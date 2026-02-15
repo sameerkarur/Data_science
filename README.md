@@ -23,5 +23,12 @@ Exploratory data analysis and hypothesis testing on marketing campaign data to u
 - **Dataset:** `03_Marketing_Campaigns/datasets/marketing_data.csv`
 - **Problem statement:** `03_Marketing_Campaigns/1736837211_marketing_campaign_problem_statement.docx`
 
+### 04 - Sales Analysis (Course-end Project 2)
+Analysis of AAL Australia's Q4 2020 apparel sales data across 7 states and 4 demographic groups. Includes data wrangling, descriptive statistics, state-wise/group-wise analysis, time-of-day insights, and sales program recommendations.
+
+- **Analysis notebook:** `04_Sales_Analysis/Sales_Analysis.ipynb`
+- **Dataset:** `04_Sales_Analysis/datasets/AusApparalSales4thQrt2020.csv`
+- **Problem statement:** `04_Sales_Analysis/1736837037_sales_analysis_problem_statement.docx`
+
 ## Practice
 - `practice/numpy_practice.py` — NumPy practice exercises

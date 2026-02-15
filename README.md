@@ -19,6 +19,7 @@ A Python-based task manager application with user authentication, allowing users
 ### 03 - Marketing Campaigns (Course-end Project 1)
 Exploratory data analysis and hypothesis testing on marketing campaign data to understand factors influencing customer acquisition. Focuses on the marketing mix (4 Ps): People, Product, Place, and Promotion.
 
+- **Analysis notebook:** `03_Marketing_Campaigns/Marketing_Campaigns_Analysis.ipynb`
 - **Dataset:** `03_Marketing_Campaigns/datasets/marketing_data.csv`
 - **Problem statement:** `03_Marketing_Campaigns/1736837211_marketing_campaign_problem_statement.docx`
 

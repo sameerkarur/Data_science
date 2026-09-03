@@ -5,6 +5,7 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+.venv/
 
 # IDE
 .vscode/
@@ -13,3 +14,16 @@ build/
 # OS
 Thumbs.db
 .DS_Store
+
+# Virtual environments
+.venv_dl/
+
+# Large course reference packs (keep locally; too big for git)
+00_Course3_Machine_Learning_Materials/Instructor_Slides_and_Notebooks.zip
+00_Course3_Machine_Learning_Materials/Datasets.zip
+00_Course4_Deep_Learning_Materials/Instructor_Slides_AND_Notebook.zip
+00_Course4_Deep_Learning_Materials/Datasets.zip
+00_Course4_Deep_Learning_Materials/CEP_Datasets.zip
+
+# Large Home Credit dataset (~166MB) — keep local; download from CEP_Datasets
+08_Home_Loan_Data_Analysis/datasets/Home_loan_data.csv

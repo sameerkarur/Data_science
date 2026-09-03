@@ -1,0 +1,121 @@
+Column no.,Variable Name,Description
+1,SK_ID_CURR,Unique identifier for each client.
+2,TARGET,"Whether the loan was repaid (1 for yes, 0 for no)."
+3,NAME_CONTRACT_TYPE,"Type of loan contract (e.g., Cash loans, Revolving loans)."
+4,CODE_GENDER,Gender of the applicant.
+5,FLAG_OWN_CAR,Whether the applicant owns a car (Yes/No).
+6,FLAG_OWN_REALTY,Whether the applicant owns a house or flat (Yes/No).
+7,CNT_CHILDREN,Number of children the applicant has.
+8,AMT_INCOME_TOTAL,Total income of the applicant.
+9,AMT_CREDIT,Total credit amount of the loan.
+10,AMT_ANNUITY,Loan annuity (monthly payment).
+11,AMT_GOODS_PRICE,Price of the goods for which the loan is taken.
+12,NAME_TYPE_SUITE,Who was accompanying the client when applying for the loan.
+13,NAME_INCOME_TYPE,"Income category of the applicant (e.g., Working, Pensioner)."
+14,NAME_EDUCATION_TYPE,Education level of the applicant.
+15,NAME_FAMILY_STATUS,"Family status of the applicant (e.g., Married, Single)."
+16,NAME_HOUSING_TYPE,"Housing situation of the applicant (e.g., Rented apartment, Own house)."
+17,REGION_POPULATION_RELATIVE,Normalized population of the region where the client lives.
+18,DAYS_BIRTH,Age of the client in days (from birth to the application date).
+19,DAYS_EMPLOYED,How long the applicant has been employed (in days).
+20,DAYS_REGISTRATION,How long ago the client registered at the current address (in days).
+21,DAYS_ID_PUBLISH,How long ago the ID was changed (in days).
+22,OWN_CAR_AGE,Age of the client’s car.
+23,FLAG_MOBIL,"Whether the applicant provided a mobile phone number (1 for yes, 0 for no)."
+24,FLAG_EMP_PHONE,Whether the applicant provided their work phone number.
+25,FLAG_WORK_PHONE,Whether the applicant provided their home phone number.
+26,FLAG_CONT_MOBILE,Whether the mobile phone number is reachable.
+27,FLAG_PHONE,Whether the applicant provided a phone number.
+28,FLAG_EMAIL,Whether the applicant provided an email address.
+29,OCCUPATION_TYPE,Occupation type of the applicant.
+30,CNT_FAM_MEMBERS,Number of family members of the applicant.
+31,REGION_RATING_CLIENT,Rating of the region where the client lives.
+32,REGION_RATING_CLIENT_W_CITY,Rating of the region and city where the client lives.
+33,WEEKDAY_APPR_PROCESS_START,Day of the week when the application was processed.
+34,HOUR_APPR_PROCESS_START,Hour of the day when the application was processed.
+35,REG_REGION_NOT_LIVE_REGION,Whether the client’s region of residence differs from the region of registration.
+36,REG_REGION_NOT_WORK_REGION,Whether the client’s region of residence differs from the region of work.
+37,LIVE_REGION_NOT_WORK_REGION,Whether the client’s region of work differs from the region of registration.
+38,REG_CITY_NOT_LIVE_CITY,Whether the client’s city of residence differs from the city of registration.
+39,REG_CITY_NOT_WORK_CITY,Whether the client’s city of residence differs from the city of work.
+40,LIVE_CITY_NOT_WORK_CITY,Whether the client’s city of work differs from the city of registration.
+41,ORGANIZATION_TYPE,Type of organization where the client works.
+42,"EXT_SOURCE_1, EXT_SOURCE_2, EXT_SOURCE_3",Normalized score from external data sources (used to assess credit risk).
+43,APARTMENTS_AVG,Normalized average value of the apartment.
+44,BASEMENTAREA_AVG,Normalized average value of the basement area.
+45,YEARS_BEGINEXPLUATATION_AVG,Normalized average value of the years since the building’s construction.
+46,YEARS_BUILD_AVG,Normalized average value of the building’s age.
+47,COMMONAREA_AVG,Normalized average value of common area.
+48,ELEVATORS_AVG,Normalized average value of elevators in the building.
+49,ENTRANCES_AVG,Normalized average value of entrances to the building.
+50,FLOORSMAX_AVG,Normalized average value of the maximum number of floors in the building.
+51,FLOORSMIN_AVG,Normalized average value of the minimum number of floors in the building.
+52,LANDAREA_AVG,Normalized average value of the land area of the property.
+53,LIVINGAPARTMENTS_AVG,Normalized average value of the living apartments.
+54,LIVINGAREA_AVG,Normalized average value of the living area.
+55,NONLIVINGAPARTMENTS_AVG,Normalized average value of non-living apartments.
+56,NONLIVINGAREA_AVG,Normalized average value of non-living area.
+57,APARTMENTS_MODE,Mode value of the apartment.
+58,BASEMENTAREA_MODE,Mode value of the basement area.
+59,YEARS_BEGINEXPLUATATION_MODE,Mode value of the years since the building’s construction.
+60,YEARS_BUILD_MODE,Mode value of the building’s age.
+61,COMMONAREA_MODE,Mode value of common area.
+62,ELEVATORS_MODE,Mode value of elevators in the building.
+63,ENTRANCES_MODE,Mode value of entrances to the building.
+64,FLOORSMAX_MODE,Mode value of the maximum number of floors in the building.
+65,FLOORSMIN_MODE,Mode value of the minimum number of floors in the building.
+66,LANDAREA_MODE,Mode value of the land area of the property.
+67,LIVINGAPARTMENTS_MODE,Mode value of the living apartments.
+68,LIVINGAREA_MODE,Mode value of the living area.
+69,NONLIVINGAPARTMENTS_MODE,Mode value of non-living apartments.
+70,NONLIVINGAREA_MODE,Mode value of non-living area.
+71,APARTMENTS_MEDI,Median value of the apartment.
+72,BASEMENTAREA_MEDI,Median value of the basement area.
+73,YEARS_BEGINEXPLUATATION_MEDI,Median value of the years since the building’s construction.
+74,YEARS_BUILD_MEDI,Median value of the building’s age.
+75,COMMONAREA_MEDI,Median value of common area.
+76,ELEVATORS_MEDI,Median value of elevators in the building.
+77,ENTRANCES_MEDI,Median value of entrances to the building.
+78,FLOORSMAX_MEDI,Median value of the maximum number of floors in the building.
+79,FLOORSMIN_MEDI,Median value of the minimum number of floors in the building.
+80,LANDAREA_MEDI,Median value of the land area of the property.
+81,LIVINGAPARTMENTS_MEDI,Median value of the living apartments.
+82,LIVINGAREA_MEDI,Median value of the living area.
+83,NONLIVINGAPARTMENTS_MEDI,Median value of non-living apartments.
+84,NONLIVINGAREA_MEDI,Median value of non-living area.
+85,FONDKAPREMONT_MODE,Mode of the apartment fund.
+86,HOUSETYPE_MODE,"Type of the house (e.g., Block of flats, Specific housing)."
+87,TOTALAREA_MODE,Mode value of the total area of the property.
+88,WALLSMATERIAL_MODE,Material used for the walls of the building.
+89,EMERGENCYSTATE_MODE,Emergency state of the house (Yes/No).
+90,OBS_30_CNT_SOCIAL_CIRCLE,Number of observations of social surroundings within 30 days.
+91,DEF_30_CNT_SOCIAL_CIRCLE,Number of social circle defaults within 30 days.
+92,OBS_60_CNT_SOCIAL_CIRCLE,Number of observations of social surroundings within 60 days.
+93,DEF_60_CNT_SOCIAL_CIRCLE,Number of social circle defaults within 60 days.
+94,DAYS_LAST_PHONE_CHANGE,Days since the last phone number change.
+95,FLAG_DOCUMENT_2,Did the client provide document 2 (Yes/No).
+96,FLAG_DOCUMENT_3,Did the client provide document 3 (Yes/No).
+97,FLAG_DOCUMENT_4,Did the client provide document 4 (Yes/No).
+98,FLAG_DOCUMENT_5,Did the client provide document 5 (Yes/No).
+99,FLAG_DOCUMENT_6,Did the client provide document 6 (Yes/No).
+100,FLAG_DOCUMENT_7,Did the client provide document 7 (Yes/No).
+101,FLAG_DOCUMENT_8,Did the client provide document 8 (Yes/No).
+102,FLAG_DOCUMENT_9,Did the client provide document 9 (Yes/No).
+103,FLAG_DOCUMENT_10,Did the client provide document 10 (Yes/No).
+104,FLAG_DOCUMENT_11,Did the client provide document 11 (Yes/No).
+105,FLAG_DOCUMENT_12,Did the client provide document 12 (Yes/No).
+106,FLAG_DOCUMENT_13,Did the client provide document 13 (Yes/No).
+107,FLAG_DOCUMENT_14,Did the client provide document 14 (Yes/No).
+108,FLAG_DOCUMENT_15,Did the client provide document 15 (Yes/No).
+109,FLAG_DOCUMENT_16,Did the client provide document 16 (Yes/No).
+110,FLAG_DOCUMENT_17,Did the client provide document 17 (Yes/No).
+111,FLAG_DOCUMENT_18,Did the client provide document 18 (Yes/No).
+112,FLAG_DOCUMENT_19,Did the client provide document 19 (Yes/No).
+113,FLAG_DOCUMENT_20,Did the client provide document 20 (Yes/No).
+114,FLAG_DOCUMENT_21,Did the client provide document 21 (Yes/No).
+115,AMT_REQ_CREDIT_BUREAU_HOUR,Number of inquiries to the Credit Bureau in the last hour.
+116,AMT_REQ_CREDIT_BUREAU_DAY,Number of inquiries to the Credit Bureau in the last day.
+117,AMT_REQ_CREDIT_BUREAU_WEEK,Number of inquiries to the Credit Bureau in the last week.
+118,AMT_REQ_CREDIT_BUREAU_MON,Number of inquiries to the Credit Bureau in the last month.
+119,AMT_REQ_CREDIT_BUREAU_QRT,Number of inquiries to the Credit Bureau in the last quarter.
+120,AMT_REQ_CREDIT_BUREAU_YEAR,Number of inquiries to the Credit Bureau in the last year.

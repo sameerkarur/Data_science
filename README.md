@@ -30,5 +30,40 @@ Analysis of AAL Australia's Q4 2020 apparel sales data across 7 states and 4 dem
 - **Dataset:** `04_Sales_Analysis/datasets/AusApparalSales4thQrt2020.csv`
 - **Problem statement:** `04_Sales_Analysis/1736837037_sales_analysis_problem_statement.docx`
 
+### 05 - Creating Cohorts of Songs (ML Course-end Project 1)
+EDA, dimensionality reduction, and clustering on Rolling Stones Spotify tracks to form song cohorts for better recommendations.
+
+- **Analysis notebook:** `05_Creating_Cohorts_of_Songs/Creating_Cohorts_of_Songs.ipynb`
+- **Dataset:** `05_Creating_Cohorts_of_Songs/datasets/rolling_stones_spotify.csv`
+- **Data dictionary:** `05_Creating_Cohorts_of_Songs/datasets/Data Dictionary - Creating cohorts of songs.xlsx`
+- **Problem statement:** `05_Creating_Cohorts_of_Songs/1736848576_creating_cohorts_of_songs_problem_statement.docx`
+
+### 06 - Employee Turnover Analytics (ML Course-end Project 2)
+Predict employee turnover for Portobello Tech: EDA, K-means on leavers, SMOTE, and comparison of Logistic Regression / Random Forest / Gradient Boosting with retention-zone strategy.
+
+- **Analysis notebook:** `06_Employee_Turnover_Analytics/Employee_Turnover_Analytics.ipynb`
+- **Dataset:** `06_Employee_Turnover_Analytics/datasets/HR_comma_sep.csv`
+- **Problem statement:** `06_Employee_Turnover_Analytics/1736848192_employee_turnover_problem_statement.docx`
+
+
+### 07 - Lending Club Loan Analysis (DL Course-end Project 1)
+Deep learning (Keras/TensorFlow) model to predict loan default on Lending Club historical data. Includes categorical encoding, EDA, correlation-based feature pruning, SMOTE, and a feed-forward neural net.
+
+- **Analysis notebook:** `07_Lending_Club_Loan_Analysis/Lending_Club_Loan_Analysis.ipynb`
+- **Dataset:** `07_Lending_Club_Loan_Analysis/datasets/loan_data.csv`
+- **Problem statement:** `07_Lending_Club_Loan_Analysis/1753786490_project_lending_club_data_analysis.pdf`
+
+### 08 - Home Loan Data Analysis (DL Course-end Project 2)
+Predict home-loan repayment difficulty (`TARGET`) with a Keras DNN. Handles nulls, class imbalance (undersampling), encoding, and reports Sensitivity + ROC-AUC.
+
+- **Analysis notebook:** `08_Home_Loan_Data_Analysis/Home_Loan_Data_Analysis.ipynb`
+- **Dataset:** `08_Home_Loan_Data_Analysis/datasets/Home_loan_data.csv` (local; large file gitignored)
+- **Data dictionary:** `08_Home_Loan_Data_Analysis/datasets/Data_Dictionary.csv`
+- **Problem statement:** `08_Home_Loan_Data_Analysis/1736854860_project_home_loan_data_analysis.docx`
+
+## Course materials
+- `00_Course3_Machine_Learning_Materials/` — Lab guide, OSL datasets, and (local-only) instructor slides / full datasets packs
+- `00_Course4_Deep_Learning_Materials/` — Lab guide, CEP datasets, instructor slides (large zips local-only)
+
 ## Practice
 - `practice/numpy_practice.py` — NumPy practice exercises

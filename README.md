@@ -1,69 +1,133 @@
-# Data Science Projects
+# AIML Practice Hub — From Python Basics to GenAI
 
-Projects completed as part of the AI/ML course at IIT Khanpur.
+**The complete open learning guide for IIT Kanpur AIML (and any AI/ML career path).**
 
-## Projects
+Structured exactly like the program: **5 courses → subtopic folders → hands-on practice → 2 portfolio projects per course → interview Q&A.**
 
-### 01 - Personal Expense Tracker
-A Python-based personal expense tracker that allows users to add, view, and manage expenses with budget tracking.
+> Built by [Sameer Karur](https://github.com/sameerkarur) while completing the IITK Professional Certificate in Generative AI & Machine Learning.
 
-- **Source code:** `01_Personal_Expense_Tracker/Personal_expense_tracker.py`
-- **Write-up:** `01_Personal_Expense_Tracker/PROJECT WRITE-UP_ Personal Expense Tracker.pdf`
+---
 
-### 02 - Task Manager with User Authentication
-A Python-based task manager application with user authentication, allowing users to create, manage, and track tasks.
+## Open in browser
 
-- **Source code:** `02_Task_Manager/Task_manager_user_authentication.py`
-- **Write-up:** `02_Task_Manager/PROJECT WRITE-UP_ TASK MANAGER.pdf`
+**[index.html](index.html)** — click any course/topic to jump to notebooks (works on GitHub Pages or locally).
 
-### 03 - Marketing Campaigns (Course-end Project 1)
-Exploratory data analysis and hypothesis testing on marketing campaign data to understand factors influencing customer acquisition. Focuses on the marketing mix (4 Ps): People, Product, Place, and Promotion.
+---
 
-- **Analysis notebook:** `03_Marketing_Campaigns/Marketing_Campaigns_Analysis.ipynb`
-- **Dataset:** `03_Marketing_Campaigns/datasets/marketing_data.csv`
-- **Problem statement:** `03_Marketing_Campaigns/1736837211_marketing_campaign_problem_statement.docx`
+## What's inside
 
-### 04 - Sales Analysis (Course-end Project 2)
-Analysis of AAL Australia's Q4 2020 apparel sales data across 7 states and 4 demographic groups. Includes data wrangling, descriptive statistics, state-wise/group-wise analysis, time-of-day insights, and sales program recommendations.
+| Course | Topics | Practice | Projects |
+|--------|--------|----------|----------|
+| **1 — Python Foundations** | 5 subtopics | basics + practice notebooks + interview Q&A | Expense Tracker, Task Manager |
+| **2 — Applied Data Science** | 11 subtopics | **220+ questions** (NumPy/Pandas/Matplotlib/Seaborn) + stats/probability | Marketing Campaigns, Sales Analysis |
+| **3 — Machine Learning** | 5 subtopics | Clustering, SMOTE, CV, evaluation | Song Cohorts, Employee Turnover |
+| **4 — Deep Learning** | 4 subtopics | Keras/TensorFlow, AUC, sensitivity | Lending Club, Home Loan |
+| **5 — Generative AI** | 3 subtopics | Prompt engineering, ChatGPT apps | Storytelling, PM Consultant |
 
-- **Analysis notebook:** `04_Sales_Analysis/Sales_Analysis.ipynb`
-- **Dataset:** `04_Sales_Analysis/datasets/AusApparalSales4thQrt2020.csv`
-- **Problem statement:** `04_Sales_Analysis/1736837037_sales_analysis_problem_statement.docx`
+Each subtopic folder contains:
 
-### 05 - Creating Cohorts of Songs (ML Course-end Project 1)
-EDA, dimensionality reduction, and clustering on Rolling Stones Spotify tracks to form song cohorts for better recommendations.
+```
+subtopic/
+├── basics.md           ← Syntax cheat sheet
+├── practice.md         ← Question list
+├── practice.ipynb      ← Type & run your code here
+├── solutions.ipynb     ← Check answers
+└── interview_qa.md     ← Interview prep Q&A
+```
 
-- **Analysis notebook:** `05_Creating_Cohorts_of_Songs/Creating_Cohorts_of_Songs.ipynb`
-- **Dataset:** `05_Creating_Cohorts_of_Songs/datasets/rolling_stones_spotify.csv`
-- **Data dictionary:** `05_Creating_Cohorts_of_Songs/datasets/Data Dictionary - Creating cohorts of songs.xlsx`
-- **Problem statement:** `05_Creating_Cohorts_of_Songs/1736848576_creating_cohorts_of_songs_problem_statement.docx`
+---
 
-### 06 - Employee Turnover Analytics (ML Course-end Project 2)
-Predict employee turnover for Portobello Tech: EDA, K-means on leavers, SMOTE, and comparison of Logistic Regression / Random Forest / Gradient Boosting with retention-zone strategy.
+## Quick start
 
-- **Analysis notebook:** `06_Employee_Turnover_Analytics/Employee_Turnover_Analytics.ipynb`
-- **Dataset:** `06_Employee_Turnover_Analytics/datasets/HR_comma_sep.csv`
-- **Problem statement:** `06_Employee_Turnover_Analytics/1736848192_employee_turnover_problem_statement.docx`
+```bash
+git clone https://github.com/sameerkarur/Data_science.git
+cd Data_science
+pip install -r requirements.txt
 
+# Large Home Loan dataset (158 MB) uses Git LFS
+git lfs install
+git lfs pull
 
-### 07 - Lending Club Loan Analysis (DL Course-end Project 1)
-Deep learning (Keras/TensorFlow) model to predict loan default on Lending Club historical data. Includes categorical encoding, EDA, correlation-based feature pruning, SMOTE, and a feed-forward neural net.
+jupyter notebook
+```
 
-- **Analysis notebook:** `07_Lending_Club_Loan_Analysis/Lending_Club_Loan_Analysis.ipynb`
-- **Dataset:** `07_Lending_Club_Loan_Analysis/datasets/loan_data.csv`
-- **Problem statement:** `07_Lending_Club_Loan_Analysis/1753786490_project_lending_club_data_analysis.pdf`
+1. Open **[index.html](index.html)** or pick a course below  
+2. Open `practice.ipynb` in any subtopic  
+3. Read `basics.md` when stuck  
+4. Review `interview_qa.md` before interviews  
 
-### 08 - Home Loan Data Analysis (DL Course-end Project 2)
-Predict home-loan repayment difficulty (`TARGET`) with a Keras DNN. Handles nulls, class imbalance (undersampling), encoding, and reports Sensitivity + ROC-AUC.
+---
 
-- **Analysis notebook:** `08_Home_Loan_Data_Analysis/Home_Loan_Data_Analysis.ipynb`
-- **Dataset:** `08_Home_Loan_Data_Analysis/datasets/Home_loan_data.csv` (local; large file gitignored)
-- **Data dictionary:** `08_Home_Loan_Data_Analysis/datasets/Data_Dictionary.csv`
-- **Problem statement:** `08_Home_Loan_Data_Analysis/1736854860_project_home_loan_data_analysis.docx`
+## Folder structure
 
-## Course materials
-- `00_Course3_Machine_Learning_Materials/` — Lab guide, OSL datasets, and (local-only) instructor slides / full datasets packs
-- `00_Course4_Deep_Learning_Materials/` — Lab guide, CEP datasets, instructor slides (large zips local-only)
+```
+Data_science/
+├── index.html                          ← Web navigation hub
+├── README.md
+├── requirements.txt
+├── datasets/shared/                    ← ALL datasets (included in repo)
+│   ├── AusApparalSales4thQrt2020.csv
+│   ├── marketing_data.csv
+│   ├── HR_comma_sep.csv
+│   ├── rolling_stones_spotify.csv
+│   ├── loan_data.csv
+│   └── Home_loan_data.csv              ← Git LFS
+│
+├── Course_01_Python_Foundations/
+│   ├── 01_variables_datatypes/ … 05_file_io_exceptions/
+│   └── projects/ Personal_Expense_Tracker, Task_Manager
+│
+├── Course_02_Applied_Data_Science/
+│   ├── 03_numpy/          ← 45 questions (full Python_Practice content)
+│   ├── 08_pandas/           ← 70 questions
+│   ├── 10_data_visualization/matplotlib/  ← 45 questions
+│   ├── 10_data_visualization/seaborn/     ← 60 questions
+│   └── projects/ Marketing_Campaigns, Sales_Analysis
+│
+├── Course_03_Machine_Learning/
+│   └── projects/ Creating_Cohorts_of_Songs, Employee_Turnover_Analytics
+│
+├── Course_04_Deep_Learning/
+│   └── projects/ Lending_Club_Loan_Analysis, Home_Loan_Data_Analysis
+│
+└── Course_05_Generative_AI/
+    └── projects/ ChatGPT_Based_Storytelling, Virtual_PM_Consultant
+```
 
-## Practice
-- `practice/numpy_practice.py` — NumPy practice exercises
+---
+
+## Datasets (all included)
+
+See **[datasets/README.md](datasets/README.md)** for full list and load examples.
+
+No external downloads needed — clone and practice.
+
+---
+
+## Interview prep path
+
+| Goal | Focus on |
+|------|----------|
+| **Data Analyst** | Course 2 — Pandas, SQL-like ops, visualization, statistics |
+| **ML Engineer** | Course 2 + 3 — feature engineering, SMOTE, model metrics |
+| **Deep Learning** | Course 4 — Keras, imbalanced data, ROC/AUC, sensitivity |
+| **AI Engineer / GenAI** | Course 5 — prompt engineering, LLM applications |
+
+Every subtopic has **`interview_qa.md`**. Course 2 assessment-style questions are covered in statistics/probability topics.
+
+---
+
+## Related repo
+
+Extended NumPy/Pandas-only practice: **[Python_Practice](https://github.com/sameerkarur/Python_Practice)** (same 220+ question style).
+
+---
+
+## Connect
+
+- GitHub: [sameerkarur](https://github.com/sameerkarur)
+- LinkedIn: [Sameer Karur](https://www.linkedin.com/in/sameer-karur-a5648224b/)
+
+If this hub helps your AI/ML journey, **star the repo** — it helps others discover it.
+
+**Happy learning.**

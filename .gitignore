@@ -6,6 +6,7 @@ __pycache__/
 dist/
 build/
 .venv/
+.venv_dl/
 
 # IDE
 .vscode/
@@ -15,15 +16,15 @@ build/
 Thumbs.db
 .DS_Store
 
-# Virtual environments
-.venv_dl/
+# Large instructor packs only (datasets ARE tracked — see datasets/shared/)
+materials/*/Instructor_Slides*.zip
+materials/*/Instructor_Slides_AND_Notebook.zip
+materials/*/Datasets.zip
+materials/*/CEP_Datasets.zip
+materials/*/Demos.zip
+materials/*/Ebooks.zip
 
-# Large course reference packs (keep locally; too big for git)
-00_Course3_Machine_Learning_Materials/Instructor_Slides_and_Notebooks.zip
-00_Course3_Machine_Learning_Materials/Datasets.zip
-00_Course4_Deep_Learning_Materials/Instructor_Slides_AND_Notebook.zip
-00_Course4_Deep_Learning_Materials/Datasets.zip
-00_Course4_Deep_Learning_Materials/CEP_Datasets.zip
-
-# Large Home Credit dataset (~166MB) — keep local; download from CEP_Datasets
-08_Home_Loan_Data_Analysis/datasets/Home_loan_data.csv
+# Large full Home Credit file (158MB) — use sample in repo or Git LFS locally
+datasets/shared/Home_loan_data.csv
+**/Home_loan_data.csv
+!datasets/shared/Home_loan_data_sample.csv

@@ -1,0 +1,12 @@
+numpy
+pandas
+matplotlib
+seaborn
+scipy
+scikit-learn
+imbalanced-learn
+jupyter
+tensorflow
+fpdf2
+openpyxl
+pypdf

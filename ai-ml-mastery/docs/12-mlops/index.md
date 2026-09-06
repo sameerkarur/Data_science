@@ -4,11 +4,14 @@ Building and operating AI systems, not just training models.
 
 ## Tooling
 
-- [ ] Git/GitHub
-- [ ] Linux
-- [ ] Docker
-- [ ] FastAPI & CI/CD
-- [ ] Testing
+- [x] [Git/GitHub](production-tooling-containerization-cicd-deep-dive.md)
+- [x] [Linux](production-tooling-containerization-cicd-deep-dive.md)
+- [x] [Docker](production-tooling-containerization-cicd-deep-dive.md)
+- [x] [FastAPI & CI/CD](production-tooling-containerization-cicd-deep-dive.md)
+- [x] [Testing](production-tooling-containerization-cicd-deep-dive.md)
+
+**Comprehensive Deep Dive:**
+- 📖 [Production Tooling, Containerization & CI/CD Deep Dive](production-tooling-containerization-cicd-deep-dive.md)
 
 ## Serving & Pipelines
 

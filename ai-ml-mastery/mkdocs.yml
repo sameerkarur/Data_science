@@ -154,6 +154,8 @@ nav:
       - Overview: 11-ai-agents/index.md
       - "Deep-dive: Agent Architectures & Patterns": 11-ai-agents/agent-architectures-patterns-deep-dive.md
       - "Deep-dive: Multi-Agent Systems & Security": 11-ai-agents/multi-agent-systems-security-deep-dive.md
-  - Book 12 – MLOps: 12-mlops/index.md
+  - Book 12 – MLOps:
+      - Overview: 12-mlops/index.md
+      - "Deep-dive: Production Tooling, Containerization & CI/CD": 12-mlops/production-tooling-containerization-cicd-deep-dive.md
   - Book 13 – AI System Design: 13-ai-system-design/index.md
   - Book 14 – Projects & Interview: 14-projects/index.md

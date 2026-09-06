@@ -9,13 +9,16 @@ Folder layout matches the Simplilearn LMS learning path (mandatory courses + ele
 
 ## 🌐 Interactive Practice Web View
 
-> 💡 **Quick Launch:** Jump straight into the interactive visual course explorer with full subtopic roadmaps, 1,500+ practice problems, step-by-step solutions, and project deliverables.
+> 💡 **Quick Launch:** Jump straight into the interactive visual course explorer with full subtopic roadmaps, 1,650+ practice problems, step-by-step solutions, and project deliverables.
 
-👉 **[Click Here to Open Web View (`index.html`)](index.html)**  
-*(If viewing on GitHub, you can access the live dashboard via **[GitHub Pages](https://sameerkarur.github.io/Data_science/)**, or simply open [`index.html`](index.html) in your browser / IDE)*
+- 🚀 **[Click Here for Live Web View (GitHub Pages)](https://sameerkarur.github.io/Data_science/)** *(Recommended — opens fully rendered interactive dashboard)*
+- 🌐 **[Instant Web Preview (HTMLPreview)](https://htmlpreview.github.io/?https://github.com/sameerkarur/Data_science/blob/main/index.html)** *(Alternative direct render in browser)*
+- 💻 **Local / Offline View:** Double-click [`index.html`](index.html) in your file manager or browser.
+
+*(Note: Clicking raw `index.html` inside GitHub displays source code. To view as a webpage, use the live links above or enable GitHub Pages in repo Settings → Pages → main branch).*
 
 - 📚 **Interactive Course Navigation:** Jump directly to any `practice.ipynb` or `solutions.ipynb` notebook across all courses.
-- 🎯 **1,500+ Curated Problems:** Systematic progression through Python, NumPy, Pandas, Matplotlib, Seaborn, ML, DL, and GenAI.
+- 🎯 **1,650+ Curated Problems:** Systematic progression through Python, NumPy, Pandas, Matplotlib, Seaborn, ML, DL, and GenAI (including Course 6 RAG, Vector DBs & Multimodal).
 - 💼 **Project Deliverables & V2 Suite:** One-click links to all LMS submission packs and the 15 next-generation `projects_version2/` architectures.
 
 ---
@@ -32,7 +35,7 @@ Folder layout matches the Simplilearn LMS learning path (mandatory courses + ele
 | `03_IITK_AIML_Core_Machine_Learning/` | IITK AIML Core: Machine Learning |
 | `04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/` | IITK AIML - Core: Deep Learning with Keras and TensorFlow |
 | `05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/` | IITK AIML Core: Essentials of Generative AI, Prompt Engineering & ChatGPT |
-| `06_IITK_AIML_Advanced_Generative_AI/` | IITK AIML - Advanced Generative AI *(Nestlé RAG & Netflix Studio)* |
+| `06_IITK_AIML_Advanced_Generative_AI/` | IITK AIML - Advanced Generative AI *(3 Practice Topics, Nestlé RAG & Netflix Studio)* |
 | `07_IITK_AIML_Capstone/` | IITK AIML - Capstone *(All 3 Projects Completed & Packaged)* |
 | `projects_version2/` | Advanced Alternative Architectures for all 15 Projects |
 

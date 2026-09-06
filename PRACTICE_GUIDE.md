@@ -83,8 +83,9 @@ Some subtopics also copy CSVs locally (e.g. NumPy folder) — both work; prefer 
 | **3 — ML** | 5 | **250+** | EDA, clustering, classification, imbalance, evaluation |
 | **4 — DL** | 4 | **200+** | NN basics, Keras, preprocessing, metrics |
 | **5 — GenAI** | 3 | **150+** | Prompts, apps, optimization |
+| **6 — Adv GenAI** | 3 | **150+** | RAG architectures, Vector DBs (Chroma), Multimodal vision |
 
-**Grand total: 1,500+** practice problems when including the full NumPy/Pandas/viz banks.
+**Grand total: 1,650+** practice problems when including the full NumPy/Pandas/viz banks.
 
 ---
 

@@ -142,6 +142,10 @@ Data_science/
 * **LLM Agents & Tool Use:** ReAct (Reason + Act) loop: Thought $\to$ Action $\to$ Observation $\to$ Final Answer.
 
 ## Course 06: Advanced Generative AI
+* **Practice Question Banks & Labs:**
+  - `01_rag_architectures/`: 50 practice problems + solutions + 30 interview Q&A on chunking, embeddings, context injection, and RAG evaluation.
+  - `02_vector_databases_chroma/`: 50 practice problems + solutions + 30 interview Q&A on HNSW, ANN search, quantization, and ChromaDB persistence.
+  - `03_multimodal_generative_models/`: 50 practice problems + solutions + 30 interview Q&A on CLIP, diffusion denoising, DALL-E, and image composition.
 * **Retrieval-Augmented Generation (RAG):**
   - Document Ingestion: PyPDFLoader, chunking strategies with overlap (`RecursiveCharacterTextSplitter`).
   - Dense Vector Databases: ChromaDB, FAISS, cosine distance indexing.

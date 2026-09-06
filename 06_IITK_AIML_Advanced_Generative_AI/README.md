@@ -6,6 +6,14 @@
 
 Course-end projects built from your Downloads materials.
 
+## Practice Topics & Interview Question Banks
+
+| Subtopic | Practice Notebook | Solutions | Concepts & Reference | Interview Q&A |
+|---|---|---|---|---|
+| **01. RAG Architectures & Retrieval Engineering** | [`01_rag_architectures/practice.ipynb`](01_rag_architectures/practice.ipynb) | [`01_rag_architectures/solutions.ipynb`](01_rag_architectures/solutions.ipynb) | [`01_rag_architectures/basics.md`](01_rag_architectures/basics.md) | [`01_rag_architectures/interview_qa.md`](01_rag_architectures/interview_qa.md) (30 Q&A) |
+| **02. Vector Databases & ChromaDB** | [`02_vector_databases_chroma/practice.ipynb`](02_vector_databases_chroma/practice.ipynb) | [`02_vector_databases_chroma/solutions.ipynb`](02_vector_databases_chroma/solutions.ipynb) | [`02_vector_databases_chroma/basics.md`](02_vector_databases_chroma/basics.md) | [`02_vector_databases_chroma/interview_qa.md`](02_vector_databases_chroma/interview_qa.md) (30 Q&A) |
+| **03. Multimodal Generative Models & Vision AI** | [`03_multimodal_generative_models/practice.ipynb`](03_multimodal_generative_models/practice.ipynb) | [`03_multimodal_generative_models/solutions.ipynb`](03_multimodal_generative_models/solutions.ipynb) | [`03_multimodal_generative_models/basics.md`](03_multimodal_generative_models/basics.md) | [`03_multimodal_generative_models/interview_qa.md`](03_multimodal_generative_models/interview_qa.md) (30 Q&A) |
+
 ## Project locations
 
 | Project | Notebook | Dataset |

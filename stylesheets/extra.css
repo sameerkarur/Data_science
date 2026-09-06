@@ -153,3 +153,83 @@
     text-align: center;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Razorpay Checkout widget on the support page
+   --------------------------------------------------------------------------- */
+
+.support-widget {
+  margin: 1.5rem 0;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.6rem;
+  padding: 1.5rem;
+  background-color: var(--md-code-bg-color);
+}
+
+.support-widget > h2:first-of-type {
+  margin-top: 0;
+}
+
+.md-typeset .support-amounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.md-typeset .support-amounts .md-button {
+  margin: 0;
+  min-width: 5.5rem;
+  text-align: center;
+}
+
+.support-custom label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.support-custom__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.support-custom input[type="number"] {
+  flex: 1 1 9rem;
+  min-width: 0;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 0.2rem;
+  padding: 0.45rem 0.7rem;
+  background-color: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+  font-family: inherit;
+  font-size: 0.78rem;
+}
+
+.support-custom input[type="number"]:focus {
+  outline: none;
+  border-color: var(--md-accent-fg-color);
+}
+
+.md-typeset .support-custom .md-button {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.support-status {
+  min-height: 1.2rem;
+  margin: 1rem 0 0 !important;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.support-status--pending { color: var(--md-default-fg-color--light); }
+.support-status--success { color: #2e7d32; }
+.support-status--error   { color: #c62828; }
+
+[data-md-color-scheme="slate"] .support-status--success { color: #81c784; }
+[data-md-color-scheme="slate"] .support-status--error   { color: #ef9a9a; }

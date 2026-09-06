@@ -1,213 +1,123 @@
 # Interview Q&A — Control Flow & Functions
 
-> **30 questions** — read aloud, then explain without looking.
+> **30 High-Yield Questions & Model Answers** for AI/ML and Data Science Technical Interviews.
 
+### Q1. How does short-circuit evaluation work with 'and' and 'or' operators?
 
-## elif avoids re-checking earlier True branches; separate if allows multiple blocks to run.
+**Answer:** Python evaluates logical expressions from left to right and stops as soon as the outcome is determined. In 'A and B', if A is falsy, Python returns A immediately without evaluating B. In 'A or B', if A is truthy, Python returns A immediately without evaluating B. This enables safe guards like: 'user and user.is_authenticated'.
 
-### Q1. Control flow
+### Q2. Explain the difference between 'break', 'continue', and 'pass'.
 
-When use elif vs separate if?
+**Answer:** 'break' terminates the nearest enclosing loop immediately. 'continue' skips the remainder of the current loop iteration and proceeds to the next iteration. 'pass' is a null statement that does nothing and acts as a syntactic placeholder.
 
+### Q3. How does the 'else' block behave in 'for' and 'while' loops?
 
-## for when iterations known/iterable; while when condition-driven.
+**Answer:** The 'else' block attached to a loop executes only if the loop completes all iterations naturally without encountering a 'break' statement. It is commonly used for search loops to execute fallback logic when no match is found.
 
-### Q2. Control flow
+### Q4. What are first-class functions in Python?
 
-for vs while?
+**Answer:** Functions in Python are first-class objects: they can be assigned to variables, passed as arguments to other functions, returned from other functions, and stored in data structures like lists and dictionaries.
 
+### Q5. Explain the mechanics of a Python decorator.
 
-## Runs if loop completes without break — useful for search-not-found.
+**Answer:** A decorator is a callable that takes a function as input, extends or modifies its behavior via an internal wrapper function, and returns the modified function. Syntactic sugar '@my_decorator' above 'def foo()' is equivalent to 'foo = my_decorator(foo)'.
 
-### Q3. Control flow
+### Q6. Why should you use 'functools.wraps' inside custom decorators?
 
-What does loop else do?
+**Answer:** When a wrapper function replaces the original function, metadata such as the function name (__name__), docstring (__doc__), and signature are replaced by the wrapper's metadata. '@functools.wraps(fn)' copies this metadata back to the wrapper, preserving introspection and debugging integrity.
 
+### Q7. What are *args and **kwargs in function definitions?
 
-## *args collects positional extras as tuple; **kwargs collects keyword extras as dict.
+**Answer:** *args collects variable-length non-keyword positional arguments into a tuple. **kwargs collects arbitrary keyword arguments into a dictionary. They allow functions to accept dynamic signatures and pass arguments cleanly down to underlying APIs.
 
-### Q4. Functions
+### Q8. Explain keyword-only arguments and how to enforce them.
 
-*args vs **kwargs?
+**Answer:** Arguments defined after an asterisk ('*') in a function signature must be passed as keyword arguments: 'def query(sql, *, timeout=30)'. This prevents callers from accidentally passing positional values to sensitive options, improving readability.
 
+### Q9. What is the difference between a generator function and a regular function?
 
-## Default evaluated once; shared list mutated across calls. Use None default.
+**Answer:** A regular function runs to completion and returns a single value via 'return', destroying its stack frame. A generator function contains 'yield'; when called, it returns a generator iterator object that pauses execution state, yielding values lazily on-demand with O(1) memory.
 
-### Q5. Functions
+### Q10. Explain the 'yield from' expression introduced in Python 3.3.
 
-Default mutable argument bug?
+**Answer:** 'yield from iterable' delegates generation directly to a sub-generator or iterable, transparently yielding all values and establishing a bi-directional communication channel for .send(), .throw(), and .close() between caller and sub-generator.
 
+### Q11. What is a lambda function and what are its architectural limitations?
 
-## Single expression, no statements; fine for short callbacks.
+**Answer:** A lambda is an anonymous, single-expression inline function: 'lambda x, y: x + y'. Limitations include: it can only contain a single expression (no multi-line statements, loops, or assignments), cannot have type annotations, and can degrade stack trace readability.
 
-### Q6. Functions
+### Q12. How does Python's structural pattern matching (match-case) work?
 
-Lambda limitations?
+**Answer:** Introduced in Python 3.10, 'match subject: case pattern:' allows matching on literal values, types, sequence structures, and object attributes with optional guards (if conditions). Unlike C switch statements, it unpacks and binds variables directly from complex nested structures.
 
+### Q13. What causes a RecursionError in Python and how do you check the recursion limit?
 
-## Local → Enclosing → Global → Built-in name lookup order.
+**Answer:** A RecursionError occurs when recursive calls exceed the interpreter's maximum stack depth (typically 1000 frames in CPython) to protect against C stack overflow. Checked via 'sys.getrecursionlimit()' and adjusted via 'sys.setrecursionlimit(n)'.
 
-### Q7. Scope
+### Q14. Explain tail-call optimization and does Python support it?
 
-LEGB rule?
+**Answer:** Tail-call optimization (TCO) allows a function's stack frame to be reused if the recursive call is the very last operation. Python deliberately does NOT support TCO to preserve complete stack traces for accurate debugging and profiling (as stated by Guido van Rossum).
 
+### Q15. What is the difference between 'global' and 'nonlocal' keywords?
 
-## global binds module-level; nonlocal binds nearest enclosing (non-global) scope.
+**Answer:** 'global var' tells Python that assignments to 'var' modify the module-level global variable. 'nonlocal var' tells Python to rebind a variable in the nearest enclosing non-global scope (essential for closures modifying state in outer functions).
 
-### Q8. Scope
+### Q16. How does 'functools.lru_cache' work and what are its requirements?
 
-global vs nonlocal?
+**Answer:** lru_cache wraps a function with a Least-Recently-Used memoization cache, storing results of expensive function calls. Requirements: all arguments passed to the cached function must be hashable because cache keys are generated from argument tuples.
 
+### Q17. Explain higher-order functions with examples (map, filter, reduce).
 
-## Generator lazy, memory efficient; list stores all values.
+**Answer:** A higher-order function takes one or more functions as arguments or returns a function. 'map(fn, seq)' applies fn to each element; 'filter(pred, seq)' retains elements where pred is True; 'functools.reduce(fn, seq)' accumulates elements pairwise into a single result.
 
-### Q9. Advanced
+### Q18. Why are list comprehensions generally preferred over map() and filter() in modern Python?
 
-Generator vs list?
+**Answer:** List comprehensions are more idiomatic, readable, support simultaneous filtering and mapping without nested lambda calls, and execute faster in CPython because they avoid function call overhead for every element.
 
+### Q19. What is function currying and partial function application?
 
-## Function wrapping another to extend behavior without modifying source.
+**Answer:** Currying translates a function callable with N arguments into a chain of N functions that each take one argument. Partial application ('functools.partial(fn, *fixed_args)') pre-fills a subset of arguments, creating a new callable with a simpler signature.
 
-### Q10. Advanced
+### Q20. What is the difference between passing arguments by value vs by reference in Python?
 
-What is a decorator?
+**Answer:** Python uses 'pass-by-object-reference' (or 'pass-by-assignment'). The function receives a copy of the reference to the object. If the object is mutable (like a list), mutating it in-place reflects in the caller; if you rebind the variable name ('x = 10'), the caller's binding remains unaffected.
 
+### Q21. How do generator expressions differ from list comprehensions?
 
-## sys.getrecursionlimit(); deep recursion risks stack overflow — prefer iteration.
+**Answer:** List comprehensions '[x*2 for x in data]' allocate the entire list in memory immediately. Generator expressions '(x*2 for x in data)' produce items lazily one at a time using O(1) memory, making them ideal for processing gigabyte-scale datasets or infinite streams.
 
-### Q11. Advanced
+### Q22. What is a pure function and why is it desirable in data pipelines?
 
-Recursion limit?
+**Answer:** A pure function produces the same output for identical inputs and causes zero observable side effects (no mutation of global state, no disk/network I/O). Pure functions are easy to unit test, refactor, memoize, and parallelize across CPU cores.
 
+### Q23. How does 'zip()' work and what happens with mismatched sequence lengths?
 
-## Not optimized by CPython; iteration preferred for deep calls.
+**Answer:** 'zip(a, b)' pairs corresponding elements from iterables into tuples until the shortest iterable is exhausted. To iterate until the longest sequence completes without truncating, use 'itertools.zip_longest(*iterables, fillvalue=None)'.
 
-### Q12. Advanced
+### Q24. Explain 'enumerate(iterable, start=0)' and why it replaces manual index tracking.
 
-Tail recursion in Python?
+**Answer:** 'enumerate' yields (index, item) pairs directly in C, eliminating the need to manually initialize, increment, and index arrays ('arr[i]'), which prevents off-by-one errors and improves execution speed.
 
+### Q25. What are function annotations / type hints and do they enforce types at runtime?
 
-## Functions are objects — assign, pass, return, store in collections.
+**Answer:** Type hints (e.g. 'def add(x: int, y: int) -> int:') document expected types and enable static analysis by tools like MyPy, IDE autocompletion, and Pydantic validation. They do NOT enforce type safety at runtime by default; Python remains dynamically typed.
 
-### Q13. Advanced
+### Q26. How do you inspect a function's parameters and annotations programmatically?
 
-First-class functions?
+**Answer:** Using the 'inspect' module: 'inspect.signature(fn)' returns a Signature object containing parameter names, default values, and annotations, allowing runtime validation and dependency injection frameworks to bind arguments dynamically.
 
+### Q27. What is the difference between 'any()' and 'all()' built-in functions?
 
-## Comprehensions more Pythonic and often faster to read.
+**Answer:** 'any(iterable)' returns True if at least one element evaluates to truthy, short-circuiting on the first True. 'all(iterable)' returns True only if every element is truthy, short-circuiting on the first False. Both handle empty iterables according to formal logic (all([]) is True, any([]) is False).
 
-### Q14. Advanced
+### Q28. What is variable shadowing in Python?
 
-map/filter vs comprehensions?
+**Answer:** Variable shadowing occurs when a variable declared within an inner scope (such as a local function variable) shares the same name as a variable in an outer scope, temporarily overriding access to the outer variable within that inner scope.
 
+### Q29. Explain the 'itertools' module and name 3 high-performance iterators.
 
-## Structural pattern matching (3.10+) — cleaner than long if/elif chains.
+**Answer:** 'itertools' provides memory-efficient building blocks for iterators written in C. Key examples: 'count()' (infinite sequence), 'cycle()' (repeats an iterable indefinitely), 'chain()' (flattens multiple iterables sequentially), and 'combinations()'/'permutations()' (combinatorial generators).
 
-### Q15. Advanced
+### Q30. How does Python handle default positional argument ordering in function signatures?
 
-match/case purpose?
-
-
-## return ends function; yield makes generator pausing execution.
-
-### Q16. Interview
-
-Difference return vs yield?
-
-
-## Inner function remembering enclosing scope variables.
-
-### Q17. Interview
-
-Closure definition?
-
-
-## Bind loop variable via default arg: lambda x=i: x.
-
-### Q18. Interview
-
-Late binding closure fix?
-
-
-## No at runtime by default; use mypy/pyright for static checking.
-
-### Q19. Interview
-
-Type hints enforced?
-
-
-## PEP 257; first line summary; used by help() and Sphinx.
-
-### Q20. Interview
-
-Docstring conventions?
-
-
-## pass noop; break exit loop; continue next iteration.
-
-### Q21. Interview
-
-pass, break, continue?
-
-
-## `a if cond else b` — expression not statement.
-
-### Q22. Interview
-
-Ternary operator syntax?
-
-
-## Provides index+value without manual counter.
-
-### Q23. Interview
-
-Enumerate benefit?
-
-
-## Stops at shortest; use itertools.zip_longest for padding.
-
-### Q24. Interview
-
-Zip with unequal lengths?
-
-
-## any True if one true; all True if all true — short-circuit.
-
-### Q25. Interview
-
-any() vs all()?
-
-
-## `reversed(seq)` or `range(len-1,-1,-1)` for indices.
-
-### Q26. Interview
-
-How to reverse iterate?
-
-
-## Has __name__, __doc__, __defaults__; can setattr on functions.
-
-### Q27. Interview
-
-Function as object attributes?
-
-
-## functools.partial fixes subset of arguments.
-
-### Q28. Interview
-
-Partial application?
-
-
-## Cache results dict keyed by args — functools.lru_cache built-in.
-
-### Q29. Interview
-
-Memoization pattern?
-
-
-## Deep trees, performance critical paths, Python stack limits.
-
-### Q30. Interview
-
-When not to use recursion?
+**Answer:** Positional arguments without default values must precede arguments with default values. Defining 'def func(a=1, b):' raises a SyntaxError: non-default argument follows default argument.

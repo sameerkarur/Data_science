@@ -140,7 +140,11 @@ nav:
       - Overview: 08-nlp/index.md
       - "Deep-dive: Text Representation & Word Embeddings": 08-nlp/text-representation-word-embeddings-deep-dive.md
       - "Deep-dive: Sequence Models, Attention & Transformers": 08-nlp/sequence-models-attention-transformers-deep-dive.md
-  - Book 9 – Transformers & LLMs: 09-transformers-llms/index.md
+  - Book 9 – Transformers & LLMs:
+      - Overview: 09-transformers-llms/index.md
+      - "Deep-dive: Transformer Architecture & Mechanics": 09-transformers-llms/transformer-architecture-mechanics-deep-dive.md
+      - "Deep-dive: Foundation Model Families": 09-transformers-llms/foundation-model-families-deep-dive.md
+      - "Deep-dive: LLM Training, Alignment & PEFT": 09-transformers-llms/llm-training-alignment-peft-deep-dive.md
   - Book 10 – Generative AI: 10-generative-ai/index.md
   - Book 11 – AI Agents: 11-ai-agents/index.md
   - Book 12 – MLOps: 12-mlops/index.md

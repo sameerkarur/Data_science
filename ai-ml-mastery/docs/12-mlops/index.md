@@ -26,11 +26,14 @@ Building and operating AI systems, not just training models.
 
 ## Operations
 
-- [ ] Monitoring, logging, observability
-- [ ] Model & data drift
-- [ ] Retraining
-- [ ] A/B testing & canary deployments
-- [ ] Cost & GPU infrastructure
+- [x] [Monitoring, logging, observability](model-monitoring-observability-retraining-deep-dive.md)
+- [x] [Model & data drift](model-monitoring-observability-retraining-deep-dive.md)
+- [x] [Retraining](model-monitoring-observability-retraining-deep-dive.md)
+- [x] [A/B testing & canary deployments](model-monitoring-observability-retraining-deep-dive.md)
+- [x] [Cost & GPU infrastructure](model-monitoring-observability-retraining-deep-dive.md)
 
-!!! mastery "Status"
-    These are chapter stubs — each topic gets its own deep-dive page as it's written. See the [Python Functions](../01-python/functions-deep-dive.md) chapter for the target depth and format.
+**Comprehensive Deep Dive:**
+- 📖 [Model Monitoring, Observability & Automated Retraining Deep Dive](model-monitoring-observability-retraining-deep-dive.md)
+
+!!! mastery "Mastery Roadmap"
+    Each topic includes comprehensive mathematical formulations, architectural diagrams, runnable Python implementations from scratch, common debugging pitfalls, staff-level interview questions, and a 10-level mastery ladder.

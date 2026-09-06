@@ -1,8 +1,8 @@
 site_name: AI/ML Mastery Program
 site_description: A complete, deep-dive AI/ML curriculum — from Python internals to production AI systems.
-site_author: Your Name
-repo_url: https://github.com/YOUR_USERNAME/YOUR_REPO
-repo_name: YOUR_USERNAME/YOUR_REPO
+site_author: Sameer Karur
+repo_url: https://github.com/sameerkarur/Data_science
+repo_name: sameerkarur/Data_science
 edit_uri: edit/main/docs/
 
 theme:

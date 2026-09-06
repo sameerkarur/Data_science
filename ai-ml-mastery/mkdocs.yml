@@ -150,7 +150,10 @@ nav:
       - "Deep-dive: LLM Application Engineering": 10-generative-ai/llm-application-engineering-deep-dive.md
       - "Deep-dive: Enterprise RAG Systems": 10-generative-ai/enterprise-rag-systems-deep-dive.md
       - "Deep-dive: Diffusion Models": 10-generative-ai/diffusion-models-deep-dive.md
-  - Book 11 – AI Agents: 11-ai-agents/index.md
+  - Book 11 – AI Agents:
+      - Overview: 11-ai-agents/index.md
+      - "Deep-dive: Agent Architectures & Patterns": 11-ai-agents/agent-architectures-patterns-deep-dive.md
+      - "Deep-dive: Multi-Agent Systems & Security": 11-ai-agents/multi-agent-systems-security-deep-dive.md
   - Book 12 – MLOps: 12-mlops/index.md
   - Book 13 – AI System Design: 13-ai-system-design/index.md
   - Book 14 – Projects & Interview: 14-projects/index.md

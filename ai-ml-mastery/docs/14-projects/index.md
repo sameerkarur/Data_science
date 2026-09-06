@@ -33,25 +33,32 @@ Progressive projects, tier by tier, plus interview question banks per topic.
 
 ## Tier 5 — Transformers
 
-- [ ] Text classifier
-- [ ] Mini language model
-- [ ] Question-answering system
+- [x] [Text classifier](advanced-frontier-projects-tier-5-to-8-deep-dive.md)
+- [x] [Mini language model](advanced-frontier-projects-tier-5-to-8-deep-dive.md)
+- [x] [Question-answering system](advanced-frontier-projects-tier-5-to-8-deep-dive.md)
 
 ## Tier 6 — GenAI
 
-- [ ] RAG chatbot
-- [ ] Document intelligence system
-- [ ] Semantic search engine
+- [x] [RAG chatbot](advanced-frontier-projects-tier-5-to-8-deep-dive.md)
+- [x] [Document intelligence system](advanced-frontier-projects-tier-5-to-8-deep-dive.md)
+- [x] [Semantic search engine](advanced-frontier-projects-tier-5-to-8-deep-dive.md)
 
 ## Tier 7 — Agents
 
-- [ ] Research agent
-- [ ] Coding agent
-- [ ] Data-analysis agent
+- [x] [Research agent](advanced-frontier-projects-tier-5-to-8-deep-dive.md)
+- [x] [Coding agent](advanced-frontier-projects-tier-5-to-8-deep-dive.md)
+- [x] [Data-analysis agent](advanced-frontier-projects-tier-5-to-8-deep-dive.md)
 
 ## Tier 8 — Production
 
-- [ ] Full pipeline: data → training → tracking → registry → API → Docker → cloud → monitoring → retraining
+- [x] [Full pipeline: data → training → tracking → registry → API → Docker → cloud → monitoring → retraining](advanced-frontier-projects-tier-5-to-8-deep-dive.md)
 
-!!! mastery "Status"
-    These are chapter stubs — each topic gets its own deep-dive page as it's written. See the [Python Functions](../01-python/functions-deep-dive.md) chapter for the target depth and format.
+**Frontier Deep Dive:**
+- 📖 [Advanced & Frontier Applied Projects (Tiers 5–8) Deep Dive](advanced-frontier-projects-tier-5-to-8-deep-dive.md)
+
+## Interview Preparation Question Banks
+
+- [ ] Top 50 Staff-Level AI/ML Engineering Technical Interview Question Banks
+
+!!! mastery "Mastery Roadmap"
+    Each tier and interview bank includes comprehensive mathematical formulations, architectural diagrams, complete runnable implementations, failure modes, staff-level interview questions, and a 10-level mastery ladder.

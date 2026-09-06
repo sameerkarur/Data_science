@@ -157,5 +157,6 @@ nav:
   - Book 12 – MLOps:
       - Overview: 12-mlops/index.md
       - "Deep-dive: Production Tooling, Containerization & CI/CD": 12-mlops/production-tooling-containerization-cicd-deep-dive.md
+      - "Deep-dive: Model Serving, Pipelines & Distributed Orchestration": 12-mlops/serving-pipelines-orchestration-deep-dive.md
   - Book 13 – AI System Design: 13-ai-system-design/index.md
   - Book 14 – Projects & Interview: 14-projects/index.md

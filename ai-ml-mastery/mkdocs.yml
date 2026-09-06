@@ -105,6 +105,7 @@ nav:
       - "Deep-dive: Foundations of Mathematics": 02-mathematics/foundations-math-deep-dive.md
       - "Deep-dive: Linear Algebra": 02-mathematics/linear-algebra-deep-dive.md
       - "Deep-dive: Calculus & Optimization": 02-mathematics/calculus-optimization-deep-dive.md
+      - "Deep-dive: Probability & Statistics": 02-mathematics/probability-statistics-deep-dive.md
   - Book 3 – Data Engineering: 03-data-engineering/index.md
   - Book 4 – Classical ML:
       - Overview: 04-classical-ml/index.md

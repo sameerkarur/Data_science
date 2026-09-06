@@ -31,14 +31,14 @@ Every concept here is built to connect directly to an ML mechanism.
 
 ## Probability & Statistics
 
-- [ ] Conditional probability & Bayes' theorem
-- [ ] Random variables & distributions
-- [ ] Expectation, variance, covariance
-- [ ] Gaussian, Bernoulli, Binomial, Poisson
-- [ ] Sampling & CLT
-- [ ] Confidence intervals & hypothesis testing
-- [ ] p-values & significance
-- [ ] MLE / MAP / Bayesian inference
+- [x] [Conditional probability & Bayes' theorem](probability-statistics-deep-dive.md#3-probability-foundations-axioms-conditional-probability-and-bayes-theorem)
+- [x] [Random variables & distributions](probability-statistics-deep-dive.md#4-random-variables-distributions-and-moments)
+- [x] [Expectation, variance, covariance](probability-statistics-deep-dive.md#42-mathematical-expectation-variance-and-covariance)
+- [x] [Gaussian, Bernoulli, Binomial, Poisson](probability-statistics-deep-dive.md#5-core-probability-distributions-in-machine-learning)
+- [x] [Sampling & CLT](probability-statistics-deep-dive.md#6-asymptotic-theorems-lln-and-the-central-limit-theorem)
+- [x] [Confidence intervals & hypothesis testing](probability-statistics-deep-dive.md#8-hypothesis-testing-confidence-intervals-and-decision-theory)
+- [x] [p-values & significance](probability-statistics-deep-dive.md#81-the-decision-matrix-type-i-and-type-ii-errors)
+- [x] [MLE / MAP / Bayesian inference](probability-statistics-deep-dive.md#7-point-estimation-mle-map-and-conjugate-bayesian-inference)
 
 !!! mastery "Status"
     These are chapter stubs — each topic gets its own deep-dive page as it's written. See the [Python Functions](../01-python/functions-deep-dive.md) chapter for the target depth and format.

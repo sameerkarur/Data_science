@@ -14,8 +14,8 @@ Every algorithm walked through: intuition → math → from-scratch → library 
 - [x] [KNN — full deep-dive](knn-naive-bayes-deep-dive.md)
 - [x] [Naive Bayes — full deep-dive](knn-naive-bayes-deep-dive.md)
 - [x] [Decision trees — full deep-dive](decision-trees-deep-dive.md)
-- [ ] Random forests
-- [ ] Gradient boosting (XGBoost, LightGBM, CatBoost)
+- [x] [Random forests — full deep-dive](ensemble-learning-deep-dive.md)
+- [x] [Gradient boosting (XGBoost, LightGBM, CatBoost) — full deep-dive](ensemble-learning-deep-dive.md)
 - [ ] SVM
 
 !!! mastery "Status"

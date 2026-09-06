@@ -119,6 +119,7 @@ nav:
       - "Deep-dive: Logistic Regression": 04-classical-ml/logistic-regression-deep-dive.md
       - "Deep-dive: KNN & Naive Bayes": 04-classical-ml/knn-naive-bayes-deep-dive.md
       - "Deep-dive: Decision Trees": 04-classical-ml/decision-trees-deep-dive.md
+      - "Deep-dive: Ensemble Learning (Random Forests & GBDT)": 04-classical-ml/ensemble-learning-deep-dive.md
   - Book 5 – ML Theory & Evaluation: 05-ml-theory/index.md
   - Book 6 – Deep Learning: 06-deep-learning/index.md
   - Book 7 – Computer Vision: 07-computer-vision/index.md

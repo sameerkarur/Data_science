@@ -58,7 +58,10 @@ Progressive projects, tier by tier, plus interview question banks per topic.
 
 ## Interview Preparation Question Banks
 
-- [ ] Top 50 Staff-Level AI/ML Engineering Technical Interview Question Banks
+- [x] [Top 50 Staff-Level AI/ML Engineering Technical Interview Question Banks](staff-level-interview-question-banks-deep-dive.md)
+
+**Comprehensive Interview Deep Dive:**
+- 📖 [Staff-Level Technical Interview Question Banks Deep Dive](staff-level-interview-question-banks-deep-dive.md)
 
 !!! mastery "Mastery Roadmap"
     Each tier and interview bank includes comprehensive mathematical formulations, architectural diagrams, complete runnable implementations, failure modes, staff-level interview questions, and a 10-level mastery ladder.

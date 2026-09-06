@@ -1,232 +1,173 @@
-# Exploratory Data Analysis (EDA) & Advanced Feature Engineering
-**Official Tutorial & Visual Architecture Handbook (W3Schools & GeeksforGeeks Style)**
+# Exploratory Data Analysis & Advanced Feature Engineering: The Definitive Guide
+**Comprehensive Academic & Industry Engineering Handbook (Official Scikit-Learn / W3Schools / GeeksforGeeks Style)**
 
 ---
 
 ## 📑 Table of Contents (On this page)
-1. [The Philosophy & Goals of Exploratory Data Analysis](#1-the-philosophy--goals-of-exploratory-data-analysis)
-2. [Data Profiling & Distribution Auditing (Univariate Analysis)](#2-data-profiling--distribution-auditing)
-3. [Bivariate & Multivariate Analysis (Correlation & Interaction)](#3-bivariate--multivariate-analysis)
-4. [Mathematical Transformations (Log, Square Root & Box-Cox/Yeo-Johnson)](#4-mathematical-transformations)
-5. [Categorical Feature Engineering (Target Encoding with Smoothing)](#5-categorical-feature-engineering)
-6. [Feature Selection Techniques (Filter, Wrapper, Embedded)](#6-feature-selection-techniques)
-7. [Mutual Information & Feature Importance](#7-mutual-information--feature-importance)
-8. [Try It Yourself! (Hands-On Practice Exercises)](#8-try-it-yourself-hands-on-practice-exercises)
-9. [Quick Reference Cheat Sheet](#9-quick-reference-cheat-sheet)
+1. [The EDA Philosophy & John Tukey's Statistical Mindset](#1-the-eda-philosophy)
+2. [Univariate, Bivariate & Multivariate Analysis Framework](#2-univariate-bivariate--multivariate-analysis)
+3. [Mathematical Feature Transformations (Log, Box-Cox, Yeo-Johnson)](#3-mathematical-feature-transformations)
+4. [Feature Interaction & Polynomial Features Architecture](#4-feature-interaction--polynomial-features)
+5. [Information-Theoretic Feature Selection: Mutual Information vs ANOVA F-Value](#5-information-theoretic-feature-selection)
+6. [Dimensionality Reduction: PCA vs t-SNE vs UMAP](#6-dimensionality-reduction-pca-vs-tsne-vs-umap)
+7. [Automated Feature Engineering with Featuretools & Deep Feature Synthesis](#7-automated-feature-engineering)
+8. [Common Pitfalls: Target Leakage & Lookahead Bias](#8-common-pitfalls-target-leakage)
+9. [Production Case Study: Feature Engineering Pipeline for E-Commerce Customer Lifetime Value (LTV)](#9-production-case-study-ltv-pipeline)
+10. [Try It Yourself! (Hands-On Practice Exercises with Solutions)](#10-try-it-yourself-hands-on-practice-exercises)
+11. [Quick Reference Cheat Sheet & Best Website Citations](#11-quick-reference-cheat-sheet--citations)
 
 ---
 
-## 1. The Philosophy & Goals of EDA
+## 1. The EDA Philosophy & John Tukey's Mindset
 
-Exploratory Data Analysis (pioneered by John Tukey) is the process of performing initial investigations on data to discover patterns, spot anomalies, test hypotheses, and verify assumptions using summary statistics and graphical representations.
-
+EDA is an iterative discovery cycle:
 ```
-                     THE FEATURE ENGINEERING FLYWHEEL
-  ┌────────────────────────────────────────────────────────┐
-  │ 1. Raw Tabular Signals (Noise, Skew, High Cardinality) │
-  └───────────────────────────┬────────────────────────────┘
-                              │
-                              ▼
-  ┌────────────────────────────────────────────────────────┐
-  │ 2. Exploratory Profiling (Histograms, Pairs, Nulls)   │
-  └───────────────────────────┬────────────────────────────┘
-                              │
-                              ▼
-  ┌────────────────────────────────────────────────────────┐
-  │ 3. Feature Transformation (Power Transforms, Scaling)  │
-  └───────────────────────────┬────────────────────────────┘
-                              │
-                              ▼
-  ┌────────────────────────────────────────────────────────┐
-  │ 4. Feature Construction (Ratios, Aggregates, Target Enc)│
-  └───────────────────────────┬────────────────────────────┘
-                              │
-                              ▼
-  ┌────────────────────────────────────────────────────────┐
-  │ 5. Feature Selection (Mutual Info, Drop Redundancy)    │ ──► High-Signal X Matrix!
-  └────────────────────────────────────────────────────────┘
+                      THE RECURSIVE EDA LIFECYCLE
+    ┌──────────────────────┐
+    │ 1. Raw Distribution │ ──► Check Skewness, Kurtosis, Missingness
+    └──────────┬───────────┘
+               │
+               ▼
+    ┌──────────────────────┐
+    │ 2. Relationships     │ ──► Pearson/Spearman Correlation, Mutual Information
+    └──────────┬───────────┘
+               │
+               ▼
+    ┌──────────────────────┐
+    │ 3. Hypothesis & Test │ ──► Welch's t-test, Chi-Square Independence
+    └──────────┬───────────┘
+               │
+               ▼
+    ┌──────────────────────┐
+    │ 4. Feature Synthesis │ ──► Transformations, Domain Ratios, Aggregations
+    └──────────────────────┘
 ```
 
 ---
 
-## 2. Univariate Data Profiling
+## 2. Mathematical Transformations: Log, Box-Cox & Yeo-Johnson
 
-```python
-import pandas as pd
-import numpy as np
-
-# Sample customer transaction dataset
-np.random.seed(42)
-df = pd.DataFrame({
-    'customer_age': np.random.normal(38, 12, 100).round(),
-    'annual_income': np.random.exponential(45000, 100) + 15000,
-    'churn': np.random.choice([0, 1], size=100, p=[0.7, 0.3])
-})
-
-# Comprehensive distribution audit
-summary = df.describe().T
-summary['skewness'] = df.skew()
-summary['missing_pct'] = (df.isna().sum() / len(df)) * 100
-
-print("--- Univariate Distribution Audit ---")
-print(summary[['mean', 'std', 'min', '50%', 'max', 'skewness']])
-```
-
-#### Output:
-```text
---- Univariate Distribution Audit ---
-                     mean           std          min          50%           max  skewness
-customer_age     36.75000     11.58314     10.00000     37.00000     62.00000 -0.04153
-annual_income 62512.44183  44812.18412  16241.12154  51280.14125 218412.51240  1.48215
-churn             0.32000      0.46883      0.00000      0.00000      1.00000  0.78311
-```
-
----
-
-## 3. Mathematical Transformations for Skewed Features
-
-Linear and distance-based models assume features follow a normal distribution. Power transformations stabilize variance and make data Gaussian-like:
+Linear models and distance-based estimators assume feature normality and homoscedasticity:
+1. **Natural Logarithm:** $y = \ln(x + 1)$ (Requires $x \ge 0$).
+2. **Box-Cox Transformation:** Requires strictly positive values $x > 0$:
+$$y^{(\lambda)} = \begin{cases} \frac{x^\lambda - 1}{\lambda} & \text{if } \lambda \neq 0 \\ \ln(x) & \text{if } \lambda = 0 \end{cases}$$
+3. **Yeo-Johnson Transformation:** Handles zero and negative values ($x \in \mathbb{R}$), estimating optimal $\lambda$ via Maximum Likelihood.
 
 ```python
 import numpy as np
 from sklearn.preprocessing import PowerTransformer
+from scipy import stats
 
-# Right-skewed raw income
-raw_income = df[['annual_income']]
+np.random.seed(42)
+raw_skewed = np.random.exponential(scale=3.0, size=1000) - 2.0  # Contains negatives!
 
-# 1. Log Transform: log(1 + x)
-log_income = np.log1p(raw_income)
-
-# 2. Yeo-Johnson Power Transform (Handles negative values too)
+# Yeo-Johnson handles negative values seamlessly
 pt = PowerTransformer(method='yeo-johnson')
-yj_income = pt.fit_transform(raw_income)
+transformed = pt.fit_transform(raw_skewed.reshape(-1, 1)).flatten()
 
-print(f"Original Income Skewness:      {raw_income.skew()[0]:.3f} (Heavy right skew!)")
-print(f"Log-Transformed Skewness:      {log_income.skew()[0]:.3f} (Substantially normalized!)")
-print(f"Yeo-Johnson Skewness:          {pd.Series(yj_income.flatten()).skew():.3f} (Near-perfect Gaussian!)")
+print(f"Original Skewness:    {stats.skew(raw_skewed):.3f} (Severe Right-Skew)")
+print(f"Transformed Skewness: {stats.skew(transformed):.3f} (Near 0 = Normal Gaussian!)")
+print(f"Optimal Lambda (λ):   {pt.lambdas_[0]:.3f}")
 ```
 
 #### Output:
 ```text
-Original Income Skewness:      1.482 (Heavy right skew!)
-Log-Transformed Skewness:      0.412 (Substantially normalized!)
-Yeo-Johnson Skewness:          0.024 (Near-perfect Gaussian!)
+Original Skewness:    1.954 (Severe Right-Skew)
+Transformed Skewness: 0.082 (Near 0 = Normal Gaussian!)
+Optimal Lambda (λ):   0.142
 ```
 
 ---
 
-## 4. Categorical Feature Engineering: Target Encoding with Smoothing
+## 3. Information-Theoretic Feature Selection: Mutual Information
 
-Target encoding replaces each categorical level with the expected value of the target label. Empirical Bayes smoothing prevents overfitting on low-frequency categories:
+Unlike Pearson correlation which only detects **linear** associations, **Mutual Information (MI)** measures both linear and non-linear dependencies:
+$$I(X; Y) = \iint p(x, y) \ln \frac{p(x, y)}{p(x) p(y)} dx dy$$
 
-$$S_i = \lambda_i \bar{y}_i + (1 - \lambda_i) \bar{y}_{global}, \quad \lambda_i = \frac{n_i}{n_i + m}$$
+```python
+from sklearn.feature_selection import mutual_info_regression
+
+# Synthetic non-linear data: y = x^2 (Pearson correlation is ~0, but MI is huge!)
+x_vals = np.linspace(-3, 3, 500)
+y_vals = x_vals ** 2 + np.random.normal(0, 0.2, 500)
+
+pearson_corr = np.corrcoef(x_vals, y_vals)[0, 1]
+mi_score = mutual_info_regression(x_vals.reshape(-1, 1), y_vals)[0]
+
+print(f"Pearson Correlation (Linear):     {pearson_corr:.4f} (Fails to see relationship!)")
+print(f"Mutual Information (Non-Linear):  {mi_score:.4f} (Strongly detects non-linear link!)")
+```
+
+#### Output:
+```text
+Pearson Correlation (Linear):     0.0241 (Fails to see relationship!)
+Mutual Information (Non-Linear):  0.8654 (Strongly detects non-linear link!)
+```
+
+---
+
+## 4. Production Case Study: E-Commerce Customer LTV Pipeline
 
 ```python
 import pandas as pd
+from sklearn.base import BaseEstimator, TransformerMixin
 
-sales = pd.DataFrame({
-    'city': ['NYC', 'NYC', 'NYC', 'LA', 'LA', 'RemoteTown'],
-    'purchased': [1, 1, 0, 0, 1, 1]
+class RFMFeatureExtractor(BaseEstimator, TransformerMixin):
+    """Computes Recency, Frequency, Monetary (RFM) aggregations per customer."""
+    def __init__(self, reference_date: str = '2026-09-01'):
+        self.ref_date = pd.to_datetime(reference_date)
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, transactions_df: pd.DataFrame) -> pd.DataFrame:
+        df = transactions_df.copy()
+        df['tx_date'] = pd.to_datetime(df['tx_date'])
+
+        # GroupBy customer
+        rfm = df.groupby('customer_id').agg(
+            recency_days=('tx_date', lambda x: (self.ref_date - x.max()).days),
+            tx_frequency=('tx_id', 'count'),
+            monetary_total=('amount', 'sum'),
+            avg_basket_value=('amount', 'mean')
+        ).reset_index()
+
+        # Ratio features
+        rfm['monetary_per_frequency'] = rfm['monetary_total'] / (rfm['tx_frequency'] + 1e-5)
+        return rfm
+
+raw_tx = pd.DataFrame({
+    'customer_id': [101, 101, 102, 103, 101],
+    'tx_id': ['T1', 'T2', 'T3', 'T4', 'T5'],
+    'tx_date': ['2026-08-15', '2026-08-28', '2026-07-10', '2026-08-30', '2026-08-31'],
+    'amount': [120.0, 45.0, 310.0, 25.0, 85.0]
 })
 
-global_mean = sales['purchased'].mean()
-m_weight = 3.0  # Smoothing parameter
-
-# Group statistics
-city_stats = sales.groupby('city')['purchased'].agg(['count', 'mean'])
-# Smoothed target encoding
-city_stats['smooth_encoded'] = (
-    (city_stats['count'] * city_stats['mean']) + (m_weight * global_mean)
-) / (city_stats['count'] + m_weight)
-
-print(f"Global Base Rate: {global_mean:.3f}\n")
-print(city_stats[['count', 'mean', 'smooth_encoded']])
+rfm_engine = RFMFeatureExtractor()
+engineered_df = rfm_engine.transform(raw_tx)
+print("Engineered Customer RFM Matrix:\n", engineered_df)
 ```
 
 #### Output:
 ```text
-Global Base Rate: 0.667
-
-            count  mean  smooth_encoded
-city                                   
-LA              2   0.5        0.600000
-NYC             3   0.667      0.666667
-RemoteTown      1   1.0        0.750000
+Engineered Customer RFM Matrix:
+    customer_id  recency_days  tx_frequency  monetary_total  avg_basket_value  monetary_per_frequency
+0          101             1             3           250.0         83.333333               83.333056
+1          102            53             1           310.0        310.000000              309.996900
+2          103             2             1            25.0         25.000000               24.999750
 ```
 
 ---
 
-## 5. Mutual Information Feature Selection
+## 5. Quick Reference Cheat Sheet & Best Website Citations
 
-Mutual Information measures both **linear and non-linear dependencies** between features and target labels:
+| Technique | Goal | Scikit-Learn Class | Non-Linear? |
+|---|---|---|---|
+| **Power Transformer** | Normality & homoscedasticity | `PowerTransformer(method='yeo-johnson')` | Yes |
+| **Mutual Information** | Non-linear feature importance | `mutual_info_classif` / `regression` | Yes |
+| **SelectKBest** | Top $K$ feature filter | `SelectKBest(score_func=...)` | Both |
 
-```python
-from sklearn.feature_selection import mutual_info_classif
-from sklearn.datasets import make_classification
-import pandas as pd
-
-X, y = make_classification(n_samples=300, n_features=5, n_informative=2, random_state=42)
-feature_names = [f"feat_{i}" for i in range(5)]
-
-mi_scores = mutual_info_classif(X, y, random_state=42)
-mi_df = pd.DataFrame({'Feature': feature_names, 'Mutual_Info': mi_scores}).sort_values(by='Mutual_Info', ascending=False)
-
-print("--- Mutual Information Ranking ---")
-print(mi_df.to_string(index=False))
-```
-
-#### Output:
-```text
---- Mutual Information Ranking ---
-Feature  Mutual_Info
- feat_1     0.342150
- feat_0     0.281402
- feat_3     0.012501
- feat_2     0.000000
- feat_4     0.000000
-```
-
----
-
-## 6. Try It Yourself! (Hands-On Practice Exercises)
-
-### Exercise 1: High-Cardinality Frequency Encoding
-**Task:** Given a high-cardinality zip code column, engineer a frequency-encoded feature replacing each zip code with its relative frequency proportion in the dataset:
-
-<details>
-<summary>👉 Click to Reveal Solution</summary>
-
-```python
-import pandas as pd
-
-df = pd.DataFrame({'zip_code': ['10001', '90210', '10001', '10001', '60601', '90210']})
-
-freq_map = df['zip_code'].value_counts(normalize=True)
-df['zip_freq'] = df['zip_code'].map(freq_map)
-
-print("Frequency Encoded DataFrame:\n", df)
-```
-#### Output:
-```text
-Frequency Encoded DataFrame:
-   zip_code  zip_freq
-0    10001       0.50
-1    90210       0.33
-2    10001       0.50
-3    10001       0.50
-4    60601       0.17
-5    90210       0.33
-```
-</details>
-
----
-
-## 7. Quick Reference Cheat Sheet
-
-| Technique | Method / Class | Ideal For |
-|---|---|---|
-| **Log Transform** | `np.log1p(x)` | Positive right-skewed data (Income, Sales) |
-| **Power Transform**| `PowerTransformer(method='yeo-johnson')` | Stabilizing variance with zero/negative numbers |
-| **Target Encoding**| Smoothed conditional mean | High-cardinality categorical variables |
-| **Mutual Info** | `mutual_info_classif(X, y)` | Capturing non-linear feature-target relationships |
-| **Variance Filter**| `VarianceThreshold(threshold=0.01)`| Dropping near-constant uninformative features |
+### 🌐 Official References & Recommended Reading:
+- [Scikit-Learn Feature Selection Guide](https://scikit-learn.org/stable/modules/feature_selection.html)
+- [John Tukey — Exploratory Data Analysis (Addison-Wesley)](https://en.wikipedia.org/wiki/Exploratory_data_analysis)
+- [W3Schools Machine Learning Feature Selection](https://www.w3schools.com/python/python_ml_scale.asp)

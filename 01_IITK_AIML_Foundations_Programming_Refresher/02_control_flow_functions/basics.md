@@ -1,281 +1,408 @@
-# Python Control Flow, Scopes & Functions: Complete Beginner-to-Pro Guide
-**Official Tutorial & Visual Architecture Handbook (W3Schools & GeeksforGeeks Style)**
+# Python Control Flow, Pattern Matching, Functions & Decorators: The Definitive Guide
+**Comprehensive Academic & Industry Engineering Handbook (Official Python / W3Schools / GeeksforGeeks Style)**
 
 ---
 
 ## 📑 Table of Contents (On this page)
-1. [Conditional Statements (`if`, `elif`, `else`)](#1-conditional-statements-if-elif-else)
-2. [Loops: `for` Loop & `range()` Function](#2-loops-for-loop--range-function)
-3. [Loops: `while` Loop, `break`, `continue` & `else`](#3-loops-while-loop-break-continue--else)
-4. [Function Architecture: `def`, Parameters & Return](#4-function-architecture-def-parameters--return)
-5. [Arbitrary Arguments: `*args` and `**kwargs`](#5-arbitrary-arguments-args-and-kwargs)
-6. [Lambda Expressions (Anonymous Functions)](#6-lambda-expressions-anonymous-functions)
-7. [Variable Scope: LEGB Rule (Local, Enclosing, Global, Built-in)](#7-variable-scope-legb-rule)
-8. [Decorators & Higher-Order Functions](#8-decorators--higher-order-functions)
-9. [Try It Yourself! (Hands-On Practice Exercises)](#9-try-it-yourself-hands-on-practice-exercises)
-10. [Quick Reference Cheat Sheet](#10-quick-reference-cheat-sheet)
+1. [Advanced Conditional Logic & Short-Circuit Evaluation](#1-advanced-conditional-logic--short-circuit-evaluation)
+2. [Structural Pattern Matching (Python 3.10+ `match / case`)](#2-structural-pattern-matching)
+3. [Loop Control Flow: `break`, `continue`, and The `for...else` Construct](#3-loop-control-flow-and-forelse)
+4. [Iterators, Iterables, and The `itertools` Standard Library](#4-iterators-iterables--itertools)
+5. [Functions: Call Stack Frames, Recursion & Parameter Signatures](#5-functions-call-stack--parameters)
+6. [LEGB Variable Scope Architecture & Closure Mechanics](#6-legb-variable-scope-architecture--closures)
+7. [Advanced Decorators: Stacking, Arguments & Class Decorators](#7-advanced-decorators)
+8. [Common Pitfalls, Antipatterns & Debugging Techniques](#8-common-pitfalls-antipatterns--debugging)
+9. [Production Case Study: Resilience Retry Engine with Exponential Jitter](#9-production-case-study-resilience-retry-engine)
+10. [Try It Yourself! (Hands-On Practice Exercises with Solutions)](#10-try-it-yourself-hands-on-practice-exercises)
+11. [Quick Reference Cheat Sheet & Best Website Citations](#11-quick-reference-cheat-sheet--citations)
 
 ---
 
-## 1. Conditional Statements (`if`, `elif`, `else`)
+## 1. Advanced Conditional Logic & Short-Circuit Evaluation
 
-Control flow executes different blocks of code based on Boolean truth conditions:
+In Python, boolean expressions evaluate using **Short-Circuit Logic**:
+- In `A and B`: If `A` evaluates to falsy, CPython short-circuits and never executes `B`.
+- In `A or B`: If `A` evaluates to truthy, CPython short-circuits and never executes `B`.
+
+```
+                    SHORT-CIRCUIT LOGIC FLOW
+    EXPRESSION: result = funcA() and funcB()
+
+         ┌───────────────┐
+         │ Call funcA()  │
+         └───────┬───────┘
+                 │
+           Is Truthy?
+          /          \
+     NO  /            \  YES
+        ▼              ▼
+   [Stop & Return]   ┌───────────────┐
+   (funcB NOT run)   │ Call funcB()  │
+                     └───────────────┘
+```
 
 ```python
-score = 85
+def expensive_db_check():
+    print("Executing expensive database query...")
+    return True
 
-if score >= 90:
-    grade = 'A'
-elif score >= 80:
-    grade = 'B'
-elif score >= 70:
-    grade = 'C'
-else:
-    grade = 'F'
-
-print(f"Student Score: {score} -> Grade Assigned: {grade}")
-
-# Ternary Conditional Expression (One-line if-else)
-status = "Passing" if score >= 70 else "Failing"
-print(f"Status: {status}")
+# Short-circuiting avoids the query when user is unauthenticated
+is_authenticated = False
+has_permission = is_authenticated and expensive_db_check()
+print("Execution Completed. Query run? NO! Permission:", has_permission)
 ```
 
 #### Output:
 ```text
-Student Score: 85 -> Grade Assigned: B
-Status: Passing
+Execution Completed. Query run? NO! Permission: False
 ```
 
 ---
 
-## 2. Loops: `for` Loop & `range()` Function
+## 2. Structural Pattern Matching (Python 3.10+ `match / case`)
+
+Pattern matching goes beyond simple C-style switch statements by enabling **type matching, tuple/dictionary destructuring, and guard clauses**:
 
 ```python
-# Iterating over range(start, stop, step)
-print("Range Step Loop:")
-for i in range(10, 35, 5):
-    print(f"Current Value: {i}")
+def handle_event(event: dict) -> str:
+    match event:
+        case {"type": "LOGIN", "status": "SUCCESS", "user": str(username)}:
+            return f"User {username} authenticated successfully."
+        case {"type": "PURCHASE", "amount": float(amt)} if amt > 1000.0:
+            return f"High-value purchase flagged for manual review: ${amt:.2f}"
+        case {"type": "PURCHASE", "amount": float(amt)}:
+            return f"Standard purchase processed: ${amt:.2f}"
+        case {"type": "ERROR", "code": int(code), "details": str(msg)}:
+            return f"Alert: System error [{code}]: {msg}"
+        case _:
+            return "Unhandled or unrecognized event format."
 
-# Iterating over list with enumerate() for index & value
-tech_stack = ["Python", "NumPy", "Pandas", "Scikit-Learn"]
-print("\nEnumerate Loop:")
-for idx, tool in enumerate(tech_stack, start=1):
-    print(f"Step {idx}: Learn {tool}")
+print(handle_event({"type": "LOGIN", "status": "SUCCESS", "user": "alice_data"}))
+print(handle_event({"type": "PURCHASE", "amount": 4500.00}))
+print(handle_event({"type": "UNKNOWN"}))
 ```
 
 #### Output:
 ```text
-Range Step Loop:
-Current Value: 10
-Current Value: 15
-Current Value: 20
-Current Value: 25
-Current Value: 30
-
-Enumerate Loop:
-Step 1: Learn Python
-Step 2: Learn NumPy
-Step 3: Learn Pandas
-Step 4: Learn Scikit-Learn
+User alice_data authenticated successfully.
+High-value purchase flagged for manual review: $4500.00
+Unhandled or unrecognized event format.
 ```
 
 ---
 
-## 3. Loops: `while` Loop, `break`, `continue` & `else`
+## 3. Loop Control Flow and The `for...else` Construct
+
+In Python, loops support an optional **`else` clause**. The `else` block executes **only if the loop completes normally without encountering a `break` statement**:
+
+```
+                  THE FOR...ELSE CONTROL FLOW
+                 ┌───────────────────────────┐
+                 │ For item in sequence...   │
+                 └─────────────┬─────────────┘
+                               │
+                      Has break occurred?
+                     /                   \
+               YES  /                     \  NO (Exhausted all items)
+                   ▼                       ▼
+           [Exit Loop Early]      ┌───────────────────────────┐
+         (else block SKIPPED)     │ Executed `else:` block!   │
+                                  └───────────────────────────┘
+```
 
 ```python
-attempts = 0
-max_attempts = 5
+def verify_cluster_nodes(nodes):
+    for node in nodes:
+        if node["status"] == "FAIL":
+            print(f"Aborting deployment: Node {node['id']} is UNHEALTHY!")
+            break
+    else:
+        # Executes only if ALL nodes passed health checks
+        print("All cluster nodes healthy. Proceeding with deployment!")
 
-while attempts < max_attempts:
-    attempts += 1
-    if attempts == 2:
-        print(f"Attempt {attempts}: Transient timeout, skipping with continue...")
-        continue
-    if attempts == 4:
-        print(f"Attempt {attempts}: Success! Exiting with break.")
-        break
-    print(f"Attempt {attempts}: Processing request...")
+verify_cluster_nodes([{"id": 1, "status": "OK"}, {"id": 2, "status": "FAIL"}])
+verify_cluster_nodes([{"id": 1, "status": "OK"}, {"id": 2, "status": "OK"}])
 ```
 
 #### Output:
 ```text
-Attempt 1: Processing request...
-Attempt 2: Transient timeout, skipping with continue...
-Attempt 3: Processing request...
-Attempt 4: Success! Exiting with break.
+Aborting deployment: Node 2 is UNHEALTHY!
+All cluster nodes healthy. Proceeding with deployment!
 ```
 
 ---
 
-## 4. Function Architecture: `def`, Parameters & Return
+## 4. Iterators, Iterables & `itertools`
+
+An **Iterable** implements `__iter__()`. An **Iterator** implements both `__iter__()` and `__next__()`:
 
 ```python
-def calculate_compound_interest(principal: float, rate: float = 0.05, years: int = 1) -> float:
-    """Computes compound interest balance: A = P(1 + r)^t"""
-    final_amount = principal * ((1 + rate) ** years)
-    return round(final_amount, 2)
+import itertools
 
-# Call with positional and keyword arguments
-bal1 = calculate_compound_interest(1000)
-bal2 = calculate_compound_interest(1000, rate=0.08, years=5)
+# Infinite Generators with itertools
+counter = itertools.count(start=10, step=5)
+print("Count first 3:", [next(counter), next(counter), next(counter)])
 
-print(f"1 Year @ Default 5%:  ${bal1}")
-print(f"5 Years @ Custom 8%:  ${bal2}")
+# Cartesian Product and Combinations
+colors = ['Red', 'Blue']
+sizes = ['S', 'M']
+product_skus = list(itertools.product(colors, sizes))
+print("Cartesian Product SKUs:\n", product_skus)
 ```
 
 #### Output:
 ```text
-1 Year @ Default 5%:  $1050.0
-5 Years @ Custom 8%:  $1469.33
+Count first 3: [10, 15, 20]
+Cartesian Product SKUs:
+ [('Red', 'S'), ('Red', 'M'), ('Blue', 'S'), ('Blue', 'M')]
 ```
 
 ---
 
-## 5. Arbitrary Arguments: `*args` and `**kwargs`
+## 5. Functions: Call Stack & Advanced Parameter Signatures
 
-```
-  *args   ──► Packs positional arguments into a Tuple: (arg1, arg2, ...)
-  **kwargs ──► Packs keyword arguments into a Dictionary: {'key': value, ...}
-```
+Python 3.8 introduced **Positional-Only (`/`)** and **Keyword-Only (`*`)** parameter separators:
 
 ```python
-def build_ml_pipeline(model_name, *metrics, **hyperparameters):
-    print(f"Configuring Model: {model_name}")
-    print(f"Evaluation Metrics (*args tuple):   {metrics}")
-    print(f"Hyperparameters (**kwargs dict):    {hyperparameters}")
+def configure_model(
+    model_name: str,       # Positional-Only
+    version: int,          # Positional-Only
+    /,
+    learning_rate: float,  # Either Positional or Keyword
+    *,
+    epochs: int = 50,      # Keyword-Only
+    use_gpu: bool = True   # Keyword-Only
+):
+    print(f"Model: {model_name}-v{version} | LR: {learning_rate} | Epochs: {epochs} | GPU: {use_gpu}")
 
-build_ml_pipeline(
-    "XGBoost Classifier",
-    "Accuracy", "F1-Score", "ROC-AUC",
-    learning_rate=0.05,
-    n_estimators=300,
-    max_depth=6
-)
+# Correct Invocation
+configure_model("ResNet", 2, 0.001, epochs=100, use_gpu=True)
 ```
 
 #### Output:
 ```text
-Configuring Model: XGBoost Classifier
-Evaluation Metrics (*args tuple):   ('Accuracy', 'F1-Score', 'ROC-AUC')
-Hyperparameters (**kwargs dict):    {'learning_rate': 0.05, 'n_estimators': 300, 'max_depth': 6}
+Model: ResNet-v2 | LR: 0.001 | Epochs: 100 | GPU: True
 ```
 
 ---
 
-## 6. Lambda Expressions (Anonymous Functions)
+## 6. LEGB Variable Scope Architecture & Closures
 
-Small one-line functions written without `def`:
+Python resolves names using the **LEGB Hierarchy**:
+1. **L**ocal (Inside current function frame)
+2. **E**nclosing (In any enclosing function closures)
+3. **G**lobal (At top-level module)
+4. **B**uilt-in (Python built-in namespaces like `len`, `range`)
+
+```
+             LEGB SCOPE LOOKUP VISUALIZATION
+    ┌──────────────────────────────────────────────┐
+    │ 4. BUILT-IN (e.g. print, max, min, len)      │
+    │   ┌──────────────────────────────────────────┼──┐
+    │   │ 3. GLOBAL (Module-level variables)       │  │
+    │   │   ┌──────────────────────────────────────┼──┼──┐
+    │   │   │ 2. ENCLOSING (Outer function scopes) │  │  │
+    │   │   │   ┌──────────────────────────────────┼──┼──┼──┐
+    │   │   │   │ 1. LOCAL (Inner function body)   │  │  │  │
+    │   │   │   └──────────────────────────────────┴──┴──┴──┘
+```
+
+### Closures & The `nonlocal` Keyword
+A **closure** retains references to variables in enclosing scopes even after the outer function has completed:
 
 ```python
-# Sorting a list of tuples by second element using lambda
-students = [("Alice", 88), ("Bob", 95), ("Charlie", 72), ("David", 91)]
+def make_moving_averager():
+    count = 0
+    total = 0.0
 
-sorted_by_score = sorted(students, key=lambda student: student[1], reverse=True)
-print("Ranked by Score:\n", sorted_by_score)
+    def averager(new_value: float) -> float:
+        nonlocal count, total  # Binds to enclosing scope variables
+        count += 1
+        total += new_value
+        return total / count
+
+    return averager
+
+avg = make_moving_averager()
+print("Moving Avg after 10:", avg(10))
+print("Moving Avg after 20:", avg(20))
+print("Moving Avg after 30:", avg(30))
 ```
 
 #### Output:
 ```text
-Ranked by Score:
- [('Bob', 95), ('David', 91), ('Alice', 88), ('Charlie', 72)]
+Moving Avg after 10: 10.0
+Moving Avg after 20: 15.0
+Moving Avg after 30: 20.0
 ```
 
 ---
 
-## 7. Variable Scope: LEGB Rule
+## 7. Advanced Decorators: Stacking, Arguments & `functools.wraps`
 
-Python resolves variable names using the **LEGB** hierarchy:
-1. **L**ocal: Inside the current function.
-2. **E**nclosing: Inside any enclosing outer function.
-3. **G**lobal: At the top module level.
-4. **B**uilt-in: Python built-in namespace (`print`, `len`, `range`).
-
-```python
-counter = 10  # Global scope
-
-def outer():
-    tag = "OuterEnclosure"  # Enclosing scope
-    def inner():
-        local_val = 42      # Local scope
-        print(f"Inside: local={local_val}, tag={tag}, global_counter={counter}")
-    inner()
-
-outer()
-```
-
-#### Output:
-```text
-Inside: local=42, tag=OuterEnclosure, global_counter=10
-```
-
----
-
-## 8. Decorators & Higher-Order Functions
-
-A decorator wraps a function to modify or measure its behavior:
+Decorators are higher-order functions that modify behavior without changing source code. In production, always apply `@functools.wraps` to preserve function docstrings and introspective metadata (`__name__`):
 
 ```python
 import time
+import functools
 
-def execution_timer(func):
-    """Decorator measuring runtime execution in milliseconds."""
-    def wrapper(*args, **kwargs):
-        t0 = time.perf_counter()
-        result = func(*args, **kwargs)
-        elapsed_ms = (time.perf_counter() - t0) * 1000
-        print(f"⚡ [{func.__name__}] completed in {elapsed_ms:.3f} ms")
-        return result
-    return wrapper
+def execution_logger(prefix: str):
+    """Decorator factory accepting custom arguments."""
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            start = time.perf_counter()
+            result = func(*args, **kwargs)
+            elapsed = time.perf_counter() - start
+            print(f"[{prefix}] {func.__name__} executed in {elapsed*1000:.3f} ms")
+            return result
+        return wrapper
+    return decorator
 
-@execution_timer
-def compute_sum_of_squares(n):
+@execution_logger(prefix="METRIC")
+def matrix_dot_sum(n: int) -> int:
+    """Calculates cumulative sum of squares."""
     return sum(i * i for i in range(n))
 
-val = compute_sum_of_squares(500_000)
-print(f"Sum of squares computed: {val}")
+print("Calculation Result:", matrix_dot_sum(100_000))
+print("Function Docstring Preserved:", matrix_dot_sum.__doc__)
 ```
 
 #### Output:
 ```text
-⚡ [compute_sum_of_squares] completed in 22.450 ms
-Sum of squares computed: 41666541666750000
+[METRIC] matrix_dot_sum executed in 4.821 ms
+Calculation Result: 333328333350000
+Function Docstring Preserved: Calculates cumulative sum of squares.
 ```
 
 ---
 
-## 9. Try It Yourself! (Hands-On Practice Exercises)
+## 8. Common Pitfalls, Antipatterns & Debugging Techniques
 
-### Exercise 1: Custom Filter Function with Lambda
-**Task:** Write a function `custom_filter(numbers, predicate)` that takes a list of integers and returns only the elements where `predicate(num)` returns `True`. Test it with a lambda that selects all even numbers greater than 10.
+### The Late-Binding Closure Gotcha
+Python evaluates free variables in closures **when the function is called**, not when defined:
+
+```python
+# BUG: All lambda functions capture the identical final state of `i`!
+multipliers = [lambda x: x * i for i in range(4)]
+print("Buggy late-binding results:", [m(2) for m in multipliers])
+
+# FIX: Bind default argument at definition time
+multipliers_fixed = [lambda x, i=i: x * i for i in range(4)]
+print("Fixed early-binding results:", [m(2) for m in multipliers_fixed])
+```
+
+#### Output:
+```text
+Buggy late-binding results: [6, 6, 6, 6]
+Fixed early-binding results: [0, 2, 4, 6]
+```
+
+---
+
+## 9. Production Case Study: Resilience Retry Engine with Exponential Jitter
+
+In distributed microservices, network blips and database deadlocks require automatic retry logic with randomized backoff (Full Jitter) to avoid the Thundering Herd Problem:
+
+```python
+import random
+import time
+import functools
+
+def retry_with_exponential_backoff(max_retries: int = 3, base_delay: float = 0.1, max_delay: float = 2.0):
+    """Production resilience decorator with Full Jitter backoff."""
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            retries = 0
+            while True:
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    retries += 1
+                    if retries > max_retries:
+                        print(f"❌ Max retries ({max_retries}) exceeded for {func.__name__}. Raising exception.")
+                        raise e
+                    # Full Jitter formula: sleep = uniform(0, min(max_delay, base_delay * 2 ** retries))
+                    backoff = min(max_delay, base_delay * (2 ** (retries - 1)))
+                    jitter_sleep = random.uniform(0, backoff)
+                    print(f"⚠️ Retry {retries}/{max_retries} for {func.__name__} after {jitter_sleep:.3f}s due to: {e}")
+                    time.sleep(jitter_sleep)
+        return wrapper
+    return decorator
+
+# Testing transient failure simulation
+attempt_counter = 0
+
+@retry_with_exponential_backoff(max_retries=3, base_delay=0.05)
+def call_external_payment_gateway():
+    global attempt_counter
+    attempt_counter += 1
+    if attempt_counter < 3:
+        raise ConnectionResetError("Remote server closed TCP connection")
+    return {"status": "SUCCESS", "tx_id": "TX_99214"}
+
+result = call_external_payment_gateway()
+print("Final Gateway Result:", result)
+```
+
+#### Output:
+```text
+⚠️ Retry 1/3 for call_external_payment_gateway after 0.031s due to: Remote server closed TCP connection
+⚠️ Retry 2/3 for call_external_payment_gateway after 0.074s due to: Remote server closed TCP connection
+Final Gateway Result: {'status': 'SUCCESS', 'tx_id': 'TX_99214'}
+```
+
+---
+
+## 10. Try It Yourself! (Hands-On Practice Exercises)
+
+### Exercise 1: Pipeline Generator Filter
+**Task:** Create a generator function `log_pipeline` that streams lines, filters for `"ERROR"`, strips whitespace, and yields structured dictionaries:
 
 <details>
 <summary>👉 Click to Reveal Solution</summary>
 
 ```python
-def custom_filter(numbers, predicate):
-    return [x for x in numbers if predicate(x)]
+def log_stream():
+    logs = [
+        "2026-09-06 INFO Server started",
+        "2026-09-06 ERROR DB connection timeout",
+        "2026-09-06 DEBUG Cache hit ratio 98%",
+        "2026-09-06 ERROR Memory allocation spike"
+    ]
+    yield from logs
 
-raw_nums = [4, 12, 7, 18, 22, 9, 30, 2, 14]
-evens_above_10 = custom_filter(raw_nums, lambda n: n % 2 == 0 and n > 10)
-print("Filtered Numbers:", evens_above_10)
+def error_filter(stream):
+    for entry in stream:
+        if "ERROR" in entry:
+            parts = entry.split(" ", 2)
+            yield {"timestamp": parts[0], "level": parts[1], "message": parts[2]}
+
+for err in error_filter(log_stream()):
+    print("Found alert:", err)
 ```
 #### Output:
 ```text
-Filtered Numbers: [12, 18, 22, 30, 14]
+Found alert: {'timestamp': '2026-09-06', 'level': 'ERROR', 'message': 'DB connection timeout'}
+Found alert: {'timestamp': '2026-09-06', 'level': 'ERROR', 'message': 'Memory allocation spike'}
 ```
 </details>
 
 ---
 
-## 10. Quick Reference Cheat Sheet
+## 11. Quick Reference Cheat Sheet & Best Website Citations
 
-| Construct | Syntax | Key Feature |
+| Feature | Syntax | Best Use Case |
 |---|---|---|
-| **Ternary Operator** | `x if condition else y` | One-line conditional |
-| **Enumerate** | `for idx, val in enumerate(lst)` | Returns index and value |
-| **Zip** | `for a, b in zip(list1, list2)` | Parallel iteration across lists |
-| **Default Arg** | `def f(x=10):` | Evaluated once at definition time |
-| **Args Pack** | `*args` | Arbitrary positional arguments as tuple |
-| **Kwargs Pack** | `**kwargs` | Arbitrary keyword arguments as dict |
-| **Lambda** | `lambda x: x * 2` | Anonymous single-expression function |
+| **Pattern Match** | `match x: case [a, b]: ...` | Complex payload routing without cascading `if-elif` |
+| **For...Else** | `for x in s: ... else: ...` | Search algorithms without extra flag variables |
+| **Positional-Only** | `def f(x, /, y):` | API stability when variable names may change |
+| **Decorators** | `@functools.wraps(func)` | Cross-cutting concerns (caching, metrics, auth) |
+| **Itertools** | `itertools.chain(a, b)` | Memory-friendly sequence concatenation |
+
+### 🌐 Official References & Recommended Reading:
+- [Python Official Documentation — Control Flow](https://docs.python.org/3/tutorial/controlflow.html)
+- [Python PEP 634 — Structural Pattern Matching](https://peps.python.org/pep-0634/)
+- [W3Schools Python Functions & Lambda](https://www.w3schools.com/python/python_functions.asp)
+- [Real Python Primer on Python Decorators](https://realpython.com/primer-on-python-decorators/)

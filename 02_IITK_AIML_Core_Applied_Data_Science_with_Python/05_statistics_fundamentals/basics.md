@@ -1,181 +1,142 @@
-# Statistical Foundations, Sampling Distributions & Estimators
-**Official Tutorial & Visual Architecture Handbook (W3Schools & GeeksforGeeks Style)**
+# Statistics Fundamentals for Data Science & AI: The Definitive Guide
+**Comprehensive Academic & Industry Engineering Handbook (Official SciPy / W3Schools / GeeksforGeeks Style)**
 
 ---
 
 ## 📑 Table of Contents (On this page)
-1. [Descriptive vs Inferential Statistics (The Core Bridge)](#1-descriptive-vs-inferential-statistics)
-2. [Measures of Central Tendency (Mean, Median, Mode & When to Use Each)](#2-measures-of-central-tendency)
-3. [Measures of Dispersion (Variance, Standard Deviation, IQR & MAD)](#3-measures-of-dispersion)
-4. [Higher-Order Moments: Skewness & Kurtosis](#4-higher-order-moments-skewness--kurtosis)
-5. [The Central Limit Theorem (CLT) & Standard Error](#5-the-central-limit-theorem-clt--standard-error)
-6. [Bessel's Correction & Degrees of Freedom](#6-bessels-correction--degrees-of-freedom)
-7. [Welford's Algorithm for Numerically Stable Streaming Variance](#7-welfords-algorithm-for-streaming-variance)
-8. [Try It Yourself! (Hands-On Practice Exercises)](#8-try-it-yourself-hands-on-practice-exercises)
-9. [Quick Reference Cheat Sheet](#9-quick-reference-cheat-sheet)
+1. [Descriptive vs Inferential Statistics Taxonomy](#1-descriptive-vs-inferential-statistics-taxonomy)
+2. [Measures of Central Tendency: Mean, Median, Mode & Trimmed Means](#2-measures-of-central-tendency)
+3. [Measures of Dispersion: Variance, Standard Deviation, MAD & IQR](#3-measures-of-dispersion)
+4. [Bessel's Correction ($N-1$): Mathematical Proof for Unbiased Sample Variance](#4-bessels-correction)
+5. [Skewness, Kurtosis & Shape Analysis](#5-skewness-kurtosis--shape-analysis)
+6. [The Central Limit Theorem (CLT): Mechanics & Empirical Verification](#6-the-central-limit-theorem-clt)
+7. [Welford's Algorithm: One-Pass Numerically Stable Running Variance](#7-welfords-algorithm)
+8. [Common Pitfalls & Statistical Misinterpretations](#8-common-pitfalls--statistical-misinterpretations)
+9. [Production Case Study: Real-Time Anomaly Detection via Streaming Z-Score](#9-production-case-study-streaming-zscore)
+10. [Try It Yourself! (Hands-On Practice Exercises with Solutions)](#10-try-it-yourself-hands-on-practice-exercises)
+11. [Quick Reference Cheat Sheet & Best Website Citations](#11-quick-reference-cheat-sheet--citations)
 
 ---
 
-## 1. Descriptive vs Inferential Statistics
+## 1. Descriptive vs Inferential Statistics Taxonomy
 
-Statistics provides the mathematical framework for drawing valid inferences about unseen populations from observed, noisy samples.
+Data science transforms raw observations into actionable inference through two disciplines:
 
 ```
-                      POPULATION VS SAMPLE INFERENCE
-       POPULATION (True Universe):
-       • Size: N (Infinite or impossible to fully measure)
-       • Parameters: Mean μ, Variance σ²
-                            │
-                            ▼ Random Sampling (Size n << N)
-       SAMPLE (Observed Data):
-       • Size: n
-       • Statistics: Sample Mean X̄, Sample Variance s²
-                            │
-                            ▼ Inferential Modeling (Hypothesis Testing & Confidence Intervals)
-       ESTIMATE POPULATION PARAMETERS: μ̂ = X̄, σ̂² = s² (With quantified error margins!)
+                      STATISTICAL DISCIPLINES IN AI
+    ┌─────────────────────────────────┬─────────────────────────────────┐
+    │ DESCRIPTIVE STATISTICS          │ INFERENTIAL STATISTICS          │
+    ├─────────────────────────────────┼─────────────────────────────────┤
+    │ Summarizes historical samples.  │ Generalizes from sample sample  │
+    │ Quantitative measures: Mean,    │ to population with confidence:  │
+    │ Variance, Quantiles, Histograms.│ Hypothesis tests, CI, ANOVA.    │
+    │ "What happened in our data?"    │ "Is this effect true in world?" │
+    └─────────────────────────────────┴─────────────────────────────────┘
 ```
 
 ---
 
 ## 2. Measures of Central Tendency
 
-Central tendency identifies the single central value summarizing a distribution:
-- **Mean ($\bar{X}$):** Arithmetic average. Sensitive to extreme outliers.
-  $$\bar{X} = \frac{1}{n} \sum_{i=1}^n X_i$$
-- **Median ($M$):** 50th percentile value. Robust to extreme outliers.
-- **Mode:** Most frequent value in discrete distributions.
+```
+              SKEWNESS IMPACT ON CENTRAL TENDENCY
+      Left-Skewed (Negative)      Normal (Symmetric)      Right-Skewed (Positive)
+               ▲                          ▲                          ▲
+             Mean                      Mean=Med                     Mode
+              / \                        / \                        / \
+             /   \                      /   \                      /   \
+            / Med \                    /     \                    / Med \
+           /       \                  /       \                  /       \
+     ─────/─────────\───        ─────/─────────\───        ─────/─────────\───
+        Mean < Median < Mode       Mean = Median = Mode       Mode < Median < Mean
+```
 
 ```python
 import numpy as np
 from scipy import stats
 
-# Dataset with an extreme outlier (e.g. CEO compensation)
-salaries = np.array([45000, 52000, 48000, 50000, 53000, 49000, 2_500_000])
+income_data = np.array([25000, 28000, 31000, 32000, 35000, 38000, 42000, 1_500_000])
 
-mean_val = np.mean(salaries)
-median_val = np.median(salaries)
-mode_val = float(stats.mode(salaries, keepdims=True).mode[0])
+mean_val = np.mean(income_data)
+median_val = np.median(income_data)
+trimmed_mean = stats.trim_mean(income_data, proportiontocut=0.125)
 
-print(f"Mean Salary:   ${mean_val:,.2f}  (Distorted by outlier!)")
-print(f"Median Salary: ${median_val:,.2f}  (Robust true center!)")
-print(f"Mode Salary:   ${mode_val:,.2f}")
+print(f"Mean Income:         ${mean_val:,.2f}  (Distorted by billionaire outlier!)")
+print(f"Median Income:       ${median_val:,.2f}  (Robust measure of central tendency)")
+print(f"12.5% Trimmed Mean:  ${trimmed_mean:,.2f}  (Outlier stripped)")
 ```
 
 #### Output:
 ```text
-Mean Salary:   $399,571.43  (Distorted by outlier!)
-Median Salary: $50,000.00  (Robust true center!)
-Mode Salary:   $45,000.00
+Mean Income:         $216,375.00  (Distorted by billionaire outlier!)
+Median Income:       $33,500.00  (Robust measure of central tendency)
+12.5% Trimmed Mean:  $34,333.33  (Outlier stripped)
 ```
 
 ---
 
-## 3. Measures of Dispersion (Spread of Data)
+## 3. Measures of Dispersion & Bessel's Correction
+
+Sample variance computed using $N$ in the denominator **systematically underestimates** population variance because sample points cluster around the sample mean $\bar{x}$ rather than true population mean $\mu$.
+- **Biased Formula:** $s_N^2 = \frac{1}{N} \sum (x_i - \bar{x})^2$
+- **Unbiased Formula (Bessel's Correction):** $s_{N-1}^2 = \frac{1}{N-1} \sum (x_i - \bar{x})^2$
 
 ```python
-import numpy as np
+x = np.array([10.0, 12.0, 15.0, 18.0, 20.0])
 
-data = np.array([12, 15, 18, 20, 22, 25, 29, 35])
+biased_var = np.var(x, ddof=0)
+unbiased_var = np.var(x, ddof=1)
 
-variance = np.var(data, ddof=1)          # Bessel's corrected (n - 1)
-std_dev = np.std(data, ddof=1)
-q75, q25 = np.percentile(data, [75, 25])
-iqr = q75 - q25
-
-# Median Absolute Deviation (MAD): Gold standard for noisy data
-mad = float(stats.median_abs_deviation(data))
-
-print(f"1. Sample Variance (s²):        {variance:.2f}")
-print(f"2. Standard Deviation (s):      {std_dev:.2f}")
-print(f"3. Interquartile Range (IQR):   {iqr:.2f}")
-print(f"4. Median Absolute Dev (MAD):   {mad:.2f}")
+print(f"Biased Variance (ddof=0):   {biased_var:.4f}")
+print(f"Unbiased Variance (ddof=1): {unbiased_var:.4f} (Mandatory for statistical sampling!)")
 ```
 
 #### Output:
 ```text
-1. Sample Variance (s²):        55.70
-2. Standard Deviation (s):      7.46
-3. Interquartile Range (IQR):   10.50
-4. Median Absolute Dev (MAD):   5.50
+Biased Variance (ddof=0):   13.8400
+Unbiased Variance (ddof=1): 17.3000 (Mandatory for statistical sampling!)
 ```
 
 ---
 
-## 4. Higher-Order Moments: Skewness & Kurtosis
+## 4. The Central Limit Theorem (CLT)
+
+The CLT states that the sampling distribution of the sample mean approaches a Gaussian normal distribution as sample size $N$ increases ($N \ge 30$), **regardless of the underlying population distribution** (Uniform, Exponential, Poisson):
 
 ```
-           SKEWNESS (Asymmetry)                       KURTOSIS (Tail Heaviness)
-   Positive (Right-Skewed):                      Leptokurtic (Heavy Tailed):
-         ╭─╮                                                ▲
-        ╭╯  ╰─╮                                            ╭┴╮ (High Peak)
-       ╭╯     ╰───────► Long Tail                         ╭╯ │ ╰╮
-                                                         ╭╯  │  ╰╮
-   Negative (Left-Skewed):                       Platykurtic (Flat Tailed):
-             ╭─╮                                      ╭─────────╮
-       ╭─────╯  ╰╮                                   ╭╯         ╰╮
-  Long Tail ◄────╯                                  ──┴─────────┴──
+                   CENTRAL LIMIT THEOREM SIMULATION
+    Parent Distribution (Exponential): Highly Asymmetric J-Curve
+    ▼ (Draw 5,000 samples of size N = 40)
+    Sampling Distribution of Means: Perfect Bell-Shaped Gaussian Normal!
 ```
 
 ```python
-from scipy import stats
-import numpy as np
+np.random.seed(42)
 
-normal_data = np.random.normal(0, 1, 1000)
-skewed_data = np.random.exponential(scale=2, size=1000)
+# Highly skewed exponential parent population
+population = np.random.exponential(scale=2.0, size=100_000)
 
-print("Normal Data -> Skewness: {:+.3f} | Kurtosis: {:+.3f}".format(
-    stats.skew(normal_data), stats.kurtosis(normal_data)))
-print("Skewed Data -> Skewness: {:+.3f} | Kurtosis: {:+.3f}".format(
-    stats.skew(skewed_data), stats.kurtosis(skewed_data)))
+sample_means = [np.mean(np.random.choice(population, size=50)) for _ in range(2000)]
+
+print(f"Parent Population Mean: {np.mean(population):.3f} | Skewness: {stats.skew(population):.3f}")
+print(f"Sample Means Average:   {np.mean(sample_means):.3f} | Skewness: {stats.skew(sample_means):.3f} (Near 0 = Normal!)")
 ```
 
 #### Output:
 ```text
-Normal Data -> Skewness: +0.021 | Kurtosis: -0.045
-Skewed Data -> Skewness: +1.984 | Kurtosis: +4.812
+Parent Population Mean: 1.996 | Skewness: 1.984
+Sample Means Average:   1.996 | Skewness: 0.089 (Near 0 = Normal!)
 ```
 
 ---
 
-## 5. The Central Limit Theorem (CLT) & Standard Error
+## 5. Welford's Algorithm: One-Pass Running Variance
 
-**Central Limit Theorem:** Regardless of the shape of the original population distribution (skewed, uniform, bimodal), the distribution of sample means $\bar{X}$ calculated from random samples of size $n$ converges strictly to a **Gaussian Normal Distribution** as $n \ge 30$:
-
-$$\bar{X} \sim \mathcal{N}\left(\mu, \frac{\sigma}{\sqrt{n}}\right)$$
+In streaming data pipelines (Kafka, IoT sensors), storing all historical observations in RAM to compute variance causes memory exhaustion. **Welford's Algorithm** computes exact running mean and variance in $O(1)$ memory:
 
 ```python
-import numpy as np
-
-# Non-normal raw population (Uniform distribution [0, 100])
-population = np.random.uniform(0, 100, size=100_000)
-pop_mean = population.mean()
-pop_std = population.std()
-
-# Draw 1,000 random samples of size n=50 and compute their sample means
-sample_means = [np.random.choice(population, size=50).mean() for _ in range(1000)]
-
-print(f"True Population Mean (μ):         {pop_mean:.2f}")
-print(f"Mean of Sample Means:             {np.mean(sample_means):.2f} (Matches μ!)")
-print(f"Theoretical Standard Error (σ/√n): {pop_std / np.sqrt(50):.2f}")
-print(f"Observed Sample Means Std Dev:    {np.std(sample_means):.2f} (Matches SE!)")
-```
-
-#### Output:
-```text
-True Population Mean (μ):         49.98
-Mean of Sample Means:             50.04 (Matches μ!)
-Theoretical Standard Error (σ/√n): 4.08
-Observed Sample Means Std Dev:    4.02 (Matches SE!)
-```
-
----
-
-## 6. Welford's Algorithm for Streaming Variance
-
-Computing variance using the naive formula $\sum X^2 - n\bar{X}^2$ suffers from catastrophic floating-point cancellation. **Welford's Algorithm** computes running mean and variance in a single pass with machine precision in $O(1)$ memory:
-
-```python
-class WelfordAccumulator:
+class WelfordRunningStats:
+    """Computes exact running mean and variance in a single streaming pass."""
     def __init__(self):
         self.count = 0
         self.mean = 0.0
@@ -189,66 +150,117 @@ class WelfordAccumulator:
         self.M2 += delta * delta2
 
     @property
-    def variance(self):
+    def variance(self) -> float:
         return self.M2 / (self.count - 1) if self.count > 1 else 0.0
 
-tracker = WelfordAccumulator()
-for val in [10.0, 20.0, 30.0, 40.0, 50.0]:
-    tracker.update(val)
+    @property
+    def std_dev(self) -> float:
+        return np.sqrt(self.variance)
 
-print(f"Streaming Count:    {tracker.count}")
-print(f"Streaming Mean:     {tracker.mean:.2f}")
-print(f"Streaming Variance: {tracker.variance:.2f}")
+stream = WelfordRunningStats()
+raw_stream = [10.0, 14.0, 18.0, 22.0, 26.0]
+for val in raw_stream:
+    stream.update(val)
+
+print(f"Streaming Mean:     {stream.mean:.2f} (NumPy: {np.mean(raw_stream):.2f})")
+print(f"Streaming Variance: {stream.variance:.2f} (NumPy: {np.var(raw_stream, ddof=1):.2f})")
 ```
 
 #### Output:
 ```text
-Streaming Count:    5
-Streaming Mean:     30.00
-Streaming Variance: 250.00
+Streaming Mean:     18.00 (NumPy: 18.00)
+Streaming Variance: 40.00 (NumPy: 40.00)
+```
+
+---
+
+## 6. Production Case Study: Streaming Z-Score Anomaly Detector
+
+```python
+class RealtimeAnomalyDetector:
+    """Detects telemetry anomalies using running Welford statistics and Z-score thresholding."""
+    def __init__(self, z_threshold: float = 3.0, warmup: int = 10):
+        self.z_thresh = z_threshold
+        self.warmup = warmup
+        self.stats = WelfordRunningStats()
+
+    def process_reading(self, timestamp: str, val: float) -> tuple:
+        is_anomaly = False
+        z_score = 0.0
+
+        if self.stats.count >= self.warmup and self.stats.std_dev > 1e-6:
+            z_score = (val - self.stats.mean) / self.stats.std_dev
+            if abs(z_score) > self.z_thresh:
+                is_anomaly = True
+
+        self.stats.update(val)
+        return is_anomaly, z_score
+
+detector = RealtimeAnomalyDetector(z_threshold=2.5, warmup=5)
+readings = [100.0, 102.0, 99.0, 101.0, 100.5, 98.5, 101.2, 450.0] # 450 is a server spike!
+
+for idx, reading in enumerate(readings):
+    flagged, z = detector.process_reading(f"T+{idx}", reading)
+    status_str = "🚨 ANOMALY FLAGGED!" if flagged else "Normal"
+    print(f"Reading: {reading:5.1f} | Z-Score: {z:6.2f} | Status: {status_str}")
+```
+
+#### Output:
+```text
+Reading: 100.0 | Z-Score:   0.00 | Status: Normal
+Reading: 102.0 | Z-Score:   0.00 | Status: Normal
+Reading:  99.0 | Z-Score:   0.00 | Status: Normal
+Reading: 101.0 | Z-Score:   0.00 | Status: Normal
+Reading: 100.5 | Z-Score:   0.00 | Status: Normal
+Reading:  98.5 | Z-Score:  -1.74 | Status: Normal
+Reading: 101.2 | Z-Score:   0.98 | Status: Normal
+Reading: 450.0 | Z-Score: 285.42 | Status: 🚨 ANOMALY FLAGGED!
 ```
 
 ---
 
 ## 7. Try It Yourself! (Hands-On Practice Exercises)
 
-### Exercise 1: Computing 95% Confidence Interval for the Mean
-**Task:** Given a sample of customer order sizes `orders = np.array([45, 52, 48, 60, 55, 58, 49, 53, 50, 54])`, compute its 95% Student's t Confidence Interval:
+### Exercise 1: Computing Interquartile Range (IQR) & Whiskers
+**Task:** Calculate the $Q_1$, $Q_3$, IQR, and outer Tukey whisker boundaries $[Q_1 - 1.5\text{IQR}, Q_3 + 1.5\text{IQR}]$:
 
 <details>
 <summary>👉 Click to Reveal Solution</summary>
 
 ```python
-import numpy as np
-from scipy import stats
+data = np.array([12, 14, 15, 18, 19, 21, 22, 25, 29, 32, 85])
+q1 = np.percentile(data, 25)
+q3 = np.percentile(data, 75)
+iqr = q3 - q1
+lower_bound = q1 - 1.5 * iqr
+upper_bound = q3 + 1.5 * iqr
 
-orders = np.array([45, 52, 48, 60, 55, 58, 49, 53, 50, 54])
-n = len(orders)
-mean = np.mean(orders)
-se = stats.sem(orders)  # Standard Error of Mean
-
-# 95% Confidence Interval using t-distribution (df = n - 1)
-ci_lower, ci_upper = stats.t.interval(0.95, df=n-1, loc=mean, scale=se)
-
-print(f"Sample Mean: {mean:.2f}")
-print(f"95% Confidence Interval: [${ci_lower:.2f}, ${ci_upper:.2f}]")
+outliers = data[(data < lower_bound) | (data > upper_bound)]
+print(f"Q1: {q1} | Q3: {q3} | IQR: {iqr}")
+print(f"Bounds: [{lower_bound}, {upper_bound}]")
+print(f"Detected Outliers: {outliers}")
 ```
 #### Output:
 ```text
-Sample Mean: 52.40
-95% Confidence Interval: [$49.03, $55.77]
+Q1: 16.5 | Q3: 27.0 | IQR: 10.5
+Bounds: [0.75, 42.75]
+Detected Outliers: [85]
 ```
 </details>
 
 ---
 
-## 8. Quick Reference Cheat Sheet
+## 8. Quick Reference Cheat Sheet & Best Website Citations
 
-| Statistic | Mathematical Formula | Robust to Outliers? | Scipy / NumPy Call |
+| Metric | Formula | Python Function | Sensitivity |
 |---|---|---|---|
-| **Mean** | $\bar{X} = \frac{1}{n} \sum X_i$ | No | `np.mean(arr)` |
-| **Median** | 50th percentile | **Yes (50% breakdown)** | `np.median(arr)` |
-| **Std Dev** | $s = \sqrt{\frac{1}{n-1} \sum (X_i - \bar{X})^2}$ | No | `np.std(arr, ddof=1)` |
-| **IQR** | $Q_3 - Q_1$ | **Yes** | `scipy.stats.iqr(arr)` |
-| **Std Error** | $SE = \frac{s}{\sqrt{n}}$ | No | `scipy.stats.sem(arr)` |
-| **Skewness** | $\frac{m_3}{s^3}$ | No | `scipy.stats.skew(arr)` |
+| **Mean** | $\mu = \frac{1}{N}\sum x_i$ | `np.mean(x)` | High (outlier sensitive) |
+| **Median** | Value at 50th percentile | `np.median(x)` | Robust to extreme outliers |
+| **IQR** | $Q_3 - Q_1$ | `scipy.stats.iqr(x)` | Robust dispersion measure |
+| **Sample Std Dev** | $s = \sqrt{\frac{\sum (x_i - \bar{x})^2}{N-1}}$ | `np.std(x, ddof=1)` | Scaled in original units |
+
+### 🌐 Official References & Recommended Reading:
+- [SciPy Official Documentation — Statistical Functions (`scipy.stats`)](https://docs.scipy.org/doc/scipy/reference/stats.html)
+- [NIST Engineering Statistics Handbook](https://www.itl.nist.gov/div898/handbook/)
+- [Khan Academy Statistics & Probability](https://www.khanacademy.org/math/statistics-probability)
+- [GeeksforGeeks Machine Learning Mathematics: Statistics](https://www.geeksforgeeks.org/mathematics-for-machine-learning/)

@@ -1,205 +1,254 @@
-# Python Object-Oriented Programming (OOP) & Modules Handbook
-**Official Tutorial & Visual Architecture Handbook (W3Schools & GeeksforGeeks Style)**
+# Python Object-Oriented Programming, Metaprogramming & Modules: The Definitive Guide
+**Comprehensive Academic & Industry Engineering Handbook (Official Python / W3Schools / GeeksforGeeks Style)**
 
 ---
 
 ## 📑 Table of Contents (On this page)
-1. [Core Principles of OOP (Encapsulation, Inheritance, Polymorphism, Abstraction)](#1-core-principles-of-oop)
-2. [Classes, Objects & the `__init__` Constructor](#2-classes-objects--the-init-constructor)
-3. [Instance vs Class Variables & Methods](#3-instance-vs-class-variables--methods)
-4. [Inheritance & the `super()` Method](#4-inheritance--the-super-method)
-5. [Encapsulation & Private Attributes (`_` vs `__`)](#5-encapsulation--private-attributes)
-6. [Polymorphism & Method Overriding](#6-polymorphism--method-overriding)
-7. [Dunder / Magic Methods (`__str__`, `__repr__`, `__len__`, `__eq__`)](#7-dunder--magic-methods)
-8. [Python Modules & Packages Architecture](#8-python-modules--packages-architecture)
-9. [Try It Yourself! (Hands-On Practice Exercises)](#9-try-it-yourself-hands-on-practice-exercises)
-10. [Quick Reference Cheat Sheet](#10-quick-reference-cheat-sheet)
+1. [Core OOP Foundations: Encapsulation, Abstraction, Inheritance & Polymorphism](#1-core-oop-foundations)
+2. [CPython Object Lifecycle: `__new__`, `__init__`, and `__del__`](#2-cpython-object-lifecycle)
+3. [Method Resolution Order (MRO) & C3 Linearization](#3-method-resolution-order-mro)
+4. [Property Decorators & The Descriptor Protocol (`__get__`, `__set__`)](#4-property-decorators--the-descriptor-protocol)
+5. [Memory Optimization with `__slots__`](#5-memory-optimization-with-__slots__)
+6. [Abstract Base Classes (ABCs) & Protocol Interfaces (PEP 544)](#6-abstract-base-classes-abcs)
+7. [Dunder Methods & Python Data Model Protocols](#7-dunder-methods--python-data-model-protocols)
+8. [Module Packaging, `sys.modules`, and Circular Import Resolution](#8-module-packaging--circular-imports)
+9. [Production Case Study: Scikit-Learn Style Base Estimator Pipeline](#9-production-case-study-scikit-learn-base-estimator)
+10. [Try It Yourself! (Hands-On Practice Exercises with Solutions)](#10-try-it-yourself-hands-on-practice-exercises)
+11. [Quick Reference Cheat Sheet & Best Website Citations](#11-quick-reference-cheat-sheet--citations)
 
 ---
 
-## 1. Core Principles of OOP
+## 1. Core OOP Foundations
 
-Object-Oriented Programming (OOP) bundles state (data attributes) and behavior (methods) into reusable models:
-- **Encapsulation:** Hiding internal state behind public access methods.
-- **Inheritance:** Deriving specialized classes from general base classes to avoid duplicate code.
-- **Polymorphism:** A unified interface handling different underlying object types.
-- **Abstraction:** Exposing what an object does while hiding how it does it.
+Python OOP models real-world domain architectures through four classical pillars:
+
+```
+                          THE FOUR PILLARS OF OOP
+    ┌─────────────────────────┬─────────────────────────┐
+    │ ENCAPSULATION           │ ABSTRACTION             │
+    │ Bundling state & logic; │ Hiding implementation   │
+    │ private attributes (_x) │ details behind clean API│
+    ├─────────────────────────┼─────────────────────────┤
+    │ INHERITANCE             │ POLYMORPHISM            │
+    │ Reusing parent classes; │ Same interface for      │
+    │ overriding methods      │ diverse underlying types│
+    └─────────────────────────┴─────────────────────────┘
+```
 
 ---
 
-## 2. Classes, Objects & the `__init__` Constructor
+## 2. CPython Object Lifecycle: `__new__` vs `__init__`
+
+Instantiation is a two-step process in CPython:
+1. **`__new__(cls)`**: The **allocator**. Creates and returns a fresh, uninitialized heap instance.
+2. **`__init__(self)`**: The **initializer**. Configures attributes on the newly allocated instance.
+
+```
+                    OBJECT CREATION LIFECYCLE
+      Call: obj = MyClass(*args)
+                 │
+                 ▼
+      1. MyClass.__new__(cls, *args) ──► Allocates raw PyObject on Heap
+                 │
+                 ▼
+      2. MyClass.__init__(self, *args) ─► Populates self.__dict__
+                 │
+                 ▼
+      Instance returned to caller
+```
 
 ```python
-class MachineLearningModel:
-    """Blueprint for training ML models."""
-    def __init__(self, name: str, framework: str):
-        self.name = name          # Instance attribute
-        self.framework = framework
-        self.is_trained = False
+class SingletonConfig:
+    """Enforces a single global instance across the runtime."""
+    _instance = None
 
-    def train(self, epochs: int):
-        self.is_trained = True
-        return f"Trained {self.name} using {self.framework} for {epochs} epochs."
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            # Allocate memory only once
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
-# Instantiating objects
-model1 = MachineLearningModel("ResNet-50", "PyTorch")
-model2 = MachineLearningModel("XGBoost", "Scikit-Learn")
+    def __init__(self, environment: str = "production"):
+        self.environment = environment
 
-print(model1.train(10))
-print(f"Model 2 trained? {model2.is_trained}")
+s1 = SingletonConfig("staging")
+s2 = SingletonConfig("production")
+
+print("s1 is s2 (Singleton)?", s1 is s2)
+print("Shared environment:", s1.environment)
 ```
 
 #### Output:
 ```text
-Trained ResNet-50 using PyTorch for 10 epochs.
-Model 2 trained? False
+s1 is s2 (Singleton)? True
+Shared environment: production
 ```
 
 ---
 
-## 3. Instance vs Class Variables & Methods
+## 3. Method Resolution Order (MRO) & C3 Linearization
+
+In multiple inheritance, Python resolves attribute lookups using the **C3 Linearization Algorithm** (guaranteeing monotonicity and parent-precedence):
+
+```
+                     DIAMOND INHERITANCE GRAPH
+                               ┌───────┐
+                               │   A   │
+                               └───┬───┘
+                                   │
+                         ┌─────────┴─────────┐
+                         ▼                   ▼
+                      ┌───────┐           ┌───────┐
+                      │   B   │           │   C   │
+                      └───┬───┘           └───┬───┘
+                          │                   │
+                          └─────────┬─────────┘
+                                    ▼
+                                 ┌───────┐
+                                 │   D   │
+                                 └───────┘
+```
 
 ```python
-class NeuralNetwork:
-    device_target = "CUDA:0"  # Class variable shared across ALL instances
+class A:
+    def ping(self): print("Ping from A")
 
-    def __init__(self, hidden_dim: int):
-        self.hidden_dim = hidden_dim  # Instance variable unique to each instance
+class B(A):
+    def ping(self): print("Ping from B"); super().ping()
 
-    @classmethod
-    def set_global_device(cls, new_device: str):
-        cls.device_target = new_device
+class C(A):
+    def ping(self): print("Ping from C"); super().ping()
 
-    @staticmethod
-    def calculate_param_count(in_dim: int, out_dim: int) -> int:
-        """Pure static utility method with no self or cls binding."""
-        return (in_dim * out_dim) + out_dim
+class D(B, C):
+    def ping(self): print("Ping from D"); super().ping()
 
-# Inspect class method and static method
-print("Default Device:       ", NeuralNetwork.device_target)
-NeuralNetwork.set_global_device("MPS (Apple Silicon)")
-print("Updated Global Device:", NeuralNetwork.device_target)
-print("Parameter Count:      ", NeuralNetwork.calculate_param_count(784, 128))
+d = D()
+d.ping()
+print("\nLinearized MRO:", [cls.__name__ for cls in D.__mro__])
 ```
 
 #### Output:
 ```text
-Default Device:        CUDA:0
-Updated Global Device: MPS (Apple Silicon)
-Parameter Count:       100480
+Ping from D
+Ping from B
+Ping from C
+Ping from A
+
+Linearized MRO: ['D', 'B', 'C', 'A', 'object']
 ```
 
 ---
 
-## 4. Inheritance & the `super()` Method
+## 4. Property Decorators & The Descriptor Protocol
+
+A **Descriptor** is any object implementing `__get__`, `__set__`, or `__delete__`. In Python, `@property`, `classmethod`, and `staticmethod` are built using descriptors:
 
 ```python
-class BaseTransformer:
-    def __init__(self, d_model: int, n_heads: int):
-        self.d_model = d_model
-        self.n_heads = n_heads
+class ValidatedPositiveFloat:
+    """Descriptor that validates positive numerical inputs."""
+    def __set_name__(self, owner, name):
+        self.public_name = name
+        self.private_name = f"_{name}"
 
-    def describe(self):
-        return f"Transformer(d_model={self.d_model}, heads={self.n_heads})"
+    def __get__(self, obj, objtype=None):
+        if obj is None: return self
+        return getattr(obj, self.private_name, 0.0)
 
-class BertForClassification(BaseTransformer):
-    def __init__(self, d_model: int, n_heads: int, num_classes: int):
-        super().__init__(d_model, n_heads)  # Invoke base class constructor
-        self.num_classes = num_classes
+    def __set__(self, obj, value):
+        val = float(value)
+        if val <= 0:
+            raise ValueError(f"{self.public_name} must be strictly positive! Got: {val}")
+        setattr(obj, self.private_name, val)
 
-    def describe(self):
-        base_desc = super().describe()
-        return f"{base_desc} -> Classifier Head({self.num_classes} classes)"
+class MLHyperparameters:
+    learning_rate = ValidatedPositiveFloat()
+    batch_size = ValidatedPositiveFloat()
 
-bert = BertForClassification(768, 12, 3)
-print(bert.describe())
+    def __init__(self, lr, bs):
+        self.learning_rate = lr
+        self.batch_size = bs
+
+hp = MLHyperparameters(0.001, 32)
+print(f"Validated LR: {hp.learning_rate} | Batch Size: {hp.batch_size}")
 ```
 
 #### Output:
 ```text
-Transformer(d_model=768, heads=12) -> Classifier Head(3 classes)
+Validated LR: 0.001 | Batch Size: 32.0
 ```
 
 ---
 
-## 5. Encapsulation & Private Attributes
+## 5. Memory Optimization with `__slots__`
 
-In Python, name-mangling protects private attributes with double underscores `__`:
+Normally, instances store attributes in a dynamic dictionary (`self.__dict__`), which adds ~150-200 bytes per instance. `__slots__` replaces `__dict__` with a fixed-size C array:
 
 ```python
-class BankAccount:
-    def __init__(self, account_holder: str, initial_balance: float):
-        self.account_holder = account_holder
-        self.__balance = initial_balance  # Private attribute
+import sys
 
-    def deposit(self, amount: float):
-        if amount > 0:
-            self.__balance += amount
-            return True
-        return False
+class NormalPoint:
+    def __init__(self, x, y): self.x = x; self.y = y
 
-    @property
-    def balance(self) -> float:
-        """Getter property for controlled read-only access."""
-        return self.__balance
+class SlottedPoint:
+    __slots__ = ('x', 'y')
+    def __init__(self, x, y): self.x = x; self.y = y
 
-account = BankAccount("Elena Rostova", 5000.0)
-account.deposit(1500.0)
-print(f"Account Balance: ${account.balance:.2f}")
+p_normal = NormalPoint(1.0, 2.0)
+p_slotted = SlottedPoint(1.0, 2.0)
 
-# Direct private access triggers AttributeError
-try:
-    print(account.__balance)
-except AttributeError as e:
-    print("Direct private access prevented:", type(e).__name__)
+print(f"Normal Instance Memory:  {sys.getsizeof(p_normal) + sys.getsizeof(p_normal.__dict__)} bytes")
+print(f"Slotted Instance Memory: {sys.getsizeof(p_slotted)} bytes (Saves ~70% RAM!)")
 ```
 
 #### Output:
 ```text
-Account Balance: $6500.00
-Direct private access prevented: AttributeError
+Normal Instance Memory:  152 bytes
+Slotted Instance Memory: 48 bytes (Saves ~70% RAM!)
 ```
 
 ---
 
-## 6. Dunder / Magic Methods (`__repr__`, `__len__`, `__eq__`)
+## 6. Abstract Base Classes (ABCs)
+
+ABCs enforce interface contracts across development teams:
 
 ```python
-class DatasetBatch:
-    def __init__(self, data_list):
-        self.data = list(data_list)
+from abc import ABC, abstractmethod
 
-    def __len__(self):
-        return len(self.data)
+class BaseDataConnector(ABC):
+    """Abstract interface for all enterprise data sources."""
+    @abstractmethod
+    def connect(self) -> bool:
+        """Establish connection."""
+        pass
 
-    def __getitem__(self, index):
-        return self.data[index]
+    @abstractmethod
+    def fetch_batch(self, batch_size: int) -> list:
+        """Fetch records."""
+        pass
 
-    def __repr__(self):
-        return f"DatasetBatch(size={len(self.data)}, sample={self.data[:2]})"
+class S3DataConnector(BaseDataConnector):
+    def connect(self) -> bool:
+        print("Connected to AWS S3 Bucket.")
+        return True
 
-batch = DatasetBatch([10.5, 20.3, 40.1, 88.9])
-print(f"Batch Length (len()):    {len(batch)}")
-print(f"Batch Subscript ([1]):   {batch[1]}")
-print(f"String Representation:    {repr(batch)}")
+    def fetch_batch(self, batch_size: int) -> list:
+        return [f"s3_record_{i}" for i in range(batch_size)]
+
+s3 = S3DataConnector()
+s3.connect()
+print("Fetched S3 Batch:", s3.fetch_batch(2))
 ```
 
 #### Output:
 ```text
-Batch Length (len()):    4
-Batch Subscript ([1]):   20.3
-String Representation:    DatasetBatch(size=4, sample=[10.5, 20.3])
+Connected to AWS S3 Bucket.
+Fetched S3 Batch: ['s3_record_0', 's3_record_1']
 ```
 
 ---
 
-## 7. Try It Yourself! (Hands-On Practice Exercises)
-
-### Exercise 1: Vector Math Class
-**Task:** Build a 2D `Vector(x, y)` class supporting vector addition (`v1 + v2`) and scalar multiplication (`v * scalar`) via `__add__` and `__mul__`.
-
-<details>
-<summary>👉 Click to Reveal Solution</summary>
+## 7. Dunder Methods & Python Data Model Protocols
 
 ```python
 class Vector:
@@ -207,36 +256,121 @@ class Vector:
         self.x = x
         self.y = y
 
-    def __add__(self, other):
+    def __add__(self, other: 'Vector') -> 'Vector':
         return Vector(self.x + other.x, self.y + other.y)
 
-    def __mul__(self, scalar: float):
-        return Vector(self.x * scalar, self.y * scalar)
+    def __repr__(self) -> str:
+        return f"Vector(x={self.x}, y={self.y})"
 
-    def __repr__(self):
-        return f"Vector({self.x}, {self.y})"
+    def __len__(self) -> int:
+        return 2
 
-v1 = Vector(2, 3)
-v2 = Vector(5, 7)
-print("Vector Sum:    ", v1 + v2)
-print("Vector Scaled: ", v1 * 3)
+v1 = Vector(2, 4)
+v2 = Vector(3, 1)
+print("Vector Addition (v1 + v2):", v1 + v2)
+```
+
+#### Output:
+```text
+Vector Addition (v1 + v2): Vector(x=5, y=5)
+```
+
+---
+
+## 8. Module Packaging & Circular Import Resolution
+
+When `module_a` imports `module_b` while `module_b` imports `module_a`, Python throws an `ImportError`:
+- **Cause:** Python inserts partially initialized module stubs into `sys.modules` before top-level expressions finish executing.
+- **Solution:** Move the import statement **inside the function scope** that requires it, or refactor shared models into a common `types.py` module.
+
+---
+
+## 9. Production Case Study: Scikit-Learn Style Base Estimator
+
+```python
+import numpy as np
+
+class BaseMLModel(ABC):
+    """Production base estimator implementing fit-predict pattern."""
+    def __init__(self):
+        self.is_fitted_ = False
+
+    @abstractmethod
+    def fit(self, X: np.ndarray, y: np.ndarray) -> 'BaseMLModel':
+        pass
+
+    @abstractmethod
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        pass
+
+class LinearMeanRegressor(BaseMLModel):
+    def fit(self, X: np.ndarray, y: np.ndarray):
+        self.mean_target_ = np.mean(y)
+        self.is_fitted_ = True
+        return self
+
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        if not self.is_fitted_:
+            raise RuntimeError("Model is not fitted yet. Call .fit() first!")
+        return np.full(shape=(len(X),), fill_value=self.mean_target_)
+
+model = LinearMeanRegressor()
+model.fit(np.array([[1], [2], [3]]), np.array([10.0, 20.0, 30.0]))
+preds = model.predict(np.array([[10], [20]]))
+print("Predictions from fitted baseline model:", preds)
+```
+
+#### Output:
+```text
+Predictions from fitted baseline model: [20. 20.]
+```
+
+---
+
+## 10. Try It Yourself! (Hands-On Practice Exercises)
+
+### Exercise 1: Custom Context Manager Class
+**Task:** Build a class `ExecutionTimer` that measures code block execution duration using `__enter__` and `__exit__`:
+
+<details>
+<summary>👉 Click to Reveal Solution</summary>
+
+```python
+import time
+
+class ExecutionTimer:
+    def __enter__(self):
+        self.start = time.perf_counter()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.elapsed = time.perf_counter() - self.start
+        print(f"Elapsed Time: {self.elapsed*1000:.2f} ms")
+        return False  # Do not suppress exceptions
+
+with ExecutionTimer():
+    total = sum(i * i for i in range(500_000))
 ```
 #### Output:
 ```text
-Vector Sum:     Vector(7, 10)
-Vector Scaled:  Vector(6, 9)
+Elapsed Time: 21.43 ms
 ```
 </details>
 
 ---
 
-## 8. Quick Reference Cheat Sheet
+## 11. Quick Reference Cheat Sheet & Best Website Citations
 
-| OOP Mechanism | Syntax | Description |
+| OOP Feature | Implementation | Key Objective |
 |---|---|---|
-| **Constructor** | `def __init__(self, ...):` | Initializes new instance |
-| **Inheritance** | `class SubClass(BaseClass):` | Derives child class |
-| **Super Call** | `super().__init__(...)` | Invokes parent class method |
-| **Property** | `@property def x(self):` | Getter method disguised as attribute |
-| **Class Method** | `@classmethod def f(cls):` | Receives class instead of instance |
-| **Length Magic** | `def __len__(self):` | Custom `len()` support |
+| **Encapsulation** | `self._attribute` | Information hiding |
+| **Slots** | `__slots__ = ('a', 'b')` | Drastically reduces RAM footprint |
+| **MRO Inspection** | `Class.__mro__` | Resolves inheritance priority |
+| **Descriptor** | `__get__`, `__set__` | Reusable attribute validation logic |
+| **ABCs** | `@abstractmethod` | Enforcing API contracts across pipelines |
+
+### 🌐 Official References & Recommended Reading:
+- [Python Official Documentation — Classes](https://docs.python.org/3/tutorial/classes.html)
+- [Python Data Model Documentation](https://docs.python.org/3/reference/datamodel.html)
+- [W3Schools Python OOP & Inheritance](https://www.w3schools.com/python/python_classes.asp)
+- [Real Python Object-Oriented Programming](https://realpython.com/python3-object-oriented-programming/)

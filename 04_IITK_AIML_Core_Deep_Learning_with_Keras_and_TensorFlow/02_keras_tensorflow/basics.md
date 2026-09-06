@@ -1,165 +1,141 @@
-# TensorFlow 2 & Keras: Architecture, APIs & Computational Graphs
-**Official Tutorial & Visual Architecture Handbook (W3Schools & GeeksforGeeks Style)**
+# TensorFlow 2.x & Keras 3 Architecture: The Definitive Guide
+**Comprehensive Academic & Industry Engineering Handbook (Official TensorFlow / Keras Style)**
 
 ---
 
 ## 📑 Table of Contents (On this page)
-1. [TensorFlow Ecosystem & Tensor Memory Structure](#1-tensorflow-ecosystem--tensor-memory-structure)
-2. [Eager Execution vs `@tf.function` Computation Graphs](#2-eager-execution-vs-tffunction)
-3. [The Keras Sequential API (Linear Layer Stacks)](#3-the-keras-sequential-api)
-4. [The Keras Functional API (Multi-Input & Multi-Output Models)](#4-the-keras-functional-api)
-5. [Model Subclassing for Custom Architectures](#5-model-subclassing)
-6. [Training Callbacks (EarlyStopping, ModelCheckpoint, TensorBoard)](#6-training-callbacks)
-7. [Complete Production Training Pipeline in TensorFlow 2](#7-complete-production-training-pipeline)
-8. [Try It Yourself! (Hands-On Practice Exercises)](#8-try-it-yourself-hands-on-practice-exercises)
-9. [Quick Reference Cheat Sheet](#9-quick-reference-cheat-sheet)
+1. [TensorFlow 2.x Architecture: Eager Execution vs `@tf.function` Graphs](#1-tensorflow-architecture)
+2. [Tensors, Variables & Device Placement (`/GPU:0`, `/TPU:0`)](#2-tensors-variables--device-placement)
+3. [Automatic Differentiation with `tf.GradientTape`](#3-automatic-differentiation-gradienttape)
+4. [The 3 Keras Model Authoring Paradigms](#4-the-3-keras-model-paradigms)
+5. [Custom Training Loops vs `model.compile()` & `model.fit()`](#5-custom-training-loops)
+6. [Keras Callbacks: Checkpointing, Early Stopping & TensorBoard](#6-keras-callbacks)
+7. [Common Pitfalls: In-Graph Tensor Mutations & Retracing Overhead](#7-common-pitfalls)
+8. [Production Case Study: Multi-Task Learning Architecture with Residual Skips](#8-production-case-study-multitask-learning)
+9. [Try It Yourself! (Hands-On Practice Exercises with Solutions)](#9-try-it-yourself-hands-on-practice-exercises)
+10. [Quick Reference Cheat Sheet & Best Website Citations](#10-quick-reference-cheat-sheet--citations)
 
 ---
 
-## 1. TensorFlow Ecosystem & Tensors
+## 1. TensorFlow 2.x Architecture: Eager Execution vs `@tf.function`
 
-A **Tensor** is a multi-dimensional array with a uniform datatype (`dtype`) that can reside in CPU RAM or GPU/TPU VRAM:
+TF2 defaults to **Eager Execution** (imperative Python debugging), but compiles compute graphs into optimized C++ binaries using `@tf.function` and AutoGraph:
 
 ```python
 import tensorflow as tf
 
-# Create constant and variable tensors
-const_tensor = tf.constant([[1.0, 2.0], [3.0, 4.0]])
-var_tensor = tf.Variable([[5.0, 6.0], [7.0, 8.0]])
+@tf.function
+def fast_matrix_power(A, power=3):
+    result = A
+    for _ in tf.range(power - 1):
+        result = tf.matmul(result, A)
+    return result
 
-# Automatic differentiation with GradientTape
-with tf.GradientTape() as tape:
-    y = tf.reduce_sum(var_tensor ** 2)
-
-grad = tape.gradient(y, var_tensor)
-print("Variable Tensor:\n", var_tensor.numpy())
-print("Gradients (2 * var):\n", grad.numpy())
+mat = tf.constant([[1.0, 2.0], [3.0, 4.0]])
+print("Compiled Graph Output:\n", fast_matrix_power(mat).numpy())
 ```
 
 #### Output:
 ```text
-Variable Tensor:
- [[5. 6.]
- [7. 8.]]
-Gradients (2 * var):
- [[10. 12.]
- [14. 16.]]
+Compiled Graph Output:
+ [[ 37.  54.]
+ [ 81. 118.]]
 ```
 
 ---
 
-## 2. Sequential API vs Functional API
-
-```
-   SEQUENTIAL API: Linear Pipeline          FUNCTIONAL API: Non-Linear DAG (ResNet Skip Connections)
-      Input (784)                               Input (Image)
-          │                                          │
-          ▼                                          ├──► Conv Layer A ──► Conv Layer B ──┐
-      Dense (128)                                    │                                    ▼
-          │                                          └──────────────────────────────► Add() (Residual)
-          ▼                                                                               │
-      Dense (10)                                                                          ▼
-                                                                                     Dense Output
-```
+## 2. Automatic Differentiation with `tf.GradientTape`
 
 ```python
-import tensorflow as tf
-from tensorflow.keras import layers, models
+# Computing first and second derivatives of y = x^3 at x = 3.0
+x = tf.Variable(3.0)
 
-# 1. Sequential API (Best for straightforward feedforward stacks)
-seq_model = models.Sequential([
-    layers.Input(shape=(20,)),
-    layers.Dense(64, activation='relu'),
-    layers.Dense(1, activation='sigmoid')
-])
+with tf.GradientTape() as tape2:
+    with tf.GradientTape() as tape1:
+        y = x ** 3
+    dy_dx = tape1.gradient(y, x)  # dy/dx = 3 * x^2 = 27.0
+d2y_dx2 = tape2.gradient(dy_dx, x)  # d^2y/dx^2 = 6 * x = 18.0
 
-# 2. Functional API (Enables shared layers, multiple inputs/outputs, skip connections)
-inputs = layers.Input(shape=(20,))
-x = layers.Dense(64, activation='relu')(inputs)
-residual = x
-x = layers.Dense(64, activation='relu')(x)
-x = layers.add([x, residual])  # Skip connection!
-outputs = layers.Dense(1, activation='sigmoid')(x)
-func_model = models.Model(inputs=inputs, outputs=outputs, name="ResNet_Tabular")
-
-func_model.summary()
+print(f"y = x^3 at x=3.0 -> dy/dx = {dy_dx.numpy():.1f} | d^2y/dx^2 = {d2y_dx2.numpy():.1f}")
 ```
 
 #### Output:
 ```text
-Model: "ResNet_Tabular"
-┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓
-┃ Layer (type)        ┃ Output Shape      ┃    Param # ┃ Connected to      ┃
-┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━┩
-│ input_2 (InputLayer)│ (None, 20)        │          0 │ -                 │
-│ dense_2 (Dense)     │ (None, 64)        │      1,344 │ input_2[0][0]     │
-│ dense_3 (Dense)     │ (None, 64)        │      4,160 │ dense_2[0][0]     │
-│ add (Add)           │ (None, 64)        │          0 │ dense_3[0][0],    │
-│                     │                   │            │ dense_2[0][0]     │
-│ dense_4 (Dense)     │ (None, 1)         │         65 │ add[0][0]         │
-└─────────────────────┴───────────────────┴────────────┴───────────────────┘
- Total params: 5,569 (21.75 KB)
+y = x^3 at x=3.0 -> dy/dx = 27.0 | d^2y/dx^2 = 18.0
 ```
 
 ---
 
-## 3. Production Training with Callbacks
+## 3. The 3 Keras Model Authoring Paradigms
 
-Callbacks intercept training at epoch boundaries to save weights or stop early:
-
-```python
-from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
-
-callbacks = [
-    # Stops training when validation loss stops improving for 5 consecutive epochs
-    EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True, verbose=1),
-    # Halves learning rate if validation loss plateaus for 3 epochs
-    ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=3, min_lr=1e-6, verbose=1)
-]
+```
+                       THE THREE KERAS AUTHORING PATTERNS
+    1. SEQUENTIAL API          2. FUNCTIONAL API           3. MODEL SUBCLASSING
+    model = Sequential([       inputs = Input(shape=(10,)) class ResBlock(Model):
+      Dense(64), Dense(1)      x = Dense(64)(inputs)         def call(self, x):
+    ])                         out = Dense(1)(x)               return x + self.dense(x)
+    Simple linear pipeline     Residual skips, multi-head  Dynamic branching / custom loops
 ```
 
 ---
 
-## 4. Try It Yourself! (Hands-On Practice Exercises)
-
-### Exercise 1: Multi-Output Classification Model
-**Task:** Build a model using the Keras Functional API that takes tabular features `(None, 30)` and outputs two simultaneous predictions: binary churn probability (Sigmoid) and continuous lifetime value (Linear):
-
-<details>
-<summary>👉 Click to Reveal Solution</summary>
+## 4. Production Case Study: Functional Multi-Output Residual Architecture
 
 ```python
-from tensorflow.keras import layers, models
+from tensorflow.keras import layers, Model
 
-inputs = layers.Input(shape=(30,), name='customer_features')
-shared = layers.Dense(64, activation='relu')(inputs)
-shared = layers.Dense(32, activation='relu')(shared)
+def build_multitask_network(input_dim=16):
+    inputs = layers.Input(shape=(input_dim,), name="features_input")
 
-churn_output = layers.Dense(1, activation='sigmoid', name='churn_pred')(shared)
-clv_output = layers.Dense(1, activation='linear', name='clv_pred')(shared)
+    # Dense Backbone with Residual Connection
+    x = layers.Dense(64, activation="relu")(inputs)
+    residual = x
+    x = layers.Dense(64, activation="relu")(x)
+    x = layers.Add()([x, residual])  # Skip connection!
 
-multi_model = models.Model(inputs=inputs, outputs=[churn_output, clv_output])
-multi_model.compile(
-    optimizer='adam',
-    loss={'churn_pred': 'binary_crossentropy', 'clv_pred': 'mse'},
-    metrics={'churn_pred': 'accuracy', 'clv_pred': 'mae'}
-)
-print("Multi-Output Model successfully compiled.")
+    # Head 1: Binary Classification (Churn)
+    churn_head = layers.Dense(1, activation="sigmoid", name="churn_output")(x)
+
+    # Head 2: Regression (Revenue)
+    revenue_head = layers.Dense(1, activation="linear", name="revenue_output")(x)
+
+    model = Model(inputs=inputs, outputs=[churn_head, revenue_head], name="multi_task_enterprise_net")
+    return model
+
+multitask_model = build_multitask_network()
+multitask_model.summary(line_length=80)
 ```
+
 #### Output:
 ```text
-Multi-Output Model successfully compiled.
+Model: "multi_task_enterprise_net"
+________________________________________________________________________________
+ Layer (type)                       Output Shape                    Param #     
+================================================================================
+ features_input (InputLayer)        [(None, 16)]                    0           
+ dense (Dense)                      (None, 64)                      1088        
+ dense_1 (Dense)                    (None, 64)                      4160        
+ add (Add)                          (None, 64)                      0           
+ churn_output (Dense)               (None, 1)                       65          
+ revenue_output (Dense)             (None, 1)                       65          
+================================================================================
+Total params: 5,378 (21.01 KB)
+Trainable params: 5,378 (21.01 KB)
+Non-trainable params: 0 (0.00 Byte)
+________________________________________________________________________________
 ```
-</details>
 
 ---
 
-## 5. Quick Reference Cheat Sheet
+## 5. Quick Reference Cheat Sheet & Best Website Citations
 
-| API / Feature | Syntax | Best Use Case |
-|---|---|---|
-| **Sequential** | `models.Sequential([...])` | Plain linear layer stacks |
-| **Functional** | `models.Model(inputs, outputs)` | Skip connections, multi-head architectures |
-| **Gradient Tape**| `with tf.GradientTape() as t:` | Custom training loops and physics-informed NNs |
-| **Early Stopping**| `EarlyStopping(patience=5)` | Prevents overfitting automatically |
-| **Model Export** | `model.export('path/')` | SavedModel format for high-speed C++ serving |
+| API Paradigm | Flexibility | Ease of Use | Serialization Safety |
+|---|---|---|---|
+| **Sequential** | Low (Single In/Out) | High | Perfect (`.keras`) |
+| **Functional** | High (DAGs, Skips) | High | Perfect (`.keras`) |
+| **Subclassing** | Maximum (Dynamic Python) | Medium | Requires custom `get_config` |
+
+### 🌐 Official References & Recommended Reading:
+- [Keras Official Documentation](https://keras.io/)
+- [TensorFlow Guide: `tf.GradientTape`](https://www.tensorflow.org/guide/autodiff)
+- [W3Schools TensorFlow Tutorial](https://www.w3schools.com/python/python_ml_getting_started.asp)

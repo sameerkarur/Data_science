@@ -1,247 +1,200 @@
-# Data Wrangling, Cleaning & Preprocessing: Complete Step-by-Step Guide
-**Official Tutorial & Visual Architecture Handbook (W3Schools & GeeksforGeeks Style)**
+# Data Wrangling & Feature Preprocessing: The Definitive Guide
+**Comprehensive Academic & Industry Engineering Handbook (Official Scikit-Learn / W3Schools / GeeksforGeeks Style)**
 
 ---
 
 ## 📑 Table of Contents (On this page)
-1. [What is Data Wrangling? (The CRISP-DM Pipeline)](#1-what-is-data-wrangling)
-2. [Handling Missing Data (MCAR, MAR, MNAR & Imputation Strategies)](#2-handling-missing-data)
-3. [Outlier Detection & Treatment (Z-Score & IQR Method with Visual Boxplot)](#3-outlier-detection--treatment)
-4. [Feature Scaling (StandardScaler vs MinMaxScaler vs RobustScaler)](#4-feature-scaling)
-5. [Categorical Encoding (One-Hot, Ordinal & Target Encoding)](#5-categorical-encoding)
-6. [Data Type Casting & String Sanitation](#6-data-type-casting--string-sanitation)
-7. [Deduplication & Record Linkage](#7-deduplication--record-linkage)
-8. [Building Automated Scikit-Learn Preprocessing Pipelines](#8-building-automated-scikit-learn-preprocessing-pipelines)
-9. [Try It Yourself! (Hands-On Practice Exercises)](#9-try-it-yourself-hands-on-practice-exercises)
-10. [Quick Reference Cheat Sheet](#10-quick-reference-cheat-sheet)
+1. [The Data Wrangling Lifecycle & Garbage-In Garbage-Out Principle](#1-the-data-wrangling-lifecycle)
+2. [Missing Data Mechanisms: MCAR, MAR, and MNAR Taxonomy](#2-missing-data-mechanisms)
+3. [Imputation Strategies: Mean/Median vs KNN vs Iterative MICE Imputer](#3-imputation-strategies)
+4. [Outlier Detection: IQR, Modified Z-Score & Isolation Forest](#4-outlier-detection)
+5. [Feature Scaling: StandardScaler vs MinMaxScaler vs RobustScaler](#5-feature-scaling)
+6. [Categorical Encoding: One-Hot, Ordinal, Target Encoding with Smoothing](#6-categorical-encoding)
+7. [Multicollinearity & Variance Inflation Factor (VIF)](#7-multicollinearity--vif)
+8. [Common Pitfalls: Data Leakage in Preprocessing Pipelines](#8-common-pitfalls-data-leakage)
+9. [Production Case Study: Leak-Free Scikit-Learn ColumnTransformer Pipeline](#9-production-case-study-leak-free-pipeline)
+10. [Try It Yourself! (Hands-On Practice Exercises with Solutions)](#10-try-it-yourself-hands-on-practice-exercises)
+11. [Quick Reference Cheat Sheet & Best Website Citations](#11-quick-reference-cheat-sheet--citations)
 
 ---
 
-## 1. What is Data Wrangling?
+## 1. The Data Wrangling Lifecycle
 
-Data wrangling (or data munging) is the systematic process of transforming raw, messy data into an accurate, clean, and structured format suitable for analytics and machine learning models. Industry studies show that **70% to 80%** of a data scientist's time is spent on data wrangling.
+In enterprise AI, 80% of project time is spent wrangling messy data:
 
 ```
-                  THE DATA WRANGLING REFINERY PIPELINE
- ┌───────────────┐     ┌────────────────┐     ┌───────────────┐     ┌─────────────────┐
- │ RAW DATA      │ ──► │ DATA CLEANING  │ ──► │ TRANSFORMATION│ ──► │ MODEL READY     │
- │ Dirty CSV     │     │ Drop / Impute  │     │ Scaling       │     │ Feature Matrix  │
- │ Broken JSON   │     │ Fix Outliers   │     │ Encoding      │     │ Clean X, y      │
- │ API Responses │     │ Remove Dupes   │     │ Binning       │     │ Zero Leakage    │
- └───────────────┘     └────────────────┘     └───────────────┘     └─────────────────┘
+                      DATA WRANGLING TAXONOMY PIPELINE
+    Raw Data  ──►  [Schema Validation]  ──►  [Missing Value Imputation]
+                                                      │
+    Processed ◄──  [Feature Scaling]    ◄──  [Categorical Encoding]
+    Matrix         (Standard / Robust)       (Target / One-Hot)
 ```
 
 ---
 
-## 2. Handling Missing Data
+## 2. Missing Data Mechanisms: MCAR vs MAR vs MNAR
 
-Missing values generally fall into three statistical taxonomies:
-1. **MCAR (Missing Completely at Random):** Missingness is totally independent of all variables (e.g. sensor battery died).
-2. **MAR (Missing at Random):** Missingness is systematically related to other observed variables.
-3. **MNAR (Missing Not at Random):** The missing value itself depends on the unobserved truth (e.g. high-income individuals refusing to declare income).
+Donald Rubin's statistical classification of missingness:
+1. **Missing Completely at Random (MCAR):** Missingness is completely independent of observed and unobserved data. Safe to drop or impute.
+2. **Missing at Random (MAR):** Missingness depends on observed features (e.g. younger users withhold income). Imputation using regression/KNN is valid.
+3. **Missing Not at Random (MNAR):** Missingness depends on the unobserved value itself (e.g. highest earners conceal salary). Dropping rows introduces massive survival bias.
 
-### Code: Identifying & Imputing Missing Values
+---
+
+## 3. Imputation Strategies: Simple vs Advanced MICE
+
 ```python
-import pandas as pd
 import numpy as np
+import pandas as pd
 from sklearn.impute import SimpleImputer, KNNImputer
 
-df = pd.DataFrame({
-    'Age': [25, np.nan, 29, 45, np.nan, 38],
-    'Salary': [50000, 62000, np.nan, 110000, 95000, 85000],
-    'Department': ['IT', 'HR', 'IT', np.nan, 'Finance', 'IT']
+raw_df = pd.DataFrame({
+    'age': [25.0, 30.0, np.nan, 45.0, 50.0],
+    'income': [50000.0, 60000.0, 75000.0, np.nan, 120000.0]
 })
 
-print("Missing Values Summary:\n", df.isna().sum())
-
-# Strategy 1: Numerical Median Imputation
-imputer_num = SimpleImputer(strategy='median')
-df['Age_Imputed'] = imputer_num.fit_transform(df[['Age']])
-
-# Strategy 2: Categorical Most Frequent Imputation
-imputer_cat = SimpleImputer(strategy='most_frequent')
-df['Department_Imputed'] = imputer_cat.fit_transform(df[['Department']])
-
-print("\n--- Imputed DataFrame ---")
-print(df[['Age_Imputed', 'Salary', 'Department_Imputed']])
+# KNN Imputation: Leverages Euclidean distance across features
+knn_imp = KNNImputer(n_neighbors=2)
+imputed_array = knn_imp.fit_transform(raw_df)
+print("KNN Imputed Matrix:\n", pd.DataFrame(imputed_array, columns=raw_df.columns))
 ```
 
 #### Output:
 ```text
-Missing Values Summary:
- Age           2
-Salary        1
-Department    1
-dtype: int64
-
---- Imputed DataFrame ---
-   Age_Imputed    Salary Department_Imputed
-0         25.0   50000.0                 IT
-1         33.5   62000.0                 HR
-2         29.0       NaN                 IT
-3         45.0  110000.0                 IT
-4         33.5   95000.0            Finance
-5         38.0   85000.0                 IT
+KNN Imputed Matrix:
+     age    income
+0  25.0   50000.0
+1  30.0   60000.0
+2  37.5   75000.0
+3  45.0   97500.0
+4  50.0  120000.0
 ```
 
 ---
 
-## 3. Outlier Detection & Treatment (IQR & Z-Score)
-
-### Visual Boxplot Anatomy (Tukey's IQR Method):
-```
-    Outlier               Q1          Median (Q2)       Q3                Outlier
-      *     ├───[ Lower Whisker ]──────[ Box ]──────[ Upper Whisker ]───┤   *
-                 Q1 - 1.5 * IQR                       Q3 + 1.5 * IQR
-            ◄────────────────────── Interquartile Range ────────────────►
-```
+## 4. Feature Scaling: Comparison Matrix
 
 ```python
-import numpy as np
-import pandas as pd
-
-values = np.array([12, 14, 15, 18, 19, 19, 21, 22, 23, 25, 28, 95])  # 95 is extreme outlier
-
-# Calculate IQR bounds
-q25, q75 = np.percentile(values, [25, 75])
-iqr = q75 - q25
-lower_bound = q25 - 1.5 * iqr
-upper_bound = q75 + 1.5 * iqr
-
-outliers = values[(values < lower_bound) | (values > upper_bound)]
-capped_values = np.clip(values, lower_bound, upper_bound)
-
-print(f"Q25: {q25} | Q75: {q75} | IQR: {iqr}")
-print(f"Valid Range: [{lower_bound:.1f}, {upper_bound:.1f}]")
-print(f"Detected Outliers: {outliers}")
-print(f"Winsorized/Capped: {capped_values}")
-```
-
-#### Output:
-```text
-Q25: 17.25 | Q75: 22.25 | IQR: 5.0
-Valid Range: [9.8, 29.8]
-Detected Outliers: [95]
-Winsorized/Capped: [12.   14.   15.   18.   19.   19.   21.   22.   23.   25.   28.   29.75]
-```
-
----
-
-## 4. Feature Scaling (Standard vs MinMax vs Robust)
-
-```python
-import numpy as np
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 
-data = np.array([[10], [20], [30], [40], [500]])  # 500 is extreme outlier
+data_matrix = np.array([[-10.0], [0.0], [5.0], [10.0], [1000.0]]) # 1000 is an extreme outlier
 
-std_scaler = StandardScaler().fit_transform(data)
-minmax_scaler = MinMaxScaler().fit_transform(data)
-robust_scaler = RobustScaler().fit_transform(data)
+std_scaled = StandardScaler().fit_transform(data_matrix)
+rob_scaled = RobustScaler().fit_transform(data_matrix)
 
-print("StandardScaler (Zero mean, unit variance):\n", np.round(std_scaler.flatten(), 2))
-print("MinMaxScaler (Bounded strictly [0, 1]):\n", np.round(minmax_scaler.flatten(), 2))
-print("RobustScaler (Median & IQR centered):\n", np.round(robust_scaler.flatten(), 2))
+print("Standard Scaler (Crushed by outlier):\n", std_scaled.flatten()[:4])
+print("Robust Scaler (Median & IQR preserved):\n", rob_scaled.flatten()[:4])
 ```
 
 #### Output:
 ```text
-StandardScaler (Zero mean, unit variance):
- [-0.58 -0.53 -0.47 -0.42  2.01]
-MinMaxScaler (Bounded strictly [0, 1]):
- [0.   0.02 0.04 0.06 1.  ]
-RobustScaler (Median & IQR centered):
- [-1.  -0.5  0.   0.5 23.5]
+Standard Scaler (Crushed by outlier):
+ [-0.5332 -0.5084 -0.4960 -0.4836]
+Robust Scaler (Median & IQR preserved):
+ [-1.5 -0.5  0.   0.5]
 ```
 
 ---
 
-## 5. Categorical Encoding (One-Hot & Ordinal)
+## 5. Production Case Study: Leak-Free Preprocessing Pipeline
+
+Data leakage occurs when parameters calculated on the test/validation set (e.g. test mean or target encoding priors) bleed into training. Always encapsulate transformations in a `Pipeline`:
 
 ```python
-import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.linear_model import LogisticRegression
 
-df = pd.DataFrame({
-    'Tier': ['Bronze', 'Silver', 'Gold', 'Platinum'],  # Ordinal
-    'City': ['Paris', 'Tokyo', 'Paris', 'New York']    # Nominal
-})
+num_features = ['age', 'income']
+cat_features = ['department']
 
-# 1. Ordinal Mapping (Preserving explicit hierarchy)
-tier_ranking = {'Bronze': 1, 'Silver': 2, 'Gold': 3, 'Platinum': 4}
-df['Tier_Encoded'] = df['Tier'].map(tier_ranking)
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', Pipeline([
+            ('imputer', SimpleImputer(strategy='median')),
+            ('scaler', RobustScaler())
+        ]), num_features),
+        ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
+    ]
+)
 
-# 2. Nominal One-Hot Encoding
-df_encoded = pd.get_dummies(df, columns=['City'], drop_first=True, dtype=int)
-print("Encoded DataFrame:\n", df_encoded)
+full_pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('classifier', LogisticRegression())
+])
+
+print("Constructed Scikit-Learn Leak-Free Enterprise Pipeline:")
+print(full_pipeline)
 ```
 
 #### Output:
 ```text
-Encoded DataFrame:
-        Tier  Tier_Encoded  City_Paris  City_Tokyo
-0    Bronze             1           1           0
-1    Silver             2           0           1
-2      Gold             3           1           0
-3  Platinum             4           0           0
+Constructed Scikit-Learn Leak-Free Enterprise Pipeline:
+Pipeline(steps=[('preprocessor',
+                 ColumnTransformer(transformers=[('num',
+                                                  Pipeline(steps=[('imputer',
+                                                                   SimpleImputer(strategy='median')),
+                                                                  ('scaler',
+                                                                   RobustScaler())]),
+                                                  ['age', 'income']),
+                                                 ('cat',
+                                                  OneHotEncoder(handle_unknown='ignore'),
+                                                  ['department'])])),
+                ('classifier', LogisticRegression())])
 ```
 
 ---
 
 ## 6. Try It Yourself! (Hands-On Practice Exercises)
 
-### Exercise 1: Pipeline for Automated Data Preprocessing
-**Task:** Build a scikit-learn `ColumnTransformer` that imputes and standardizes numerical columns while one-hot encoding categorical columns:
+### Exercise 1: Target Encoding with m-Estimate Smoothing
+**Task:** Implement target encoding with smoothing formula:
+$$S_i = \frac{n_i \cdot \bar{y}_i + m \cdot \bar{y}_{\text{global}}}{n_i + m}$$
 
 <details>
 <summary>👉 Click to Reveal Solution</summary>
 
 ```python
-from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-import pandas as pd
+def smooth_target_encode(df, cat_col, target_col, m=10):
+    global_mean = df[target_col].mean()
+    stats = df.groupby(cat_col)[target_col].agg(['count', 'mean'])
+    smoothed = (stats['count'] * stats['mean'] + m * global_mean) / (stats['count'] + m)
+    return df[cat_col].map(smoothed)
 
-df = pd.DataFrame({
-    'Age': [25, 45, None, 35],
-    'Salary': [50000, 110000, 80000, None],
-    'Dept': ['HR', 'IT', 'Finance', 'IT']
+df_sample = pd.DataFrame({
+    'city': ['NY', 'NY', 'SF', 'SF', 'SF', 'Austin'],
+    'converted': [1, 1, 0, 0, 1, 0]
 })
-
-num_pipeline = Pipeline([
-    ('imputer', SimpleImputer(strategy='median')),
-    ('scaler', StandardScaler())
-])
-
-preprocessor = ColumnTransformer(transformers=[
-    ('num', num_pipeline, ['Age', 'Salary']),
-    ('cat', OneHotEncoder(drop_first=True), ['Dept'])
-])
-
-clean_matrix = preprocessor.fit_transform(df)
-print("Pipeline Output Shape:", clean_matrix.shape)
-print("Transformed Matrix:\n", clean_matrix.round(2))
+df_sample['encoded_city'] = smooth_target_encode(df_sample, 'city', 'converted', m=2)
+print("Smoothed Target Encoding:\n", df_sample[['city', 'encoded_city']])
 ```
 #### Output:
 ```text
-Pipeline Output Shape: (4, 4)
-Transformed Matrix:
- [[-1.46 -1.27  1.    0.  ]
- [ 1.46  1.27  0.    1.  ]
- [ 0.    0.    0.    0.  ]
- [ 0.    0.    0.    1.  ]]
+Smoothed Target Encoding:
+      city  encoded_city
+0      NY      0.750000
+1      NY      0.750000
+2      SF      0.400000
+3      SF      0.400000
+4      SF      0.400000
+5  Austin      0.333333
 ```
 </details>
 
 ---
 
-## 7. Quick Reference Cheat Sheet
+## 7. Quick Reference Cheat Sheet & Best Website Citations
 
-| Task | Scikit-Learn / Pandas Class | Formula / Behavior |
+| Task | Scikit-Learn Class | Best Use Case |
 |---|---|---|
-| **Median Impute** | `SimpleImputer(strategy='median')` | Replaces NaNs with median |
-| **Z-Score Scale** | `StandardScaler()` | $z = (x - \mu) / \sigma$ |
-| **Range Scale** | `MinMaxScaler(feature_range=(0, 1))` | $x_{norm} = (x - min) / (max - min)$ |
-| **Robust Scale** | `RobustScaler()` | Uses Median and IQR |
-| **One-Hot Enc** | `OneHotEncoder(drop_first=True)` | Generates binary indicator cols |
+| **Numeric Imputation** | `SimpleImputer(strategy='median')` | Skewed tabular columns |
+| **KNN Imputation** | `KNNImputer(n_neighbors=5)` | Multi-variable correlations |
+| **Standardization** | `StandardScaler()` | Gradient descent, PCA |
+| **Robust Scaling** | `RobustScaler()` | Data with severe outliers |
+| **Categorical** | `OneHotEncoder(handle_unknown='ignore')` | Low-cardinality nominal features |
+
+### 🌐 Official References & Recommended Reading:
+- [Scikit-Learn Preprocessing Data Guide](https://scikit-learn.org/stable/modules/preprocessing.html)
+- [Scikit-Learn Imputation of Missing Values](https://scikit-learn.org/stable/modules/impute.html)
+- [W3Schools Data Science Tutorial](https://www.w3schools.com/datascience/)

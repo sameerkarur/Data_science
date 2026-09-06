@@ -838,9 +838,9 @@ marked_parser_logic = """
 """
 
 def build():
-    # 1. Get HEAD:index.html
+    # 1. Get base pristine template 47563f8:index.html to prevent duplicate injections
     head_html = subprocess.check_output(
-        ["git", "show", "HEAD:index.html"],
+        ["git", "show", "47563f8:index.html"],
         text=True,
         cwd=str(REPO_ROOT),
     )

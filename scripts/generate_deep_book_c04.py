@@ -1,4 +1,22 @@
-# Neural Networks Architecture, Activation Functions & Backpropagation: The Definitive Textbook
+"""
+Comprehensive Textbook Generator for Course 4: Deep Learning with Keras & TensorFlow
+Generates 1,000+ line authoritative master chapters covering:
+- Deep mathematical derivations (Chain rule, Backprop, Xavier/He init, Loss functions)
+- Complete numerical hand-worked backpropagation examples with real decimal values
+- Detailed ASCII architecture diagrams, decision boundaries, and computational graphs
+- Step-by-step optimizer mathematical evolutions (SGD -> Momentum -> RMSprop -> Adam -> AdamW)
+- Modular from-scratch pure NumPy implementations
+- Comprehensive diagnostic guides and hands-on exercises
+"""
+
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+# =====================================================================
+# Module 1: Neural Networks Architecture, Activation Functions & Backpropagation
+# =====================================================================
+C04_M01_BOOK = r'''# Neural Networks Architecture, Activation Functions & Backpropagation: The Definitive Textbook
 **Comprehensive Academic & Industry Engineering Handbook (Stanford CS231n / MIT 6.S191 / DeepLearning.AI Grade)**
 
 ---
@@ -963,3 +981,8 @@ NLL Loss:        0.4170
 4. **Kingma, D. P., & Ba, J. (2014).** Adam: A method for stochastic optimization. *arXiv preprint arXiv:1412.6980*.
 5. **Loshchilov, I., & Hutter, F. (2019).** Decoupled weight decay regularization. *ICLR*.
 6. **Hendrycks, D., & Gimpel, K. (2016).** Gaussian error linear units (GELUs). *arXiv:1606.08415*.
+'''
+
+p_c04_m01 = REPO_ROOT / "04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/01_neural_network_basics/basics.md"
+p_c04_m01.write_text(C04_M01_BOOK.strip() + "\n", encoding="utf-8")
+print(f"✅ Generated C04 M01 (Neural Networks Master Textbook): {len(C04_M01_BOOK.splitlines())} lines.")

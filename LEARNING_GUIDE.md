@@ -1,6 +1,6 @@
 # Master AI/ML & Generative AI Learning Guide
 **Professional Certificate Program — E&ICT Academy, IIT Kanpur (Dec 2025 – Nov 2026)**  
-*Compiled & Authored by Sameer Karur*
+*Comprehensive Curriculum Handbook & Academic Synthesis*
 
 ---
 
@@ -94,18 +94,42 @@ Data_science/
 * **Key Learning:** Setting up isolated virtual environments (`venv`, `conda`), understanding dependencies, adhering to reproducibility standards.
 
 ## Course 01: Foundations — Programming Refresher
+* **Master Textbook Chapters:**
+  - 📖 [Chapter 1: Variables, Types & Memory Architecture](01_IITK_AIML_Foundations_Programming_Refresher/01_variables_datatypes/basics.md)
+  - 📖 [Chapter 2: Control Flow, Pattern Matching & Functional Paradigms](01_IITK_AIML_Foundations_Programming_Refresher/02_control_flow_functions/basics.md)
+  - 📖 [Chapter 3: Advanced Data Structures & Algorithmic Complexity](01_IITK_AIML_Foundations_Programming_Refresher/03_data_structures/basics.md)
+  - 📖 [Chapter 4: Object-Oriented Architecture & Design Patterns](01_IITK_AIML_Foundations_Programming_Refresher/04_oop_modules/basics.md)
+  - 📖 [Chapter 5: File I/O, Serialization Protocols & Exception Resilience](01_IITK_AIML_Foundations_Programming_Refresher/05_file_io_exceptions/basics.md)
 * **Python Memory Model:** CPython reference counting, garbage collection cycles, object mutability vs immutability (tuples/strings vs lists/dicts).
 * **Advanced Constructs:** List/dict/set comprehensions, generators (`yield` for lazy memory streaming), `itertools`, `functools` (`lru_cache`, `partial`), decorators (`@wraps`), context managers (`with` / `__enter__`, `__exit__`).
 * **Object-Oriented Programming (OOP):** Encapsulation, inheritance, polymorphism, abstract base classes (`abc.ABC`), dataclasses, and solid design patterns (Factory, Strategy, Observer).
 * **Exception Handling & File I/O:** Robust file streams, atomic writes, JSON/CSV parsing, custom exception hierarchies.
 
 ## Course 02: Core — Applied Data Science with Python
+* **Master Textbook Chapters:**
+  - 📖 [Chapter 6: The Data Science Paradigm & CRISP-DM](02_IITK_AIML_Core_Applied_Data_Science_with_Python/01_intro_data_science/basics.md)
+  - 📖 [Chapter 7: Python Data Science Ecosystem & Virtual Environments](02_IITK_AIML_Core_Applied_Data_Science_with_Python/02_python_essentials/basics.md)
+  - 📖 [Chapter 8: Vectorized Numerical Computing with NumPy](02_IITK_AIML_Core_Applied_Data_Science_with_Python/03_numpy/basics.md)
+  - 📖 [Chapter 9: Linear Algebra, Spectral Theory & SVD](02_IITK_AIML_Core_Applied_Data_Science_with_Python/04_linear_algebra/basics.md)
+  - 📖 [Chapter 10: Descriptive & Inferential Statistics](02_IITK_AIML_Core_Applied_Data_Science_with_Python/05_statistics_fundamentals/basics.md)
+  - 📖 [Chapter 11: Probability Theory, Distributions & Bayes](02_IITK_AIML_Core_Applied_Data_Science_with_Python/06_probability_distributions/basics.md)
+  - 📖 [Chapter 12: Statistical Hypothesis Testing & A/B Testing](02_IITK_AIML_Core_Applied_Data_Science_with_Python/07_advanced_statistics/basics.md)
+  - 📖 [Chapter 13: High-Performance Data Manipulation with Pandas](02_IITK_AIML_Core_Applied_Data_Science_with_Python/08_pandas/basics.md)
+  - 📖 [Chapter 14: Data Wrangling, Cleaning & Preprocessing](02_IITK_AIML_Core_Applied_Data_Science_with_Python/09_data_wrangling/basics.md)
+  - 📖 [Chapter 15: Data Visualization Architecture (Matplotlib & Seaborn)](02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/basics.md)
+  - 📖 [Chapter 16: String Processing, Regex Internals & Web APIs](02_IITK_AIML_Core_Applied_Data_Science_with_Python/11_regex_json_apis/basics.md)
 * **NumPy Vectorization:** Broadcasting semantics, stride tricks, SIMD CPU acceleration, memory views vs copies.
 * **Pandas Analytics:** MultiIndex pivoting, split-apply-combine (`groupby`), window functions (`rolling`, `expanding`), categoricals for memory compression, datetime indexing.
 * **Data Visualization & Storytelling:** Matplotlib figure-axes architecture, Seaborn statistical distributions (kdeplots, heatmaps, pairplots), visual encoding best practices.
 * **Feature Engineering:** Handling missing values (MICE, iterative imputer, domain heuristics), outlier detection (Tukey's IQR, Z-score, Isolation Forest), feature scaling (MinMaxScaler, StandardScaler, RobustScaler).
 
 ## Course 03: Core — Machine Learning
+* **Master Textbook Chapters:**
+  - 📖 [Chapter 17: Exploratory Data Analysis & Feature Selection](03_IITK_AIML_Core_Machine_Learning/01_eda_feature_engineering/basics.md)
+  - 📖 [Chapter 18: Unsupervised Clustering & Density Estimation](03_IITK_AIML_Core_Machine_Learning/02_clustering/basics.md)
+  - 📖 [Chapter 19: Supervised Classification & XGBoost](03_IITK_AIML_Core_Machine_Learning/03_classification/basics.md)
+  - 📖 [Chapter 20: Extreme Class Imbalance Mitigation (SMOTE & Focal Loss)](03_IITK_AIML_Core_Machine_Learning/04_imbalanced_data/basics.md)
+  - 📖 [Chapter 21: Model Validation & Explainable AI (SHAP)](03_IITK_AIML_Core_Machine_Learning/05_model_evaluation/basics.md)
 * **Supervised Regression & Classification:**
   - Cost functions: Mean Squared Error (MSE), Cross-Entropy Loss (Log Loss).
   - Regularization: L1 (Lasso) promotes sparsity; L2 (Ridge) shrinks weights; ElasticNet balances both.
@@ -121,6 +145,11 @@ Data_science/
 * **Model Evaluation Metrics:** Precision, Recall, $F_\beta$ score, ROC curve, Area Under ROC (ROC-AUC), Precision-Recall AUC (PR-AUC for skewed data).
 
 ## Course 04: Core — Deep Learning with Keras & TensorFlow
+* **Master Textbook Chapters:**
+  - 📖 [Chapter 22: Neural Network Architecture & Backpropagation Calculus](04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/01_neural_network_basics/basics.md)
+  - 📖 [Chapter 23: TensorFlow 2.x & Keras 3 Framework Architecture](04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/02_keras_tensorflow/basics.md)
+  - 📖 [Chapter 24: Production Data Pipelines (tf.data) & Regularization](04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/03_preprocessing_imbalance/basics.md)
+  - 📖 [Chapter 25: DL Evaluation, Learning Rate Schedules & Grad-CAM](04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/04_model_evaluation_dl/basics.md)
 * **Neural Architecture Foundations:** Forward propagation, computational graphs, automatic differentiation, backpropagation chain rule.
 * **Activation Functions:** Non-linear mappings: Sigmoid $\sigma(z) = \frac{1}{1 + e^{-z}}$, Tanh $\tanh(z)$, ReLU $\max(0, z)$, Leaky ReLU, GELU (Gaussian Error Linear Unit).
 * **Preventing Overfitting in Deep Networks:** Dropout (Bernoulli masking during training), Batch Normalization (stabilizing internal covariate shift), Weight decay, Early Stopping with model checkpointing.
@@ -130,6 +159,10 @@ Data_science/
   - Transfer Learning: Freezing base feature extractors (e.g. MobileNetV2, ResNet50), training custom classification heads, progressive fine-tuning of top layers with low learning rates.
 
 ## Course 05: Core — Essentials of Generative AI, Prompt Engineering & ChatGPT
+* **Master Textbook Chapters:**
+  - 📖 [Chapter 26: Enterprise Prompt Engineering, ICL & Guardrails](05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/01_prompt_engineering/basics.md)
+  - 📖 [Chapter 27: Chat Completion APIs, Tool Calling & Structured Outputs](05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/02_chatgpt_applications/basics.md)
+  - 📖 [Chapter 28: Parameter-Efficient Fine-Tuning (PEFT), LoRA & Quantization](05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/03_genai_optimization/basics.md)
 * **Transformer Architecture:**
   - Self-Attention Mechanism:
     $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
@@ -142,6 +175,10 @@ Data_science/
 * **LLM Agents & Tool Use:** ReAct (Reason + Act) loop: Thought $\to$ Action $\to$ Observation $\to$ Final Answer.
 
 ## Course 06: Advanced Generative AI
+* **Master Textbook Chapters:**
+  - 📖 [Chapter 29: Enterprise Retrieval-Augmented Generation (RAG) Architecture](06_IITK_AIML_Advanced_Generative_AI/01_rag_architectures/basics.md)
+  - 📖 [Chapter 30: Vector Databases, Approximate Nearest Neighbors & ChromaDB](06_IITK_AIML_Advanced_Generative_AI/02_vector_databases_chroma/basics.md)
+  - 📖 [Chapter 31: Multimodal Vision-Language (CLIP) & Latent Diffusion Models](06_IITK_AIML_Advanced_Generative_AI/03_multimodal_generative_models/basics.md)
 * **Practice Question Banks & Labs:**
   - `01_rag_architectures/`: 50 practice problems + solutions + 30 interview Q&A on chunking, embeddings, context injection, and RAG evaluation.
   - `02_vector_databases_chroma/`: 50 practice problems + solutions + 30 interview Q&A on HNSW, ANN search, quantization, and ChromaDB persistence.
@@ -156,6 +193,10 @@ Data_science/
   - System prompt chaining: Generating marketing pitch copy $\to$ synthesizing image generation prompts $\to$ automated image fetching & rendering.
 
 ## Course 07: Capstone (Autonomous Driving, Sales Forecasting, Heritage AI)
+* **Master Capstone Project Deliverables:**
+  - 📖 [Chapter 32: Autonomous Driving Perception Architecture](07_IITK_AIML_Capstone/project1_autonomous_driving/WRITEUP.md)
+  - 📖 [Chapter 33: 365-Day Hierarchical Demand Forecasting Architecture](07_IITK_AIML_Capstone/project2_sales_forecasting/WRITEUP.md)
+  - 📖 [Chapter 34: Heritage Monument Multi-Modal Recommendation Architecture](07_IITK_AIML_Capstone/project3_preserving_heritage/WRITEUP.md)
 * **Capstone 1: Autonomous Driving:**
   - Image cropping & annotation parsing from Pascal VOC XMLs.
   - Transfer learning MobileNetV2 vehicle crop classifier (89.9% accuracy).

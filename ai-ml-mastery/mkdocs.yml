@@ -131,7 +131,11 @@ nav:
       - "Deep-dive: Neural Network Foundations": 06-deep-learning/neural-network-foundations-deep-dive.md
       - "Deep-dive: Architecture Components & Regularization": 06-deep-learning/architecture-components-regularization-deep-dive.md
       - "Deep-dive: Deep Learning Optimizers": 06-deep-learning/deep-learning-optimizers-deep-dive.md
-  - Book 7 – Computer Vision: 07-computer-vision/index.md
+  - Book 7 – Computer Vision:
+      - Overview: 07-computer-vision/index.md
+      - "Deep-dive: Convolutional Foundations": 07-computer-vision/convolutional-foundations-deep-dive.md
+      - "Deep-dive: Modern CNN Architectures & Transfer Learning": 07-computer-vision/modern-cnn-architectures-transfer-learning-deep-dive.md
+      - "Deep-dive: Vision Tasks, ViT & Multimodal Vision": 07-computer-vision/vision-tasks-transformers-multimodal-deep-dive.md
   - Book 8 – NLP: 08-nlp/index.md
   - Book 9 – Transformers & LLMs: 09-transformers-llms/index.md
   - Book 10 – Generative AI: 10-generative-ai/index.md

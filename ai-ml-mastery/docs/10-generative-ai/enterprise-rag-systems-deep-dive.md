@@ -8,6 +8,7 @@
 ## 1. The Big Picture: Parametric vs. Non-Parametric Memory
 
 Foundation models possess **parametric memory**: knowledge compressed into billions of neural network weights during pretraining. While powerful, parametric memory exhibits fatal enterprise deficiencies:
+
 1. **Knowledge Cutoffs**: Weights cannot access information created after the pretraining cut-off date.
 2. **Hallucination Risk**: When generating rare or long-tail factual claims, models hallucinate plausible-sounding falsehoods.
 3. **Lack of Auditability & Citations**: Weights cannot provide verifiable source provenance.
@@ -42,6 +43,7 @@ flowchart TD
 ## 2. Chunking Strategies & Context Engineering
 
 Chunking transforms raw variable-length documents into discrete informational units. Choosing an suboptimal chunk size introduces a fundamental trade-off:
+
 - **Chunks Too Small**: Loses surrounding semantic context, resulting in fragmented fragments that baffle the generator.
 - **Chunks Too Large**: Dilutes specific facts in noise, causing vector embeddings to average out into generic topic centroids.
 
@@ -87,6 +89,7 @@ flowchart LR
 2. Compute embeddings $\mathbf{e}_t = \phi(s_t)$.
 3. Compute cosine distance between adjacent sentences:
    $$d_t = 1 - \cos(\mathbf{e}_t, \mathbf{e}_{t+1})$$
+
 4. Place a chunk boundary at index $t$ if $d_t > \tau$, where threshold $\tau$ is dynamically set to the $95\text{th}$ percentile of all observed distances.
 
 ---
@@ -155,6 +158,7 @@ flowchart TD
 - Vectors are inserted into a multi-layer graph structure.
 - The maximum layer $l$ for a new vector is sampled exponentially:
   $$l = \lfloor -\ln(\text{uniform}(0, 1)) \cdot m_L \rfloor, \quad \text{where } m_L = \frac{1}{\ln(M)}$$
+
 - Layer 0 contains **all** $N$ vectors with high clustering and short-range links.
 - Higher layers contain an exponentially decreasing subset of vectors with long-range "expressway" links.
 
@@ -165,6 +169,7 @@ flowchart TD
 4. At layer 0, expand the search frontier up to $efSearch$ candidates to return the top-$k$ nearest neighbors.
 
 **HNSW Hyperparameters:**
+
 - $M \in [16, 64]$: Maximum bi-directional links per node. Higher $M$ increases recall and index size.
 - $efConstruction \in [100, 400]$: Size of dynamic candidate list during graph construction. Controls build time vs. graph quality.
 - $efSearch \in [32, 256]$: Size of dynamic candidate list during query execution. Tunes the query latency vs. recall trade-off without rebuilding the index.
@@ -174,6 +179,7 @@ flowchart TD
 ### 3.3 Product Quantization (PQ)
 
 Product Quantization ([Jégou et al., 2011](https://ieeexplore.ieee.org/document/5432242)) compresses vectors by orders of magnitude:
+
 1. Split $d$-dimensional space $\mathbb{R}^d$ into $m$ orthogonal sub-vectors of dimension $d^* = d / m$.
 2. For each subspace $j \in \{1, \dots, m\}$, run $k$-means to learn $k^* = 256$ centroids: codebook $\mathcal{C}_j = \{ \mathbf{c}_{j, 1}, \dots, \mathbf{c}_{j, 256} \}$.
 3. Each sub-vector is replaced by the 8-bit index ($1\text{ byte}$) of its nearest centroid.
@@ -210,6 +216,7 @@ $$
 $$
 
 where:
+
 - $f(q_i, D)$ is the term frequency of query token $q_i$ in document $D$.
 - $|D|$ is the document length in tokens, and $\text{avgdl}$ is the average document length across the corpus.
 - $k_1 \in [1.2, 2.0]$ controls **term frequency saturation**: as $f(q_i, D) \to \infty$, the term score asymptotically approaches $k_1 + 1$.
@@ -235,6 +242,7 @@ $$
 where $\mathcal{M} = \{\text{dense}, \text{sparse}\}$, $r_m(d)$ is the 1-based rank of document $d$ in system $m$, and $k$ is a constant smoothing hyperparameter (standard $k = 60$).
 
 **Why RRF Works:**
+
 1. Invariant to score scale, calibration, and distribution shape.
 2. Heavily rewards documents that rank in the top 5 of *either* system while smoothly promoting documents appearing moderately high in *both*.
 
@@ -243,6 +251,7 @@ where $\mathcal{M} = \{\text{dense}, \text{sparse}\}$, $r_m(d)$ is the 1-based r
 ## 5. Knowledge Graphs & GraphRAG
 
 Traditional vector RAG fails on **global thematic queries** that span an entire corpus:
+
 - *"What are the top three operational risks across all internal audit reports?"*
 
 Because no single chunk contains the answer, vector search retrieves arbitrary localized fragments.
@@ -289,9 +298,11 @@ flowchart TD
    Extract all factual claims from generated answer $A$: $\{c_1, \dots, c_n\}$. For each claim, check if it can be inferred directly from retrieved context $C$:
    $$\text{Faithfulness} = \frac{|\{c_i \mid C \models c_i\}|}{|\{c_1, \dots, c_n\}|}$$
    Measures hallucination rate ($1.0 = \text{zero hallucination}$).
+
 2. **Answer Relevance**:
    Evaluate whether the response addresses the prompt without extraneous verbosity. Computed by prompting an LLM to generate $m$ synthetic queries from answer $A$ and measuring mean cosine similarity against the original query $q$:
    $$\text{Answer Relevance} = \frac{1}{m} \sum_{i=1}^m \cos(\phi(q), \phi(\tilde{q}_i))$$
+
 3. **Context Precision**:
    Evaluates retrieval ranking quality. Measures whether ground-truth relevant chunks appear near the top of the retrieved list (equivalent to Mean Average Precision @ K).
 
@@ -299,6 +310,7 @@ flowchart TD
 
 ### 6.2 The "Lost in the Middle" Effect
 [Liu et al. (2023)](https://arxiv.org/abs/2307.03172) demonstrated that decoder-only LLMs exhibit severe **U-shaped position bias**:
+
 - Retrieval information placed at the **very beginning** or **very end** of the context prompt achieves $70-80\%$ accuracy.
 - When critical information is located in the **middle** of a long context window ($>4\text{k tokens}$), accuracy drops below $30\%$.
 
@@ -309,6 +321,7 @@ flowchart TD
 ## 7. Complete Runnable Python Implementation
 
 Below is a complete, self-contained implementation featuring:
+
 - **BM25 Lexical Inverted Index**.
 - **Dense Vector Search with Cosine Similarity**.
 - **Reciprocal Rank Fusion (RRF) Hybrid Combiner**.
@@ -545,12 +558,14 @@ smoothed_distances = np.convolve(distances, [0.25, 0.5, 0.25], mode='same')
 **Model Answer:**  
 Linear score combination computes $S_{\text{hybrid}}(d) = \alpha S_{\text{dense}}(d) + (1 - \alpha) S_{\text{sparse}}(d)$.  
 This fails in production because:
+
 1. Dense cosine similarity is bounded in $[-1, 1]$ and concentrated in $[0.6, 0.9]$.
 2. Sparse BM25 scores are unbounded $[0, \infty)$ and scale with query length and term uniqueness (a rare token yields scores $>25$, while common terms yield $<3$).
 3. Attempting to normalize BM25 via min-max scaling depends on the maximum score in the current result set, causing score instability across queries.  
 RRF discards raw scores entirely and operates purely on ranks:
 $$\text{RRF}(d) = \sum_{m \in \mathcal{M}} \frac{1}{k + r_m(d)}$$
 Mathematical properties:
+
 - Invariant to score scale and distribution shifts.
 - The parameter $k$ (typically 60) regulates the penalty gradient: the difference in reward between rank 1 and rank 2 is $\frac{1}{61} - \frac{1}{62} \approx 0.00026$, preventing an outlier rank 1 from completely dominating if the document is absent from the other retriever.
 - An item ranking top-3 in both systems achieves higher fused score than an item ranking #1 in one system but absent (or ranked #100) in the other.
@@ -561,6 +576,7 @@ Mathematical properties:
 
 **Model Answer:**  
 HNSW structures data into a multi-layer graph hierarchy modeled after skip lists:
+
 1. **Layer Hierarchy**: Layers are numbered $0$ to $l_{\max}$. Every node exists in Layer 0. Nodes are assigned to higher layers with exponentially decreasing probability $p = 1 / \ln(M)$. Higher layers contain few nodes connected by long-range links; lower layers contain all nodes connected by short-range, local cluster links.
 2. **Greedy Traversal**: Search begins at the top layer $l_{\max}$ at a global entry point. At the current layer, the algorithm greedily hops to whichever neighbor has the smallest distance to query $\mathbf{q}$. When no neighbor is closer than the current node, search drops down one layer, using that local minimum as the entry point for the layer below.
 3. **Complexity**: Because the number of nodes decreases exponentially with layer height, the number of hops per layer is bounded by a constant. Traversing $\ln(N)$ layers yields $\mathcal{O}(\log N)$ overall query complexity while maintaining high clustering coefficients and small-world short path lengths.
@@ -570,6 +586,7 @@ HNSW structures data into a multi-layer graph hierarchy modeled after skip lists
 ### Q3: Contrast standard Vector RAG with Microsoft GraphRAG. What fundamental query failure mode does GraphRAG solve?
 
 **Model Answer:**  
+
 - **Vector RAG**: Indexes isolated text chunks as dense vectors. When a query is issued, it retrieves chunks via cosine similarity (point-to-point semantic similarity).
   - *Failure Mode*: Fails on global, corpus-wide thematic queries (*"What are the major themes across all 5,000 customer interviews?"*). Because no single chunk contains the comprehensive theme, top-$k$ vector retrieval returns disconnected anecdotal fragments.
 - **GraphRAG**:
@@ -585,9 +602,11 @@ HNSW structures data into a multi-layer graph hierarchy modeled after skip lists
 **Model Answer:**  
 Liu et al. (2023) demonstrated that decoder-only Transformers exhibit a U-shaped accuracy curve as context length grows. When critical retrieval context is placed at the very beginning (primacy effect) or very end (recency effect) of the input prompt, retrieval accuracy reaches $70-80\%$. When the critical fact is placed in the middle of a $4\text{k}-32\text{k}$ token context, accuracy drops below $30\%$.  
 This occurs because:
+
 1. Rotary Position Embeddings (RoPE) and causal attention naturally maintain sharp attention weights at the current token (recency) and initial prompt system tokens (attention sinks).
 2. Gradients attenuate over long intervening token distances.  
 **Mitigation Strategy**: Context Reordering. After ranking retrieved chunks by relevance, the pipeline re-orders them such that:
+
 - Rank 1 chunk is placed at the top (beginning of context).
 - Rank 2 chunk is placed at the bottom (immediately before user question).
 - Lower-ranked chunks (Ranks 3, 4, 5) are placed in the middle.
@@ -597,6 +616,7 @@ This occurs because:
 ### Q5: How do the three metrics of the Ragas framework (Faithfulness, Answer Relevance, Context Precision) isolate failure modes between the Retriever and the Generator?
 
 **Model Answer:**  
+
 1. **Context Precision** isolates the **Retriever**:
    - Compares retrieved chunks against the ground truth / query intent.
    - Low Context Precision means the retriever returned noisy, irrelevant, or misranked documents.

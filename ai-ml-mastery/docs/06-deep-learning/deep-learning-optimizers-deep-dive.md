@@ -8,11 +8,13 @@
 ## 1. The Big Picture
 
 Training deep neural networks requires navigating highly non-convex loss surfaces in spaces with millions to billions of dimensions. In this high-dimensional regime, the primary obstacles to convergence are not local minima, but:
+
 1. **Ill-conditioned Ravines**: Valleys where curvature is orders of magnitude steeper in some directions than others (condition number $\kappa = \frac{\lambda_{\max}(H)}{\lambda_{\min}(H)} \gg 1$), causing vanilla gradient descent to oscillate violently across walls while making negligible progress along the base.
 2. **Saddle Points & Flat Plateaus**: Critical points where $\nabla \mathcal{L} = \mathbf{0}$, but the Hessian has both positive and negative eigenvalues. Escaping saddle points requires momentum or second-moment curvature compensation.
 3. **Stochastic Gradient Variance**: Mini-batch sampling introduces noisy gradient estimates that destabilize parameter trajectories.
 
 Modern deep learning optimizers solve these geometric challenges through two orthogonal mechanisms:
+
 - **First-Moment Tracking (Momentum)**: Accumulating velocity vectors to accelerate along consistent gradient directions and cancel out high-frequency oscillations.
 - **Second-Moment Adaptation (RMSProp / Adam)**: Scaling coordinate-wise step sizes inversely proportional to the historical root-mean-square gradient magnitude, equalizing update velocities across stiff and sloppy directions.
 
@@ -60,6 +62,7 @@ $$
 
 In a quadratic bowl $\mathcal{L}(x, y) = \frac{1}{2}(x^2 + 100 y^2)$, $\kappa = 100$.  
 For vanilla gradient descent $x_{t+1} = x_t - \eta \nabla \mathcal{L}$:
+
 - To prevent divergence along the stiff $y$-direction, the step size must satisfy $\eta < \frac{2}{\lambda_{\max}} = \frac{2}{100} = 0.02$.
 - But along the flat $x$-direction, convergence proceeds at rate $(1 - \eta \lambda_{\min}) = (1 - 0.02 \times 1) = 0.98$.
 - It takes hundreds of iterations to traverse the ravine!
@@ -87,6 +90,7 @@ $$
 $$
 
 where:
+
 - $\mathbf{g}_t = \nabla \mathcal{L}(\boldsymbol{\theta}_{t-1})$ is the current gradient.
 - $\mathbf{v}_t$ is the velocity vector.
 - $\beta \in [0, 1)$ is the momentum decay factor (typically $\beta = 0.9$).
@@ -138,6 +142,7 @@ flowchart LR
 
 **Theoretical Convergence Advantage:**  
 For convex functions with $L$-Lipschitz gradients:
+
 - Standard Gradient Descent: convergence rate $\mathcal{O}(1/t)$.
 - Classical Polyak Momentum: $\mathcal{O}(1/t)$.
 - Nesterov Accelerated Gradient: $\mathcal{O}(1/t^2)$ — matching the optimal theoretical lower bound for first-order black-box optimization.
@@ -177,6 +182,7 @@ $$
 
 where $\beta_2 \in [0.9, 0.999]$ (typically $\beta_2 = 0.99$).  
 Because $\mathbf{v}_t$ tracks a localized temporal average of squared gradients:
+
 - Directions with consistently large gradients have large $\sqrt{\mathbf{v}_{t, i}}$, scaling down their effective step size.
 - Directions with tiny gradients have small $\sqrt{\mathbf{v}_{t, i}}$, scaling up their effective step size.
 - The condition number is effectively equalized without the premature decay of AdaGrad.
@@ -190,14 +196,19 @@ Adam combines the benefits of **Momentum** (first moment of gradients) and **RMS
 ### 6.1 Algorithmic Formulation
 
 At iteration step $t \ge 1$:
+
 1. **Compute Mini-batch Gradient**:
    $$\mathbf{g}_t = \nabla_{\boldsymbol{\theta}} \mathcal{L}_t(\boldsymbol{\theta}_{t-1})$$
+
 2. **Update Biased First Moment (Velocity)**:
    $$\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1 - \beta_1) \mathbf{g}_t$$
+
 3. **Update Biased Second Raw Moment (Squared Gradient EMA)**:
    $$\mathbf{v}_t = \beta_2 \mathbf{v}_{t-1} + (1 - \beta_2) \mathbf{g}_t^2$$
+
 4. **Compute Bias-Corrected Moments**:
    $$\widehat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1 - \beta_1^t}, \qquad \widehat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1 - \beta_2^t}$$
+
 5. **Update Parameters**:
    $$\boldsymbol{\theta}_t = \boldsymbol{\theta}_{t-1} - \frac{\eta}{\sqrt{\widehat{\mathbf{v}}_t} + \epsilon} \odot \widehat{\mathbf{m}}_t$$
 
@@ -278,6 +289,7 @@ $$
 $$
 
 **The Catastrophic Breakdown:**
+
 1. Parameters with **large gradients** have large $\widehat{\mathbf{v}}_t$, causing the regularizing penalty $\frac{\eta \lambda}{\sqrt{\widehat{\mathbf{v}}_t}}$ to be **diminished**.
 2. Parameters with **small gradients** have tiny $\widehat{\mathbf{v}}_t$, causing their regularization penalty to be **heavily magnified**.
 3. $L_2$ regularization in Adam regularizes weights with small gradients much more intensely than weights with large gradients—the exact opposite of intended shrinkage!
@@ -314,8 +326,10 @@ flowchart LR
 
 1. **Step Decay**:
    $$\eta_t = \eta_0 \cdot \gamma^{\lfloor t / S \rfloor}, \quad \gamma \in [0.1, 0.5]$$
+
 2. **Cosine Annealing (Loshchilov & Hutter, 2016)**:
    $$\eta_t = \eta_{\min} + \frac{1}{2}(\eta_{\max} - \eta_{\min}) \left( 1 + \cos\left( \frac{t}{T_{\max}} \pi \right) \right)$$
+
 3. **Linear Warmup**:
    For the first $T_{\text{warmup}}$ steps (typically $1\%$ to $5\%$ of total iterations):
    $$\eta_t = \eta_{\max} \cdot \frac{t}{T_{\text{warmup}}}$$
@@ -673,6 +687,7 @@ Let the first-moment EMA be initialized at $\mathbf{m}_0 = \mathbf{0}$:
 $$\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1 - \beta_1) \mathbf{g}_t$$
 
 Unrolling the recurrence from $t=1$:
+
 - $\mathbf{m}_1 = (1 - \beta_1) \mathbf{g}_1$
 - $\mathbf{m}_2 = \beta_1 (1 - \beta_1) \mathbf{g}_1 + (1 - \beta_1) \mathbf{g}_2$
 - By induction: $\mathbf{m}_t = (1 - \beta_1) \sum_{i=1}^t \beta_1^{t-i} \mathbf{g}_i$
@@ -718,6 +733,7 @@ The gradient is evaluated at the projected point $\boldsymbol{\theta}_{t-1} - \b
 **Model Answer:**  
 Empirically, while Adam/AdamW converges significantly faster than SGD during early training epochs, **SGD with Momentum frequently achieves superior test set generalization and lower final error on vision tasks (e.g., ImageNet classification)**.  
 **Mechanisms:**
+
 1. **Geometry of Minima**: Adaptive optimizers scale step sizes by $\frac{1}{\sqrt{\mathbf{v}_t}}$, which equalizes curvature across all directions. This allows Adam to navigate narrow, high-curvature ravines and settle into sharp local minima. SGD, constrained by a uniform coordinate step size, cannot stabilize in sharp minima and is forced by stochastic noise to settle in wide, flat minima. Flat minima possess low spectral norm $\lambda_{\max}(H)$, making them robust to test-set distribution shifts.
 2. **Spurious Correlation Sensitivity**: In the presence of rare, uninformative noise features with small gradients, Adam scales their effective step size up by dividing by tiny $\sqrt{v_i}$, over-indexing on non-generalizing spurious correlations. SGD naturally suppresses updates on features with small gradients.
 

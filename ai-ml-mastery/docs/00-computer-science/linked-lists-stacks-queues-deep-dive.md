@@ -90,6 +90,7 @@ flowchart TD
 A stack only allows adding/removing from **one end** ("the top"). Both `push` and `pop` are O(1) — whether backed by a dynamic array (append/remove at the end) or a linked list (insert/remove at the head).
 
 **Where stacks show up constantly:**
+
 - Function calls — the "call stack" from the Python Functions chapter is literally a stack of frames; the most recently called function is the first to return.
 - Undo functionality, expression parsing, depth-first search/traversal (Book 0 Algorithms), backtracking.
 

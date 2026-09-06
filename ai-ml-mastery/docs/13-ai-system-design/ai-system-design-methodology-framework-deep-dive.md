@@ -35,6 +35,7 @@ flowchart TD
 ```
 
 The fundamental challenges unique to AI system design include:
+
 1. **The Dual Serving/Training Path**: Unifying low-latency online inference (scoring live users in $<50\text{ ms}$) with massive offline distributed training (processing terabytes of historical logs over hundreds of GPUs).
 2. **Hardware Sizing & Memory-Bandwidth Bottlenecks**: Deep neural networks and Large Language Models are heavily bound by GPU High-Bandwidth Memory (HBM) throughput, demanding exact hardware sizing calculations.
 3. **Multi-Stage Funnels**: Balancing candidate generation (filtering millions of items to hundreds in $<15\text{ ms}$) with complex heavy ranking (evaluating thousands of features in $<35\text{ ms}$).
@@ -108,6 +109,7 @@ flowchart TD
 ### Step 3: Data Engineering & Feature Store Architecture
 
 Design the feature pipeline to avoid online/offline skew and temporal feature leakage:
+
 - **Streaming Pipeline**: Apache Kafka / Flink ingests clickstream events to compute sliding-window real-time aggregates (e.g., `user_clicks_last_10_minutes`).
 - **Batch Pipeline**: Daily Spark/Airflow workflows process heavy historical aggregations (e.g., `user_30_day_average_spend`).
 - **Dual Storage**: Write streaming aggregates directly to an in-memory key-value store (Redis) for $<5\text{ ms}$ point lookup, while archiving historical snapshots to columnar Parquet tables for point-in-time correct training joins.
@@ -142,6 +144,7 @@ Map model architectures to target hardware infrastructure, accounting for memory
 ### Step 6: Evaluation, Monitoring & Safety Guardrails
 
 Evaluate both offline algorithmic benchmarks and online business KPIs:
+
 - **Offline Metrics**: ROC-AUC, PR-AUC, Normalized Discounted Cumulative Gain ($\text{NDCG}@K$), Mean Reciprocal Rank (MRR), Hit Rate.
 - **Online Business Metrics**: Click-Through Rate (CTR), Conversion Rate (CVR), Average Order Value (AOV), Revenue per Mille (RPM).
 - **Safety & Moderation**: Pre-retrieval query sanitation, embedding toxicity filters, and post-generation LLM output guardrails (e.g., Llama-Guard).
@@ -151,6 +154,7 @@ Evaluate both offline algorithmic benchmarks and online business KPIs:
 ### Step 7: Failure Modes, Edge Cases & Operational Resiliency
 
 Design fail-safes for unpredictable production anomalies:
+
 - **Graceful Degradation & Fallbacks**: If the deep ranking service times out ($>35\text{ ms}$), a circuit breaker trips, instantly falling back to an in-memory cached heuristic or popularity-ranked list.
 - **Cold-Start Handling**: Multi-armed bandits (LinUCB, Thompson Sampling) dynamically balance exploration of unindexed/new items against exploitation of proven hits.
 - **Feedback Loop Mitigation**: Counterfactual learning and negative down-sampling prevent the system from repeatedly showing the same items and narrowing user diversity.
@@ -218,6 +222,7 @@ The memory footprint of the KV cache is given by:
 $$\text{Memory}_{\text{KV}} = 2 \times B \times L \times n_{\text{layers}} \times n_{\text{heads}} \times d_{\text{head}} \times b_{\text{bytes}}$$
 
 Where:
+
 - The factor of $2$ accounts for the two matrices: Key ($K$) and Value ($V$).
 - $B$ is the concurrent batch size.
 - $L$ is the context sequence length (prompt tokens $+$ generated tokens).
@@ -243,6 +248,7 @@ The total GPU memory required to host an inference deployment is:
 $$\text{Memory}_{\text{total}} = \text{Memory}_{\text{weights}} + \text{Memory}_{\text{KV\_cache}} + \text{Memory}_{\text{activations}} + \text{Memory}_{\text{CUDA\_overhead}}$$
 
 Where:
+
 - $\text{Memory}_{\text{weights}} = P \times b_{\text{bytes}}$ (e.g. $70\text{B} \times 2\text{ bytes} = 140\text{ GB}$).
 - $\text{Memory}_{\text{activations}} \approx \mathcal{O}(B \times S \times d_{\text{model}})$.
 - $\text{Memory}_{\text{CUDA\_overhead}} \approx 1 - 2\text{ GB}$ reserved for CUDA runtime contexts and NCCL communication buffers.
@@ -345,6 +351,7 @@ flowchart TD
 ### Q1: Walk through the complete capacity estimation for serving a 70B parameter LLM at 1,000 concurrent streaming requests with an average context length of 2,000 tokens. How many GPUs are required?
 
 **Model Answer:**  
+
 1. **Weight Memory**:
    - At FP16 precision ($2\text{ bytes/parameter}$): $70\text{B} \times 2 = 140\text{ GB}$.
 2. **KV Cache Memory**:
@@ -373,6 +380,7 @@ flowchart TD
 
 **Model Answer:**  
 The two-stage funnel resolves the fundamental trade-off between **candidate catalog scale** ($N = 10^7 - 10^9$ items) and **scoring model complexity** under strict latency constraints ($P_{99} \le 50\text{ ms}$):
+
 1. **Computational Feasibility**:
    - A deep ranking model (DLRM / Transformer) evaluates thousands of sparse cross-features and dense interactions, requiring $\sim 10^7\text{ FLOPs}$ per item scoring pass.
    - Scoring $10^7$ items would demand $10^{14}\text{ FLOPs}$ per user request. At $50,000\text{ QPS}$, the serving cluster would require millions of GPU cores, incurring billions in cloud costs and exceeding latency budgets by multiple orders of magnitude.
@@ -386,6 +394,7 @@ The two-stage funnel resolves the fundamental trade-off between **candidate cata
 ### Q3: Explain how Speculative Decoding achieves lower latency without altering model output probabilities. Prove that the target model's output distribution is preserved.
 
 **Model Answer:**  
+
 - **Operational Mechanism**:
   1. A small, fast draft model autoregressively generates $K$ candidate tokens: $\tilde{x}_1, \dots, \tilde{x}_K$.
   2. The large target model processes the prompt and all $K$ candidates in a **single parallel forward pass**, obtaining logits and probability distributions $p(x)$ for each position.
@@ -395,12 +404,14 @@ The two-stage funnel resolves the fundamental trade-off between **candidate cata
        $$\alpha = \min\left(1, \frac{p(\tilde{x}_i)}{q(\tilde{x}_i)}\right)$$
        
        where $p(x)$ is the target model distribution and $q(x)$ is the draft model distribution.
+
      - If accepted, the token is kept.
      - If rejected, the token is resampled from the residual distribution:
        
        $$p'(x) = \max(0, p(x) - q(x)) / \sum_{x'} \max(0, p(x') - q(x'))$$
        
        and all subsequent draft tokens are discarded.
+
 - **Proof of Equivalence**:
   The probability of emitting token $x$ under speculative sampling is:
   
@@ -415,6 +426,7 @@ The two-stage funnel resolves the fundamental trade-off between **candidate cata
 ### Q4: In recommendation systems, what is the cold-start problem for new items, and how does the LinUCB contextual bandit algorithm resolve it?
 
 **Model Answer:**  
+
 - **The Problem**: Collaborative filtering models rely on historical user-item interaction matrices. When a new item is added, it has zero interaction history, resulting in uninformative embeddings and zero impressions.
 - **LinUCB Algorithm**:
   - Treats recommendation as a contextual multi-armed bandit problem. For each user context vector $\mathbf{x}_{t}$, the expected reward (click/conversion) for arm $a$ is modeled as a linear payoff: $\mathbb{E}[r_{t, a} \mid \mathbf{x}_{t}] = \mathbf{x}_{t}^T \boldsymbol{\theta}_a$.
@@ -423,6 +435,7 @@ The two-stage funnel resolves the fundamental trade-off between **candidate cata
     $$a_t = \arg\max_{a} \left( \mathbf{x}_t^T \hat{\boldsymbol{\theta}}_a + \alpha \sqrt{\mathbf{x}_t^T \mathbf{A}_a^{-1} \mathbf{x}_t} \right)$$
     
     Where:
+
     - $\mathbf{A}_a = \mathbf{D}_a^T \mathbf{D}_a + \mathbf{I}_d$ is the covariance matrix of past contexts observed for arm $a$.
     - The first term represents expected reward (exploitation).
     - The second term represents the statistical variance / uncertainty (exploration), scaled by hyperparameter $\alpha$.
@@ -433,6 +446,7 @@ The two-stage funnel resolves the fundamental trade-off between **candidate cata
 ### Q5: How do you design an AI serving system to handle catastrophic cascading failures when a downstream database or feature store becomes unreachable?
 
 **Model Answer:**  
+
 1. **Circuit Breakers (Fail Fast)**:
    - Wrap feature store calls with a circuit breaker (e.g. Netflix Resilience4j / Envoy circuit breakers). If error rate exceeds $50\%$ or latency exceeds $20\text{ ms}$ over a 10-second rolling window, open the circuit immediately.
    - Subsequent requests fail fast within $<1\text{ ms}$ rather than hanging until connection timeouts expire, preventing threadpool exhaustion in the serving gateway.

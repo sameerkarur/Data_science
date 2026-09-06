@@ -49,12 +49,14 @@ GROUP BY Category;
 #### 1. The Row-Oriented Approach (CSV, JSON, PostgreSQL Heap Pages):
 - Data is stored on disk row-by-row:
   $$\text{Row 1} \to [c_1, c_2, \dots, c_{50}], \quad \text{Row 2} \to [c_1, c_2, \dots, c_{50}]$$
+
 - To evaluate `AVG(Price)`, the storage engine must load **all 50 columns** of every single row from disk into RAM.
 - If each row is 500 bytes, scanning 100M rows requires reading **50 GB of disk I/O**, even though `Price`, `Category`, and `Timestamp` only account for 20 bytes per row (96% of disk bandwidth is wasted reading discarded features).
 
 #### 2. The Column-Oriented Approach (Apache Parquet, ClickHouse, Snowflake):
 - Data is grouped into blocks and stored column-by-column:
   $$\text{Block 1} \to \text{Category}[1 \dots N], \quad \text{Price}[1 \dots N], \quad \text{Timestamp}[1 \dots N]$$
+
 - The engine reads **only the 3 relevant columns** from disk (2 GB instead of 50 GB).
 - Because all values in a column share the exact same data type and high statistical redundancy (e.g., millions of repeated "Electronics" strings), compression algorithms compress the data by 80% to 90%.
 - Total disk read drops from **50 GB to 300 MB** (**160x reduction in disk I/O**).
@@ -216,6 +218,7 @@ FROM transactions;
 ### 5.1 The Token Bucket Rate Limiting Algorithm
 
 To protect backend ML inference and data ingestion services from being overwhelmed by bursty traffic, production gateways enforce **Token Bucket Rate Limiting**:
+
 - A bucket holds up to $C$ tokens (maximum burst capacity).
 - Tokens are continuously added to the bucket at a constant fill rate $r$ tokens per second.
 - When an API request arrives:
@@ -313,6 +316,7 @@ flowchart TD
 ## 7. Python Implementation: Rate Limiter, Pagination and Analytical SQL
 
 Below is a complete, runnable script featuring:
+
 1. A thread-safe **Token Bucket Rate Limiter**.
 2. An automated **Keyset (Cursor-Based) Pagination Client**.
 3. **PyArrow Parquet Generation** with dictionary encoding inspection.
@@ -503,6 +507,7 @@ if __name__ == "__main__":
 An Apache Parquet file is divided into one or more **Row Groups** (typically 128MB–512MB in size). Each Row Group contains **Column Chunks** for every column in the schema. Column chunks are subdivided into **Pages** (typically 1MB), consisting of a Header, an optional Dictionary Page, and Data Pages.
 
 **Compression and Encoding Pipeline:**
+
 1. **Dictionary Encoding:** High-cardinality data like strings or categorical identifiers are replaced with integer dictionary IDs. The unique strings are stored once in a Dictionary Page at the head of the Column Chunk. Subsequent Data Pages store only compact integer indices.
 2. **Bit-Packing:** If the dictionary contains only 5 unique values, standard 32-bit integers are wasteful. Bit-packing stores each integer using only $\lceil \log_2(5) \rceil = 3$ bits, packing eight 3-bit values into 3 bytes.
 3. **Run-Length Encoding (RLE):** If identical values repeat sequentially (common in sorted data or boolean validity masks), RLE encodes the run as a pair: `(count, value)`. For example, 10,000 consecutive true values compress to `(10000, 1)`.
@@ -512,6 +517,7 @@ An Apache Parquet file is divided into one or more **Row Groups** (typically 128
 
 ### Q2: Compare the read, write, and space amplification characteristics of B-Trees vs. Log-Structured Merge (LSM) Trees.
 **Model Answer:**
+
 - **Write Amplification (WA):** Ratio of bytes written to physical storage vs. bytes submitted by user.
   - *B-Tree:* High WA. Updating a single 50-byte record requires rewriting an entire 4KB or 16KB leaf page to disk, plus writing to the Write-Ahead Log (WAL).
   - *LSM-Tree:* Low initial WA (writes are appended sequentially to MemTable and WAL). However, background compactions rewrite data across SSTable levels, leading to moderate-to-high amortized WA ($\approx 10\times$ to $30\times$).
@@ -527,6 +533,7 @@ An Apache Parquet file is divided into one or more **Row Groups** (typically 128
 ### Q3: Explain why `OFFSET 1000000 LIMIT 10` is a database anti-pattern. How does Keyset pagination resolve this?
 **Model Answer:**
 When executing `SELECT * FROM table ORDER BY id LIMIT 10 OFFSET 1000000`, the database engine cannot jump directly to the 1,000,000th row because rows vary in byte length and deleted/updated rows leave dead tuples. The engine must scan the index, materialize the first 1,000,010 rows, discard the first 1,000,000, and return the final 10.
+
 - **Time Complexity:** $\mathcal{O}(N)$ where $N$ is the offset magnitude. As users page deeper, query latency degrades linearly, causing CPU spikes.
 - **Inconsistency Under Concurrent Writes:** If a new row is inserted into page 1 while a user navigates to page 2, all subsequent rows shift downward by 1, causing the user to see duplicate records or miss records entirely.
 
@@ -545,6 +552,7 @@ The B-Tree index seeks directly to the tuple `(:last_created_at, :last_id)` in $
 ### Q4: How do ACID transactions work on top of stateless object storage in Delta Lake and Apache Iceberg?
 **Model Answer:**
 Object storage systems like AWS S3 lack POSIX file locking and atomic multi-file operations. Table formats solve this by introducing an explicit **Metadata Transaction Log**:
+
 1. **Atomicity & Consistency:** Every table mutation (append, overwrite, delete) writes new immutable Parquet data files to S3. It then writes a new commit JSON file (e.g., `000004.json` in Delta) or updates a pointer to the newest `metadata.json` (Iceberg) via an atomic compare-and-swap operation (e.g., AWS S3 PutObject with conditional headers or a catalog like AWS Glue/DynamoDB).
 2. **Isolation (Snapshot Isolation via MVCC):** Readers read the latest valid commit metadata file at query start time. The metadata explicitly enumerates the exact set of active Parquet files for that snapshot. Even if concurrent writers are actively writing new files or compacting old ones, the reader sees a completely stable, consistent snapshot of the data.
 3. **Optimistic Concurrency Control (OCC):** When two writers attempt to commit concurrently, both assume no conflict. The first writer's commit succeeds. The second writer detects that its base version is outdated, inspects whether the first commit modified the same partitions/files, and if no logical conflict exists, replays its metadata commit forward; otherwise, it aborts.
@@ -553,6 +561,7 @@ Object storage systems like AWS S3 lack POSIX file locking and atomic multi-file
 
 ### Q5: Compare Hash Join, Sort-Merge Join, and Broadcast Hash Join. When does a query optimizer select each?
 **Model Answer:**
+
 - **Hash Join:**
   - *Mechanism:* Builds an in-memory hash table on the join key of the smaller table $R$ ($\mathcal{O}(|R|)$), then streams the larger table $S$ and probes the hash table ($\mathcal{O}(|S|)$).
   - *Best When:* Joining unsorted, moderately sized tables where the build side fits comfortably in RAM (`work_mem`).
@@ -570,11 +579,13 @@ Object storage systems like AWS S3 lack POSIX file locking and atomic multi-file
 The **Small File Problem** arises when streaming ingestion pipelines (e.g., Kafka consumers or micro-batch Spark jobs) commit micro-batches every few seconds, generating millions of tiny (10KB to 1MB) Parquet or ORC files in cloud object storage.
 
 **Why It Degrades Performance:**
+
 1. **Metadata Bloat:** Query engines (Trino, Athena, Spark) must issue `LIST` and `GET` requests to discover and open each file. In AWS S3, each HTTP request introduces 10-30 ms of round-trip latency. Opening 100,000 small files consumes 30 minutes in pure HTTP handshake overhead before any computation begins!
 2. **Compression Inefficiency:** Columnar compression (dictionary encoding, RLE) requires large statistical sample sizes (50,000+ rows) to achieve high compression ratios. A 500-row file exhibits virtually zero compression.
 3. **Loss of Row Group Pruning:** Tiny files contain only a single small row group, rendering Parquet footer min/max statistics ineffective.
 
 **Compaction Strategies:**
+
 - **Scheduled Bin-Packing (Compaction Jobs):** Run background jobs (e.g., `OPTIMIZE my_table COMPACT` in Delta Lake or Iceberg rewrite actions) that read clusters of small files within a partition and coalesce them into optimal 128MB–512MB files.
 - **Hierarchical Partitioning & Buffering:** Buffer streaming events in an append-ahead buffer (e.g., Kafka or Apache Arrow memory ring buffers) and flush to object storage only when file size reaches $\ge 64\text{ MB}$ or a maximum time threshold (e.g., 15 minutes) elapses.
 

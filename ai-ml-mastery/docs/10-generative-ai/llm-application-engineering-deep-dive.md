@@ -27,6 +27,7 @@ flowchart LR
 ```
 
 Application engineering bridges this gap through four pillars:
+
 1. **Dense Vector Embeddings & Metric Geometry**: Encoding semantic similarity into geometric distance.
 2. **Cognitive Prompt Frameworks**: Orchestrating multi-step reasoning through Chain-of-Thought (CoT), Tree of Thoughts (ToT), and ReAct.
 3. **Constrained Decoding & Structured Outputs**: Masking vocabulary logits at generation time using Context-Free Grammars (CFG) to guarantee 100% syntactically valid JSON.
@@ -55,11 +56,14 @@ flowchart TD
 
 #### Theorem: Monotonic Equivalence of Normalized Cosine Similarity and Euclidean Distance
 When embedding vectors are $L_2$-normalized to lie on the unit hypersphere $\mathbb{S}^{d-1}$ (such that $\|\mathbf{u}\|_2 = \|\mathbf{v}\|_2 = 1$):
+
 1. The dot product equals the cosine similarity:
    $$\langle \mathbf{u}, \mathbf{v} \rangle = \frac{\langle \mathbf{u}, \mathbf{v} \rangle}{(1)(1)} = \cos(\mathbf{u}, \mathbf{v})$$
+
 2. The squared Euclidean distance is a strictly decreasing monotonic linear transformation of cosine similarity:
 
 **Proof:**
+
 $$
 \|\mathbf{u} - \mathbf{v}\|_2^2 = \langle \mathbf{u} - \mathbf{v}, \, \mathbf{u} - \mathbf{v} \rangle = \|\mathbf{u}\|_2^2 + \|\mathbf{v}\|_2^2 - 2 \langle \mathbf{u}, \mathbf{v} \rangle
 $$
@@ -111,6 +115,7 @@ flowchart TD
 
 ### 2.3 The MTEB Evaluation Framework
 The **Massive Text Embedding Benchmark (MTEB, Muennighoff et al. 2022)** standardizes embedding evaluation across 8 distinct tasks:
+
 1. **Retrieval**: Information retrieval NDCG@10 (MS MARCO, BEIR).
 2. **Reranking**: Ranking candidate documents given a query.
 3. **Clustering**: Grouping documents by topic (k-means V-measure).
@@ -179,6 +184,7 @@ flowchart TD
 ```
 
 ToT defines:
+
 1. **Thought Generator**: Proposes $k$ candidate next reasoning steps: $p_\theta^{\text{gen}}(s_{t+1} \mid s_t)$.
 2. **State Evaluator**: Evaluates the promise of intermediate state $s_t$ (e.g. *sure / likely / impossible* or numerical heuristic score $V(s) \in [0, 1]$).
 3. **Search Algorithm**: Breadth-First Search (BFS) or Depth-First Search (DFS) with backtracking when a sub-branch leads to contradiction.
@@ -211,6 +217,7 @@ In enterprise applications, an LLM must emit structured payloads (e.g. valid JSO
 
 ### 4.1 The Failure Mode of Prompt-Only JSON
 Instructing a model with *"Respond only in valid JSON matching this schema..."* fails systematically at production scale:
+
 - Outputting preamble or markdown backticks (` ```json `).
 - Missing closing brackets (`}`) when truncated by `max_tokens`.
 - Hallucinating unexpected keys or emitting trailing commas (`{"a": 1,}`).
@@ -280,6 +287,7 @@ flowchart TD
 ## 5. Complete Runnable Python Implementation
 
 Below is a complete, production-grade implementation featuring:
+
 - **Bi-Encoder Dense Retrieval & Cosine Similarity**.
 - **Pydantic v2 Schema Generation & Structured Extraction**.
 - **A Complete Function Calling Engine with Automatic Dispatch and Error Recovery**.
@@ -541,11 +549,13 @@ Therefore, maximizing $\cos(\mathbf{u}, \mathbf{v})$ over candidate set $\mathca
 
 **Model Answer:**  
 Grammar-constrained decoding intervenes at the logit level during autoregressive decoding.  
+
 1. **Compilation**: The target JSON Schema or Pydantic model is compiled into a Deterministic Finite Automaton (DFA) or Context-Free Grammar (CFG) Pushdown Automaton.
 2. **State Tracking**: As tokens are generated, the engine tracks the current automaton state $S_t$.
 3. **Logit Masking**: For the current state $S_t$, the grammar identifies the subset of valid subsequent Unicode characters, which is mapped to the set of valid vocabulary token IDs $\mathcal{V}_{\text{valid}} \subseteq \mathcal{V}$.
 4. **Logit Update**: All invalid tokens $v \notin \mathcal{V}_{\text{valid}}$ have their pre-softmax logits overwritten with $-\infty$:
    $$\tilde{z}_v = \begin{cases} z_v & \text{if } v \in \mathcal{V}_{\text{valid}} \\ -\infty & \text{otherwise} \end{cases}$$
+
 5. **Sampling**: Softmax computes zero probability for all invalid tokens.  
 Because the model can only sample from tokens that satisfy the grammar at every decoding step, syntax errors (missing braces, unquoted keys, bad types) are mathematically impossible.
 
@@ -554,6 +564,7 @@ Because the model can only sample from tokens that satisfy the grammar at every 
 ### Q3: Contrast Bi-Encoders and Cross-Encoders in production information retrieval. Why not use Cross-Encoders for initial document retrieval?
 
 **Model Answer:**  
+
 - **Bi-Encoders**: Encode query $\mathbf{q}$ and document $\mathbf{d}$ independently into single dense vectors $\mathbf{u} = E_q(\mathbf{q}), \mathbf{v} = E_d(\mathbf{d})$. The similarity is computed via dot product $\mathbf{u}^T \mathbf{v}$.
   - *Complexity*: Documents are encoded offline once and indexed into approximate nearest neighbor (ANN) graphs (HNSW). Retrieval over $10\text{ million documents}$ costs $\mathcal{O}(\log M)$ distance checks ($< 5\text{ ms}$).
   - *Limitation*: No token-level interaction between query and document tokens; fine syntactic dependencies are compressed into a single vector.
@@ -576,6 +587,7 @@ When CoT is used, generating $K$ reasoning tokens allocates $2 K N_{\text{params
 ### Q5: How does the ReAct framework prevent error compounding compared to pure planning or pure action agents?
 
 **Model Answer:**  
+
 - **Pure Action Agents (No Thoughts)**: Execute API calls directly based on prompts without intermediate reflection. When an API returns unexpected data, error codes, or empty responses, the agent has no internal mechanism to evaluate failure, causing it to blindly repeat the invalid action or generate hallucinations.
 - **Pure Reasoning Agents (CoT without Actions)**: Reason internally without consulting external ground truth. When the model encounters facts missing from its pretraining weights or outdated numerical figures, it hallucinates plausible-sounding premises and builds a flawed reasoning chain upon them.
 - **ReAct Synergy**: Interleaves `Thought` $\to$ `Action` $\to$ `Observation`. The `Thought` step formulates a hypothesis and decides which API to call. The `Observation` step brings objective empirical reality back into the context. If the observation contradicts the expectation, the subsequent `Thought` detects the anomaly and adjusts the plan dynamically, halting error compounding before emitting the final answer.

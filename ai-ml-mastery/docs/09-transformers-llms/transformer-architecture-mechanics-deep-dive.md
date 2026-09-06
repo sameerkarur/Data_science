@@ -32,6 +32,7 @@ flowchart TD
 ```
 
 The original architecture was an **Encoder-Decoder** designed for bilingual machine translation. Over the subsequent decade, modern large language models converged primarily onto the **Decoder-only** autoregressive architecture (GPT, LLaMA, Mistral, DeepSeek), incorporating architectural enhancements including:
+
 - **Pre-Layer Normalization** or **RMSNorm** for training stability without delicate warmup schedules.
 - **Rotary Position Embeddings (RoPE)** or **ALiBi** replacing static sinusoidal absolute embeddings.
 - **SwiGLU** activation replacing standard ReLU/GELU feed-forward networks.
@@ -62,6 +63,7 @@ flowchart LR
 Let an input sequence of $N$ tokens embedded in dimension $d_{\text{model}}$ be represented as a matrix $\mathbf{X} \in \mathbb{R}^{N \times d_{\text{model}}}$. 
 
 The model projects $\mathbf{X}$ into three distinct vector spaces using learned linear transformation matrices:
+
 - **Queries ($\mathbf{Q}$)**: What each token is searching for.
 - **Keys ($\mathbf{K}$)**: What each token contains or offers to matching queries.
 - **Values ($\mathbf{V}$)**: The actual informational payload extracted when a query matches a key.
@@ -161,10 +163,12 @@ $$
 As $d_k$ grows large (for instance, $d_k = 64$ gives $\sigma = 8$; $d_k = 128$ gives $\sigma \approx 11.3$), the logits $s_i$ diverge significantly in magnitude. In a set of $N$ Gaussian random variables with standard deviation $\sqrt{d_k}$, the maximum logit $s_{\max}$ is on the order of $\sqrt{2 \ln N} \cdot \sqrt{d_k}$.
 
 When $s_{\max} - s_j \gg 1$ for all $j \ne \max$:
+
 - $p_{\max} \to 1.0$
 - $p_j \to 0.0$ for all $j \ne \max$
 
 Evaluate the Jacobian in this saturated regime:
+
 - For the peak entry: $\frac{\partial p_{\max}}{\partial s_{\max}} = p_{\max}(1 - p_{\max}) \approx 1(1 - 1) = 0$.
 - For all other entries: $\frac{\partial p_j}{\partial s_j} = p_j(1 - p_j) \approx 0(1 - 0) = 0$.
 - Cross terms: $\frac{\partial p_i}{\partial s_j} = -p_i p_j \approx 0$.
@@ -199,6 +203,7 @@ The inputs to the softmax maintain unit variance regardless of how wide the repr
 ### 3.1 Motivation & Geometric Intuition
 
 A single attention head computes a single convex combination of value vectors. However, a word or token in natural language engages in multiple simultaneous grammatical, syntactic, and semantic relationships:
+
 - In *"The animal didn't cross the street because it was too tired"*, the token *"it"* must simultaneously link to:
   1. *"animal"* (coreference resolution / semantic subject).
   2. *"tired"* (predicate attribute / causal reason).
@@ -256,9 +261,11 @@ In standard architectures, $d_k = d_v = \frac{d_{\text{model}}}{h}$. The concate
 ### 3.3 Complexity Analysis
 
 Let $N$ be sequence length and $d = d_{\text{model}}$.
+
 1. **Projections**: Projecting $\mathbf{X}$ to $\mathbf{Q}, \mathbf{K}, \mathbf{V}$ costs $3 \times \mathcal{O}(N d^2)$.
 2. **Attention Scores $\mathbf{Q} \mathbf{K}^T$**: For each of the $h$ heads, multiplying $(N \times d_k)$ by $(d_k \times N)$ costs $\mathcal{O}(N^2 d_k)$. Across $h$ heads:
    $$h \cdot \mathcal{O}(N^2 d_k) = \mathcal{O}\left( N^2 \cdot (h d_k) \right) = \mathcal{O}(N^2 d)$$
+
 3. **Softmax & Weighting $\mathbf{A} \mathbf{V}$**: Multiplying $(N \times N)$ by $(N \times d_v)$ per head costs $h \cdot \mathcal{O}(N^2 d_v) = \mathcal{O}(N^2 d)$.
 4. **Final Linear Projection $\mathbf{W}^O$**: Multiplying $(N \times d)$ by $(d \times d)$ costs $\mathcal{O}(N d^2)$.
 
@@ -281,6 +288,7 @@ $$
 $$
 
 **Proof:**
+
 $$
 \mathbf{Q}' = \mathbf{P} \mathbf{X} \mathbf{W}^Q = \mathbf{P} \mathbf{Q}, \quad \mathbf{K}' = \mathbf{P} \mathbf{K}, \quad \mathbf{V}' = \mathbf{P} \mathbf{V}
 $$
@@ -344,6 +352,7 @@ $$
 $$
 
 Using the angle addition formulas:
+
 - $\sin(a + b) = \sin(a)\cos(b) + \cos(a)\sin(b)$
 - $\cos(a + b) = \cos(a)\cos(b) - \sin(a)\sin(b)$
 
@@ -549,6 +558,7 @@ flowchart LR
 ### 5.3 Cross-Attention
 
 In Encoder-Decoder models (T5, original Transformer), the decoder contains a **Cross-Attention** sublayer bridging source and target sequences:
+
 - **Queries ($\mathbf{Q}$)** come from the previous Decoder sublayer: $\mathbf{Q} = \mathbf{H}_{\text{dec}} \mathbf{W}^Q \in \mathbb{R}^{T_{\text{target}} \times d_k}$.
 - **Keys ($\mathbf{K}$)** and **Values ($\mathbf{V}$)** come from the final output of the Encoder: $\mathbf{K} = \mathbf{H}_{\text{enc}} \mathbf{W}^K \in \mathbb{R}^{T_{\text{source}} \times d_k}$, $\mathbf{V} = \mathbf{H}_{\text{enc}} \mathbf{W}^V \in \mathbb{R}^{T_{\text{source}} \times d_v}$.
 
@@ -673,6 +683,7 @@ $$
 $$
 
 where:
+
 - $\mathbf{W}_{\text{gate}} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{ff}}}$
 - $\mathbf{W}_{\text{up}} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{ff}}}$
 - $\mathbf{W}_{\text{down}} \in \mathbb{R}^{d_{\text{ff}} \times d_{\text{model}}}$
@@ -708,6 +719,7 @@ $$\sum_{t=1}^T \mathcal{O}(t^2 d) = \mathcal{O}(T^3 d)$$
 However, because earlier tokens do not change, their Key and Value projections $\mathbf{k}_1, \dots, \mathbf{k}_{t-1}$ and $\mathbf{v}_1, \dots, \mathbf{v}_{t-1}$ remain identical.
 
 The **KV Cache** stores previous keys and values in GPU VRAM:
+
 1. **Prefill Phase**: Process the entire prompt of length $N_{\text{prompt}}$ in parallel. Cache all keys and values: $\mathbf{K}_{\text{cache}} \in \mathbb{R}^{B \times H \times N_{\text{prompt}} \times d_k}$.
 2. **Generation Phase**: At each subsequent step, input **only 1 new token**. Compute its $\mathbf{q}_t, \mathbf{k}_t, \mathbf{v}_t$. Concatenate $\mathbf{k}_t$ and $\mathbf{v}_t$ to the cache. Compute attention of $\mathbf{q}_t$ against the full cached $\mathbf{K}$:
 
@@ -734,6 +746,7 @@ flowchart TD
 ## 8. Complete PyTorch Implementation from Scratch
 
 Below is a complete, self-contained implementation of an autoregressive Transformer Decoder featuring:
+
 - **RMSNorm**
 - **Rotary Position Embeddings (RoPE)**
 - **Multi-Head Causal Self-Attention with KV Caching**
@@ -1099,6 +1112,7 @@ The inner product is mathematically an exact function of the relative distance $
 ### Q3: Contrast Pre-LN and Post-LN architectures. Why did modern LLMs completely abandon Post-LN?
 
 **Model Answer:**  
+
 - **Post-LN**: $\mathbf{x}_{l+1} = \text{LN}(\mathbf{x}_l + \mathcal{F}(\mathbf{x}_l))$. The normalization is outside the residual addition. Unrolling the recurrence from layer 1 to $L$ shows that the gradient must pass through a product of normalization scale factors: $\prod_{l=1}^L \frac{1}{\sigma_l}$. Because each sublayer adds variance, $\sigma_l$ grows with depth, causing the gradient to vanish exponentially for early layers. To prevent divergence, Post-LN models require a strict learning rate warmup (hundreds to thousands of steps with near-zero learning rates).
 - **Pre-LN**: $\mathbf{x}_{l+1} = \mathbf{x}_l + \mathcal{F}(\text{LN}(\mathbf{x}_l))$. The residual connection forms an uninterrupted identity pathway from input to output: $\mathbf{x}_L = \mathbf{x}_1 + \sum_{l=1}^{L-1} \mathcal{F}(\text{LN}(\mathbf{x}_l))$. The derivative contains an identity term: $\frac{\partial \mathbf{x}_L}{\partial \mathbf{x}_1} = \mathbf{I} + \sum \frac{\partial \mathcal{F}}{\partial \mathbf{x}_1}$. Gradients flow directly to early layers without attenuation. Modern LLMs abandoned Post-LN because Pre-LN (and RMSNorm) enables stable training of 100B+ parameter models at high learning rates without divergence.
 
@@ -1107,6 +1121,7 @@ The inner product is mathematically an exact function of the relative distance $
 ### Q4: Explain the computational and memory trade-offs of the KV Cache during autoregressive generation.
 
 **Model Answer:**  
+
 - **Computational Trade-off**: Without a KV cache, generating token $T$ requires re-running attention over all tokens $1, \dots, T-1$. Generating $N$ tokens costs $\sum_{t=1}^N \mathcal{O}(t^2 d) = \mathcal{O}(N^3 d)$. With a KV cache, previous Keys and Values are retrieved from memory; computing token $T$ requires projecting only the new token's $q_T, k_T, v_T$ ($\mathcal{O}(d^2)$) and computing attention against the cached keys ($\mathcal{O}(T d)$). The total generation cost collapses from $\mathcal{O}(N^3 d)$ to $\mathcal{O}(N^2 d)$.
 - **Memory Footprint**: The KV cache must reside in high-bandwidth GPU memory (HBM). For batch size $B$, sequence length $L$, number of layers $n_{\text{layers}}$, number of heads $H$, and head dimension $d_k$, storing FP16 (2 bytes) keys and values requires:
 $$\text{Memory}_{\text{KV}} = 2 \times 2 \times B \times L \times n_{\text{layers}} \times H \times d_k \text{ bytes} = 4 B L n_{\text{layers}} d_{\text{model}} \text{ bytes}$$
@@ -1122,6 +1137,7 @@ This exceeds the memory of four A100 (80GB) GPUs purely for cached activations, 
 A standard FFN computes $\text{FFN}(x) = \sigma(x W_1) W_2$, where non-linearity acts as an elementwise soft threshold.  
 SwiGLU computes $\text{SwiGLU}(x) = (\text{Swish}(x W_{\text{gate}}) \odot x W_{\text{up}}) W_{\text{down}}$.  
 Theoretical advantages:
+
 1. **Dynamic Multiplicative Gating**: The gate branch acts as a continuous, input-dependent router, dynamically selecting which feature components of $x W_{\text{up}}$ are amplified, suppressed, or inverted. This gives the network second-order interaction capacity in a single layer.
 2. **Non-monotonic Gradient Flow**: Swish ($x \cdot \sigma(x)$) is smooth and non-monotonic; for negative inputs near 0, its derivative is non-zero and slightly negative, preventing "dead neurons" (which plague ReLU) while providing self-regularizing curvature.
 3. Empirical studies across PaLM, LLaMA, and Chinchilla show that SwiGLU achieves lower validation perplexity per compute FLOP than ReLU or GELU, even when parameter counts are strictly normalized by scaling the hidden dimension to $\frac{8}{3} d_{\text{model}}$.

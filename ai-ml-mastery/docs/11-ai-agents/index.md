@@ -11,6 +11,7 @@ Autonomous cognitive loops, multi-agent state machines, and sandboxed execution 
 - [x] [Agent loops & POMDP formulation](agent-architectures-patterns-deep-dive.md)
 
 **Comprehensive Deep Dive:**
+
 - 📖 [Agent Architectures & Patterns Deep Dive](agent-architectures-patterns-deep-dive.md)
 
 ## Systems
@@ -22,6 +23,7 @@ Autonomous cognitive loops, multi-agent state machines, and sandboxed execution 
 - [x] [Agent security (prompt & tool injection, SSRF, sandboxing)](multi-agent-systems-security-deep-dive.md)
 
 **Comprehensive Deep Dive:**
+
 - 📖 [Multi-Agent Systems & Security Deep Dive](multi-agent-systems-security-deep-dive.md)
 
 !!! mastery "Mastery Roadmap"

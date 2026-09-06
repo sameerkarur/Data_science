@@ -59,6 +59,7 @@ For a training sample $(\mathbf{x}_i, y_i)$:
 1. **Functional Margin ($\hat{\gamma}_i$)**:
    $$\hat{\gamma}_i = y_i (\mathbf{w}^T \mathbf{x}_i + b)$$
    A positive functional margin implies correct classification. However, $\hat{\gamma}_i$ is scale-invariant: scaling $\mathbf{w} \to 2\mathbf{w}$ and $b \to 2b$ doubles $\hat{\gamma}_i$ without altering the physical hyperplane.
+
 2. **Geometric Margin ($\gamma_i$)**:
    The Euclidean perpendicular distance from point $\mathbf{x}_i$ to the hyperplane:
    $$\gamma_i = \frac{y_i (\mathbf{w}^T \mathbf{x}_i + b)}{\|\mathbf{w}\|_2}$$
@@ -120,6 +121,7 @@ $$
 $$
 
 The hyperparameter $C > 0$ governs the trade-off between margin width and violation penalty:
+
 - **Large $C$**: Heavy penalty on slack violations. Forces a narrow margin to minimize training errors (high variance, risk of overfitting).
 - **Small $C$**: Tolerates many slack violations in exchange for a wider margin (high bias, robust to noise).
 
@@ -162,8 +164,10 @@ Setting the partial derivatives with respect to the primal variables $(\mathbf{w
 
 1. **Stationarity with respect to $\mathbf{w}$**:
    $$\nabla_{\mathbf{w}} \mathcal{L}_P = \mathbf{w} - \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i = \mathbf{0} \implies \mathbf{w} = \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i$$
+
 2. **Stationarity with respect to $b$**:
    $$\frac{\partial \mathcal{L}_P}{\partial b} = -\sum_{i=1}^n \alpha_i y_i = 0 \implies \sum_{i=1}^n \alpha_i y_i = 0$$
+
 3. **Stationarity with respect to $\xi_i$**:
    $$\frac{\partial \mathcal{L}_P}{\partial \xi_i} = C - \alpha_i - \mu_i = 0 \implies C = \alpha_i + \mu_i$$
 
@@ -188,9 +192,11 @@ $$
 #### Three Distinct Regimes of Training Points:
 1. **Non-Support Vectors ($\alpha_i = 0$)**:
    $y_i(\mathbf{w}^T \mathbf{x}_i + b) > 1$ and $\xi_i = 0$. The sample lies strictly outside the margin. It contributes **zero weight** to $\mathbf{w}$ and can be deleted from the dataset with zero effect on the model!
+
 2. **Free Support Vectors on the Margin ($0 < \alpha_i < C$)**:
    Since $\alpha_i < C$, $\mu_i = C - \alpha_i > 0$, forcing $\xi_i = 0$.
    Therefore, $y_i(\mathbf{w}^T \mathbf{x}_i + b) = 1$. These points lie **exactly on the margin boundaries**. They uniquely determine the intercept $b$.
+
 3. **Bounded Support Vectors Violating the Margin ($\alpha_i = C$)**:
    $\mu_i = 0$, so $\xi_i \ge 0$. The sample is either inside the margin or misclassified.
 
@@ -293,6 +299,7 @@ The RBF kernel computes the exact inner product in an **infinite-dimensional pol
 John Platt (1998) introduced **Sequential Minimal Optimization (SMO)**. Standard quadratic programming packages require storing the $n \times n$ kernel matrix, costing $\mathcal{O}(n^2)$ memory and $\mathcal{O}(n^3)$ flops.
 
 SMO exploits the linear equality constraint $\sum_{i=1}^n \alpha_i y_i = 0$:
+
 - We cannot update a single multiplier $\alpha_1$ alone, because $\alpha_1 = -\frac{1}{y_1}\sum_{i=2}^n \alpha_i y_i$ is completely locked.
 - The smallest subproblem that can be optimized while satisfying the constraint involves **two Lagrange multipliers $(\alpha_1, \alpha_2)$ simultaneously**.
 
@@ -468,6 +475,7 @@ The Gram matrix collapses to the identity matrix ($K \approx I$), causing every 
 ### 9.2 The Gamma-C Interplay in RBF
 
 In the RBF kernel:
+
 - $\gamma$ controls the radius of influence of each support vector: $\sigma = \frac{1}{\sqrt{2\gamma}}$.
   - If $\gamma$ is excessively large: Each support vector has a tiny Gaussian bell. The decision boundary creates tight concentric bubbles around individual training points (extreme overfitting).
   - If $\gamma$ is excessively small: The Gaussian bell is nearly flat. The kernel behaves like a linear model (underfitting).
@@ -491,6 +499,7 @@ $$\min_{\mathbf{w}, b, \boldsymbol{\xi}} \frac{1}{2}\|\mathbf{w}\|_2^2 + C\sum_{
 Forming the primal Lagrangian with multipliers $\alpha_i \ge 0$ and $\mu_i \ge 0$:
 $$\mathcal{L}_P(\mathbf{w}, b, \boldsymbol{\xi}, \boldsymbol{\alpha}, \boldsymbol{\mu}) = \frac{1}{2}\|\mathbf{w}\|_2^2 + C\sum_{i=1}^n \xi_i - \sum_{i=1}^n \alpha_i \left[ y_i(\mathbf{w}^T \mathbf{x}_i + b) - 1 + \xi_i \right] - \sum_{i=1}^n \mu_i \xi_i$$
 Setting partial derivatives with respect to primal variables to zero:
+
 1. $\nabla_{\mathbf{w}} \mathcal{L}_P = \mathbf{w} - \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i = \mathbf{0} \implies \mathbf{w} = \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i$
 2. $\frac{\partial \mathcal{L}_P}{\partial b} = -\sum_{i=1}^n \alpha_i y_i = 0 \implies \sum_{i=1}^n \alpha_i y_i = 0$
 3. $\frac{\partial \mathcal{L}_P}{\partial \xi_i} = C - \alpha_i - \mu_i = 0 \implies C = \alpha_i + \mu_i$
@@ -510,18 +519,22 @@ $$\max_{\boldsymbol{\alpha}} \sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i=1}^n \su
 
 **Model Answer:**
 The KKT complementary slackness conditions state:
+
 1. $\alpha_i \left[ y_i(\mathbf{w}^T \mathbf{x}_i + b) - 1 + \xi_i \right] = 0$
 2. $\mu_i \xi_i = (C - \alpha_i) \xi_i = 0$
 
 This categorizes all training samples into three distinct regimes:
+
 - **Case 1: $\alpha_i = 0$ (Non-Support Vectors)**:
   From condition 2, since $\alpha_i < C$, $\mu_i > 0 \implies \xi_i = 0$.
   From the primal constraint, $y_i(\mathbf{w}^T \mathbf{x}_i + b) \ge 1$. Since condition 1 is satisfied with $\alpha_i = 0$, $y_i(\mathbf{w}^T \mathbf{x}_i + b) > 1$.
   These samples lie strictly outside the margin on the correct side. They contribute nothing to the weight vector ($\mathbf{w} = \sum \alpha_i y_i \mathbf{x}_i$) and have zero influence on the decision boundary.
+
 - **Case 2: $0 < \alpha_i < C$ (Free / Unbounded Support Vectors)**:
   Since $\alpha_i < C$, $\mu_i = C - \alpha_i > 0 \implies \xi_i = 0$.
   Since $\alpha_i > 0$, condition 1 requires $y_i(\mathbf{w}^T \mathbf{x}_i + b) - 1 + 0 = 0 \implies y_i(\mathbf{w}^T \mathbf{x}_i + b) = 1$.
   These points lie **exactly on the margin boundaries**. They physically anchor the separating slab and are used to solve for the intercept $b$.
+
 - **Case 3: $\alpha_i = C$ (Bounded Support Vectors)**:
   Here $\mu_i = C - \alpha_i = 0$, so $\xi_i \ge 0$.
   Condition 1 requires $y_i(\mathbf{w}^T \mathbf{x}_i + b) = 1 - \xi_i$.

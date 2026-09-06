@@ -29,6 +29,7 @@ Progressive projects, tier by tier, plus interview question banks per topic.
 - [x] [Sentiment classifier](foundational-applied-projects-tier-1-to-4-deep-dive.md)
 
 **Foundational Deep Dive:**
+
 - 📖 [Foundational Applied Projects (Tiers 1–4) Deep Dive](foundational-applied-projects-tier-1-to-4-deep-dive.md)
 
 ## Tier 5 — Transformers
@@ -54,6 +55,7 @@ Progressive projects, tier by tier, plus interview question banks per topic.
 - [x] [Full pipeline: data → training → tracking → registry → API → Docker → cloud → monitoring → retraining](advanced-frontier-projects-tier-5-to-8-deep-dive.md)
 
 **Frontier Deep Dive:**
+
 - 📖 [Advanced & Frontier Applied Projects (Tiers 5–8) Deep Dive](advanced-frontier-projects-tier-5-to-8-deep-dive.md)
 
 ## Interview Preparation Question Banks
@@ -61,6 +63,7 @@ Progressive projects, tier by tier, plus interview question banks per topic.
 - [x] [Top 50 Staff-Level AI/ML Engineering Technical Interview Question Banks](staff-level-interview-question-banks-deep-dive.md)
 
 **Comprehensive Interview Deep Dive:**
+
 - 📖 [Staff-Level Technical Interview Question Banks Deep Dive](staff-level-interview-question-banks-deep-dive.md)
 
 !!! mastery "Mastery Roadmap"

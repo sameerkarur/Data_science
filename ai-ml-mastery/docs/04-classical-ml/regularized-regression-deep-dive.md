@@ -98,6 +98,7 @@ $$
 $$
 
 where $\lambda \ge 0$ is the regularization hyperparameter:
+
 - $\lambda = 0 \implies$ Ordinary Least Squares.
 - $\lambda \to \infty \implies \mathbf{w}^* \to \mathbf{0}$.
 
@@ -164,6 +165,7 @@ $$
 The matrix is **guaranteed to be non-singular and invertible**, even when $p > n$ or when columns of $X$ are perfectly collinear!
 
 Furthermore, consider the matrix **condition number** $\kappa(A) = \frac{\mu_{\max}}{\mu_{\min}}$:
+
 - For OLS: $\kappa(X^T X) = \frac{\sigma_1^2}{\sigma_p^2} \to \infty$ as $\sigma_p \to 0$.
 - For Ridge: $\kappa(X^T X + \lambda I) = \frac{\sigma_1^2 + \lambda}{\sigma_p^2 + \lambda} < \frac{\sigma_1^2}{\sigma_p^2}$.
 
@@ -172,6 +174,7 @@ Ridge directly bounds numerical error propagation during matrix inversion.
 ### 3.4 SVD Perspective on Weight Shrinkage
 
 Using the Singular Value Decomposition (SVD) of the design matrix $X = U \Sigma V^T$:
+
 - $U \in \mathbb{R}^{n \times p}$ has orthonormal columns ($U^T U = I_p$).
 - $\Sigma = \text{diag}(\sigma_1, \dots, \sigma_p)$ contains singular values.
 - $V \in \mathbb{R}^{p \times p}$ is an orthogonal matrix of right singular vectors ($V^T V = V V^T = I_p$).
@@ -307,6 +310,7 @@ Whenever the correlation between feature $j$ and the remaining residual is less 
 ### 4.4 Geometric Intuition: Diamond ($L_1$) vs. Circle ($L_2$)
 
 Consider the constrained formulations:
+
 - **Ridge**: $\min_{\mathbf{w}} \|\mathbf{y} - X\mathbf{w}\|_2^2$ subject to $w_1^2 + w_2^2 \le t^2$ (a Euclidean circle/sphere).
 - **Lasso**: $\min_{\mathbf{w}} \|\mathbf{y} - X\mathbf{w}\|_2^2$ subject to $|w_1| + |w_2| \le t$ (a diamond/polytope).
 
@@ -337,6 +341,7 @@ Because the $L_1$ ball has sharp vertices lying directly on the coordinate axes 
 ### 5.1 Limitations of Lasso
 
 While Lasso is powerful for sparse selection, it exhibits two structural flaws in real-world tabular data:
+
 1. **$p > n$ Dimensionality Cap**: If $p > n$, Lasso can select at most $n$ non-zero features before saturating, arbitrarily discarding remaining signals.
 2. **Collinear Instability**: If a group of features are highly correlated (e.g., Pearson $r > 0.95$), Lasso arbitrarily selects one feature from the cluster and sets all others to zero, causing massive variance across cross-validation splits.
 
@@ -349,6 +354,7 @@ $$
 $$
 
 where $\alpha$ controls overall penalty strength and $\rho \in [0, 1]$ is the mixing ratio (`l1_ratio` in scikit-learn):
+
 - $\rho = 1 \implies$ Pure Lasso.
 - $\rho = 0 \implies$ Pure Ridge.
 
@@ -559,6 +565,7 @@ ConvergenceWarning: Objective did not converge. You might want to increase the n
 ```
 
 **Root Causes & Diagnosis:**
+
 1. **Unscaled Features**: If features have widely differing variances, the Lipschitz constant varies across coordinates, slowing coordinate descent.
 2. **Extremely Small $\alpha$**: As $\alpha \to 0$, the problem approaches ill-conditioned OLS where coordinate descent exhibits slow sublinear convergence.
 3. **Severe Multicollinearity**: When features are near-duplicates, coordinate descent zig-zags between them.
@@ -626,6 +633,7 @@ $$-\ln p(\mathbf{w} | X, \mathbf{y}) = \frac{1}{2\sigma^2} \|\mathbf{y} - X\math
    If we place a zero-mean isotropic Gaussian prior on weights $w_j \sim \mathcal{N}(0, \tau^2)$:
    $$p(\mathbf{w}) = \prod_{j=1}^p \frac{1}{\sqrt{2\pi\tau^2}} \exp\left(-\frac{w_j^2}{2\tau^2}\right) \implies -\ln p(\mathbf{w}) = \frac{1}{2\tau^2} \|\mathbf{w}\|_2^2 + \text{const}$$
    Setting $\lambda = \frac{\sigma^2}{\tau^2}$ exactly recovers the Ridge objective.
+
 2. **Lasso Regression $\iff$ Independent Laplace (Double Exponential) Prior**:
    If we place a zero-mean Laplace prior on weights $p(w_j) = \frac{1}{2b} \exp\left(-\frac{|w_j|}{b}\right)$:
    $$-\ln p(\mathbf{w}) = \frac{1}{b} \|\mathbf{w}\|_1 + \text{const}$$
@@ -661,6 +669,7 @@ $$H_{\text{Ridge}} = X (X^T X + \lambda I)^{-1} X^T$$
 Using the cyclic property of the trace $\text{tr}(AB) = \text{tr}(BA)$ and SVD $X = U \Sigma V^T$:
 $$\text{df}(\lambda) = \text{tr}\left( X^T X (X^T X + \lambda I)^{-1} \right) = \text{tr}\left( V \Sigma^2 (\Sigma^2 + \lambda I)^{-1} V^T \right) = \sum_{j=1}^p \frac{\sigma_j^2}{\sigma_j^2 + \lambda}$$
 Notice that:
+
 - As $\lambda \to 0$: $\frac{\sigma_j^2}{\sigma_j^2} = 1 \implies \text{df} \to p$.
 - As $\lambda \to \infty$: $\frac{\sigma_j^2}{\sigma_j^2 + \lambda} \to 0 \implies \text{df} \to 0$.
 The effective degrees of freedom decreases monotonically as $\lambda$ increases, providing a continuous measure of model complexity.
@@ -673,6 +682,7 @@ The effective degrees of freedom decreases monotonically as $\lambda$ increases,
 Yes, coordinate descent can be derived for Ridge regression. Isolating coordinate $w_j$ in the Ridge objective:
 $$\frac{\partial}{\partial w_j} \left[ \frac{1}{2n} \sum_{i=1}^n (r_i^{(j)} - X_{ij} w_j)^2 + \frac{\lambda}{2} w_j^2 \right] = 0 \implies w_j = \frac{\rho_j}{\frac{1}{n}\sum_i X_{ij}^2 + \lambda}$$
 However, coordinate descent is rarely preferred for Ridge for two reasons:
+
 1. **Differentiability**: Ridge is smooth and quadratic everywhere. Its gradient $\nabla \mathcal{L} = X^T(X\mathbf{w} - \mathbf{y}) + \lambda \mathbf{w}$ is Lipschitz continuous. Accelerated first-order methods (Conjugate Gradient, L-BFGS) update all coordinates simultaneously and converge in $O(p)$ iterations without coordinate-wise looping.
 2. **Matrix Factorization**: When $n \ge p$ and $p$ is moderate ($p \le 10,000$), computing the Cholesky decomposition of $(X^T X + \lambda I)$ takes $O(p^3)$ flops once, after which solutions for multiple regularization parameters or cross-validation folds can be computed via rapid triangular back-substitution in $O(p^2)$ time.
 

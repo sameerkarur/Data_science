@@ -299,6 +299,7 @@ z_i - \max_k(z_k) \le 0 \quad \implies \quad 0 < e^{z_i - \max_k(z_k)} \le 1
 $$
 
 This guarantees that:
+
 1. No exponent ever exceeds $e^0 = 1$ (overflow is physically impossible).
 2. At least one term in the denominator is $e^0 = 1$, ensuring $\sum_{j=1}^K e^{z_j - c} \ge 1 > 0$ (division by zero is physically impossible).
 
@@ -484,11 +485,13 @@ Both our scratch implementation and PyTorch yield identical probabilities: `[0.0
 ### Q1: Why do machine learning models optimize log-likelihood instead of raw likelihood?
 **Model Answer:**
 There are four primary mathematical and computational reasons:
+
 1. **Numerical Stability (Underflow Prevention):** For an i.i.d. dataset of size $N$, the joint likelihood is a product of probabilities $\prod_{i=1}^N p(x_i \mid \theta)$. As $N$ grows, this product approaches zero exponentially, easily breaching the IEEE 754 float32 underflow limit ($\approx 1.18 \times 10^{-38}$). The logarithm converts products into sums $\sum_{i=1}^N \log p(x_i \mid \theta)$, keeping values within standard precision ranges.
 2. **Computational Tractability of Derivatives:** The derivative of a sum is simply the sum of derivatives ($\frac{d}{d\theta} \sum f_i = \sum \frac{d}{d\theta} f_i$), whereas differentiating a product of $N$ terms requires the multi-term product rule, creating an $O(N^2)$ computational graph.
 3. **Strict Monotonicity Preserves Extrema:** The natural logarithm is a strictly monotonically increasing function on $\mathbb{R}^+$. Therefore:
    $$\arg\max_\theta \prod_{i=1}^N p(x_i \mid \theta) = \arg\max_\theta \sum_{i=1}^N \log p(x_i \mid \theta)$$
    The exact location of the optimal parameter set $\boldsymbol{\theta}^*$ remains unchanged.
+
 4. **Exponential Family Compatibility:** Many probability distributions (Gaussian, Bernoulli, Poisson, Exponential) belong to the exponential family $p(x \mid \eta) = h(x) \exp(\eta^T T(x) - A(\eta))$. Taking the logarithm cancels the exponential operator, transforming the log-likelihood into a linear or concave function of natural parameters, greatly simplifying optimization.
 
 ---
@@ -500,6 +503,7 @@ $$p_i = \frac{e^{z_i}}{\sum_{j=1}^K e^{z_j}}$$
 Let $c = \max_{j} z_j$. We multiply both numerator and denominator by $e^{-c}$:
 $$p_i = \frac{e^{z_i} e^{-c}}{\left(\sum_{j=1}^K e^{z_j}\right) e^{-c}} = \frac{e^{z_i - c}}{\sum_{j=1}^K e^{z_j - c}}$$
 Because $c = \max_j z_j$:
+
 1. $z_i - c \le 0$ for all $i \in \{1, \dots, K\}$, which guarantees $e^{z_i - c} \in (0, 1]$. Hence, intermediate terms cannot overflow past $1.0$ (overflow ceiling eliminated).
 2. For the maximum index $k^* = \arg\max_j z_j$, $z_{k^*} - c = 0$, so $e^0 = 1$. This guarantees the denominator $\sum_{j=1}^K e^{z_j - c} \ge 1.0 > 0$, making division by zero impossible even if all other terms underflow to zero.
 
@@ -508,10 +512,13 @@ Because $c = \max_j z_j$:
 ### Q3: Derive the relationship between Shannon Entropy, Cross-Entropy, and Kullback-Leibler (KL) Divergence.
 **Model Answer:**
 Let $P$ be the true data distribution and $Q$ be the model distribution over discrete support $\mathcal{X}$.
+
 1. **Shannon Entropy** measures the intrinsic uncertainty/information content of the true distribution:
    $$H(P) = -\sum_{x \in \mathcal{X}} P(x) \log P(x) = \mathbb{E}_{x \sim P}[-\log P(x)]$$
+
 2. **Cross-Entropy** measures the expected number of bits required to encode events drawn from $P$ using an optimal code designed for $Q$:
    $$H(P, Q) = -\sum_{x \in \mathcal{X}} P(x) \log Q(x) = \mathbb{E}_{x \sim P}[-\log Q(x)]$$
+
 3. **KL Divergence (Relative Entropy)** measures the statistical inefficiency or information lost by approximating $P$ with $Q$:
    $$D_{\text{KL}}(P \parallel Q) = \sum_{x \in \mathcal{X}} P(x) \log \frac{P(x)}{Q(x)}$$
 
@@ -530,6 +537,7 @@ Minimizing cross-entropy is mathematically equivalent to minimizing the KL diver
 The Huber loss is defined as:
 $$L_\delta(r) = \begin{cases} \frac{1}{2} r^2 & \text{for } |r| \le \delta \\ \delta \left(|r| - \frac{1}{2}\delta\right) & \text{for } |r| > \delta \end{cases}$$
 where $r = y - \hat{y}$ is the residual.
+
 - **Comparison to MSE ($L_2$):** For large residuals ($|r| > \delta$), MSE scales quadratically ($r^2$), which causes gradients to grow linearly ($\nabla L = r$). A single outlier with an error of $1000$ exerts a gradient of $1000$, dominating the batch update and destabilizing weights. Huber transitions to linear error for large residuals, bounding the gradient magnitude to $\pm\delta$, making it robust against outliers.
 - **Comparison to MAE ($L_1$):** MAE has a constant gradient magnitude $\pm 1$ everywhere except $r = 0$, where its derivative is undefined (a subdifferential discontinuity). Near zero, MAE oscillates or requires decaying learning rates to settle. Huber loss is quadratic near zero ($|r| \le \delta$), providing smooth, continuous first derivatives ($\nabla L = r$) that diminish smoothly to zero, enabling stable convergence under gradient descent.
 - At the transition point $|r| = \delta$:
@@ -543,6 +551,7 @@ where $r = y - \hat{y}$ is the residual.
 Catastrophic cancellation occurs in finite-precision IEEE 754 arithmetic when subtracting two nearly equal floating-point numbers ($x \approx y$). Because both numbers share their leading significant bits, subtraction cancels those leading bits, leaving only the trailing bits, which are dominated by rounding noise and truncation error.
 
 **Manifestation in ML:**
+
 1. **Variance calculation:** The textbook formula $\text{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2$ computes two large numbers and subtracts them. If data has high mean $\mu = 10^8$ and low variance $\sigma^2 = 1$, $\mathbb{E}[X^2] \approx 10^{16}$ and $(\mathbb{E}[X])^2 \approx 10^{16}$. In 32-bit float (24 bits of mantissa, $\approx 7$ decimal digits), both round to identical representations, producing $\text{Var}(X) = 0.0$ or even negative variance! Production libraries use **Welford's algorithm**, which computes variance online via incremental differences $(x_k - \bar{x}_{k-1})(x_k - \bar{x}_k)$.
 2. **Log-prob near 1:** Evaluating $\log(1 + x)$ for $|x| \ll 1$. Floating point adds $1 + x$, immediately rounding small $x$ into the least significant bits of 1. Calling `log1p(x)` uses a Taylor expansion avoiding the explicit $+1$.
 

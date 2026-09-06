@@ -8,6 +8,7 @@
 ## 1. The Big Picture
 
 Machine learning models have two distinct tiers of parameters:
+
 1. **Model Parameters ($\mathbf{w}, b$)**: Learned automatically during training by minimizing the loss function on the training dataset via gradient descent or closed-form equations.
 2. **Hyperparameters ($\boldsymbol{\theta}$)**: Structural knobs chosen *before* training begins (learning rate $\eta$, regularization weight $\lambda$, tree depth $d$, kernel width $\gamma$, network layers).
 
@@ -144,6 +145,7 @@ f(\boldsymbol{\theta}) \mid \mathcal{D}_{1:t} \sim \mathcal{N}\left( \mu(\boldsy
 $$
 
 where:
+
 - $\mu(\boldsymbol{\theta}) = \mathbf{k}^T (K + \sigma_{\text{noise}}^2 I)^{-1} \mathbf{y}$ (the expected performance).
 - $\sigma^2(\boldsymbol{\theta}) = k(\boldsymbol{\theta}, \boldsymbol{\theta}) - \mathbf{k}^T (K + \sigma_{\text{noise}}^2 I)^{-1} \mathbf{k}$ (the epistemic model uncertainty).
 
@@ -198,8 +200,10 @@ $$
 $$
 
 Evaluating both integrals:
+
 1. By symmetry of the standard normal density $\phi(z)$:
    $$\int_{-Z}^{\infty} \phi(z) dz = \int_{-\infty}^{Z} \phi(z) dz = \Phi(Z)$$
+
 2. Because $\phi'(z) = -z \phi(z)$, the second integrand is an exact derivative:
    $$\int_{-Z}^{\infty} z \phi(z) dz = \left[ -\phi(z) \right]_{-Z}^{\infty} = 0 - (-\phi(-Z)) = \phi(Z)$$
 
@@ -277,6 +281,7 @@ Evaluating every hyperparameter trial to full convergence (e.g., training a deep
 ### 6.2 Hyperband: Resolving the Explore-Exploit Trade-off
 
 Successive Halving requires picking initial trial count $N$ and minimum budget $R$:
+
 - If $R$ is too small: Good configurations that learn slowly are discarded prematurely.
 - If $R$ is too large: We cannot afford to explore many configurations $N$.
 
@@ -460,6 +465,7 @@ print(f"Best Parameters: {study.best_params}")
 
 Parameters like learning rate $\eta \in [10^{-4}, 10^{-1}]$ or regularization $\lambda \in [10^{-3}, 10^2]$ span several orders of magnitude.
 If sampled uniformly on a linear scale $[0.0001, 0.1]$:
+
 - $90\%$ of all random trials fall in $[0.01, 0.1]$.
 - Only $1\%$ of trials test the critical small regime $[0.0001, 0.001]$!
 **Fix**: Always configure `log=True` (in Optuna) or sample via `scipy.stats.loguniform`.
@@ -505,6 +511,7 @@ Substitute the standard normal variable $z = \frac{y - \mu}{\sigma} \implies y =
 The lower integration limit becomes $z_{\min} = \frac{y^+ + \xi - \mu}{\sigma} = -Z$, where $Z = \frac{\mu - y^+ - \xi}{\sigma}$.
 The integral decomposes into two terms:
 $$\text{EI}(\boldsymbol{\theta}) = \int_{-Z}^{\infty} (\mu - y^+ - \xi) \phi(z) dz + \sigma \int_{-Z}^{\infty} z \phi(z) dz$$
+
 1. For the first term, by standard normal symmetry $\int_{-Z}^\infty \phi(z) dz = \int_{-\infty}^Z \phi(z) dz = \Phi(Z)$.
 2. For the second term, using $\frac{d}{dz} \phi(z) = -z \phi(z)$:
    $$\int_{-Z}^{\infty} z \phi(z) dz = [-\phi(z)]_{-Z}^{\infty} = -\lim_{z \to \infty} \phi(z) - (-\phi(-Z)) = 0 + \phi(Z) = \phi(Z)$$
@@ -535,6 +542,7 @@ The denominator $\gamma + (1 - \gamma) \frac{g(\boldsymbol{\theta})}{\ell(\bolds
 ### Q4: Contrast Gaussian Process Bayesian Optimization with Tree-structured Parzen Estimators.
 
 **Model Answer:**
+
 | Dimension | Gaussian Process BO | Tree-Structured Parzen Estimator (TPE) |
 |---|---|---|
 | **Underlying Approach** | Discriminative: Models $p(y \mid \boldsymbol{\theta})$ directly | Generative: Models $p(\boldsymbol{\theta} \mid y)$ via KDEs |
@@ -549,6 +557,7 @@ The denominator $\gamma + (1 - \gamma) \frac{g(\boldsymbol{\theta})}{\ell(\bolds
 ### Q5: Explain the mechanics of Successive Halving (SHA) and Hyperband.
 
 **Model Answer:**
+
 - **Successive Halving (SHA):**
   Given a total budget and $N$ hyperparameter candidates:
   1. Allocate a minimum resource $r$ (e.g., 1 training epoch) to all $N$ configurations.
@@ -557,6 +566,7 @@ The denominator $\gamma + (1 - \gamma) \frac{g(\boldsymbol{\theta})}{\ell(\bolds
   4. Increase the resource allocation for survivors by factor $\eta$ (e.g., 3 epochs).
   5. Repeat until the final winning configuration reaches the maximum budget $R$.
   *Flaw:* If the initial minimum budget $r$ is too small, configurations that start slowly but have high asymptotic performance are discarded.
+
 - **Hyperband:**
   Wraps SHA in an outer loop over different values of $N$ and $r$. It systematically tests various balances of the exploration-exploitation spectrum:
   - Bracket 0: Classic SHA with many configurations evaluated on tiny initial budgets (aggressive exploration).

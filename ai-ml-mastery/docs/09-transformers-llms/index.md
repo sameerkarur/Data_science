@@ -12,6 +12,7 @@ The foundational guide to modern language models — from self-attention and pos
 - [x] [Feed-forward, layer norm, residuals](transformer-architecture-mechanics-deep-dive.md)
 
 **Comprehensive Deep Dive:**
+
 - 📖 [Transformer Architecture & Mechanics Deep Dive](transformer-architecture-mechanics-deep-dive.md)
 
 ## Model Families
@@ -22,6 +23,7 @@ The foundational guide to modern language models — from self-attention and pos
 - [x] [Modern LLM Innovations (GQA, MLA, MoE)](foundation-model-families-deep-dive.md)
 
 **Comprehensive Deep Dive:**
+
 - 📖 [Foundation Model Families Deep Dive](foundation-model-families-deep-dive.md)
 
 ## Training
@@ -33,6 +35,7 @@ The foundational guide to modern language models — from self-attention and pos
 - [x] [LoRA / QLoRA / PEFT](llm-training-alignment-peft-deep-dive.md)
 
 **Comprehensive Deep Dive:**
+
 - 📖 [LLM Training, Alignment & PEFT Deep Dive](llm-training-alignment-peft-deep-dive.md)
 
 !!! mastery "Mastery Roadmap"

@@ -8,6 +8,7 @@
 ## 1. The Big Picture
 
 Between 2012 and 2020, computer vision underwent a structural revolution catalyzed by the ImageNet Large Scale Visual Recognition Challenge (ILSVRC). The timeline of modern Convolutional Neural Networks is the history of solving three fundamental bottlenecks:
+
 1. **Vanishing/Exploding Gradients**: Solved sequentially by ReLU, Batch Normalization, and Residual Connections.
 2. **The Degradation Problem**: Deeper plain networks performing worse on training data than shallow ones—solved definitively by **ResNet's additive identity shortcuts**.
 3. **Computational & Edge Efficiency**: Enabling high-accuracy vision on edge devices and mobile phones via **Depthwise Separable Convolutions (MobileNet)** and **Compound Scaling (EfficientNet)**.
@@ -33,12 +34,14 @@ timeline
 ### 2.1 LeNet-5 (LeCun et al., 1998)
 
 Yann LeCun's LeNet-5 processed $32 \times 32$ handwritten grayscale digits for automated banking check processing:
+
 - Architecture: `Input (32x32) -> Conv (5x5) -> AvgPool -> Conv (5x5) -> AvgPool -> FC120 -> FC84 -> Output (10)`.
 - Key limitations: Used saturating Sigmoid/Tanh activations, average pooling, and had only $\approx 60,000$ parameters, limited by 1990s CPU compute.
 
 ### 2.2 AlexNet (Krizhevsky, Sutskever, Hinton, 2012)
 
 AlexNet won ILSVRC 2012 by an astonishing 10.8 percentage point margin, inaugurating the modern deep learning era:
+
 - **Depth**: 8 learned layers (5 convolutional, 3 dense).
 - **GPU Parallelism**: Split across two 3GB NVIDIA GeForce GTX 580 GPUs.
 - **Architectural Innovations**:
@@ -50,6 +53,7 @@ AlexNet won ILSVRC 2012 by an astonishing 10.8 percentage point margin, inaugura
 ### 2.3 VGG Network (Simonyan & Zisserman, 2014)
 
 VGG established the fundamental design rule of modern modular CNNs:
+
 - **Homogeneous Modular Design**: Replaced arbitrary large filter sizes ($11 \times 11$, $7 \times 7$, $5 \times 5$) strictly with uniform stacks of **$3 \times 3$ convolutions** with stride 1 and padding 1, followed by $2 \times 2$ Max Pooling (stride 2).
 - **Rule of Thumb**: Whenever spatial dimensions are halved by pooling, the channel depth is doubled ($64 \to 128 \to 256 \to 512$).
 - **Bottleneck**: The three fully connected layers (4096 $\to$ 4096 $\to$ 1000) contained $>100$ million parameters, making VGG-16 ($138\text{M}$ parameters) computationally bloated.
@@ -57,6 +61,7 @@ VGG established the fundamental design rule of modern modular CNNs:
 ### 2.4 Inception / GoogLeNet (Szegedy et al., 2014)
 
 GoogLeNet achieved 22 layers with only $6.8$ million parameters (a $20\times$ parameter reduction over AlexNet) through the **Inception Block**:
+
 - **Multi-Scale Processing**: Rather than choosing a single kernel size, an Inception block runs $1 \times 1$, $3 \times 3$, $5 \times 5$ convolutions and $3 \times 3$ max pooling in parallel on the same input, concatenating their output channels.
 - **$1 \times 1$ Bottleneck Convolutions**: Performing $3 \times 3$ convolutions on high-dimensional channels ($C=256$) is computationally prohibitive. A $1 \times 1$ convolution reduces channels first ($256 \to 64$), applies the spatial $3 \times 3$ filter, and expands back.
 
@@ -143,6 +148,7 @@ $$
 
 **The Core Insight:**  
 The gradient $\frac{\partial \mathcal{E}}{\partial \mathbf{x}_l}$ decomposes into two additive terms:
+
 1. The **Direct Gradient Highway**: $\frac{\partial \mathcal{E}}{\partial \mathbf{x}_L} \cdot \mathbf{I}$. The error gradient from the output layer flows directly backward to layer $l$ **unimpeded, without passing through any weight matrices or diminishing multiplicative terms!**
 2. Even if the learned residual gradients $\sum \frac{\partial \mathcal{F}}{\partial \mathbf{x}_l}$ approach zero, the term $\mathbf{I}$ ensures that $\frac{\partial \mathcal{E}}{\partial \mathbf{x}_l}$ never vanishes.
 
@@ -171,21 +177,26 @@ flowchart TD
 ### 4.1 BasicBlock (ResNet-18 & ResNet-34)
 
 Used for shallow networks with moderate channel counts:
+
 - Two consecutive $3 \times 3$ convolutions with equal channel dimension $C$.
 - Parameter count: $2 \times (3 \times 3 \times C^2) = 18 C^2$.
 
 ### 4.2 Bottleneck Block (ResNet-50, ResNet-101, ResNet-152)
 
 Used for deep networks where channel counts reach $512$ or $2048$:
+
 - **$1 \times 1$ Conv**: Reduces channel dimension from $4C \to C$ (dimension reduction).
 - **$3 \times 3$ Conv**: Performs spatial filtering on the compact $C$-dimensional representation.
 - **$1 \times 1$ Conv**: Restores channel dimension from $C \to 4C$ (dimension expansion).
 
 **Computational Efficiency Comparison (for $4C = 256 \implies C = 64$):**
+
 - Two $3 \times 3$ convolutions on 256 channels:
   $$2 \times (3 \times 3 \times 256 \times 256) \approx 1,179,648 \text{ operations}$$
+
 - Bottleneck block ($256 \to 64 \to 64 \to 256$):
   $$(1 \times 1 \times 256 \times 64) + (3 \times 3 \times 64 \times 64) + (1 \times 1 \times 64 \times 256) = 16,384 + 36,864 + 16,384 \approx 69,632 \text{ operations}$$
+
 - **A $17\times$ reduction in computational cost!**
 
 ### 4.3 Projection Shortcuts
@@ -206,6 +217,7 @@ MobileNet was engineered to run high-accuracy computer vision on edge devices an
 ### 5.1 Factorizing Standard Convolutions
 
 Standard 2D convolution applies spatial filtering and channel cross-correlation simultaneously:
+
 - Input: $D_F \times D_F \times M$ ($H \times W \times C_{\text{in}}$)
 - Output: $D_F \times D_F \times N$ ($H \times W \times C_{\text{out}}$)
 - Kernel: $D_K \times D_K$ ($k \times k$)
@@ -257,6 +269,7 @@ $$
 ## 6. EfficientNet: Principled Compound Scaling (Tan & Le, 2019)
 
 Prior to EfficientNet, scaling up CNNs was arbitrary:
+
 - Deeper models (more layers, e.g. ResNet-18 $\to$ ResNet-152).
 - Wider models (more channels per layer, e.g. WideResNet).
 - Higher resolution (larger input images, e.g. $224 \times 224 \to 480 \times 480$).
@@ -580,6 +593,7 @@ In ResNet, the term $\frac{\partial \mathcal{E}}{\partial \mathbf{x}_L} \cdot \m
 **Model Answer:**  
 Overfitting is characterized by a divergence between training performance and generalization performance: the network memorizes training data noise, achieving near-zero training error while exhibiting high validation/test error.  
 The **Degradation Problem** is the counterintuitive phenomenon where increasing depth causes **training error to worsen**:
+
 - A 56-layer plain network exhibits higher training error than a 20-layer plain network on the exact same training set.
 - This cannot be overfitting, because an overfitted model would easily achieve lower training error.
 - Rather, the degradation problem is an **optimization failure**: the non-convex loss surface of deep plain networks becomes riddled with pathological curvature and vanishing gradients, preventing first-order optimizers (SGD) from converging to even the identity function solution that the deeper architecture trivially contains in its parameter space.
@@ -590,9 +604,11 @@ The **Degradation Problem** is the counterintuitive phenomenon where increasing 
 
 **Model Answer:**  
 Let the input feature map have spatial size $D_F \times D_F$ with $M$ channels, producing an output of size $D_F \times D_F$ with $N$ channels using a kernel of size $D_K \times D_K$.  
+
 1. **Standard Convolution**:
    Computes $N$ filters, each of shape $D_K \times D_K \times M$, over $D_F \times D_F$ spatial locations:
    $$\text{Cost}_{\text{std}} = D_K \cdot D_K \cdot M \cdot N \cdot D_F \cdot D_F$$
+
 2. **Depthwise Separable Convolution**:
    - *Depthwise Step*: Applies $M$ spatial filters of size $D_K \times D_K \times 1$:
      $$\text{Cost}_{\text{dw}} = D_K \cdot D_K \cdot M \cdot D_F \cdot D_F$$
@@ -600,6 +616,7 @@ Let the input feature map have spatial size $D_F \times D_F$ with $M$ channels, 
      $$\text{Cost}_{\text{pw}} = M \cdot N \cdot D_F \cdot D_F$$
    - Total Cost:
      $$\text{Cost}_{\text{sep}} = D_F^2 \cdot M \cdot (D_K^2 + N)$$
+
 3. **Reduction Ratio**:
    $$\frac{\text{Cost}_{\text{sep}}}{\text{Cost}_{\text{std}}} = \frac{D_F^2 \cdot M \cdot (D_K^2 + N)}{D_F^2 \cdot M \cdot N \cdot D_K^2} = \frac{D_K^2 + N}{N \cdot D_K^2} = \frac{1}{N} + \frac{1}{D_K^2}$$
 For a typical $3 \times 3$ kernel ($D_K = 3$) and $N \gg 1$:
@@ -613,6 +630,7 @@ This yields an exact $\approx 89\%$ reduction in multiply-accumulate operations.
 **Model Answer:**  
 Let network depth be scaled by $d = \alpha^\phi$, width by $w = \beta^\phi$, and input resolution by $r = \gamma^\phi$, where $\phi$ is a user-controlled compound scaling coefficient.  
 Consider how each dimension impacts the computational cost (FLOPs):
+
 - **Depth ($d$)**: Doubling the number of layers doubles the operations linearly: $\text{FLOPs} \propto d \propto \alpha^\phi$.
 - **Width ($w$)**: Doubling channels multiplies both input channels $C_{\text{in}}$ and output channels $C_{\text{out}}$ by 2. Because convolution FLOPs scale as $C_{\text{in}} \cdot C_{\text{out}}$, doubling width quadruples FLOPs: $\text{FLOPs} \propto w^2 \propto \beta^{2\phi}$.
 - **Resolution ($r$)**: Doubling the spatial height and width quadruples the total pixel count $H \cdot W$. Because convolution applies filters across all spatial positions, doubling resolution quadruples FLOPs: $\text{FLOPs} \propto r^2 \propto \gamma^{2\phi}$.

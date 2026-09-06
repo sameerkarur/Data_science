@@ -141,6 +141,7 @@ $$
 
 - **First-Order Methods (Gradient Descent)** use the linear approximation:
   $$f(\mathbf{x}_0 + \Delta \mathbf{x}) \approx f(\mathbf{x}_0) + \nabla f(\mathbf{x}_0)^T \Delta \mathbf{x}$$
+
 - **Second-Order Methods (Newton's Method)** use the full quadratic model including the Hessian:
   $$m(\Delta \mathbf{x}) = f(\mathbf{x}_0) + \nabla f(\mathbf{x}_0)^T \Delta \mathbf{x} + \frac{1}{2} \Delta \mathbf{x}^T H(\mathbf{x}_0) \Delta \mathbf{x}$$
 
@@ -161,6 +162,7 @@ $$
 #### Equivalent First- and Second-Order Characterizations:
 1. **First-Order Condition**: $f$ is convex if and only if the tangent hyperplane always lies below the function:
    $$f(\mathbf{y}) \ge f(\mathbf{x}) + \nabla f(\mathbf{x})^T (\mathbf{y} - \mathbf{x}) \quad \forall \mathbf{x}, \mathbf{y}$$
+
 2. **Second-Order Condition**: A twice-differentiable function is convex if and only if its Hessian is positive semi-definite everywhere:
    $$\nabla^2 f(\mathbf{x}) \succeq 0 \quad \forall \mathbf{x} \in \mathcal{C}$$
 
@@ -189,10 +191,12 @@ $$
 ### 5.2 Forward-Mode vs. Reverse-Mode Autodiff
 
 Consider a function $\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m$:
+
 - **Forward-Mode (Jacobian-Vector Products - JVPs)**: Propagates derivatives $\frac{\partial v}{\partial x_{\text{in}}}$ forward from inputs to outputs alongside function evaluation. Computing the full Jacobian requires $n$ forward passes (one per input dimension).
 - **Reverse-Mode (Vector-Jacobian Products - VJPs)**: First evaluates all operations forward (recording the DAG and intermediate values), then sweeps **backward** from the scalar loss $L \in \mathbb{R}$ to all inputs.
 
 In machine learning, we optimize a **single scalar loss** $L \in \mathbb{R}$ with respect to $P = 10^9$ parameters ($n = 10^9, m = 1$).
+
 - Forward mode requires $10^9$ forward passes.
 - Reverse mode requires **exactly ONE backward pass**!
 
@@ -275,12 +279,16 @@ Adam combines the advantages of Momentum (first moment $\mathbf{m}_t$) and RMSpr
 #### Algorithm Equations:
 1. Update biased first moment estimate:
    $$\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1 - \beta_1) \mathbf{g}_t$$
+
 2. Update biased second raw moment estimate:
    $$\mathbf{v}_t = \beta_2 \mathbf{v}_{t-1} + (1 - \beta_2) \mathbf{g}_t^2$$
+
 3. Compute bias-corrected first moment:
    $$\hat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1 - \beta_1^t}$$
+
 4. Compute bias-corrected second moment:
    $$\hat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1 - \beta_2^t}$$
+
 5. Apply parameter update:
    $$\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \frac{\eta}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon} \odot \hat{\mathbf{m}}_t$$
 
@@ -379,6 +387,7 @@ $$
 ## 7. Python Implementation: Autodiff Engine & 2D Optimizer Suite
 
 Below is a complete, runnable script featuring:
+
 1. A micro **Scalar Autodiff Engine** (`Value`) building dynamic computational DAGs.
 2. From-scratch optimizers: **SGD**, **Momentum**, **RMSprop**, and **Adam**.
 3. Benchmark optimization on the notorious non-convex **Beale Function** ($f(x, y) = (1.5 - x + xy)^2 + (2.25 - x + xy^2)^2 + (2.625 - x + xy^3)^2$, global minimum at $(3.0, 0.5)$).
@@ -609,11 +618,13 @@ The second moment follows the identical recurrence $\mathbf{v}_t = (1 - \beta_2)
 ### Q2: Explain the fundamental difference between forward-mode and reverse-mode automatic differentiation. When is reverse-mode computationally superior?
 **Model Answer:**
 Consider a function $\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m$.
+
 - **Forward-Mode AD** applies the chain rule from the inside out (from inputs to outputs). It computes **Jacobian-Vector Products (JVPs)**, evaluating $\nabla_{\mathbf{x}} v_i$ concurrently with the primal value $v_i$. To obtain the full $m \times n$ Jacobian, forward mode must be evaluated $n$ times (once per unit basis vector $\mathbf{e}_j \in \mathbb{R}^n$).
 - **Reverse-Mode AD** evaluates the function forward, records the execution graph (tape/DAG), and then propagates derivatives from the outside in (from outputs back to inputs) using **Vector-Jacobian Products (VJPs)**. Computing gradients with respect to all $n$ inputs requires $m$ backward sweeps.
 
 **ML Superiority:**
 In deep learning, the loss function maps millions of parameters to a single scalar objective ($n \approx 10^7 \text{ to } 10^{11}$, $m = 1$).
+
 - Forward mode would require $10^{11}$ full network evaluations to get the gradient vector!
 - Reverse mode requires **a single forward pass and a single backward pass**, running in $\mathcal{O}(1)$ relative to parameter count $n$. Hence, reverse-mode autodiff is fundamentally necessary for training modern deep models.
 
@@ -640,6 +651,7 @@ $$\nabla_{\Delta \mathbf{x}} m(\Delta \mathbf{x}) = \nabla f(\mathbf{x}_t) + H(\
 If $H$ is invertible, the optimal step is $\Delta \mathbf{x}^* = - [H(\mathbf{x}_t)]^{-1} \nabla f(\mathbf{x}_t)$.
 
 **Why Impractical in Deep Learning:**
+
 1. **Memory Complexity:** For $P$ parameters, $H \in \mathbb{R}^{P \times P}$. For $P = 10^8$, storing $H$ in float32 requires $4 \times 10^{16}$ bytes ($40$ Petabytes).
 2. **Computational Inversion Cost:** Solving $H \Delta \mathbf{x} = -\mathbf{g}$ via Cholesky or LU decomposition requires $\mathcal{O}(P^3)$ operations per step.
 3. **Non-Convexity Instability:** In deep nets, $H$ is rarely positive definite. Inverting an indefinite Hessian leads directly to saddle points or local maxima.
@@ -652,6 +664,7 @@ At a local minimum $\mathbf{x}^*$ with strictly positive definite Hessian $H \su
 $$\kappa(H) = \frac{\lambda_{\max}(H)}{\lambda_{\min}(H)} \ge 1$$
 For a quadratic objective $f(\mathbf{x}) = \frac{1}{2} \mathbf{x}^T H \mathbf{x}$, standard Gradient Descent with optimal learning rate $\eta = \frac{2}{\lambda_{\max} + \lambda_{\min}}$ exhibits the linear convergence bound:
 $$\|\mathbf{x}_k - \mathbf{x}^*\|_H \le \left( \frac{\kappa(H) - 1}{\kappa(H) + 1} \right)^k \|\mathbf{x}_0 - \mathbf{x}^*\|_H$$
+
 - When $\kappa(H) \approx 1$ (isotropic, circular contours), $\frac{\kappa - 1}{\kappa + 1} \approx 0$, converging in a single step.
 - When $\kappa(H) \gg 1$ (e.g., $\kappa = 10^4$, highly ill-conditioned ravine), $\frac{\kappa - 1}{\kappa + 1} \approx 1 - \frac{2}{\kappa} = 0.9998$. Gradient descent crawls, oscillating violently along the eigenvector of $\lambda_{\max}$ while making virtually zero progress along the eigenvector of $\lambda_{\min}$. This necessitates adaptive optimizers (Adam) or batch normalization to condition the landscape.
 

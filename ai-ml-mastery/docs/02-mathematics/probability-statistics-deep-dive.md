@@ -142,6 +142,7 @@ flowchart LR
 
 #### Variance (Second Central Moment / Spread):
 $$\text{Var}(X) = \sigma^2 = \mathbb{E}\left[(X - \mathbb{E}[X])^2\right] = \mathbb{E}[X^2] - (\mathbb{E}[X])^2$$
+
 - Scaling property: $\text{Var}(aX + b) = a^2 \text{Var}(X)$.
 
 #### Covariance and Correlation Matrix:
@@ -153,6 +154,7 @@ $$\Sigma_{ij} = \text{Cov}(X_i, X_j) = \mathbb{E}[(X_i - \mu_i)(X_j - \mu_j)]$$
 
 - **Pearson Correlation Coefficient**:
   $$\rho(X_i, X_j) = \frac{\text{Cov}(X_i, X_j)}{\sigma_{X_i} \sigma_{X_j}} \in [-1, 1]$$
+
 - The covariance matrix $\Sigma$ is always **symmetric** and **positive semi-definite** ($\Sigma \succeq 0$), connecting directly to the [Spectral Theorem in Linear Algebra](linear-algebra-deep-dive.md#62-spectral-theorem-for-real-symmetric-matrices).
 
 ---
@@ -195,6 +197,7 @@ Let $X_1, X_2, \dots, X_n$ be independent and identically distributed (i.i.d.) r
 
 - **Weak Law (WLLN)**: Sample mean converges in probability to the true mean:
   $$\lim_{n \to \infty} P(|\bar{X}_n - \mu| \ge \epsilon) = 0 \quad \forall \epsilon > 0$$
+
 - **Strong Law (SLLN)**: Sample mean converges almost surely to the true mean:
   $$P\left(\lim_{n \to \infty} \bar{X}_n = \mu\right) = 1$$
 
@@ -362,6 +365,7 @@ $$
 $$
 
 Compare this to the MLE estimate $\hat{\theta}_{\text{MLE}} = \frac{k}{n}$:
+
 - As $n \to \infty$, the data dominates the prior: $\lim_{n \to \infty} \hat{\theta}_{\text{MAP}} = \frac{k}{n} = \hat{\theta}_{\text{MLE}}$.
 - When data is sparse ($n=1, k=1$), MLE predicts $1.0$ (catastrophic overconfidence), whereas MAP with a neutral prior ($\alpha=2, \beta=2$) predicts $\frac{1 + 1}{1 + 2} = \frac{2}{3}$ (Laplace smoothing).
 
@@ -409,6 +413,7 @@ $$
 ## 9. Python Implementation: From Scratch & Statistical Simulation
 
 Below is a runnable suite implementing:
+
 1. From-scratch **MLE for Gaussian Distribution** with Bessel's bias demonstration.
 2. **Beta-Binomial Bayesian Updating**.
 3. **Monte Carlo Central Limit Theorem** demonstrating convergence of heavily skewed data.
@@ -618,6 +623,7 @@ if __name__ == "__main__":
 **Model Answer:**
 Given an i.i.d. sample $x_1, \dots, x_N \sim \mathcal{N}(\mu, \sigma^2)$, the log-likelihood is:
 $$\ell(\mu, \sigma^2) = -\frac{N}{2} \ln(2\pi) - \frac{N}{2} \ln(\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^N (x_i - \mu)^2$$
+
 1. **Deriving $\hat{\mu}_{\text{MLE}}$:**
    $$\frac{\partial \ell}{\partial \mu} = \frac{1}{\sigma^2} \sum_{i=1}^N (x_i - \mu) = 0 \implies \hat{\mu}_{\text{MLE}} = \frac{1}{N} \sum_{i=1}^N x_i = \bar{x}$$
    $\mathbb{E}[\hat{\mu}_{\text{MLE}}] = \frac{1}{N} \sum \mathbb{E}[X_i] = \mu$ (unbiased).
@@ -666,10 +672,12 @@ Then the standardized sample mean converges in distribution to a standard normal
 $$\frac{\bar{X}_n - \mu}{\sigma / \sqrt{n}} \xrightarrow{d} \mathcal{N}(0, 1)$$
 
 **Minimal Conditions:**
+
 1. **Finite Variance:** $\sigma^2 < \infty$.
 2. **Independence:** Weak dependence is permitted under mixing conditions, but strong correlations invalidate the standard rate.
 
 **Breakdown Cases:**
+
 - **Heavy-Tailed Distributions (Infinite Variance):** The **Cauchy distribution** ($f(x) = \frac{1}{\pi(1+x^2)}$) or Pareto distributions with shape $\alpha \le 2$ have undefined or infinite variance. The average of $n$ Cauchy variables is *identically Cauchy*, never converging to a Gaussian!
 - **Non-identically distributed variables with dominating outliers:** Unless the Lindeberg or Lyapunov conditions are satisfied, a few extreme variables can prevent convergence.
 
@@ -677,6 +685,7 @@ $$\frac{\bar{X}_n - \mu}{\sigma / \sqrt{n}} \xrightarrow{d} \mathcal{N}(0, 1)$$
 
 ### Q4: Distinguish between Type I ($\alpha$) and Type II ($\beta$) errors. What is statistical power ($1-\beta$), and how do you calculate the minimum sample size for an A/B test?
 **Model Answer:**
+
 - **Type I Error ($\alpha$):** Rejecting the null hypothesis $H_0$ when $H_0$ is actually true (False Positive). We set $\alpha$ (typically $0.05$).
 - **Type II Error ($\beta$):** Failing to reject $H_0$ when $H_0$ is actually false (False Negative).
 - **Statistical Power ($1 - \beta$):** The probability of correctly detecting a real effect of a given magnitude (typically $0.80$).
@@ -697,11 +706,13 @@ $$\text{FWER} = P(\ge 1 \text{ false positive}) = 1 - (1 - \alpha)^M$$
 For $M = 20$: $\text{FWER} = 1 - (0.95)^{20} \approx 0.6415$ ($64.2\%$ false alarm probability!).
 
 **Remedies:**
+
 1. **Bonferroni Correction (Controls FWER):**
    Enforce individual test significance threshold $\alpha' = \frac{\alpha}{M}$.
    By Boole's inequality:
    $$P\left( \bigcup_{i=1}^M (p_i \le \alpha') \right) \le \sum_{i=1}^M P(p_i \le \alpha') = M \cdot \frac{\alpha}{M} = \alpha$$
    Guarantees FWER $\le \alpha$, but is highly conservative, suppressing statistical power.
+
 2. **Benjamini-Hochberg Procedure (Controls False Discovery Rate - FDR):**
    Controls $\text{FDR} = \mathbb{E}\left[\frac{\text{False Discoveries}}{\text{Total Discoveries}}\right]$.
    Sort all $M$ p-values: $p_{(1)} \le p_{(2)} \le \dots \le p_{(M)}$.
@@ -736,9 +747,11 @@ $$\log P(\mathbf{y} \mid X, \mathbf{w}) = -\frac{1}{2\sigma^2} \|\mathbf{y} - X\
 
 ### Q7: What is the difference between a Frequentist 95% Confidence Interval and a Bayesian 95% Credible Interval?
 **Model Answer:**
+
 - **Frequentist 95% Confidence Interval:**
   The true parameter $\theta^*$ is a fixed, non-random physical constant. The computed interval $[L(D), U(D)]$ is a random variable that varies from sample to sample.
   **Meaning:** If the data collection experiment is replicated an infinite number of times under identical conditions, 95% of the resulting confidence intervals will encompass $\theta^*$. For any *specific, observed* interval (e.g., $[3.2, 5.8]$), the statement *"there is a 95% probability that $\theta^*$ lies between 3.2 and 5.8"* is mathematically invalid—it either does ($100\%$) or does not ($0\%$).
+
 - **Bayesian 95% Credible Interval:**
   The collected data $D$ is fixed and observed. The parameter $\theta$ is a random variable modeled by the posterior distribution $P(\theta \mid D)$.
   **Meaning:** Integrating the posterior density:

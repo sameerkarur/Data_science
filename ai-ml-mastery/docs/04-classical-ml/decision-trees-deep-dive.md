@@ -98,6 +98,7 @@ $$G(S) = 1 - \sum_{k=1}^K p_k^2$$
 
 **Gini vs. Entropy Comparison**:
 In binary classification with $p$ as positive class probability:
+
 - $G(p) = 2p(1 - p)$
 - $H(p) = -p \log_2 p - (1-p) \log_2(1-p)$
 
@@ -135,6 +136,7 @@ For a continuous feature $x_j$, there are uncountably many real values $\theta$.
 
 1. Sort the unique values of feature $j$ across the $N$ node samples:
    $$x_{(1), j} < x_{(2), j} < \dots < x_{(m), j}$$
+
 2. The candidate thresholds are the midpoints between adjacent sorted values:
    $$\theta_i = \frac{x_{(i), j} + x_{(i+1), j}}{2}, \quad i \in \{1, \dots, m-1\}$$
 
@@ -151,6 +153,7 @@ flowchart LR
 Evaluating a candidate threshold from scratch takes $\mathcal{O}(N)$ operations, which would make scanning all $N-1$ thresholds cost $\mathcal{O}(N^2)$ per feature.
 
 Instead, we sort once in $\mathcal{O}(N \log N)$ time, and then **sweep a pointer from left to right**:
+
 - Maintain running counts of class frequencies: $C_{L, k}$ and $C_{R, k} = \text{Total}_k - C_{L, k}$.
 - When the threshold moves past sample $i$, simply update $C_{L, y_i} \leftarrow C_{L, y_i} + 1$ in $\mathcal{O}(1)$ time.
 - The overall complexity to find the optimal split across $p$ features at a node of size $N$ is $\mathcal{O}(p \cdot N \log N)$.
@@ -164,6 +167,7 @@ An unconstrained decision tree will grow until every leaf contains a single samp
 ### 5.1 Pre-Pruning (Early Stopping Hyperparameters)
 
 Halts tree expansion before full memorization occurs:
+
 - `max_depth`: Limits the maximum distance from root to any leaf.
 - `min_samples_split`: The minimum number of samples required to split an internal node.
 - `min_samples_leaf`: The minimum number of samples required to form a valid leaf node.
@@ -183,6 +187,7 @@ R_\alpha(T) = R(T) + \alpha |T|
 $$
 
 where:
+
 - $R(T) = \sum_{t \in \text{leaves}(T)} \frac{N_t}{N} I(t)$ is the total empirical training impurity (misclassification rate, Gini, or MSE).
 - $|T|$ is the number of terminal leaf nodes in $T$.
 - $\alpha \ge 0$ is the regularization penalty governing the trade-off between tree size and fit to training data:
@@ -191,6 +196,7 @@ where:
 
 #### Weakest-Link Pruning:
 For each internal node $t$:
+
 - If node $t$ is collapsed into a single leaf, its empirical risk is $R(t)$.
 - If subtree $T_t$ rooted at $t$ is retained, its cost-complexity is $R_\alpha(T_t) = R(T_t) + \alpha |T_t|$.
 
@@ -212,6 +218,7 @@ $$\alpha_{\text{eff}}(t) = \frac{R(t) - R(T_t)}{|T_t| - 1}$$
 - CART finds the internal node $t^*$ that minimizes $\alpha_{\text{eff}}(t)$, collapses $T_{t^*}$ into a leaf, and records $\alpha_1 = \alpha_{\text{eff}}(t^*)$.
 - Repeating this recursively produces a finite nested sequence of pruned subtrees:
   $$T_0 \supset T_1 \supset T_2 \dots \supset T_{\text{root}}$$
+
 - The optimal $\alpha$ is chosen via K-Fold Cross-Validation.
 
 ---
@@ -447,6 +454,7 @@ If a categorical feature has many unique categories (e.g., `user_id` or `zip_cod
 
 **Model Answer:**
 For a node with class probabilities $\mathbf{p} = [p_1, \dots, p_K]$:
+
 - **Gini Impurity**: $G = 1 - \sum_{k=1}^K p_k^2$
 - **Shannon Entropy**: $H = -\sum_{k=1}^K p_k \log_2 p_k$
 
@@ -469,6 +477,7 @@ Let $T_{\max}$ be the full unpruned tree. The cost-complexity criterion is:
 $$R_\alpha(T) = R(T) + \alpha |T|$$
 where $R(T) = \sum_{t \in \tilde{T}} R(t)$ is total training error/impurity across leaves $\tilde{T}$, and $|T| = |\tilde{T}|$ is the number of terminal leaves.
 Consider any single internal node $t$. If we collapse the entire subtree $T_t$ rooted at $t$ into a single leaf node $\{t\}$:
+
 - The single collapsed leaf has cost-complexity: $R_\alpha(\{t\}) = R(t) + \alpha \cdot 1$.
 - The unpruned subtree $T_t$ has cost-complexity: $R_\alpha(T_t) = R(T_t) + \alpha |T_t|$.
 
@@ -479,11 +488,13 @@ $$R(t) + \alpha \le R(T_t) + \alpha |T_t| \iff R(t) - R(T_t) \le \alpha (|T_t| -
 Solving for $\alpha$ gives the **effective alpha** for node $t$:
 $$\alpha_{\text{eff}}(t) = \frac{R(t) - R(T_t)}{|T_t| - 1}$$
 **Algorithmic Sequence (Weakest-Link Pruning):**
+
 1. Compute $\alpha_{\text{eff}}(t)$ for every internal node in the current tree.
 2. The node with the smallest $\alpha_{\text{eff}}$ is the **weakest link**—it provides the smallest impurity reduction per leaf.
 3. Collapse this subtree to create $T_1$, recording $\alpha_1 = \min_t \alpha_{\text{eff}}(t)$.
 4. Repeat this process until only the root node remains, producing a strictly nested sequence of subtrees:
    $$T_0 \supset T_1 \supset T_2 \dots \supset T_m = \{ \text{root} \}$$
+
 5. Use K-Fold Cross-Validation on the training folds to evaluate the validation score of each subtree in the sequence, selecting $\alpha^*$.
 
 ---
@@ -492,18 +503,22 @@ $$\alpha_{\text{eff}}(t) = \frac{R(t) - R(T_t)}{|T_t| - 1}$$
 
 **Model Answer:**
 Consider an internal node with $N$ samples and $p$ features:
+
 1. **Sorting Candidate Thresholds:**
    For a continuous feature $j$, sorting the $N$ sample values requires $\mathcal{O}(N \log N)$ operations.
+
 2. **Impurity Evaluation:**
    Evaluating each of the $N-1$ candidate midpoints naively takes $\mathcal{O}(N)$ time. However, by maintaining running cumulative sums (prefix sums) of target values (or class frequencies), each threshold evaluation requires only $\mathcal{O}(1)$ updates:
    $$\text{SSE}_{\text{left}} = \sum_{i=1}^k y_i^2 - \frac{(\sum_{i=1}^k y_i)^2}{k}, \qquad \text{SSE}_{\text{right}} = \text{SSE}_{\text{total}} - \text{SSE}_{\text{left}}$$
    Thus, scanning all thresholds for one sorted feature takes $\mathcal{O}(N)$ time.
+
 3. **Total Node Cost:**
    Across all $p$ features:
    $$\text{Cost}_{\text{node}} = \mathcal{O}(p \cdot N \log N)$$
 
 **Modern Optimizations (XGBoost, LightGBM):**
 For massive datasets ($N = 10^7$), sorting every feature at every tree node is computationally prohibitive.
+
 - **Histogram-based Binning (LightGBM / Scikit-learn HistGradientBoosting):** Discretizes continuous features into $B = 256$ discrete integer bins upfront before tree construction. Finding optimal splits scans 256 bin boundaries in $\mathcal{O}(B)$ time, reducing complexity to $\mathcal{O}(p \cdot N + p \cdot B)$ independent of sorting!
 - **Histogram Subtraction:** When node $S$ splits into $S_L$ and $S_R$, we build the histogram for the smaller child (e.g., $S_L$) in $\mathcal{O}(N_L)$ time, and obtain the histogram for $S_R$ by simple subtraction: $\text{Hist}(S_R) = \text{Hist}(S) - \text{Hist}(S_L)$ in $\mathcal{O}(B)$ operations.
 
@@ -525,10 +540,12 @@ In contrast, Linear Regression estimates a continuous gradient $\hat{y} = \mathb
 
 **Model Answer:**
 Breiman's CART handles missing values gracefully without imputation via **Surrogate Splits**:
+
 1. **Primary Split Selection:** When evaluating an internal node, the optimal split $(j^*, \theta^*)$ is found using only the subset of training samples that have non-missing values for feature $j^*$.
 2. **Surrogate Split Ranking:** Once the primary split is established (which sends some non-missing points to the left child and others to the right child), the algorithm searches through all other features to find an alternative split $(k, \theta_k)$ that mimics the primary split as closely as possible.
 3. The quality of a surrogate split is measured by its **predictive agreement** with the primary split:
    $$\lambda(j^*, k) = \frac{\text{Number of points sent to same child by both } j^* \text{ and } k}{\text{Total non-missing points}}$$
+
 4. A ranked list of primary and secondary surrogate splits is stored inside the node.
 5. **Inference Handling:** When evaluating an unseen test sample at runtime:
    - If feature $j^*$ is present, use the primary split.

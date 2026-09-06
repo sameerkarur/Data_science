@@ -96,6 +96,10 @@ markdown_extensions:
   - md_in_html
   - footnotes
   - tables
+  # Renders the book checklists and Mastery Ladders as real checkboxes;
+  # without it the source `- [x]` / `- [ ]` leaks through as literal text.
+  - pymdownx.tasklist:
+      custom_checkbox: true
 
 extra_javascript:
   - javascripts/mathjax.js

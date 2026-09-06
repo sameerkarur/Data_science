@@ -11,6 +11,7 @@ Building and operating AI systems, not just training models.
 - [x] [Testing](production-tooling-containerization-cicd-deep-dive.md)
 
 **Comprehensive Deep Dive:**
+
 - 📖 [Production Tooling, Containerization & CI/CD Deep Dive](production-tooling-containerization-cicd-deep-dive.md)
 
 ## Serving & Pipelines
@@ -22,6 +23,7 @@ Building and operating AI systems, not just training models.
 - [x] [Kubernetes & cloud (AWS/Azure/GCP)](serving-pipelines-orchestration-deep-dive.md)
 
 **Comprehensive Deep Dive:**
+
 - 📖 [Model Serving, Pipelines & Distributed Orchestration Deep Dive](serving-pipelines-orchestration-deep-dive.md)
 
 ## Operations
@@ -33,6 +35,7 @@ Building and operating AI systems, not just training models.
 - [x] [Cost & GPU infrastructure](model-monitoring-observability-retraining-deep-dive.md)
 
 **Comprehensive Deep Dive:**
+
 - 📖 [Model Monitoring, Observability & Automated Retraining Deep Dive](model-monitoring-observability-retraining-deep-dive.md)
 
 !!! mastery "Mastery Roadmap"

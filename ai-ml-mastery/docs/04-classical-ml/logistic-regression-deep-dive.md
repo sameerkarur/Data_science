@@ -49,6 +49,7 @@ Let $p = P(y = 1 | \mathbf{x}) \in (0, 1)$ denote the conditional probability of
 1. **Probability ($p$)**: Bounded in $(0, 1)$. Unsuitable for linear combinations because sums can exceed $1$ or drop below $0$.
 2. **Odds ($\frac{p}{1-p}$)**: The ratio of probability of success to probability of failure, bounded in $(0, \infty)$:
    $$\text{Odds} = \frac{p}{1 - p}$$
+
 3. **Log-Odds or Logit ($\ln \frac{p}{1-p}$)**: The natural logarithm of the odds maps $(0, \infty)$ to the entire real line $(-\infty, \infty)$:
    $$\text{logit}(p) = \ln \left( \frac{p}{1 - p} \right) = z = \mathbf{w}^T \mathbf{x} + b$$
 
@@ -65,6 +66,7 @@ p (1 + e^z) = e^z \implies p = \frac{e^z}{1 + e^z} = \frac{1}{1 + e^{-z}} \equiv
 $$
 
 The logistic sigmoid $\sigma(z)$ satisfies key analytical properties:
+
 - **Symmetry**: $\sigma(-z) = 1 - \sigma(z)$.
 - **Asymptotes**: $\lim_{z \to \infty} \sigma(z) = 1$, and $\lim_{z \to -\infty} \sigma(z) = 0$.
 - **Decision Boundary**: $z = 0 \iff \sigma(z) = 0.5 \iff \mathbf{w}^T \mathbf{x} + b = 0$, forming a linear hyperplane separating class $1$ from class $0$.
@@ -139,6 +141,7 @@ $$
 $$
 
 Evaluating each partial derivative:
+
 1. $\frac{\partial J_i}{\partial \hat{y}_i} = -\left( \frac{y_i}{\hat{y}_i} - \frac{1 - y_i}{1 - \hat{y}_i} \right) = -\frac{y_i(1 - \hat{y}_i) - (1 - y_i)\hat{y}_i}{\hat{y}_i(1 - \hat{y}_i)} = \frac{\hat{y}_i - y_i}{\hat{y}_i(1 - \hat{y}_i)}$
 2. $\frac{\partial \hat{y}_i}{\partial z_i} = \hat{y}_i(1 - \hat{y}_i)$
 3. $\frac{\partial z_i}{\partial w_j} = X_{ij}$
@@ -295,6 +298,7 @@ P(y = k | \mathbf{x}) = \hat{p}_k = \frac{\exp(\mathbf{w}_k^T \mathbf{x})}{\sum_
 $$
 
 Properties:
+
 - $\hat{p}_k > 0$ for all $k$.
 - $\sum_{k=1}^K \hat{p}_k = 1$. The output vector $\hat{\mathbf{p}}$ lies on the standard $(K-1)$-simplex.
 
@@ -548,6 +552,7 @@ assert abs(soft_acc - sk_m_acc) < 0.03, "Softmax accuracy diverges from scikit-l
 ### 9.1 Numerical Underflow/Overflow in Sigmoid & Log-Loss
 
 Computing $\frac{1}{1 + e^{-z}}$ naively fails when $z \ll -709$ or $z \gg 709$ in IEEE 754 64-bit floating-point:
+
 - If $z = -1000 \implies e^{1000} \to \text{inf} \implies \text{OverflowError}$.
 - If $\hat{y} = 1.0 \implies \ln(1 - \hat{y}) = \ln(0) = -\infty \implies \text{NaN}$.
 
@@ -599,6 +604,7 @@ Let $\mathbf{u} = X\mathbf{v} \in \mathbb{R}^n$. Then:
 $$\mathbf{v}^T H \mathbf{v} = \frac{1}{n} \mathbf{u}^T R \mathbf{u} = \frac{1}{n} \sum_{i=1}^n R_{ii} u_i^2$$
 Assuming the design matrix $X$ has full column rank ($n \ge p$ with linearly independent columns), $X\mathbf{v} = \mathbf{0} \iff \mathbf{v} = \mathbf{0}$. For any $\mathbf{v} \ne \mathbf{0}$, at least one component $u_i \ne 0$, meaning the sum is strictly positive: $\mathbf{v}^T H \mathbf{v} > 0$.
 **Optimization Implications:**
+
 1. The loss surface has no local minima, saddle points, or plateaus with zero gradient other than the unique global minimum $\mathbf{w}^*$.
 2. Any standard descent algorithm (Gradient Descent, Conjugate Gradient, Newton-Raphson) will reliably converge to the exact same optimal parameters.
 
@@ -638,6 +644,7 @@ To achieve $J(\mathbf{w}) \to 0$, the predicted probabilities must satisfy $\hat
 Because the sigmoid function reaches $1.0$ only as $z \to +\infty$ and $0.0$ only as $z \to -\infty$, the optimizer scales the magnitude of the weight vector $\|\mathbf{w}\| \to \infty$ along the normal vector of the separating hyperplane.
 
 **Consequences & Diagnosis:**
+
 1. Gradient descent never terminates: gradients become tiny not because the optimum is reached, but because $\sigma'(z) \to 0$ in the saturation zones.
 2. Estimated coefficients explode to numbers like $\pm 10^4$ or $\pm 10^7$.
 3. The standard errors of the parameters computed from the Fisher Information matrix / inverse Hessian $H^{-1} = (X^T R X)^{-1}$ explode to infinity because $R_{ii} = \hat{y}_i(1 - \hat{y}_i) \to 0$, making $H$ singular.
@@ -650,10 +657,12 @@ Because the sigmoid function reaches $1.0$ only as $z \to +\infty$ and $0.0$ onl
 
 **Model Answer:**
 While MSE $J(\mathbf{w}) = \frac{1}{2n}\sum_{i=1}^n (\sigma(\mathbf{w}^T \mathbf{x}_i) - y_i)^2$ is mathematically permissible, it is profoundly inferior to Cross-Entropy for two fundamental reasons:
+
 1. **Non-Convexity & Local Minima**:
    When $\hat{y}_i = \sigma(z_i)$ is substituted into MSE, the loss function is no longer quadratic in $z_i$. Differentiating MSE:
    $$\frac{\partial J}{\partial w_j} = \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i) \cdot \sigma'(z_i) \cdot X_{ij} = \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i) \hat{y}_i(1 - \hat{y}_i) X_{ij}$$
    Computing the second derivative yields terms containing both $\sigma'(z)$ and $\sigma''(z)$. Because $\sigma''(z) = \sigma(z)(1-\sigma(z))(1-2\sigma(z))$ changes sign across $z=0$, the Hessian matrix ceases to be positive semi-definite everywhere. MSE creates a **non-convex loss landscape plagued by saddle points and local minima**.
+
 2. **Vanishing Gradients on Wildly Wrong Predictions**:
    Suppose the true label is $y_i = 1$, but the current model is catastrophically wrong with $z_i = -10$, predicting $\hat{y}_i \approx 0.000045$.
    Under MSE:
@@ -668,9 +677,11 @@ While MSE $J(\mathbf{w}) = \frac{1}{2n}\sum_{i=1}^n (\sigma(\mathbf{w}^T \mathbf
 ### Q5: How do One-vs-Rest (OvR) and Multinomial Softmax differ for multi-class classification, and when is Softmax preferred?
 
 **Model Answer:**
+
 - **One-vs-Rest (OvR / One-vs-All):**
   Trains $K$ independent binary logistic regression models. Model $k$ predicts $P(y = k \text{ vs } y \ne k)$.
   *Limitations:* The binary models are uncoordinated; their independent probabilities do not sum to 1 ($\sum_{k=1}^K P(y=k|\mathbf{x}) \ne 1$). Calibrating probabilities requires ad-hoc post-processing normalization. Furthermore, each binary classifier suffers from class imbalance (1 positive class vs $K-1$ negative classes).
+
 - **Multinomial Softmax Regression:**
   Trains all $K$ classes simultaneously under a single unified objective. The categorical cross-entropy loss couples the class weights through the softmax denominator $\sum_{j=1}^K e^{\mathbf{w}_j^T \mathbf{x}}$.
   *Advantages:* The outputs are guaranteed to form a mathematically valid probability distribution on the simplex ($\sum \hat{p}_k = 1$). A boost in the logit for class $k$ automatically depresses the probabilities of competing classes. Softmax is mathematically consistent with maximum likelihood estimation for categorical random variables.
@@ -688,6 +699,7 @@ Exponentiating both sides:
 $$\frac{p(\mathbf{x} + \mathbf{e}_j)}{1 - p(\mathbf{x} + \mathbf{e}_j)} = \frac{p(\mathbf{x})}{1 - p(\mathbf{x})} \cdot e^{w_j}$$
 The ratio of the odds after the 1-unit increase to the odds before is the **Odds Ratio (OR)**:
 $$\text{OR}_j = \frac{\text{Odds}(x_j + 1)}{\text{Odds}(x_j)} = e^{w_j}$$
+
 - If $w_j = 0 \implies \text{OR} = 1$: Feature $j$ has no association with the positive class odds.
 - If $w_j > 0 \implies \text{OR} > 1$: Every 1-unit increase in $x_j$ multiplies the odds of the outcome by $e^{w_j}$ (e.g., $w_j = 0.693 \implies e^{0.693} \approx 2.0$, doubling the odds of success).
 - If $w_j < 0 \implies \text{OR} < 1$: Every 1-unit increase diminishes the odds of success.

@@ -69,6 +69,7 @@ flowchart TD
 ### 3.1 The Anatomy of an `ndarray`
 
 A NumPy `ndarray` consists of two distinct components:
+
 1. **The Array Header (Metadata)**: A lightweight Python/C struct storing:
    - `dtype`: Data type and byte width (e.g., `float64`, 8 bytes).
    - `shape`: Tuple representing dimensions (e.g., `(1000, 50)`).
@@ -115,6 +116,7 @@ $$
 ### 3.3 Views vs. Copies
 
 Because NumPy decouples array metadata from the underlying memory buffer, many transformations are **zero-copy views**:
+
 - **Reshaping**: `arr.reshape(2, 6)` modifies only `shape` and `strides`. No memory is copied!
 - **Transposition**: `arr.T` simply reverses `shape` and `strides` tuples: `(3, 4)` with strides `(32, 8)` becomes `(4, 3)` with strides `(8, 32)`. Execution time is $\mathcal{O}(1)$.
 - **Basic Slicing**: `arr[::2, :]` creates a view by doubling the row stride: `strides = (64, 8)`.
@@ -128,6 +130,7 @@ flowchart TD
 ```
 
 **When Copies Occur:**
+
 1. **Fancy Indexing**: `arr[[0, 2], :]` (indexing with integer arrays or boolean masks) always forces an explicit memory copy.
 2. **Flattening a Non-Contiguous View**: Calling `.reshape(-1)` or `.flatten()` on an array with non-contiguous strides forces a buffer re-allocation.
 
@@ -137,6 +140,7 @@ Broadcasting enables operations between arrays of different shapes without alloc
 
 #### The Formal Broadcasting Rules:
 Two arrays are compatible for broadcasting if, starting from the **trailing (rightmost) dimensions** and working backwards:
+
 1. The dimensions are equal, OR
 2. One of the dimensions is exactly $1$.
 
@@ -172,6 +176,7 @@ As the CPU iterates along that dimension, the memory offset advances by $i \cdot
 ### 4.1 The BlockManager in Pandas 1.x
 
 Historically, Pandas structured a DataFrame internally as a collection of 2D NumPy arrays grouped by homogeneous dtype, managed by the **BlockManager**:
+
 - One 2D float block storing all `float64` columns.
 - One 2D int block storing all `int64` columns.
 - One object block storing strings, dates, and Python objects.
@@ -197,6 +202,7 @@ flowchart TD
 ### 4.2 Pandas 2.0 and the PyArrow Backend
 
 Pandas 2.0 introduced first-class integration with the **Apache Arrow** columnar format:
+
 - True missing value support (`pd.NA`) without dtype casting.
 - Zero-copy string representation using UTF-8 contiguous byte buffers and offset arrays.
 - 5x–10x memory reduction and accelerated vectorized execution via PyArrow kernels.
@@ -221,6 +227,7 @@ flowchart TD
 ### 5.1 The Apache Arrow Memory Format
 
 Apache Arrow specifies a standardized, language-agnostic in-memory columnar format:
+
 1. **Bitmaps for Nulls**: Nullability is tracked via a compact validity bitmap (1 bit per row). Null values consume zero memory in the data buffer.
 2. **Contiguous Arrays**: Primitive numeric types are stored in contiguous 64-byte aligned buffers, ready for AVX-512 vectorization.
 3. **Variable-Length Binary / String Layout**:
@@ -275,6 +282,7 @@ flowchart TD
 ## 7. Python Implementation: Memory Profiling and Stride Tricks
 
 Below is a complete, runnable script demonstrating:
+
 1. Memory buffer inspection and stride manipulation (`as_strided` for zero-copy sliding windows).
 2. The zero-stride broadcasting mechanism.
 3. A performance benchmark comparing **Python List vs. NumPy vs. Pandas vs. Polars**.
@@ -404,6 +412,7 @@ if __name__ == "__main__":
 In NumPy, an `ndarray` consists of a pointer to a flat memory buffer and a `strides` tuple that defines the number of bytes to step along each axis to locate the next item. The byte position of index $(i, j)$ is:
 $$\text{offset} = i \cdot \text{strides}[0] + j \cdot \text{strides}[1]$$
 To construct an overlapping sliding window view of length $W$ over a 1D array of length $N$ with step $S$:
+
 - Output shape is: $\left(\frac{N - W}{S} + 1, \; W\right)$
 - Output strides are: $(S \cdot \text{itemsize}, \; \text{itemsize})$
 `np.lib.stride_tricks.as_strided` creates an array header with this shape and strides pointing to the exact same buffer. Time and memory complexities are $\mathcal{O}(1)$.
@@ -417,6 +426,7 @@ To construct an overlapping sliding window view of length $W$ over a 1D array of
 **Model Answer:**
 NumPy compares shapes elementwise from trailing to leading dimensions. Two axes are compatible if their dimensions match or if one of them is $1$.
 Under the hood:
+
 1. **Prepending Dimensions:** If arrays have different numbers of dimensions, the array with fewer dimensions is prepended with dimensions of size 1 until shapes have equal length.
 2. **Zero-Stride Mapping:** For every axis where an array has dimension $1$ while the other array has dimension $M > 1$, NumPy sets the corresponding stride value for that axis to **0 bytes**:
    $$\text{strides}[k] = 0, \quad \text{shape}[k] = M$$
@@ -427,15 +437,18 @@ When looping over that axis during a C-level kernel operation, the memory pointe
 ### Q3: Explain the internal architecture of the Pandas BlockManager. Why did Pandas 1.x struggle with memory fragmentation, and how does the Apache Arrow backend in Pandas 2.0 address this?
 **Model Answer:**
 In Pandas 1.x, a DataFrame was represented internally by the `BlockManager`, which grouped columns of identical NumPy dtypes into consolidated 2D NumPy arrays ("blocks"):
+
 - A single 2D float block held all float columns; a 2D integer block held integers; an object block held strings/objects.
 
 **Bottlenecks:**
+
 1. **Memory Fragmentation & Re-allocation:** Adding, deleting, or type-casting a single column invalidated the 2D block, forcing a copy of all companion columns in that block.
 2. **Type Coercion for Missing Values:** Because NumPy had no native bitmask for missing integers, inserting `np.nan` into an `int64` column coerced the entire column and its block to `float64`.
 3. **Object String Overhead:** Strings were stored as arrays of pointers to individual Python `PyUnicode` objects, wasting memory on object headers and destroying CPU cache locality.
 
 **Pandas 2.0 PyArrow Solution:**
 Pandas 2.0 replaces the BlockManager with 1D **Apache Arrow Array** columns:
+
 - Nulls are tracked natively with 1-bit boolean validity bitmaps without type coercion.
 - Strings are stored in packed, contiguous UTF-8 byte buffers with integer offset arrays.
 - Columns are independent Arrow chunks, eliminating 2D block re-allocation overhead.
@@ -444,8 +457,10 @@ Pandas 2.0 replaces the BlockManager with 1D **Apache Arrow Array** columns:
 
 ### Q4: Compare the query execution model of Polars with Pandas. How does Polars utilize Rust, Apache Arrow, and work-stealing parallelism?
 **Model Answer:**
+
 - **Pandas (Eager, Single-Threaded, Block-Based):**
   Operations are evaluated eagerly one statement at a time. Intermediate DataFrames are materialized in RAM. The Python GIL limits execution to a single thread unless external C routines release it.
+
 - **Polars (Lazy, Multi-Threaded, Columnar Arrow Engine):**
   1. **Expression Trees & DAGs:** Polars expressions (`pl.col('x').mean()`) construct an abstract syntax tree (AST). In `LazyFrame` mode, the full sequence of operations forms a Directed Acyclic Graph (DAG) before execution.
   2. **Query Optimizer:** The DAG is optimized via rule-based passes (predicate pushdown, projection pushdown, slice pushdown, common sub-expression elimination) before touching data.
@@ -456,8 +471,10 @@ Pandas 2.0 replaces the BlockManager with 1D **Apache Arrow Array** columns:
 
 ### Q5: What is predicate pushdown and projection pushdown in query optimization? Walk through how they transform a physical query plan reading large datasets.
 **Model Answer:**
+
 - **Projection Pushdown (Column Pruning):**
   Analyzes the query AST to determine the exact subset of columns needed by downstream aggregations, filters, or outputs. Unreferenced columns are eliminated at the scan layer. If a Parquet or Arrow table has 100 columns and the query only uses 3, the disk I/O reader decodes only the chunks corresponding to those 3 columns, saving up to 97% of disk bandwidth and memory.
+
 - **Predicate Pushdown (Filter Early):**
   Moves `.filter()` conditions down the query tree to the data source.
   When reading columnar formats like Apache Parquet or Apache Iceberg, files contain **row group metadata** with summary statistics (`min` and `max` values per column chunk).
@@ -472,11 +489,13 @@ The warning is emitted during **chained assignment**, such as:
 df[df['age'] > 30]['salary'] = 100000
 ```
 This expression executes in two distinct steps:
+
 1. `temp = df[df['age'] > 30]`
 2. `temp['salary'] = 100000`
 
 **The Core Issue:**
 Depending on whether the original DataFrame is contiguous, consolidated, or multi-typed, step 1 may return:
+
 - A **view** pointing to the original buffer: the assignment in step 2 modifies the original `df`.
 - A **copy** stored in a newly allocated buffer: the assignment in step 2 modifies the temporary object `temp`, which is immediately garbage collected! The original `df` remains unchanged.
 
@@ -493,10 +512,13 @@ This bypasses intermediate object creation and updates the buffer in place.
 
 ### Q7: Compare the architectural pipelines of Matplotlib, Seaborn, and Plotly.
 **Model Answer:**
+
 - **Matplotlib (Imperative Object-Oriented Canvas):**
   Architectured around a strict hierarchy: `Figure` $\to$ `Axes` $\to$ `Artists` (`Line2D`, `PathCollection`, `Text`). Every geometric element must be imperatively configured and transformed through Matplotlib's coordinate transformation pipeline (Data $\to$ Axes $\to$ Figure $\to$ Display). Renders statically to raster (Agg backend) or vector (PDF/SVG).
+
 - **Seaborn (Declarative Statistical Facade):**
   Operates on top of Matplotlib's backend. Accepts tidy DataFrames and automatically maps data columns to visual channels (hue, size, style). Executes statistical computations (KDE estimation, regression lines, confidence intervals via bootstrapping) before constructing the underlying Matplotlib `Axes` and `Artist` elements.
+
 - **Plotly (Declarative JSON / WebGL Engine):**
   Does not use Matplotlib. Plotly Python builds a declarative JSON tree conforming to the open-source `plotly.js` schema. Rendering occurs client-side in browser environments using HTML5 Canvas, SVG, or hardware-accelerated **WebGL** (via `Scattergl`), enabling 60 FPS interactive panning, zooming, and 3D rendering over millions of data points.
 

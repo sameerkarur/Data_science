@@ -8,6 +8,7 @@
 ## 1. The Big Picture: Non-Equilibrium Thermodynamics to Generative AI
 
 Generative modeling seeks to sample high-dimensional data $\mathbf{x} \sim p_{\text{data}}(\mathbf{x})$ (e.g. photorealistic images, audio waveforms, molecular structures). Prior paradigms exhibited structural limitations:
+
 - **Generative Adversarial Networks (GANs)**: Train a minimax game between Generator and Discriminator. Prone to **mode collapse**, training instability, and lack of density coverage.
 - **Variational Autoencoders (VAEs)**: Optimize a variational lower bound (ELBO) over a single latent step. Prone to blurry samples due to injected prior assumptions and uncalibrated pixel MSE loss.
 - **Autoregressive Models**: Generate pixels sequentially ($\mathcal{O}(H \times W)$ steps), which is computationally prohibitive for high-resolution images.
@@ -195,6 +196,7 @@ flowchart TD
 1. **Sinusoidal Timestep Embeddings**: Analogous to Transformer position embeddings, scalar timestep $t \in [1, 1000]$ is mapped to a continuous vector via geometric frequencies:
    $$\text{emb}_{(2i)} = \sin\left(\frac{t}{10000^{2i/d}}\right), \quad \text{emb}_{(2i+1)} = \cos\left(\frac{t}{10000^{2i/d}}\right)$$
    Passed through a 2-layer MLP and injected into every residual block via feature-wise affine modulation (AdaGN).
+
 2. **Skip Connections**: Direct high-resolution tensor pathways between encoder and decoder preserve fine spatial details.
 3. **Cross-Attention Conditioning**: Spatial latent features query prompt token representations produced by a frozen text encoder (CLIP ViT-L/14 or T5-XXL).
 
@@ -249,6 +251,7 @@ flowchart TD
 
 ### Mathematical Formulation
 During inference, evaluate the network twice at each timestep:
+
 1. Conditional prediction: $\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, c)$
 2. Unconditional prediction: $\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \emptyset)$
 
@@ -278,6 +281,7 @@ flowchart TD
 
 - **DDPM**: Samples with random Gaussian noise injection at every step:
   $$\mathbf{x}_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( \mathbf{x}_t - \frac{\beta_t}{\sqrt{1 - \bar{\alpha}_t}} \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t) \right) + \sigma_t \mathbf{z}, \quad \mathbf{z} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$$
+
 - **DDIM (Denoising Diffusion Implicit Models)**: Formulates reverse diffusion as an ordinary differential equation (ODE) with zero variance ($\sigma_t = 0$):
   $$\mathbf{x}_{t-1} = \sqrt{\bar{\alpha}_{t-1}} \left( \frac{\mathbf{x}_t - \sqrt{1 - \bar{\alpha}_t}\boldsymbol{\epsilon}_\theta}{\sqrt{\bar{\alpha}_t}} \right) + \sqrt{1 - \bar{\alpha}_{t-1}} \boldsymbol{\epsilon}_\theta$$
   Enables deterministic generation in $20-50$ steps and exact image inversion (encoding images back into noise for editing).
@@ -287,6 +291,7 @@ flowchart TD
 ## 9. Complete PyTorch Implementation from Scratch
 
 Below is a self-contained implementation of a 1D Diffusion Model featuring:
+
 - **Linear Beta Variance Schedule & Closed-Form Forward Noising**.
 - **Sinusoidal Timestep Embedding**.
 - **1D Residual Denoising MLP Network**.
@@ -506,6 +511,7 @@ $$\mathbf{x}_t = \sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1 - \bar{\alpha}_t}\b
 ### Q2: Why did DDPM parameterize the network to predict noise $\boldsymbol{\epsilon}$ rather than the clean image $\mathbf{x}_0$ directly?
 
 **Model Answer:**  
+
 1. **Connection to Score Matching**: As shown by Song et al., predicting noise is equivalent to estimating the Stein score $\nabla_\mathbf{x} \log p(\mathbf{x})$. Predicting $\boldsymbol{\epsilon}$ models the direction towards high-probability regions of the data manifold.
 2. **Loss Landscape & Multi-frequency Dynamics**: If predicting $\mathbf{x}_0$ directly at high timesteps $t \approx T$ (where $\mathbf{x}_T$ is nearly pure noise), the $L_2$ loss forces the network to predict the conditional expectation $\mathbb{E}[\mathbf{x}_0 \mid \mathbf{x}_T]$, which is the blurry average of all images in the training set. Predicting $\boldsymbol{\epsilon}$ normalizes the target distribution: the noise is always zero-mean and unit-variance across all timesteps $t$, preventing the regression loss from collapsing early training dynamics towards blurry mean modes.
 3. Ho et al. empirically proved that predicting $\boldsymbol{\epsilon}$ yields vastly superior FID scores compared to predicting $\mathbf{x}_0$ or the posterior mean $\tilde{\boldsymbol{\mu}}_t$.
@@ -532,10 +538,12 @@ When $s > 1$, the model sharpens the probability density around modes strongly c
 
 **Model Answer:**  
 Natural images contain two distinct regimes of information:
+
 1. **Perceptual Compression**: High-frequency details (individual pores, hair strands, imperceptible sensor noise) that contribute little to semantic understanding.
 2. **Semantic / Conceptual Content**: Global object layouts, geometry, lighting, and relations.  
 Pixel-space diffusion wastes over $90\%$ of its capacity modeling stochastic high-frequency pixel variations.  
 LDM decouples these stages:
+
 - A pretrained VAE performs perceptual downsampling by a factor of $f = 8$, reducing spatial dimensions from $512 \times 512$ to $64 \times 64$.
 - The number of spatial tokens processed by self-attention layers in the U-Net drops from $(512/8)^2 = 4096$ to $(64/8)^2 = 64$. Because attention is quadratic in spatial resolution, attention operations drop by $(64)^2 = 4096\times$, and total FLOPs decrease by $64\times$.
 - The VAE decoder then reconstructs high-frequency textures in a single deterministic pass.
@@ -545,6 +553,7 @@ LDM decouples these stages:
 ### Q5: Contrast DDPM and DDIM sampling. Why can DDIM sample images in 20 steps while DDPM requires 1,000 steps?
 
 **Model Answer:**  
+
 - **DDPM**: The reverse process is strictly **Markovian**: $p_\theta(\mathbf{x}_{t-1} \mid \mathbf{x}_t)$ requires adding stochastic Gaussian noise $\sigma_t \mathbf{z}$ at every step. If you skip steps (e.g. jumping from $t=100$ to $t=50$), the accumulated variance violates the Markov assumption, resulting in blurry, degraded outputs. Hence DDPM requires small steps ($T=1000$).
 - **DDIM**: Observes that the marginal distributions $q(\mathbf{x}_t \mid \mathbf{x}_0)$ depend only on $\mathbf{x}_0$, not on the Markovian assumption. Song et al. constructed a family of **non-Markovian forward processes** that share the exact same marginals $q(\mathbf{x}_t \mid \mathbf{x}_0)$ as DDPM. Setting the forward noise variance to zero ($\sigma_t = 0$) turns the reverse process into a **deterministic Ordinary Differential Equation (ODE)**. Because ODE trajectories are smooth and continuous, higher-order numerical solvers can take large discrete steps ($20-50$ steps) along the trajectory without accumulating random walk variance drift.
 

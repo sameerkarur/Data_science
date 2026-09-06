@@ -37,6 +37,7 @@ flowchart LR
 
 **Model Answer:**  
 CPython bypasses the operating system's standard `malloc()` for small object allocations ($\le 512\text{ bytes}$) via **PyMalloc**, a specialized three-tier hierarchical slab allocator designed to eliminate heap fragmentation and minimize syscall overhead:
+
 1. **Arenas ($256\text{ KB}$)**:
    - PyMalloc requests large $256\text{ KB}$ contiguous chunks of virtual memory directly from the OS kernel using `mmap()` (or `VirtualAlloc()` on Windows).
    - Arenas track their constituent pools via a doubly linked list. An arena is freed back to the OS kernel *only* when all of its 64 pools become completely empty.
@@ -54,6 +55,7 @@ CPython bypasses the operating system's standard `malloc()` for small object all
 ### Q1.2: How does the Global Interpreter Lock (GIL) function at the C level, and how does PEP 703 (Python 3.13 free-threading) remove it safely?
 
 **Model Answer:**  
+
 - **CPython GIL Mechanics**:
   - The GIL is an OS-level mutual exclusion lock (`PyMutex` or `pthread_mutex_t`) guarding CPython’s global interpreter state.
   - In `ceval.c`, the main execution loop (`_PyEval_EvalFrameDefault`) executes bytecode instructions. To prevent race conditions in reference counting (`Py_INCREF`/`Py_DECREF`) and mutable runtime dicts, an OS thread must hold the GIL to execute bytecode.
@@ -70,6 +72,7 @@ CPython bypasses the operating system's standard `malloc()` for small object all
 
 **Model Answer:**  
 A descriptor is any Python object defining at least one of the protocol methods: `__get__(self, obj, type=None)`, `__set__(self, obj, value)`, or `__delete__(self, obj)`.
+
 - **Attribute Lookup Precedence**: When evaluating `obj.attr`:
   1. If `attr` is a **Data Descriptor** (defines `__set__` or `__delete__`), the descriptor's `__get__` is invoked, overriding `obj.__dict__`.
   2. If `attr` exists in instance dictionary `obj.__dict__`, the instance value is returned.
@@ -120,12 +123,14 @@ $$\mathbf{J} = \frac{\partial \mathbf{x}_L}{\partial \mathbf{x}_0} = \mathbf{J}_
 ### Q2.2: State the Singular Value Decomposition (SVD) theorem and the Eckart-Young-Mirsky theorem. How does SVD enable low-rank adaptation (LoRA) in LLMs?
 
 **Model Answer:**  
+
 - **SVD Theorem**:
   Any real matrix $\mathbf{A} \in \mathbb{R}^{m \times n}$ can be factored as:
   
   $$\mathbf{A} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^T = \sum_{i=1}^r \sigma_i \mathbf{u}_i \mathbf{v}_i^T$$
   
   Where $\mathbf{U} \in \mathbb{R}^{m \times m}$ and $\mathbf{V} \in \mathbb{R}^{n \times n}$ are orthogonal matrices ($\mathbf{U}^T \mathbf{U} = \mathbf{I}$, $\mathbf{V}^T \mathbf{V} = \mathbf{I}$), and $\mathbf{\Sigma} \in \mathbb{R}^{m \times n}$ contains singular values $\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r > 0$.
+
 - **Eckart-Young-Mirsky Theorem**:
   The optimal rank-$k$ approximation $\mathbf{A}_k$ minimizing the Frobenius norm error $\|\mathbf{A} - \mathbf{A}_k\|_F$ is obtained by truncating the SVD at the top-$k$ singular components:
   
@@ -150,6 +155,7 @@ The Lagrangian is:
 $$\mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}, \boldsymbol{\nu}) = f(\mathbf{x}) + \sum_{i=1}^m \lambda_i g_i(\mathbf{x}) + \sum_{j=1}^p \nu_j h_j(\mathbf{x})$$
 
 The KKT first-order conditions necessary for optimality $\mathbf{x}^*$:
+
 1. **Stationarity**: $\nabla_{\mathbf{x}} \mathcal{L}(\mathbf{x}^*, \boldsymbol{\lambda}^*, \boldsymbol{\nu}^*) = \mathbf{0}$.
 2. **Primal Feasibility**: $g_i(\mathbf{x}^*) \le 0$ and $h_j(\mathbf{x}^*) = 0$.
 3. **Dual Feasibility**: $\lambda_i^* \ge 0$.
@@ -255,6 +261,7 @@ For a mini-batch $\mathcal{B} = \{x_1, \dots, x_m\}$, Batch Normalization comput
 $$\mu_{\mathcal{B}} = \frac{1}{m} \sum_{i=1}^m x_i, \quad \sigma_{\mathcal{B}}^2 = \frac{1}{m} \sum_{i=1}^m (x_i - \mu_{\mathcal{B}})^2, \quad \hat{x}_i = \frac{x_i - \mu_{\mathcal{B}}}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}}, \quad y_i = \gamma \hat{x}_i + \beta$$
 
 Let downstream gradient be $\frac{\partial \mathcal{L}}{\partial y_i}$.
+
 1. Gradients with respect to scale and shift parameters:
    
    $$\frac{\partial \mathcal{L}}{\partial \gamma} = \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial y_i} \hat{x}_i, \quad \frac{\partial \mathcal{L}}{\partial \beta} = \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial y_i}$$
@@ -312,6 +319,7 @@ Let components of query vector $\mathbf{q}$ and key vector $\mathbf{k}$ be indep
 $$\mathbb{E}[q_i] = \mathbb{E}[k_i] = 0, \quad \text{Var}(q_i) = \text{Var}(k_i) = 1 \quad \forall i \in \{1, \dots, d_k\}$$
 
 The dot product is $S = \mathbf{q} \cdot \mathbf{k} = \sum_{i=1}^{d_k} q_i k_i$.
+
 1. **Expectation of $S$**:
    
    $$\mathbb{E}[S] = \sum_{i=1}^{d_k} \mathbb{E}[q_i k_i] = \sum_{i=1}^{d_k} \mathbb{E}[q_i] \mathbb{E}[k_i] = 0$$
@@ -331,6 +339,7 @@ The dot product is $S = \mathbf{q} \cdot \mathbf{k} = \sum_{i=1}^{d_k} q_i k_i$.
   $$\frac{\partial \text{softmax}(z_i)}{\partial z_j} = \text{softmax}(z_i)(\delta_{ij} - \text{softmax}(z_j))$$
   
   When $\text{softmax}(z_i) \to 1$ and all other elements $\to 0$, these derivatives vanish to zero ($\sim 0$), completely halting backpropagation learning.
+
 - **Scaling Solution**:
   Dividing by $\sqrt{d_k}$ normalizes variance back to unity:
   
@@ -383,6 +392,7 @@ flowchart TD
 ### Q6.1: Detail how PagedAttention solves the internal and external GPU memory fragmentation problem in LLM serving.
 
 **Model Answer:**  
+
 - **The Classical Serving Problem**:
   In standard Transformer serving frameworks, the KV cache for a sequence is allocated as a contiguous memory tensor sized to the maximum possible sequence length ($L_{\max} = 4,096$ tokens).
   This causes three catastrophic inefficiencies:
@@ -390,6 +400,7 @@ flowchart TD
   2. *External Fragmentation*: Variable request lengths leave fragmented memory holes between allocations that cannot satisfy new incoming requests.
   3. *Zero Memory Sharing*: Parallel sampling beams or shared system prompt prefixes must duplicate identical KV cache activations.
   In production, these issues limit effective GPU memory utilization to $20\% - 40\%$.
+
 - **PagedAttention Solution**:
   Inspired by operating system virtual memory paging:
   1. *Physical Memory Blocks*: The GPU KV cache pool is partitioned into fixed-size physical blocks (e.g. 16 tokens per block).
@@ -403,6 +414,7 @@ flowchart TD
 ### Q6.2: Walk through the complete capacity estimation for a global multi-tenant vector database hosting 1 billion 1536-dimensional vectors. Calculate memory, disk, and index search latency.
 
 **Model Answer:**  
+
 1. **Raw Vector Dimension & Memory**:
    - Total vectors $N = 10^9$.
    - Dimension $d = 1,536$.

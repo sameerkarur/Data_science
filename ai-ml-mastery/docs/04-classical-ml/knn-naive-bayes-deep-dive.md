@@ -85,6 +85,7 @@ s^p = r \implies s = r^{1/p}
 $$
 
 For $r = 0.01$ (capturing just 1% of the data):
+
 - In $p = 1$: $s = 0.01^1 = 0.01$ (a tight local neighborhood).
 - In $p = 10$: $s = 0.01^{1/10} \approx 0.63$ (requires covering 63% of each feature axis!).
 - In $p = 100$: $s = 0.01^{1/100} \approx 0.955$ (requires spanning 95.5% of the entire domain).
@@ -120,6 +121,7 @@ flowchart TD
   2. Splits at the median value of feature $j$.
   3. Query Pruning: During search, if the distance from $\mathbf{x}_{\text{query}}$ to the bounding splitting hyperplane is greater than the current $k$-th best distance, the entire opposite branch is pruned.
   *Limitation*: When $p \ge 20$, the curse of dimensionality forces the search algorithm to inspect nearly every leaf, degrading to $\mathcal{O}(n)$.
+
 - **Ball-Tree**:
   Partitions space into nested hyperspheres (balls). Better suited for higher dimensions and arbitrary metric spaces where coordinate-aligned splitting is ineffective.
 
@@ -543,10 +545,12 @@ Expanding the quadratic terms inside the bracket:
 $$\frac{x_j^2 - 2x_j\mu_{0j} + \mu_{0j}^2}{2\sigma_{0j}^2} - \frac{x_j^2 - 2x_j\mu_{1j} + \mu_{1j}^2}{2\sigma_{1j}^2} = x_j^2 \left( \frac{1}{2\sigma_{0j}^2} - \frac{1}{2\sigma_{1j}^2} \right) + x_j \left( \frac{\mu_{1j}}{\sigma_{1j}^2} - \frac{\mu_{0j}}{\sigma_{0j}^2} \right) + \text{const}$$
 
 **Two Distinct Cases:**
+
 1. **Equal Feature Variances ($\sigma_{0j}^2 = \sigma_{1j}^2 = \sigma_j^2$ for all $j$):**
    The quadratic coefficient $\left( \frac{1}{2\sigma_{0j}^2} - \frac{1}{2\sigma_{1j}^2} \right) = 0$. The squared terms $x_j^2$ cancel out completely! The log-odds becomes a strictly affine function:
    $$\ln \frac{P(y=1|\mathbf{x})}{P(y=0|\mathbf{x})} = \mathbf{w}^T \mathbf{x} + b$$
    where $w_j = \frac{\mu_{1j} - \mu_{0j}}{\sigma_j^2}$. The decision boundary is a **strictly linear hyperplane**, mathematically equivalent to Linear Discriminant Analysis (LDA) with a diagonal covariance matrix.
+
 2. **Unequal Feature Variances ($\sigma_{0j}^2 \ne \sigma_{1j}^2$):**
    The quadratic terms do not cancel out. The decision boundary is a **quadratic hypersurface** (ellipsoid, paraboloid, or hyperboloid), equivalent to Quadratic Discriminant Analysis (QDA) with diagonal covariance matrices.
 
@@ -567,6 +571,7 @@ The Bayes estimator under squared error loss is the posterior mean:
 $$\hat{\theta}_j = \mathbb{E}[\theta_j | \mathbf{c}] = \frac{c_j + \alpha_j}{\sum_{k=1}^d (c_k + \alpha_k)}$$
 Under a symmetric prior where $\alpha_j = \alpha$ for all $j$:
 $$\hat{\theta}_j = \frac{c_j + \alpha}{\sum_{k=1}^d c_k + \alpha \cdot d} = \frac{N_{yj} + \alpha}{N_y + \alpha \cdot d}$$
+
 - Setting $\alpha = 1$ yields **Laplace smoothing**, equivalent to a uniform prior where every outcome was observed once before training.
 - Setting $0 < \alpha < 1$ yields **Lidstone smoothing**, representing weaker prior pseudo-evidence.
 
@@ -575,10 +580,12 @@ $$\hat{\theta}_j = \frac{c_j + \alpha}{\sum_{k=1}^d c_k + \alpha \cdot d} = \fra
 ### Q5: Compare Multinomial Naive Bayes and Bernoulli Naive Bayes for text classification. When does each fail?
 
 **Model Answer:**
+
 - **Multinomial Naive Bayes (MNB):**
   Takes word count vectors $\mathbf{x} = [x_1, \dots, x_d]^T$ where $x_j \in \{0, 1, 2, \dots\}$. The likelihood is $P(\mathbf{x}|y) \propto \prod_j \theta_{yj}^{x_j}$.
   *Characteristics:* Models document length and word repetition. A word appearing 10 times contributes 10 times to the log-likelihood ($\sum x_j \ln \theta_{yj}$).
   *Failure Mode:* Severely influenced by document length variations. Long documents accumulate much larger negative log-likelihoods than short ones unless normalized.
+
 - **Bernoulli Naive Bayes (BNB):**
   Takes binary occurrence indicators $\mathbf{x} = [b_1, \dots, b_d]^T$ where $b_j \in \{0, 1\}$. The likelihood is $P(\mathbf{x}|y) = \prod_j \theta_{yj}^{b_j} (1 - \theta_{yj})^{1 - b_j}$.
   *Characteristics:* Evaluates both presence AND absence of words. If a document does not contain word $j$, BNB penalizes the class by $\ln(1 - \theta_{yj})$.
@@ -590,10 +597,13 @@ $$\hat{\theta}_j = \frac{c_j + \alpha}{\sum_{k=1}^d c_k + \alpha \cdot d} = \fra
 
 **Model Answer:**
 The parameter $k$ controls model flexibility and hypothesis capacity:
+
 - **At $k = 1$ (Maximum Variance, Minimum Bias):**
   The model memorizes every training sample. Every training point lies in its own Voronoi cell with training error identically $0$. The decision boundary is highly irregular, jagged, and sensitive to individual noisy labels or outliers. The model has maximum degrees of freedom ($\text{effective df} = n$) and high variance.
+
 - **At $k = n$ (Minimum Variance, Maximum Bias):**
   The model pools all $n$ training instances for every query. It predicts the majority class of the entire training dataset regardless of the input feature $\mathbf{x}$. The decision boundary vanishes entirely. The model has minimum capacity ($\text{effective df} = 1$), zero variance, and extreme bias (underfitting).
+
 - **Optimal $k$ Selection:**
   Typically chosen via Stratified K-Fold Cross-Validation. A common heuristic starting point is $k = \lfloor\sqrt{n}\rfloor$ (often odd to avoid ties in binary voting). As $n \to \infty$, Cover & Hart (1967) proved that if $k(n) \to \infty$ and $k(n)/n \to 0$, the $k$-NN error rate asymptotically approaches the optimal Bayes risk $\mathcal{R}^*$.
 

@@ -43,6 +43,7 @@ Consider predicting an outcome that varies continuously with the hour of the day
 At 23:59 (11:59 PM), the temperature or traffic condition is nearly identical to 00:01 (12:01 AM).
 
 If represented as a raw integer $t \in [0, 23]$:
+
 - The mathematical distance between 23:00 and 00:00 is $|23 - 0| = 23$ (the maximum possible distance in the feature space!).
 - A linear regressor or neural network must learn an abrupt, discontinuous cliff at midnight.
 - A decision tree must create artificial, brittle split thresholds at both ends ($t \le 1$ and $t \ge 22$).
@@ -111,6 +112,7 @@ $$
 ### 3.2 Binning & Discretization
 
 Discretization converts continuous variables into discrete intervals (bins):
+
 1. **Uniform Binning (Equal Width)**: Divides range $[x_{\min}, x_{\max}]$ into $K$ intervals of equal size $\frac{x_{\max} - x_{\min}}{K}$. Sensitive to outliers (outliers leave middle bins empty).
 2. **Quantile Binning (Equal Frequency)**: Divides data using sample percentiles such that every bin contains exactly $N / K$ samples. Robust against outliers and normalizes feature distribution.
 
@@ -199,9 +201,11 @@ $$
 
 1. **Term Frequency $\text{TF}(t, d)$**: Relative frequency of token $t$ in document $d$:
    $$\text{TF}(t, d) = \frac{f_{t, d}}{\sum_{t' \in d} f_{t', d}}$$
+
 2. **Smooth Inverse Document Frequency $\text{IDF}(t, \mathcal{D})$**:
    $$\text{IDF}(t, \mathcal{D}) = \ln\left( \frac{1 + N}{1 + \text{DF}(t)} \right) + 1$$
    where $\text{DF}(t)$ is the number of documents in corpus $\mathcal{D}$ containing term $t$. Words appearing in every document (e.g., "the", "is") yield $\text{IDF} \approx 1$, while rare diagnostic keywords yield large IDF multipliers.
+
 3. **L2 Normalization**: To eliminate document length bias, each document vector $\mathbf{v}_d$ is projected onto the unit sphere:
    $$\mathbf{v}_d \leftarrow \frac{\mathbf{v}_d}{\|\mathbf{v}_d\|_2}$$
 
@@ -245,6 +249,7 @@ $$
 ### 6.2 Wrapper Methods: Recursive Feature Elimination (RFE)
 
 Wrapper methods treat model training as an evaluation sub-routine:
+
 1. Train model on the full set of $d$ features.
 2. Rank features by importance (e.g., absolute weight $|w_j|$ in linear models or feature importances in trees).
 3. Prune the least important $k$ features.
@@ -284,6 +289,7 @@ flowchart TD
 ## 7. Python Implementation: Cyclical Encoders, Point-in-Time Windows and Mutual Information
 
 Below is a complete, runnable script featuring:
+
 1. A from-scratch **Cyclical Sine/Cosine Temporal Transformer**.
 2. A from-scratch **Discrete Mutual Information Estimator**.
 3. A **Point-in-Time Leak-Free Aggregator** for temporal event logs.
@@ -485,6 +491,7 @@ To preserve topological continuity, we map periodic scalar $t \in [0, T)$ onto t
 $$x_{\sin} = \sin\left(\frac{2\pi t}{T}\right), \qquad x_{\cos} = \cos\left(\frac{2\pi t}{T}\right)$$
 **Why a single function is insufficient:**
 Both $\sin(\theta)$ and $\cos(\theta)$ are non-monotonic on $[0, 2\pi)$. Specifically:
+
 - $\sin(\pi - \theta) = \sin(\theta)$. For hour $T=24$, $\sin\left(\frac{2\pi \cdot 2}{24}\right) = \sin\left(\frac{\pi}{6}\right) = 0.5$, and $\sin\left(\frac{2\pi \cdot 10}{24}\right) = \sin\left(\frac{5\pi}{6}\right) = 0.5$. A model relying solely on sine cannot distinguish 2:00 AM from 10:00 AM!
 - $\cos(-\theta) = \cos(\theta)$. A model relying solely on cosine cannot distinguish morning from evening.
 Together, the pair $(\sin, \cos)$ forms a unique bijection to the unit circle: $\sin^2\theta + \cos^2\theta = 1$. The Euclidean distance between any two points $t_1, t_2$ is strictly proportional to their shortest circular arc distance along the period.
@@ -500,6 +507,7 @@ $$I(X; Y) = \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x, y) \log \left
 $I(X; Y)$ is the Kullback-Leibler divergence between the true joint distribution $p(x, y)$ and the factored independent distribution $p(x)p(y)$.
 
 **Comparison with Correlation:**
+
 - **Pearson Correlation ($\rho$):** Measures exclusively linear co-variation: $\rho = \frac{\text{Cov}(X, Y)}{\sigma_X \sigma_Y}$. If $X \sim \mathcal{U}(-1, 1)$ and $Y = X^2$, $Y$ is completely deterministically determined by $X$, yet $\text{Cov}(X, Y) = \mathbb{E}[X^3] - \mathbb{E}[X]\mathbb{E}[X^2] = 0 - 0 = 0$. Pearson correlation is exactly $0$!
 - **Spearman Correlation ($r_s$):** Evaluates monotonic rank relationships; also fails on parabolic or circular dependencies.
 - **Mutual Information:** Since $p(x, y) \ne p(x)p(y)$ for $Y = X^2$, $I(X; X^2) = H(X^2) > 0$. Mutual Information makes no parametric or functional assumptions, capturing arbitrary non-linear, non-monotonic, and multi-modal statistical dependencies.
@@ -513,21 +521,26 @@ Example: Computing a customer's `average_monthly_spend` by executing a SQL `GROU
 
 **Point-in-Time Resolution in Feature Stores (e.g., Feast, Hopsworks):**
 Production feature stores enforce **Point-in-Time Joins** (also called "AS OF" joins):
+
 1. The training dataset consists of entity IDs with explicit observation timestamps: $(\text{user\_id}, t_{\text{obs}})$.
 2. For each record, the feature store joins historical feature values by querying the feature log strictly as it existed at $t_{\text{obs}}$:
    $$\text{Feature Value} = \max_{\tau < t_{\text{obs}}} f(\text{user\_id}, \tau)$$
+
 3. Ensures that historical training feature vectors exactly match the state of the production key-value store when an inference request arrives at timestamp $t_{\text{obs}}$.
 
 ---
 
 ### Q4: Contrast Mean Decrease in Impurity (MDI / Gini Importance), Permutation Feature Importance, and SHAP values. Why does MDI bias toward high-cardinality features?
 **Model Answer:**
+
 - **Mean Decrease in Impurity (MDI):**
   Accumulates the total Gini impurity (or MSE) reduction brought by all splits on feature $j$ across all trees in an ensemble.
   *The Cardinality Pathology:* Decision tree split algorithms evaluate all possible split points. A random noise feature with high cardinality (e.g., a random integer ID $\in [1, 1000]$) offers thousands of opportunities to accidentally find a split that separates training samples by chance. The tree splits on the noise feature near the leaves, achieving massive training impurity reduction, causing MDI to rank random noise as the most important feature!
+
 - **Permutation Feature Importance:**
   Evaluates the trained model on a validation holdout set, shuffles column $j$ to destroy its relationship with target $y$, and records the metric drop: $\Delta = \text{Score}_{\text{base}} - \text{Score}_{\text{shuffled}}$.
   Because evaluation occurs on unseen validation data, splitting on random noise does not generalize; shuffling noise causes zero drop in validation score. Immune to cardinality bias!
+
 - **SHAP (Shapley Additive Explanations):**
   Derived from cooperative game theory. Measures the marginal contribution of feature $j$ across all possible subsets (coalitions) of remaining features:
   $$\phi_j = \sum_{S \subseteq F \setminus \{j\}} \frac{|S|!(|F| - |S| - 1)!}{|F|!} \Big( f(S \cup \{j\}) - f(S) \Big)$$
@@ -537,11 +550,13 @@ Production feature stores enforce **Point-in-Time Joins** (also called "AS OF" j
 
 ### Q5: Derive the Box-Cox and Yeo-Johnson transformations. When must Yeo-Johnson be chosen over Box-Cox?
 **Model Answer:**
+
 - **Box-Cox Transformation:**
   Designed to normalize positive continuous variables:
   $$y^{(\lambda)} = \begin{cases} \frac{y^\lambda - 1}{\lambda} & \text{if } \lambda \ne 0 \\ \ln y & \text{if } \lambda = 0 \end{cases}$$
   As $\lambda \to 0$, by L'Hôpital's rule: $\lim_{\lambda \to 0} \frac{d/d\lambda(y^\lambda - 1)}{d/d\lambda(\lambda)} = \lim_{\lambda \to 0} \frac{y^\lambda \ln y}{1} = \ln y$.
   **Limitation:** Strictly undefined for $y \le 0$ because $\ln y$ and fractional powers of negative numbers are non-real.
+
 - **Yeo-Johnson Transformation:**
   Extends Box-Cox to all real numbers ($y \in \mathbb{R}$) while ensuring strict continuity and monotonicity across zero:
   $$\psi(\lambda, y) = \begin{cases}
@@ -556,6 +571,7 @@ Production feature stores enforce **Point-in-Time Joins** (also called "AS OF" j
 
 ### Q6: Compare Filter, Wrapper, and Embedded feature selection paradigms.
 **Model Answer:**
+
 1. **Filter Methods (e.g., Mutual Information, ANOVA, Chi-Square):**
    - *Complexity:* $\mathcal{O}(d \cdot N)$. Fast, univariate screening.
    - *Model Dependency:* Completely model-agnostic; evaluates intrinsic statistical correlation.
@@ -577,13 +593,16 @@ The **Variance Inflation Factor (VIF)** measures how much the variance of an est
 
 **Calculation:**
 For each feature $X_j$:
+
 1. Fit an Ordinary Least Squares regression treating $X_j$ as the dependent variable and all other features $X_{-j}$ as predictors:
    $$X_j = \alpha_0 + \sum_{k \ne j} \alpha_k X_k + \epsilon$$
+
 2. Compute the coefficient of determination $R_j^2$ from this regression.
 3. Calculate VIF:
    $$\text{VIF}_j = \frac{1}{1 - R_j^2}$$
 
 **Interpretation:**
+
 - If $X_j$ is completely orthogonal to all other features, $R_j^2 = 0 \implies \text{VIF}_j = 1$ (no variance inflation).
 - If $X_j$ is strongly collinear ($R_j^2 = 0.90$), $\text{VIF}_j = \frac{1}{1 - 0.90} = 10$. The variance of $\hat{\beta}_j$ is inflated by a factor of 10.
 - **Rule of Thumb:** $\text{VIF} > 5$ indicates moderate collinearity; $\text{VIF} > 10$ indicates severe multicollinearity that destabilizes parameter estimates, requiring feature elimination or regularization.

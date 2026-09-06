@@ -10,12 +10,14 @@
 Computers cannot natively perform arithmetic on raw strings of Unicode characters. To train machine learning algorithms on human natural language, text must be translated into real-valued vectors $\mathbf{x} \in \mathbb{R}^D$.
 
 The history of natural language processing is the evolutionary shift between two paradigms:
+
 1. **Discrete Sparse Representations (Count-Based)**:
    - One-hot vectors, Bag of Words (BoW), and TF-IDF.
    - Vector dimensions equal the entire vocabulary size $|V| \sim 10^5 - 10^7$.
    - **Orthogonality Catastrophe**: Every word is mathematically orthogonal to every other word:
      $$\mathbf{w}_{\text{motel}}^T \mathbf{w}_{\text{hotel}} = 0$$
      The representation is completely blind to synonymous meaning, semantics, and context.
+
 2. **Dense Distributed Representations (Embeddings)**:
    - Rooted in the **Distributional Hypothesis** (Firth, 1957): *"You shall know a word by the company it keeps."*
    - Words are projected into a continuous low-dimensional metric space $\mathbb{R}^d$ ($d \sim 100 - 1024$) where geometric distance correlates with semantic similarity:
@@ -52,7 +54,7 @@ flowchart LR
 
 ### 2.1 The Tokenization Taxonomy
 
-| Paradigm | Unit | Vocabulary Size $|V|$ | Sequence Length | Out-Of-Vocabulary (OOV) Handling | Primary Failure Mode |
+| Paradigm | Unit | Vocabulary Size $\lvert V \rvert$ | Sequence Length | Out-Of-Vocabulary (OOV) Handling | Primary Failure Mode |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Word-Level** | Whitespace/Punctuation words | Massive ($10^5 - 10^7$) | Short | Catastrophic (maps rare/misspelled words to `[UNK]`) | Inability to generalize across morphological variants (`run`, `running`, `runs`). |
 | **Character-Level** | Individual characters | Tiny ($256$ ASCII, $\sim 1000$ Unicode) | Extremely Long ($5-10\times$) | Zero OOV | Weak semantic density per token; prohibitive self-attention memory. |
@@ -61,6 +63,7 @@ flowchart LR
 ### 2.2 Byte-Pair Encoding (BPE, Sennrich et al., 2016)
 
 Originally a data compression algorithm (Gage, 1994), BPE was adapted for subword tokenization in NLP:
+
 1. Initialize vocabulary with all unique base characters plus end-of-word token `</w>`.
 2. Represent every word in the training corpus as a sequence of individual characters.
 3. Iteratively count the frequency of all adjacent character/token pairs across the corpus.
@@ -68,6 +71,7 @@ Originally a data compression algorithm (Gage, 1994), BPE was adapted for subwor
 5. Repeat for $k$ merge operations until desired vocabulary size is achieved.
 
 **Example**:
+
 - Words: `{"low": 5, "lower": 2, "newest": 6, "widest": 3}`
 - Initial tokens: `l, o, w, e, r, n, s, t, d, i`
 - Frequent pair `('e', 's')` $\to$ merge to `es`
@@ -96,11 +100,14 @@ TF-IDF reweights term counts by multiplying local term importance by global spec
 1. **Term Frequency (TF)**:
    $$\text{TF}(t, d) = \frac{f_{t, d}}{\sum_{t' \in d} f_{t', d}}$$
    where $f_{t, d}$ is the raw count of term $t$ in document $d$.
+
 2. **Inverse Document Frequency (IDF)**:
    $$\text{IDF}(t, D) = \log\left( \frac{1 + |D|}{1 + |\{d \in D : t \in d\}|} \right) + 1$$
    (using Scikit-Learn's smooth IDF formulation, adding 1 to numerator and denominator to prevent division by zero).
+
 3. **Composite TF-IDF Score**:
    $$\text{TF-IDF}(t, d, D) = \text{TF}(t, d) \times \text{IDF}(t, D)$$
+
 4. **$L_2$ Normalization**:
    To prevent document length bias:
    $$\mathbf{v}_{\text{norm}} = \frac{\mathbf{v}}{\|\mathbf{v}\|_2}$$
@@ -110,6 +117,7 @@ TF-IDF reweights term counts by multiplying local term importance by global spec
 ## 4. Dense Distributed Representations: The Word2Vec Framework
 
 Tomas Mikolov et al. (2013) proposed two complementary log-linear architectures to train dense embeddings $\mathbf{v}_w \in \mathbb{R}^d$ from unannotated text corpora:
+
 - **Continuous Bag of Words (CBOW)**: Predicts center word $w_t$ given context words $\{w_{t-c}, \dots, w_{t+c}\} \setminus \{w_t\}$.
 - **Skip-Gram**: Predicts context words given center word $w_t$.
 
@@ -132,6 +140,7 @@ flowchart TD
 ### 4.1 The Full Softmax Objective & Computational Bottleneck
 
 In the Skip-Gram model, each word $w$ has two vectors:
+
 - Center vector $\mathbf{v}_w \in \mathbb{R}^d$ (from input weight matrix $W \in \mathbb{R}^{|V| \times d}$)
 - Context vector $\mathbf{u}_w \in \mathbb{R}^d$ (from output weight matrix $W' \in \mathbb{R}^{d \times |V|}$)
 
@@ -204,6 +213,7 @@ Computing these updates costs $\mathcal{O}(k \cdot d)$, completely independent o
 ## 5. GloVe: Global Vectors for Word Representation (Pennington et al., 2014)
 
 Jeffrey Pennington, Richard Socher, and Christopher Manning recognized a fundamental dichotomy in NLP:
+
 - **Global Matrix Factorization methods (LSA / SVD)**: Capture global corpus statistical co-occurrences efficiently, but do poorly on local linear analogy tasks.
 - **Local Context Window methods (Skip-Gram)**: Excel on linear analogies, but waste compute sweeping across local windows without directly leveraging global co-occurrence statistics.
 
@@ -224,6 +234,7 @@ Let $X_i = \sum_k X_{ik}$ be the total frequency of word $i$.
 The conditional probability is $P_{ij} = P(j | i) = \frac{X_{ij}}{X_i}$.
 
 Consider words $i = \text{ice}$, $j = \text{steam}$, and probe words $k$:
+
 - For $k = \text{solid}$: $P(\text{solid}|\text{ice})$ is large, $P(\text{solid}|\text{steam})$ is small $\implies \frac{P(\text{solid}|\text{ice})}{P(\text{solid}|\text{steam})} \gg 1$.
 - For $k = \text{gas}$: $\frac{P(\text{gas}|\text{ice})}{P(\text{gas}|\text{steam})} \ll 1$.
 - For $k = \text{water}$: both are large $\implies \frac{P(\text{water}|\text{ice})}{P(\text{water}|\text{steam})} \approx 1$.
@@ -272,6 +283,7 @@ J = \sum_{i, j=1}^{|V|} f(X_{ij}) \left( \mathbf{w}_i^T \tilde{\mathbf{w}}_j + b
 $$
 
 where the weighting function $f(X)$ satisfies:
+
 1. $f(0) = 0$ (so $\lim_{X \to 0} f(X) \ln^2(X) = 0$, handling zero co-occurrences).
 2. $f(X)$ is non-decreasing to give more weight to frequent pairs.
 3. $f(X)$ is bounded for large $X$ so stop words do not dominate the loss:
@@ -608,6 +620,7 @@ Raising unigram frequencies to $3/4$:
 $$P_n(w) \propto f(w)^{0.75}$$
 
 acts as a non-linear probability redistributor:
+
 - For a frequent word with $f = 1,000,000$: $1,000,000^{0.75} = 31,622$ (compressed by $31\times$).
 - For a rare word with $f = 16$: $16^{0.75} = 8$ (compressed by only $2\times$).
 - The relative sampling probability of rare words is significantly elevated while preserving overall unigram rank ordering, striking the empirical sweet spot for noise contrastive estimation.
@@ -617,6 +630,7 @@ acts as a non-linear probability redistributor:
 ### Q3: Contrast Word2Vec and GloVe in terms of optimization mechanics and computational scaling.
 
 **Model Answer:**  
+
 - **Word2Vec (Online Streaming SGD)**:
   - Iterates over text as a temporal stream via a sliding window.
   - Scales linearly with total token count $T$ of the corpus ($\mathcal{O}(T)$).
@@ -634,6 +648,7 @@ acts as a non-linear probability redistributor:
 
 **Model Answer:**  
 BPE constructs a subword vocabulary through bottom-up iterative merges:
+
 1. Base tokens are initialized as all raw UTF-8 byte characters ($256$ tokens) or ASCII characters.
 2. The most frequent co-occurring adjacent token pairs are merged and added to the vocabulary.
 3. At test time, any unseen word is first broken down into its constituent base characters.

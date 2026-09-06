@@ -8,6 +8,7 @@
 ## 1. The Big Picture
 
 Computer vision spans a hierarchy of spatial reasoning tasks with increasing granularity:
+
 1. **Image Classification**: Assigning a discrete semantic label to an entire image ($X \to y \in \{1, \dots, K\}$).
 2. **Object Detection**: Localizing multiple foreground objects with axis-aligned bounding boxes and predicting their class labels ($X \to \{(b_i, c_i)\}_{i=1}^M$).
 3. **Semantic Segmentation**: Assigning a discrete class label to every individual pixel ($X \in \mathbb{R}^{3 \times H \times W} \to Y \in \{1, \dots, K\}^{H \times W}$).
@@ -30,6 +31,7 @@ flowchart LR
 ### 2.1 Bounding Box Parameterization & Metrics
 
 A bounding box can be parameterized in two equivalent formats:
+
 - **Corner Coordinates**: $[x_{\min}, y_{\min}, x_{\max}, y_{\max}]$
 - **Center-Offset Format**: $[x_c, y_c, w, h]$ where $x_c = \frac{x_{\min} + x_{\max}}{2}$, $y_c = \frac{y_{\min} + y_{\max}}{2}$, $w = x_{\max} - x_{\min}$, $h = y_{\max} - y_{\min}$.
 
@@ -97,6 +99,7 @@ flowchart TD
 ### 3.2 One-Stage: YOLO (You Only Look Once, Redmon et al., 2016)
 
 YOLO frames object detection as a single end-to-end spatial regression task:
+
 - Divides the image into an $S \times S$ spatial grid (e.g. $7 \times 7$ or $19 \times 19$).
 - If an object center falls into a grid cell, that cell is responsible for detecting it.
 - Each cell predicts $B$ bounding boxes, each consisting of 5 coordinates: $(x, y, w, h, \text{confidence})$, plus $C$ conditional class probabilities $P(\text{Class}_k | \text{Object})$.
@@ -183,13 +186,16 @@ flowchart TD
    Given image $\mathbf{x} \in \mathbb{R}^{H \times W \times C}$ and patch size $P \times P$:
    $$N = \frac{H \cdot W}{P^2} \quad \text{patches}$$
    Flatten each patch into a vector $\mathbf{x}_p^{(i)} \in \mathbb{R}^{P^2 \cdot C}$ for $i \in \{1, \dots, N\}$.
+
 2. **Linear Patch Projection**:  
    Project flattened patches to constant embedding dimension $D$ via learnable weight matrix $E \in \mathbb{R}^{(P^2 \cdot C) \times D}$:
    $$\mathbf{z}_0 = \left[ \mathbf{x}_{\text{class}}; \, \mathbf{x}_p^{(1)} E; \, \dots; \, \mathbf{x}_p^{(N)} E \right] + E_{\text{pos}}$$
    where $\mathbf{x}_{\text{class}} \in \mathbb{R}^D$ is the learnable classification token ($[CLS]$), and $E_{\text{pos}} \in \mathbb{R}^{(N+1) \times D}$ are 1D learnable positional embeddings.
+
 3. **Transformer Encoder Blocks ($l = 1, \dots, L$)**:
    $$\mathbf{z}'_l = \text{MSA}(\text{LN}(\mathbf{z}_{l-1})) + \mathbf{z}_{l-1}$$
    $$\mathbf{z}_l = \text{MLP}(\text{LN}(\mathbf{z}'_l)) + \mathbf{z}'_l$$
+
 4. **Classification Head**:
    $$y = \text{Linear}(\text{LN}(\mathbf{z}_L^0))$$
 
@@ -224,6 +230,7 @@ flowchart TD
 ### 6.1 Contrastive Symmetric InfoNCE Loss
 
 Given a mini-batch of $N$ (image, text) pairs:
+
 - Vision encoder produces normalized image vectors: $\mathbf{v}_i = \frac{f(\mathbf{I}_i)}{\|f(\mathbf{I}_i)\|_2} \in \mathbb{R}^D$.
 - Text encoder produces normalized text vectors: $\mathbf{u}_j = \frac{g(\mathbf{T}_j)}{\|g(\mathbf{T}_j)\|_2} \in \mathbb{R}^D$.
 - Pairwise cosine similarity matrix:
@@ -231,8 +238,10 @@ Given a mini-batch of $N$ (image, text) pairs:
   where $\tau = \exp(-\sigma)$ is a learnable temperature parameter.
 
 The loss consists of two symmetric cross-entropy objectives:
+
 1. **Image-to-Text Loss**:
    $$\mathcal{L}_{\text{image}} = -\frac{1}{N} \sum_{i=1}^N \ln \frac{\exp(S_{i, i})}{\sum_{j=1}^N \exp(S_{i, j})}$$
+
 2. **Text-to-Image Loss**:
    $$\mathcal{L}_{\text{text}} = -\frac{1}{N} \sum_{j=1}^N \ln \frac{\exp(S_{j, j})}{\sum_{i=1}^N \exp(S_{i, j})}$$
 
@@ -245,6 +254,7 @@ $$
 ### 6.2 Zero-Shot Classification Mechanism
 
 To classify an unseen test image $\mathbf{I}_{\text{test}}$ across $K$ arbitrary categories:
+
 1. Wrap class names in prompt templates: `"A photo of a {label}."` (e.g. `"A photo of a dog."`, `"A photo of a car."`).
 2. Pass all $K$ text prompts through the text encoder to obtain candidate vectors $\mathbf{u}_1, \dots, \mathbf{u}_K \in \mathbb{R}^D$.
 3. Pass $\mathbf{I}_{\text{test}}$ through the vision encoder to obtain $\mathbf{v} \in \mathbb{R}^D$.
@@ -492,10 +502,12 @@ x = torch.cat([u, c_skip], dim=1)
 
 **Model Answer:**  
 CNNs possess two hard-coded **inductive biases**:
+
 1. **Spatial Locality**: Convolutions operate on small local neighborhoods ($3 \times 3$), baking in the assumption that pixels close to each other carry stronger statistical correlation.
 2. **Translation Equivariance**: Weight sharing ensures that shifting an image shifts feature maps identically ($f(T X) = T f(X)$).
 
 These inductive biases restrict the hypothesis class $\mathcal{H}_{\text{CNN}} \subset \mathcal{H}_{\text{ViT}}$.  
+
 - **Small Dataset Regime ($N < 10^5$)**: The inductive biases act as powerful structural regularizers. A CNN does not need to learn that adjacent pixels are related; it knows it *a priori*. ViT, having zero spatial assumptions, must learn 2D geometry, spatial adjacency, and translation invariance entirely from data. With insufficient data, ViT overfits or fails to discover basic visual primitives.
 - **Massive Dataset Regime ($N > 10^7$)**: The inductive biases of CNNs become a **representational bottleneck**. Convolutions cannot model long-range global relationships in early layers without deep stacks. ViT's unconstrained self-attention allows any patch to attend to any other patch globally at layer 1. As data scales, ViT's larger, expressive hypothesis class continuously improves without the saturation observed in CNNs.
 
@@ -505,10 +517,13 @@ These inductive biases restrict the hypothesis class $\mathcal{H}_{\text{CNN}} \
 
 **Model Answer:**  
 Let an image have resolution $H \times W$ and patch size $P \times P$.  
+
 1. **Number of Tokens ($N$)**:
    $$N = \frac{H \cdot W}{P^2}$$
+
 2. **Projection**:
    Linear projection of $N$ tokens to embedding dimension $D$ costs $\mathcal{O}(N \cdot P^2 C \cdot D) = \mathcal{O}(H \cdot W \cdot C \cdot D)$.
+
 3. **Scaled Dot-Product Attention**:
    Given $Q, K, V \in \mathbb{R}^{N \times D}$:
    - $Q K^T$: Matrix multiplication of $(N \times D)$ by $(D \times N)$ costs $\mathcal{O}(N^2 \cdot D)$.
@@ -524,6 +539,7 @@ While a CNN's compute scales **linearly** with image resolution ($\mathcal{O}(H 
 ### Q3: Explain why U-Net utilizes skip connections by concatenation rather than addition (as in ResNet).
 
 **Model Answer:**  
+
 - **In ResNet (Addition: $\mathbf{x} + \mathcal{F}(\mathbf{x})$)**: Both tensors represent features at the **same semantic level and channel dimension**. Addition acts as a residual perturbation, preserving identity while refining features.
 - **In U-Net (Concatenation: $[\mathbf{x}_{\text{encoder}}, \mathbf{x}_{\text{decoder}}]$)**: The two tensors belong to fundamentally **different representation spaces**:
   1. $\mathbf{x}_{\text{encoder}}$ contains raw, low-level spatial features (exact pixel coordinates, sharp edge boundaries, fine textures) with little semantic meaning.
@@ -554,6 +570,7 @@ Because $\ln(N)$ is the theoretical maximum bound on mutual information achievab
 **Model Answer:**  
 **Mechanism:**  
 Given candidate boxes $B$ and confidence scores $S$:
+
 1. Sort $B$ in descending order of scores.
 2. Select the box $M$ with the highest score and append to final detections $D$.
 3. Compute $\text{IoU}(M, b_i)$ for all remaining boxes $b_i \in B$.

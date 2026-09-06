@@ -32,6 +32,7 @@ flowchart TD
 ```
 
 The enterprise MLOps lifecycle centers on three critical boundaries:
+
 1. **The Feature Consistency Boundary**: Bridging offline analytical data engines (optimized for multi-terabyte scans) and online operational databases (optimized for sub-5 millisecond key-value lookups) without temporal feature leakage.
 2. **The Lineage & Governance Boundary**: Structuring model provenance, metrics, hyperparameters, weights, schemas, and approval workflows from exploratory training to production rollout.
 3. **The Distributed Compute Boundary**: Scheduling inference workloads dynamically across Kubernetes pods, utilizing hardware acceleration (GPUs, Tensor Cores), and coordinating continuous batching and multi-worker execution.
@@ -93,6 +94,7 @@ flowchart TD
 ```
 
 Key architectural capabilities of Triton:
+
 - **Concurrent Model Execution**: Multiple models or multiple instances of the same model run simultaneously across one or more physical GPUs.
 - **Dynamic Batching**: Queues requests from different client threads over a configurable microsecond window (`max_queue_delay_microseconds: 5000`), assembling them into single Tensor Core GEMM operations without modifying client payloads.
 - **Model Ensembles & BLS (Business Logic Scripting)**: Chains tokenizers, image normalizers, neural models, and post-processing steps inside the server memory space, eliminating network serialization hops between pipeline stages.
@@ -100,6 +102,7 @@ Key architectural capabilities of Triton:
 ### 2.2 LLM Serving: Continuous Batching & PagedAttention
 
 Traditional static or dynamic mini-batching fails catastrophically for Large Language Models (LLMs) due to the autoregressive generation loop:
+
 1. Different prompts produce wildly varying output token lengths ($L_{\text{out}} \in [1, 2048]$).
 2. Static batching forces all sequences in a batch to wait for the slowest sequence to finish generation (**the straggler problem**), wasting GPU FLOPs on padding tokens:
 
@@ -120,6 +123,7 @@ flowchart TD
 ```
 
 **Continuous Batching (Iteration-Level Scheduling)** ([Yu et al., 2022 (Orca)](https://www.usenix.org/conference/osdi22/presentation/yu)) resolves this:
+
 - The batch is evaluated at the granularity of a **single token generation step** rather than an entire sequence.
 - Sequences that emit the end-of-sequence token (`<eos>`) are evicted immediately. New incoming requests are inserted into the running batch on the very next token iteration.
 - Combined with **PagedAttention** ([Kwon et al., 2023](https://arxiv.org/abs/2309.06180)), which partitions Key-Value (KV) cache memory into non-contiguous physical memory blocks (mirroring OS virtual memory pages), GPU memory fragmentation drops from $>60\%$ to $<4\%$, increasing serving throughput by $2-4\times$.
@@ -257,6 +261,7 @@ if __name__ == "__main__":
 ## 4. Feature Stores: Dual-Storage & Point-in-Time Correctness
 
 In production ML, feature engineering is plagued by two classic failure modes:
+
 1. **Online/Offline Skew**: Features are computed in SQL/Spark for batch training, but reimplemented in Python/C++ for online serving. Subtly mismatched logic degrades model performance.
 2. **Temporal Feature Leakage (Lookahead Bias)**: During training set creation, feature values computed *after* the prediction event timestamp are accidentally joined, giving the model access to future information it will never observe in production.
 
@@ -400,7 +405,7 @@ default_args = {
     "owner": "mlops-platform",
     "depends_on_past": False,
     "email_on_failure": True,
-    "email": ["mlops-alerts@enterprise.com"],
+    "email": ["mlops-alerts@example.com"],
     "retries": 2,
     "retry_delay": timedelta(minutes=5),
 }
@@ -484,6 +489,7 @@ flowchart TD
 
 ### 6.1 The NVIDIA GPU Operator
 Managing GPUs manually on bare-metal Kubernetes nodes is fraught with failure (driver updates require node rebuilds, CUDA library mismatches halt containers). The **NVIDIA GPU Operator** automates this via Kubernetes DaemonSets:
+
 - Automatically installs the host NVIDIA driver kernel modules.
 - Deploys the NVIDIA Container Toolkit hook.
 - Runs the **Data Center GPU Manager (DCGM) Exporter**, which exposes fine-grained hardware metrics (VRAM saturation, GPU compute utilization, tensor core temperature, PCIe bandwidth) to Prometheus.
@@ -635,6 +641,7 @@ spec:
 ### Q1: Compare static mini-batching, dynamic mini-batching, and continuous batching with PagedAttention. Why is continuous batching necessary for LLM serving?
 
 **Model Answer:**  
+
 - **Static Mini-batching**: Assembles a fixed number of samples $B$ before execution. In LLM autoregressive generation, sequences terminate at different token lengths. Shorter sequences must be padded with `<pad>` tokens while waiting for the longest sequence to finish, wasting memory bandwidth and FLOPs.
 - **Dynamic Mini-batching**: Aggregates independent client requests across a short time window $W$ into a single forward pass. Effective for static-shape or single-pass models (ResNet, BERT), but still suffers from the straggler problem in multi-step autoregressive generation.
 - **Continuous Batching (Iteration-Level Scheduling)**: Evaluates requests at the granularity of individual token generation steps. Sequences that complete generation are evicted immediately, freeing KV cache slots, while newly arrived requests enter the batch on the next token iteration.
@@ -650,6 +657,7 @@ Point-in-time correctness guarantees that for any observation record $i$ occurri
 $$\mathbf{x}_i = \{ f_j(T^*) \mid T^* = \max \{ t \le T_{E, i} \mid \text{update}(f_j, t) \} \}$$
 
 In an offline feature store (like Feast), this is achieved through an **As-Of Join**:
+
 1. The training entity dataframe (containing entity IDs and event timestamps) is joined with historical feature event logs.
 2. The join condition filters out any feature record with $T_{\text{feature}} > T_{\text{entity}}$.
 3. For records where $T_{\text{feature}} \le T_{\text{entity}}$, it computes a window partition ordered by $T_{\text{feature}}$ descending and retains row rank 1.
@@ -660,6 +668,7 @@ This provides a formal guarantee that feature states post-dating the decision bo
 ### Q3: Contrast CeleryExecutor and KubernetesExecutor in Apache Airflow for machine learning workflows.
 
 **Model Answer:**  
+
 - **CeleryExecutor**:
   - *Mechanism*: Tasks are pushed to a message broker (RabbitMQ/Redis) and picked up by a fixed pool of persistent Celery worker nodes.
   - *Pros*: Low task initiation latency (workers are pre-warmed, no container spin-up overhead).
@@ -676,6 +685,7 @@ This provides a formal guarantee that feature states post-dating the decision bo
 
 **Model Answer:**  
 Standard Kubernetes HPA triggers scaling based on container CPU or RAM percentage. In GPU inference serving:
+
 1. **CPU/RAM Disconnect**: A model serving pod may utilize $<10\%$ host CPU and stable RAM while its GPU Tensor Cores are fully saturated at $100\%$ capacity with incoming inference batches. Standard HPA will never trigger a scale-up event.
 2. **GPU Metric Integration**: Production GPU autoscaling requires exporting hardware metrics via the NVIDIA DCGM Exporter into Prometheus.
 3. **Leading vs. Lagging Indicators**: GPU utilization is a lagging indicator. Under sudden traffic spikes, queuing delay increases before GPU utilization changes.
@@ -689,6 +699,7 @@ Standard Kubernetes HPA triggers scaling based on container CPU or RAM percentag
 
 **Model Answer:**  
 An **MLflow Model Signature** defines the explicit data contract for model inputs and outputs:
+
 - It specifies column names, data types (e.g. `DataType.float32`, `DataType.string`), and structural shapes (e.g. tensor dimensions `[-1, 10]`).
 - *Operational Risks of Omission*:
   1. **Silent Type Coercion**: Pandas or JSON parsers may cast a nullable integer ID into a floating-point number (`1001` $\to$ `1001.0`), silently altering hashing features or embeddings.

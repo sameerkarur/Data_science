@@ -8,6 +8,7 @@
 ## 1. The Big Picture
 
 Deep neural networks are composed of distinct architectural primitives:
+
 1. **Universal Function Approximators (MLPs)**: Stacking affine transformations with non-linear activations.
 2. **Activation Functions**: Controlling gradient flow, introducing non-linearity, and bounding or shaping coordinate manifolds.
 3. **Normalization Layers (BatchNorm, LayerNorm, GroupNorm)**: Stabilizing internal representation statistics, smoothing the optimization landscape, and enabling larger learning rates.
@@ -107,6 +108,7 @@ $$
 
 The gradient identically vanishes. The weight vector receives zero updates, permanently "killing" the neuron for all subsequent training epochs.  
 **Solutions**:
+
 1. Initialize biases $b_j$ with a small positive constant ($+0.01$ or $+0.1$).
 2. Use **Leaky ReLU** or **ELU** where negative inputs maintain a non-zero slope $\alpha > 0$.
 3. Use smooth stochastic activations like **GELU** (standard in GPT, BERT, and ViT).
@@ -125,11 +127,14 @@ Given a mini-batch $\mathcal{B} = \{x_1, \dots, x_m\}$ of activations for a sing
 
 1. **Mini-batch Mean**:
    $$\mu_{\mathcal{B}} = \frac{1}{m} \sum_{i=1}^m x_i$$
+
 2. **Mini-batch Variance**:
    $$\sigma_{\mathcal{B}}^2 = \frac{1}{m} \sum_{i=1}^m (x_i - \mu_{\mathcal{B}})^2$$
+
 3. **Standardization**:
    $$\hat{x}_i = \frac{x_i - \mu_{\mathcal{B}}}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}}$$
    where $\epsilon \approx 10^{-5}$ prevents division by zero.
+
 4. **Scale and Shift (Learnable Affine)**:
    $$y_i = \gamma \hat{x}_i + \beta$$
    where $\gamma \in \mathbb{R}$ (scale) and $\beta \in \mathbb{R}$ (shift) restore representational capacity. If $\gamma = \sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}$ and $\beta = \mu_{\mathcal{B}}$, the identity mapping is perfectly recovered.
@@ -159,6 +164,7 @@ This linear transformation can be pre-fused directly into preceding linear/convo
 Let $\frac{\partial \mathcal{L}}{\partial y_i}$ be the incoming gradient. We must compute $\frac{\partial \mathcal{L}}{\partial \gamma}$, $\frac{\partial \mathcal{L}}{\partial \beta}$, and $\frac{\partial \mathcal{L}}{\partial x_i}$.
 
 #### Step 1: Gradients with respect to $\gamma$ and $\beta$
+
 $$
 \frac{\partial \mathcal{L}}{\partial \gamma} = \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial y_i} \hat{x}_i
 $$
@@ -168,22 +174,27 @@ $$
 $$
 
 #### Step 2: Gradient with respect to normalized $\hat{x}_i$
+
 $$
 \frac{\partial \mathcal{L}}{\partial \hat{x}_i} = \frac{\partial \mathcal{L}}{\partial y_i} \gamma
 $$
 
 #### Step 3: Gradient with respect to variance $\sigma_{\mathcal{B}}^2$
+
 $$
 \frac{\partial \mathcal{L}}{\partial \sigma_{\mathcal{B}}^2} = \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial \hat{x}_i} (x_i - \mu_{\mathcal{B}}) \cdot \left( -\frac{1}{2} (\sigma_{\mathcal{B}}^2 + \epsilon)^{-3/2} \right) = -\frac{1}{2(\sigma_{\mathcal{B}}^2 + \epsilon)} \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial \hat{x}_i} \hat{x}_i
 $$
 
 #### Step 4: Gradient with respect to mean $\mu_{\mathcal{B}}$
+
 $$
 \frac{\partial \mathcal{L}}{\partial \mu_{\mathcal{B}}} = \left( \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial \hat{x}_i} \frac{-1}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}} \right) + \frac{\partial \mathcal{L}}{\partial \sigma_{\mathcal{B}}^2} \frac{\sum_{i=1}^m -2(x_i - \mu_{\mathcal{B}})}{m} = -\frac{1}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}} \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial \hat{x}_i}
 $$
+
 (since $\sum_{i=1}^m (x_i - \mu_{\mathcal{B}}) = 0$).
 
 #### Step 5: Gradient with respect to input $x_i$
+
 $$
 \frac{\partial \mathcal{L}}{\partial x_i} = \frac{\partial \mathcal{L}}{\partial \hat{x}_i} \frac{1}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}} + \frac{\partial \mathcal{L}}{\partial \sigma_{\mathcal{B}}^2} \frac{2(x_i - \mu_{\mathcal{B}})}{m} + \frac{\partial \mathcal{L}}{\partial \mu_{\mathcal{B}}} \frac{1}{m}
 $$
@@ -239,8 +250,10 @@ $$
 $$
 
 **Expectation and Variance Preservation:**
+
 - **Expectation**:
   $$\mathbb{E}[\widetilde{a}_i] = \frac{\mathbb{E}[r_i] \cdot a_i}{1 - p} = \frac{(1 - p) a_i}{1 - p} = a_i$$
+
 - **At Test Time**:
   $$\widetilde{a}_i = a_i \quad (\text{No scaling required! Identical forward graph})$$
 
@@ -254,6 +267,7 @@ A network with $N$ neurons has $2^N$ possible subnetworks formed by binary maski
 
 Consider a deep linear network without biases: $\mathbf{a}^{[L]} = W^{[L]} W^{[L-1]} \dots W^{[1]} \mathbf{x}$.  
 If weights are initialized with variance $\sigma^2$:
+
 - If $\sigma^2 > 1$: Activations grow exponentially as $\mathcal{O}(\sigma^{2L}) \to \infty$ (**Exploding Gradients**).
 - If $\sigma^2 < 1$: Activations decay exponentially as $\mathcal{O}(\sigma^{2L}) \to 0$ (**Vanishing Gradients**).
 
@@ -314,6 +328,7 @@ $$
 $$
 
 This is **He / Kaiming Initialization** (He et al., 2015):
+
 - **Normal Kaiming**: $W \sim \mathcal{N}\left( 0, \frac{2}{n_{\text{in}}} \right)$
 - **Uniform Kaiming**: $W \sim \mathcal{U}\left( -\sqrt{\frac{6}{n_{\text{in}}}}, +\sqrt{\frac{6}{n_{\text{in}}}} \right)$
 
@@ -601,6 +616,7 @@ This injects multiplicative and additive noise into every hidden unit's activati
 
 **Model Answer:**  
 Three structural properties make LayerNorm superior for Transformers:
+
 1. **Sequence Length Variability**: NLP inputs are sequences of varying lengths padded with zeros. BatchNorm computes statistics across the batch axis, which conflates true tokens with padding tokens, poisoning the statistics.
 2. **Autoregressive Generation (Batch Size 1)**: During LLM inference, tokens are generated one by one. With batch size $N=1$, BatchNorm variance is $0$, making the operation mathematically undefined without falling back to stale running statistics.
 3. **Temporal Dependency and Distribution Drift**: In recurrent or attention sequences, token representations evolve across positions $t \in [1, T]$. Computing a single batch statistic across heterogeneous semantic positions destroys positional representations. LayerNorm normalizes across the hidden dimension $D$ of each token vector individually:
@@ -647,6 +663,7 @@ It can be approximated efficiently without special functions:
 $$\text{GELU}(x) \approx 0.5x \left( 1 + \tanh\left( \sqrt{\frac{2}{\pi}} (x + 0.044715 x^3) \right) \right)$$
 
 **Advantages over ReLU:**
+
 1. **Smooth Differentiability**: Unlike ReLU, which has a non-differentiable sharp corner at $x=0$, GELU is infinitely differentiable ($C^\infty$) everywhere.
 2. **Non-Monotonicity and Curvature**: GELU has a small negative curvature zone for $x \in (-0.75, 0)$, reaching a local minimum at $x \approx -0.75$ with value $\approx -0.17$. This curvature allows neurons to output small negative activations for weak inhibitory signals rather than aggressively zeroing them out, preventing the catastrophic "dead neuron" failure mode of ReLU while maintaining non-linearity.
 

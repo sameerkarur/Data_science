@@ -37,8 +37,9 @@ P(x_1, \dots, x_T) = \prod_{t=1}^T P(x_t \mid x_1, \dots, x_{t-1})
 $$
 
 While necessary for generation, directional conditioning severely handicaps sequence comprehension. In natural language, the identity of an ambiguous word depends equally on subsequent context:
-- *"The **crane** lifted the five-ton steel beam."* (Construction vehicle)
-- *"The **crane** folded its long wings by the lake."* (Bird)
+
+- _"The **crane** lifted the five-ton steel beam."_ (Construction vehicle)
+- _"The **crane** folded its long wings by the lake."_ (Bird)
 
 [Devlin et al. (2018)](https://arxiv.org/abs/1810.04805) introduced **BERT (Bidirectional Encoder Representations from Transformers)** to capture non-directional context by masking random tokens and training the model to reconstruct them from deep bidirectional representations.
 
@@ -59,11 +60,14 @@ flowchart TD
 BERT randomly selects $15\%$ of all input WordPiece tokens as prediction targets. However, if target tokens were always replaced with a special `[MASK]` token, the model would encounter a severe mismatch during downstream fine-tuning, where `[MASK]` tokens never appear.
 
 To mitigate this discrepancy, the **80/10/10 corruption rule** governs the chosen $15\%$ targets:
+
 1. **$80\%$ of the time**: Replace the token with `[MASK]`  
    *(e.g., "my dog is hairy" $\to$ "my dog is [MASK]")*
+
 2. **$10\%$ of the time**: Replace the token with a random token from the vocabulary  
    *(e.g., "my dog is hairy" $\to$ "my dog is apple")*  
    *Forces the model to maintain contextual representations for every token, since any observed word could be a corrupted intruder.*
+
 3. **$10\%$ of the time**: Keep the original token unchanged  
    *(e.g., "my dog is hairy" $\to$ "my dog is hairy")*  
    *Biases the representation towards the true observed token identity.*
@@ -78,6 +82,7 @@ where $\mathbf{h}_i \in \mathbb{R}^{d_{\text{model}}}$ is the output hidden stat
 
 #### Next Sentence Prediction (NSP)
 To learn discourse relationships between pairs of sentences $(A, B)$:
+
 - $50\%$ of training pairs are consecutive sentences from the corpus (`IsNext`).
 - $50\%$ of training pairs pair sentence $A$ with a randomly sampled sentence $B$ (`NotNext`).
 
@@ -118,6 +123,7 @@ flowchart LR
 ```
 
 GPT-3 revealed that once model scale crosses a critical threshold ($\approx 10\text{B}-100\text{B}$ parameters), models acquire **In-Context Learning (ICL)** without weight updates:
+
 - **Zero-Shot**: Prompt contains task instructions only.
 - **One-Shot**: Instructions followed by a single demonstration example.
 - **Few-Shot**: Instructions followed by $k \in [3, 32]$ demonstration pairs $\langle x_i, y_i \rangle$.
@@ -227,6 +233,7 @@ Offsets from 0 to 8 receive exact individual buckets, while larger offsets up to
 ## 5. Modern Open LLM Architectural Innovations
 
 Between 2023 and 2026, foundation models evolved beyond vanilla Multi-Head Attention to overcome two primary physical barriers on GPUs:
+
 1. **The KV Cache Memory Wall** during generation.
 2. **Dense Feed-Forward Compute Costs** when scaling parameters beyond 100B.
 
@@ -297,8 +304,10 @@ flowchart TD
 
 #### Mathematical Formulation
 Instead of caching $H \cdot d_k$ keys and $H \cdot d_v$ values per token:
+
 1. Down-project the hidden state $\mathbf{h}_t \in \mathbb{R}^{d_{\text{model}}}$ to a compressed latent space:
    $$\mathbf{c}_t^{KV} = \mathbf{h}_t \mathbf{W}_{DKV} \in \mathbb{R}^{d_c}, \quad \text{where } d_c \ll H d_k$$
+
 2. Because Rotary Position Embedding (RoPE) is position-sensitive, it cannot be baked directly into a cached compressed representation that undergoes downstream linear transformations. MLA solves this by **decoupling RoPE**:
    - Cache $\mathbf{c}_t^{KV}$ (representing position-invariant content).
    - Cache a separate small positional vector $\mathbf{k}_t^R \in \mathbb{R}^{d_R}$ carrying RoPE.
@@ -639,6 +648,7 @@ Standard attention caches full keys and values: $2 \times H \times d_k$ floats p
 However, standard keys incorporate Rotary Position Embeddings (RoPE), which apply coordinate rotation $\mathbf{R}_t \mathbf{k}_t$. Because $\mathbf{R}_t$ is position-dependent and non-commutative with arbitrary linear projections, multiplying a cached compressed vector by an up-projection matrix $\mathbf{W}_{UK}$ cannot reconstruct rotated keys after the fact:
 $$\mathbf{R}_t (\mathbf{c}_t \mathbf{W}_{UK}) \ne (\mathbf{R}_t \mathbf{c}_t) \mathbf{W}_{UK}$$
 MLA solves this by **decoupling RoPE**: it splits attention into two parallel streams:
+
 1. An unrotated content stream where keys $\mathbf{k}_t^C$ are reconstructed from cached latent $\mathbf{c}_t^{KV}$.
 2. A small, independent rotary key $\mathbf{k}_t^R \in \mathbb{R}^{d_R}$ that carries RoPE and is cached separately.  
 Total cached floats per token are $d_c + d_R$, yielding up to $93\%$ cache compression while preserving exact relative position sensitivity.
@@ -660,6 +670,7 @@ When an expert $i$ receives too many tokens, its fraction $f_i$ is large. Minimi
 ### Q5: Why did the field transition from Encoder-only (BERT) and Encoder-Decoder (T5) architectures to Decoder-only models for generative agents and foundation models?
 
 **Model Answer:**  
+
 1. **Unified Compute Graph**: In decoder-only architectures, prompt processing (prefill) and generation (decoding) share the identical attention and FFN weights without requiring separate encoder-decoder cross-attention layers.
 2. **Key-Value Cache Simplicity**: Encoder-decoders require caching both cross-attention keys/values (fixed size $T_{\text{enc}} \times d$) and causal decoder keys/values. Decoder-only models manage a single homogeneous KV cache.
 3. **In-Context Zero/Few-Shot Generality**: Autoregressive causal language modeling directly matches the sequence conditioning required for prompting. Autoregressive decoders learn next-token distributions conditioned on arbitrary prefix trajectories, enabling multi-turn dialogues, code generation, and chain-of-thought without task-specific architectural heads.

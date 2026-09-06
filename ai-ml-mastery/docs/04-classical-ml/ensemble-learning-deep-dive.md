@@ -60,6 +60,7 @@ $$\text{Var}(\bar{f}(\mathbf{x})) = \rho \sigma^2 + \frac{1 - \rho}{B} \sigma^2$
 1. As the number of trees $B \to \infty$:
    $$\lim_{B \to \infty} \text{Var}(\bar{f}) = \rho \sigma^2$$
    The second term $\frac{1 - \rho}{B} \sigma^2$ vanishes, but the first term $\rho \sigma^2$ acts as an **irreducible variance floor** dictated entirely by the correlation $\rho$ between trees!
+
 2. If trees are identical ($\rho = 1$), averaging does nothing: $\text{Var} = \sigma^2$.
 3. If trees are completely uncorrelated ($\rho = 0$), variance drops linearly: $\text{Var} = \sigma^2 / B$.
 
@@ -69,6 +70,7 @@ Standard Bagging builds trees using bootstrap samples of rows. However, if the d
 
 Breiman's **Random Forest** introduces a second source of randomization: **Feature Subsampling**.
 At every candidate split in every tree, the algorithm considers only a random subset of $m$ features out of all $p$ features:
+
 - For **Classification**: $m = \lfloor\sqrt{p}\rfloor$
 - For **Regression**: $m = \lfloor p / 3 \rfloor$
 
@@ -231,6 +233,7 @@ flowchart TD
 ### 4.4 Sparsity-Aware Split Finding
 
 In real datasets, features often contain missing values (`NaN`). XGBoost handles missingness natively:
+
 1. For a split candidate, all samples with non-missing values are partitioned into $I_L$ and $I_R$.
 2. All missing samples are tentatively placed entirely in $I_L$, and the Gain is calculated.
 3. Then all missing samples are placed entirely in $I_R$, and the Gain is calculated.
@@ -246,6 +249,7 @@ Microsoft's **LightGBM** (Ke et al., 2017) was designed to train orders of magni
 
 In gradient boosting, instances with large gradients $|g_i|$ contribute much more to the split gain than instances with small gradients (which are already well-trained).
 GOSS balances sample size reduction with statistical unbiasedness:
+
 1. Rank all $n$ training instances by absolute gradient $|g_i|$.
 2. Keep the top $a \times 100\%$ instances with the largest gradients (e.g., $a = 0.2$).
 3. Randomly sample a fraction $b \times 100\%$ from the remaining $(1 - a)$ small-gradient instances (e.g., $b = 0.1$).
@@ -290,6 +294,7 @@ Standard target encoding replaces a categorical level $c$ with the target mean: 
 However, because sample $i$'s own target $y_i$ is included in the mean, this introduces catastrophic **conditional shift / target leakage**, causing trees to overfit immediately.
 
 CatBoost introduces **Ordered Target Encoding**:
+
 1. Generate an online random permutation $\sigma = (\sigma_1, \dots, \sigma_n)$ of the training instances.
 2. For sample $i$, calculate the target encoding using strictly the historical instances preceding it in the permutation:
    $$\hat{x}_{\sigma_k} = \frac{\sum_{j=1}^{k-1} \mathbb{I}(x_{\sigma_j} = x_{\sigma_k}) y_{\sigma_j} + a \cdot P}{\sum_{j=1}^{k-1} \mathbb{I}(x_{\sigma_j} = x_{\sigma_k}) + a}$$
@@ -524,6 +529,7 @@ $$\text{Gain} = \mathcal{L}_{\text{before}} - \mathcal{L}_{\text{after}} = \frac
 ### Q3: Compare the core algorithmic innovations of XGBoost, LightGBM, and CatBoost.
 
 **Model Answer:**
+
 | Dimension | XGBoost | LightGBM | CatBoost |
 |---|---|---|---|
 | **Tree Growth Policy** | Level-wise (depth-first) | Leaf-wise (best-first) | Symmetric Oblivious Trees |
@@ -542,6 +548,7 @@ $$\text{Gain} = \mathcal{L}_{\text{before}} - \mathcal{L}_{\text{after}} = \frac
 In GBDT, sample $i$ with a small gradient has already been well-fitted (low residual error), contributing minimal gain to split criteria.
 However, simply discarding all small-gradient samples skews the underlying data distribution, inducing severe bias.
 **GOSS Algorithm:**
+
 1. Sort all training samples by absolute gradient $|g_i|$.
 2. Retain the top $a \times 100\%$ instances with the largest gradients: subset $A$.
 3. Draw a random subsample of size $b \times 100\%$ from the remaining small-gradient pool $A^c$: subset $B$.
@@ -562,6 +569,7 @@ If a rare category appears only twice with targets $y_1 = 1, y_2 = 1$, then $\ha
 
 **CatBoost Ordered Target Encoding Solution:**
 CatBoost enforces a strict causal ordering to simulate historical online inference:
+
 1. Generate an online random permutation $\boldsymbol{\sigma} = (\sigma_1, \dots, \sigma_n)$ of the training dataset.
 2. For any sample $\sigma_k$, the encoding is computed **strictly using samples that precede it in the permutation**:
    $$\hat{x}_{\sigma_k} = \frac{\sum_{j=1}^{k-1} \mathbb{I}(x_{\sigma_j} = x_{\sigma_k}) y_{\sigma_j} + a \cdot P}{\sum_{j=1}^{k-1} \mathbb{I}(x_{\sigma_j} = x_{\sigma_k}) + a}$$
@@ -574,15 +582,19 @@ Because sample $\sigma_k$'s own label $y_{\sigma_k}$ is strictly excluded from t
 
 **Model Answer:**
 In standard asymmetric CART/XGBoost trees:
+
 - Evaluating an input $\mathbf{x}$ requires traversing a branching graph of pointer-linked nodes.
 - At each node, the CPU fetches the node struct, evaluates a conditional branch (`if x[feat] <= thr goto left else goto right`), incurring frequent **CPU branch mispredictions** and non-contiguous memory pointer dereferences.
 
 In CatBoost Oblivious Trees:
+
 - At depth $d$, all nodes across that entire horizontal level share the **identical feature and threshold** $(j_d, \theta_d)$.
 - For a tree of depth $D$ (typically $D = 6$), we evaluate $D$ binary boolean comparisons independently:
   $$b_0 = \mathbb{I}(x_{j_0} > \theta_0), \quad b_1 = \mathbb{I}(x_{j_1} > \theta_1), \quad \dots, \quad b_{D-1} = \mathbb{I}(x_{j_{D-1}} > \theta_{D-1})$$
+
 - The leaf index is computed via a single bitwise shift-or expression:
   $$\text{Leaf Index} = \sum_{k=0}^{D-1} b_k \cdot 2^k = b_0 \,|\, (b_1 \ll 1) \,|\, (b_2 \ll 2) \,|\, \dots \,|\, (b_{D-1} \ll (D - 1))$$
+
 - The prediction is fetched directly from a flat array: `values[Leaf Index]`.
 This is completely **branchless**, vectorizes seamlessly via CPU SIMD (AVX2/AVX-512) instructions, and fits entirely inside the L1 CPU instruction cache.
 

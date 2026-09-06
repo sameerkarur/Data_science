@@ -17,6 +17,7 @@ flowchart TD
 ```
 
 These four advanced tiers bridge mathematical theory and mission-critical production systems:
+
 1. **Tier 5 (Transformers)**: Demystifies foundation models by constructing a decoder-only language model in PyTorch from raw tensor operations, enforcing causal masking and temperature-scaled sampling.
 2. **Tier 6 (GenAI)**: Assembles an enterprise retrieval-augmented generation engine that combines dense embeddings with sparse inverted indices to eliminate hallucinations.
 3. **Tier 7 (Agents)**: Implements an autonomous cybernetic loop capable of multi-step planning, tool invocation, observation parsing, and self-reflection without external agent frameworks.
@@ -28,6 +29,7 @@ These four advanced tiers bridge mathematical theory and mission-critical produc
 
 ### 2.1 Project Scope & Requirements
 Covers: **Text classifier**, **Mini language model**, and **Question-answering system**.
+
 - **Core Objective**: Implement a complete decoder-only causal language model (GPT-style architecture) in pure PyTorch without relying on `nn.TransformerDecoder` abstractions.
 - **Architectural Primitives**: Multi-Head Causal Self-Attention with lower-triangular causal masking ($M_{i, j} = -\infty$ for $j > i$), Pre-Layer Normalization (RMSNorm/LayerNorm), Feed-Forward SwiGLU/GELU networks, residual gradient highways, cross-entropy loss over shifted targets, and temperature/top-$k$/nucleus (top-$p$) text generation.
 
@@ -192,6 +194,7 @@ class MiniGPT(nn.Module):
 
 ### 3.1 Project Scope & Requirements
 Covers: **RAG chatbot**, **Document intelligence system**, and **Semantic search engine**.
+
 - **Core Objective**: Construct an enterprise-scale, production-ready Retrieval-Augmented Generation platform capable of parsing complex PDF/Word documents, executing hybrid vector + lexical search, reranking passages with a cross-encoder, and streaming grounded responses with source citations via FastAPI Server-Sent Events (SSE).
 - **Core Capabilities**: Multi-format document chunking with metadata tagging, HNSW vector search (dense) paired with BM25 (sparse), Reciprocal Rank Fusion (RRF), and context window compaction.
 
@@ -304,6 +307,7 @@ class PromptAugmenter:
 
 ### 4.1 Project Scope & Requirements
 Covers: **Research agent**, **Coding agent**, and **Data-analysis agent**.
+
 - **Core Objective**: Implement an autonomous, tool-using research agent based on the **ReAct (Reasoning + Acting)** paradigm with an explicit **Reflexion memory buffer** for self-correction without framework bloat (e.g. raw Python without LangChain).
 - **Core Capabilities**: Multi-step goal decomposition, tool dispatching registry (web retrieval, Python execution sandbox, calculator), observation parser, loop detection, and verbal post-mortem self-reflection upon failure.
 
@@ -417,6 +421,7 @@ class AutonomousReActAgent:
 
 ### 5.1 Project Scope & Requirements
 Covers: **Full pipeline: data $\to$ training $\to$ tracking $\to$ registry $\to$ API $\to$ Docker $\to$ cloud $\to$ monitoring $\to$ retraining**.
+
 - **Core Objective**: Unify every architectural pillar from Books 12, 13, and 14 into an automated production pipeline:
   1. Data Ingestion & Pandera contract validation.
   2. Automated Data Drift Gate (Population Stability Index $< 0.15$).
@@ -632,6 +637,7 @@ scores = scores.masked_fill(self.causal_mask[:, :, :T, :T] == 0, float("-inf"))
 ### Q1: In Tier 5, why is weight tying between the token embedding matrix and the final language model unembedding projection layer beneficial?
 
 **Model Answer:**  
+
 - **Mathematical Form**:
   - Let $\mathbf{W}_e \in \mathbb{R}^{V \times d}$ be the token embedding matrix mapping discrete token indices to hidden representations.
   - Let $\mathbf{W}_u \in \mathbb{R}^{d \times V}$ be the linear projection head mapping final layer representations back to vocabulary logits.
@@ -645,6 +651,7 @@ scores = scores.masked_fill(self.causal_mask[:, :, :T, :T] == 0, float("-inf"))
 ### Q2: In an Enterprise RAG platform, compare Reciprocal Rank Fusion (RRF) with Learned Cross-Encoder Reranking. Why use both sequentially rather than just one?
 
 **Model Answer:**  
+
 - **RRF (Algorithmic Properties)**:
   - Non-parametric, zero GPU compute required. It normalizes disparate score scales across dense vector search (cosine similarities $\in [-1, 1]$) and sparse BM25 scores (unbounded $\in [0, \infty)$) using relative rank positions.
   - *Limitation*: Treats document relevance as a function of rank position without reading the combined query-document text syntax.
@@ -660,6 +667,7 @@ scores = scores.masked_fill(self.causal_mask[:, :, :T, :T] == 0, float("-inf"))
 ### Q3: Explain how the Reflexion framework enables an autonomous agent to perform verbal reinforcement learning without computing backpropagation gradients.
 
 **Model Answer:**  
+
 - **Classical Reinforcement Learning**: Updates policy weights $\theta$ via policy gradient ascent on scalar reward signals: $\Delta \theta \propto \nabla_\theta \log \pi_\theta(a \mid s) R(\tau)$. This requires millions of interaction episodes and can disrupt pretraining alignment.
 - **Reflexion (Verbal RL)**:
   - Replaces numeric scalar rewards with **natural language self-critiques**.
@@ -674,6 +682,7 @@ scores = scores.masked_fill(self.causal_mask[:, :, :T, :T] == 0, float("-inf"))
 ### Q4: In Tier 8, how does an automated drift gate prevent model performance degradation while avoiding unnecessary retraining costs?
 
 **Model Answer:**  
+
 - **The Trade-Off**: Retraining deep neural networks on enterprise datasets consumes expensive GPU hours and risks introducing regressions on edge cases. Conversely, failing to retrain allows covariate shift and concept drift to degrade predictions silently.
 - **Two-Tier Gating Architecture**:
   1. *Statistical Drift Detection*: Every incoming production batch is scored against the baseline training distribution using the Population Stability Index (PSI) and Kolmogorov-Smirnov test. If $\text{PSI} < 0.10$, distribution stability is certified, and the pipeline halts, saving thousands in compute.
@@ -689,6 +698,7 @@ scores = scores.masked_fill(self.causal_mask[:, :, :T, :T] == 0, float("-inf"))
 
 **Model Answer:**  
 Given unnormalized model logits $\mathbf{z} \in \mathbb{R}^V$:
+
 1. **Temperature Scaling ($T > 0$)**:
    
    $$p_i = \frac{\exp(z_i / T)}{\sum_j \exp(z_j / T)}$$

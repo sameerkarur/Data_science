@@ -9,6 +9,7 @@ Production systems, retrieval-augmented generation, and continuous diffusion arc
 - [x] [Structured outputs & function calling](llm-application-engineering-deep-dive.md)
 
 **Comprehensive Deep Dive:**
+
 - 📖 [LLM Application Engineering Deep Dive](llm-application-engineering-deep-dive.md)
 
 ## RAG
@@ -20,6 +21,7 @@ Production systems, retrieval-augmented generation, and continuous diffusion arc
 - [x] [Evaluation, hallucinations, grounding](enterprise-rag-systems-deep-dive.md)
 
 **Comprehensive Deep Dive:**
+
 - 📖 [Enterprise RAG Systems Deep Dive](enterprise-rag-systems-deep-dive.md)
 
 ## Diffusion
@@ -29,6 +31,7 @@ Production systems, retrieval-augmented generation, and continuous diffusion arc
 - [x] [Latent diffusion / Stable Diffusion concepts](diffusion-models-deep-dive.md)
 
 **Comprehensive Deep Dive:**
+
 - 📖 [Diffusion Models Deep Dive](diffusion-models-deep-dive.md)
 
 !!! mastery "Mastery Roadmap"

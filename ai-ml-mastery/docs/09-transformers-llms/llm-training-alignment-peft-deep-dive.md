@@ -20,6 +20,7 @@ flowchart TD
 ```
 
 Each stage targets a distinct mathematical objective:
+
 1. **Pretraining** compresses universal world knowledge into billions of neural weights via maximum likelihood estimation over trillions of tokens.
 2. **Supervised Fine-Tuning (SFT)** aligns the base model's raw probability distribution to conversational formats and task templates.
 3. **Alignment (RLHF / DPO)** shapes the policy to satisfy human values (truthfulness, safety, instruction following) by penalizing toxic, hallucinatory, or degenerate paths.
@@ -33,6 +34,7 @@ Modern frontier models contain hundreds of billions of parameters. Training requ
 
 ### 2.1 The GPU Memory Breakdown
 When training an LLM with $N$ parameters using 16-bit mixed precision (FP16 or BF16) and the AdamW optimizer:
+
 1. **Model Parameters**: 2 bytes per parameter $\to 2N$ bytes.
 2. **Gradients**: 2 bytes per parameter $\to 2N$ bytes.
 3. **AdamW Optimizer States**:
@@ -92,10 +94,12 @@ flowchart TD
 - **Row-Parallel (Attention Output $\mathbf{W}^O$ & MLP Down)**: Matrix is sliced row-wise:
   $$\mathbf{Y} = [\mathbf{X}_1, \mathbf{X}_2] \begin{bmatrix} \mathbf{W}_1 \\ \mathbf{W}_2 \end{bmatrix} = \mathbf{X}_1 \mathbf{W}_1 + \mathbf{X}_2 \mathbf{W}_2$$
   A single `All-Reduce (Sum)` operation combines the partial sums.
+
 - **Communication Cost**: Exactly 2 All-Reduce operations per Transformer block in forward pass, and 2 in backward pass. Requires high-bandwidth NVLink ($900\text{ GB/s}$).
 
 #### 3. Pipeline Parallelism (PP)
 Partitions the $L$ layers of the Transformer across $P$ nodes in sequential stages. Because naive sequential execution leaves $P-1$ nodes idle at any given time (a pipeline bubble), modern frameworks adopt the **1F1B (One-Forward-One-Backward)** schedule:
+
 - Split the batch into $M$ micro-batches ($M \gg P$).
 - After a warm-up phase, each stage alternates execution of one forward micro-batch and one backward micro-batch.
 - The pipeline bubble fraction is:
@@ -103,6 +107,7 @@ Partitions the $L$ layers of the Transformer across $P$ nodes in sequential stag
 
 #### 4. ZeRO (Zero Redundancy Optimizer)
 [Rajbhandari et al. (2020)](https://arxiv.org/abs/1910.02054) eliminate redundant memory allocations across DDP workers:
+
 - **ZeRO-Stage 1**: Partitions AdamW optimizer states ($12N$ bytes) across $P$ devices. Memory reduction: $4\times$.
 - **ZeRO-Stage 2**: Partitions optimizer states and gradients ($12N + 2N = 14N$ bytes). Memory reduction: $8\times$.
 - **ZeRO-Stage 3**: Partitions optimizer states, gradients, and model parameters ($16N$ bytes). Each GPU fetches parameters on-the-fly via `All-Gather` during forward/backward passes and discards them immediately after computation.
@@ -364,6 +369,7 @@ $$
 $$
 
 where:
+
 - $\mathbf{A} \in \mathbb{R}^{r \times k}$ is initialized with Gaussian noise: $\mathbf{A} \sim \mathcal{N}\left(0, \frac{1}{r}\right)$.
 - $\mathbf{B} \in \mathbb{R}^{d \times r}$ is initialized to **zeros**: $\mathbf{B} = \mathbf{0}$.
 - $r \ll \min(d, k)$ is the rank (typically $r \in [8, 64]$).
@@ -391,6 +397,7 @@ flowchart LR
 ### 6.2 QLoRA: 4-bit Base Quantization with Double Quantization
 
 [Dettmers et al. (2023)](https://arxiv.org/abs/2305.14314) made it possible to fine-tune a 65B/70B parameter model on a single 48GB GPU by combining:
+
 1. **4-bit NormalFloat (NF4)** base model weights.
 2. **Double Quantization (DQ)**: Quantizes the quantization constants $s_1$ themselves using 8-bit FP with block size 256, saving $0.37$ bits per parameter (reducing memory by $\approx 3\text{ GB}$ on a 65B model).
 3. **Paged Optimizers**: Uses CUDA Unified Memory to automatically page AdamW memory states between GPU and CPU RAM during gradient checkpointing spikes, eliminating Out-Of-Memory (`OOM`) crashes.
@@ -628,6 +635,7 @@ Because the loss is evaluated directly on offline preference pairs using policy 
 ### Q2: Compare Data Parallelism (DDP), Megatron Tensor Parallelism (TP), and Pipeline Parallelism (PP). When should each be chosen?
 
 **Model Answer:**  
+
 1. **Tensor Parallelism (TP)**: Slices matrices within each layer.
    - *Communication*: Requires 2 All-Reduce operations per transformer block in forward and backward passes.
    - *Hardware requirement*: High-bandwidth, low-latency interconnects (NVLink: $900\text{ GB/s}$).
@@ -648,6 +656,7 @@ Because the loss is evaluated directly on offline preference pairs using policy 
 **Model Answer:**  
 Neural network weights trained with weight decay and gradient descent conform closely to a normal distribution $\mathbf{W} \sim \mathcal{N}(0, \sigma^2)$.  
 In standard uniform 4-bit quantization, 16 discrete levels are spaced at equal linear intervals across $[-1, 1]$. Because the probability density of a Gaussian is concentrated near zero and decays exponentially toward the tails:
+
 1. Outer intervals near $\pm 1$ represent virtually empty probability mass, wasting quantization bins.
 2. The high-density center near 0 is quantized with coarse resolution, resulting in high mean squared quantization error (quantization noise).  
 NF4 computes the quantiles of $\mathcal{N}(0, 1)$ such that every one of the 16 bins contains exactly $\frac{1}{16}$ of the continuous distribution's probability mass. This maximizes the Shannon entropy of the discrete representation:
@@ -663,6 +672,7 @@ In LoRA, the forward pass computes:
 $$\mathbf{y} = \mathbf{x} \mathbf{W}_0 + \frac{\alpha}{r} (\mathbf{x} \mathbf{A}^T \mathbf{B}^T)$$
 The factor $\frac{\alpha}{r}$ serves as a learning rate multiplier for the low-rank adapter updates.  
 When the rank $r$ is varied (e.g. comparing $r=4$ to $r=64$):
+
 - Because $\mathbf{A} \in \mathbb{R}^{r \times k}$ has $r$ rows, the expected magnitude of the inner product $\mathbf{x} \mathbf{A}^T$ grows with $\sqrt{r}$.
 - Dividing by $r$ ensures that the overall scale of adapter updates $\Delta \mathbf{W}$ remains stable when experimenting with different rank values.  
 If $\alpha$ is kept constant while $r$ is increased, the effective magnitude of the adapter update is normalized, allowing hyperparameter reuse (learning rate and warmup) across different rank configurations without re-tuning.

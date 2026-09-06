@@ -289,6 +289,7 @@ flowchart TD
 
 #### Tensor Parallelism (Megatron-LM Style)
 A 70B parameter model requires $140\text{ GB}$ of VRAM at FP16, exceeding a single $80\text{ GB}$ H100. Tensor Parallelism splits parameter weight matrices across 8 GPUs connected via NVLink ($900\text{ GB/s}$ bidirectional bandwidth):
+
 - **Attention Multi-Head Projections**: The Query, Key, and Value projection weight matrices $\mathbf{W}_Q, \mathbf{W}_K, \mathbf{W}_V$ are column-partitioned:
 
 $$\mathbf{W}_Q = [\mathbf{W}_{Q, 1} \mid \mathbf{W}_{Q, 2} \mid \dots \mid \mathbf{W}_{Q, 8}]$$
@@ -301,6 +302,7 @@ Because NVLink latency is sub-microsecond, all-reduce communication adds negligi
 
 #### Radix Tree Prefix Caching
 In conversational systems, the system prompt and conversation history remain identical across consecutive turns. Standard engines re-evaluate the full prompt prefix each turn, consuming redundant GPU compute.
+
 - A **Radix Tree** indexes KV cache blocks by token prefix hash.
 - Subsequent turns re-use existing KV cache pages in GPU memory with zero compute overhead, reducing TTFT from $300\text{ ms}$ to $<15\text{ ms}$.
 
@@ -385,6 +387,7 @@ With a $25\%$ surge headroom, deploy **20x 8-GPU H100 Nodes (160 GPUs total)**.
 ### Q1: In the Netflix recommendation architecture, explain why the Two-Tower bi-encoder is optimal for retrieval, but unsuitable for final heavy ranking.
 
 **Model Answer:**  
+
 - **Bi-Encoder Separation**: The Two-Tower architecture strictly decouples the computation of the user vector $\mathbf{u} = f(\mathbf{x}_{\text{user}})$ from the item vector $\mathbf{v} = g(\mathbf{x}_{\text{item}})$. Because the scoring function is a simple dot product $s = \mathbf{u}^T \mathbf{v}$, all item vectors can be computed offline, normalized, and indexed into an Approximate Nearest Neighbor (ANN) index (e.g. ScaNN/HNSW). At query time, the system performs a single user forward pass and executes a sub-linear graph search ($\mathcal{O}(\log N)$), retrieving 500 candidates from 10 million in $<15\text{ ms}$.
 - **Unsuitability for Ranking**: By decoupling the user and item networks until the final dot product, the bi-encoder **cannot model early, fine-grained cross-feature interactions**. For example, it cannot compute non-linear interactions between `user_device == "mobile"` and `item_video_resolution == "4K"`, or `user_current_hour == "02:00"` and `item_genre == "horror"`.
 - **Heavy Ranker Role**: The heavy ranker (DLRM/CatBoost) concatenates all user, item, and contextual features into a unified feature vector, passing them through explicit dot-product interaction layers and deep MLPs. This models all higher-order feature interactions, achieving superior ranking precision over the filtered candidate set where candidate volume is low enough ($N = 500$) to satisfy latency budgets.
@@ -394,6 +397,7 @@ With a $25\%$ surge headroom, deploy **20x 8-GPU H100 Nodes (160 GPUs total)**.
 ### Q2: In an Enterprise RAG system, how does Reciprocal Rank Fusion (RRF) resolve the fundamental trade-off between dense semantic search and sparse lexical search?
 
 **Model Answer:**  
+
 - **The Divergence**:
   - *Dense Semantic Search (HNSW / Bi-Encoder)*: Excels at mapping conceptual queries to semantically related passages (e.g. `"annual compensation guidelines"` matches `"salary and bonus policy"`). However, it frequently fails on exact, low-frequency tokens, numbers, part IDs, and corporate acronyms (e.g. searching for SKU `"TX-9021"` may return vectors for `"TX-9020"` due to high cosine similarity in latent space).
   - *Sparse Lexical Search (BM25 / Inverted Index)*: Uses exact term frequency and inverse document frequency. It finds exact acronyms and part numbers effortlessly, but fails entirely on synonyms or conceptual paraphrasing.
@@ -410,6 +414,7 @@ With a $25\%$ surge headroom, deploy **20x 8-GPU H100 Nodes (160 GPUs total)**.
 ### Q3: How does Radix Tree Prefix Caching function in high-throughput LLM serving engines, and how does it affect load balancer routing decisions?
 
 **Model Answer:**  
+
 - **Radix Tree Mechanics**:
   - In conversational LLM applications, prompts share extensive common prefixes (system instructions, multi-shot demonstrations, prior conversational history).
   - A Radix Tree (trie) data structure maintains pointers to physical KV cache memory blocks indexed by tokens. When a prompt arrives, the engine traverses the Radix tree. If the first 500 tokens match an existing branch, the engine skips the compute-heavy prefill phase for those tokens, directly binding the pre-computed KV cache blocks in GPU VRAM.
@@ -422,6 +427,7 @@ With a $25\%$ surge headroom, deploy **20x 8-GPU H100 Nodes (160 GPUs total)**.
 ### Q4: Explain the difference between Tensor Parallelism and Pipeline Parallelism. Why is Tensor Parallelism preferred within a single 8-GPU node, while Pipeline Parallelism is used across nodes?
 
 **Model Answer:**  
+
 - **Tensor Parallelism (Intra-Node)**:
   - Splits individual weight matrices (GEMMs) within each layer across multiple GPUs.
   - *Communication*: Requires two collective **All-Reduce** operations per transformer layer (one after multi-head attention, one after the feed-forward network).
@@ -437,6 +443,7 @@ With a $25\%$ surge headroom, deploy **20x 8-GPU H100 Nodes (160 GPUs total)**.
 ### Q5: How do you design an automated, low-latency Hallucination Detection Guardrail for an Enterprise RAG system without adding hundreds of milliseconds of latency?
 
 **Model Answer:**  
+
 1. **The Challenge**: Using a second large LLM to audit the generated response for factual consistency adds $500 - 1500\text{ ms}$ of latency, violating end-to-end SLAs.
 2. **Two-Tier Guardrail Architecture**:
    - **Tier 1: Synchronous Lightweight NLI Classifier (Low Latency)**:

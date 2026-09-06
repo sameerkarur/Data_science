@@ -38,6 +38,7 @@ flowchart TD
 ```
 
 Production AI engineering requires mastering five foundational pillars:
+
 1. **Operating System & Kernel Architecture**: How the Linux kernel allocates physical memory, balances swap, isolates processes through control groups (`cgroups`), handles inter-process communication (IPC), and schedules asynchronous disk and network I/O (`io_uring`).
 2. **Containerization & Driver Integration**: How Docker container layers are cached and constructed, how the NVIDIA Container Toolkit (`nvidia-ctk`) hooks host GPU drivers into isolated namespaces, and how shared memory limits prevent IPC deadlocks in PyTorch data loaders.
 3. **High-Performance Serving Gateways**: How the Asynchronous Server Gateway Interface (ASGI) event loop operates, how to decouple CPU-bound tensor execution from I/O polling, and how dynamic mini-batching amortizes model forward pass latency.
@@ -86,6 +87,7 @@ The OOM Killer calculates an badness score for every active process:
 $$\text{oom\_score} = \frac{\text{RSS} + \text{swap\_usage}}{\text{total\_physical\_ram}} \times 1000 + \text{oom\_score\_adj}$$
 
 Where:
+
 - $\text{RSS}$ is the Resident Set Size (pages physically resident in RAM).
 - $\text{oom\_score\_adj} \in [-1000, 1000]$ is a user-configurable bias stored in `/proc/<PID>/oom_score_adj`.
 - If $\text{oom\_score\_adj} = -1000$, the process is completely immune from OOM termination.
@@ -97,6 +99,7 @@ $$\text{Exit Code} = 128 + 9 = 137$$
 ### 2.2 Control Groups (cgroups v2) and Resource Throttling
 
 Modern container runtimes rely on Linux `cgroups v2` to enforce hard and soft resource ceilings. In Kubernetes and Docker:
+
 - `memory.max`: Hard upper limit. If process memory exceeds this threshold and cannot be reclaimed by evicting page cache, the kernel triggers the cgroup OOM killer.
 - `memory.high`: Soft limit. Exceeding this triggers memory throttling and synchronous page-cache reclamation, slowing down process execution without immediate termination.
 - `cpu.max`: Enforces quota within a fixed period (typically $100\text{ ms} = 100,000\text{ }\mu\text{s}$). If a container is assigned $2.5\text{ CPUs}$, `cpu.max` is configured as `250000 100000`. Once the process consumes $250\text{ ms}$ of aggregated CPU runtime within the $100\text{ ms}$ wall-clock window, the kernel scheduler completely freezes the process threads until the next period begins (**CPU Throttling**).
@@ -169,6 +172,7 @@ flowchart TD
 ### 3.1 The NVIDIA Container Toolkit Architecture
 
 Docker isolated namespaces cannot access host hardware devices by default. The **NVIDIA Container Toolkit** (`nvidia-ctk`) solves this using an OCI (Open Container Initiative) prestart hook:
+
 1. When Docker starts a container with `--gpus all` (or `device_requests`), containerd invokes `nvidia-container-runtime-hook`.
 2. The hook inspects the host's installed NVIDIA driver version.
 3. It selectively mounts the required character device nodes (`/dev/nvidia0`, `/dev/nvidiactl`, `/dev/nvidia-uvm`) and injects the host's dynamic user-space driver libraries (e.g., `libcuda.so.1`, `libnvidia-ml.so`) into the container's root filesystem.
@@ -177,6 +181,7 @@ Docker isolated namespaces cannot access host hardware devices by default. The *
 ### 3.2 CUDA Image Variants: `base` vs `runtime` vs `devel`
 
 NVIDIA publishes three distinct base image tiers on Docker Hub (`nvidia/cuda`):
+
 - `base`: Contains only the CUDA runtime entrypoint and dynamic driver stubs (`libcuda.so`). Ultra-lightweight ($~150\text{ MB}$), but cannot run any framework compiled with cuDNN or cuBLAS unless packaged separately.
 - `runtime`: Contains `base` plus precompiled runtime libraries: cuBLAS, cuDNN, NCCL, and TensorRT. Ideal for production inference containers ($~2-3\text{ GB}$).
 - `devel`: Contains `runtime` plus the complete CUDA Compiler driver (`nvcc`), C/C++ header files (`cuda.h`), and static development archives. Necessary only when compiling custom C++/CUDA kernels (e.g. FlashAttention, vLLM custom ops) ($~5-8\text{ GB}$).
@@ -257,6 +262,7 @@ ENTRYPOINT ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "-
 ## 4. Production Serving with FastAPI & High-Throughput I/O
 
 Serving machine learning models requires bridging two conflicting operational models:
+
 1. **Network I/O Handling**: Highly concurrent, non-blocking asynchronous event loops suited for HTTP request ingestion, connection pooling, and payload validation.
 2. **Tensor Inference Execution**: Compute-heavy, memory-bandwidth-bound matrix multiplications that saturate CPU/GPU cores and block the Python thread.
 
@@ -302,6 +308,7 @@ While `model(tensor)` executes on the CPU or synchronizes with the GPU via `.ite
   from starlette.concurrency import run_in_threadpool
   result = await run_in_threadpool(blocking_inference, tensor)
   ```
+
 - For **GPU inference**, requests should feed into an asynchronous queue processed by a background worker that dynamically groups concurrent inputs into a single batched tensor pass.
 
 ### 4.2 Dynamic Mini-Batching Mechanics
@@ -335,6 +342,7 @@ sequenceDiagram
 ### 4.3 Complete Production FastAPI Service Implementation
 
 Below is a complete, runnable, production-grade FastAPI service implementing:
+
 - Pydantic v2 validation contracts.
 - Asynchronous lifespan management (warmup, resource allocation, clean shutdown).
 - Dynamic mini-batch queue running in a dedicated background task.
@@ -540,6 +548,7 @@ flowchart TD
 ### 5.1 Unit Testing: Gradients, Invariants, and Convergence
 
 Unit tests verify that code components conform to basic numerical and algorithmic invariants:
+
 1. **Tensor Shape Invariance**: Verify output dimensions match expected batch sizes and channel lengths across all layer boundaries.
 2. **Gradient Flow**: Ensure no layers produce zero or NaN gradients during backpropagation (detecting vanishing/exploding gradients).
 3. **Overfitting on Single Batch**: A neural network implementation should be able to overfit a 2-sample batch to near-zero loss ($\mathcal{L} \le 10^{-4}$) within 100 iterations. If it cannot, the architecture contains fundamental bugs (e.g., misconfigured loss reduction, disconnected gradient graphs, or wrong activation functions).
@@ -797,6 +806,7 @@ spec:
 ### Q1: Explain the operational differences between ASGI and WSGI. Why is WSGI inadequate for modern LLM token streaming services?
 
 **Model Answer:**  
+
 - **WSGI (Web Server Gateway Interface - PEP 3333)** is a synchronous request-response protocol. Each incoming HTTP request occupies an entire worker process or thread from start to finish. When handling streaming responses (e.g. Large Language Model Server-Sent Events generating 500 tokens over 15 seconds), that thread remains completely blocked, unable to process other requests. Scaling to 1,000 concurrent streaming connections would require 1,000 OS processes, inducing crushing memory consumption and kernel context-switching overhead.
 - **ASGI (Asynchronous Server Gateway Interface)** decouples request handling using non-blocking event loops (`asyncio`). An ASGI server (such as Uvicorn) manages thousands of concurrent open HTTP connections on a single OS thread using OS notification mechanisms (`epoll` on Linux, `kqueue` on macOS). For token streaming, the route yields control back to the event loop between tokens (`await asyncio.sleep(...)` or awaiting the next token from an asynchronous queue), multiplexing thousands of concurrent streaming connections with minimal memory overhead.
 
@@ -805,6 +815,7 @@ spec:
 ### Q2: What is the exact sequence of events when a containerized process accesses an NVIDIA GPU via Docker `--gpus all`?
 
 **Model Answer:**  
+
 1. **Container Initiation**: Docker delegates container creation to `containerd`, which invokes the OCI runtime (`runc`).
 2. **Hook Execution**: An OCI prestart hook registered by the NVIDIA Container Toolkit (`nvidia-container-runtime-hook`) intercepts container setup before the entrypoint launches.
 3. **Hardware Discovery**: The hook queries the host kernel via `libnvidia-container` to discover installed NVIDIA GPU devices and driver versions.
@@ -817,11 +828,13 @@ spec:
 ### Q3: Contrast Invariance Tests (INV) and Directional Expectation Tests (DIR) in the CheckList framework. Provide a mathematical formulation and test case for each.
 
 **Model Answer:**  
+
 - **Invariance Tests (INV)** assert that label predictions remain stable under semantic-preserving transformations:
   
   $$\forall x \in \mathcal{X}, \quad |f(x) - f(g_{\text{inv}}(x))| \le \epsilon$$
   
   *Example*: In fraud detection, swapping an applicant's phone number or zip code within the same census tract should not alter the model's calculated fraud risk score.
+
 - **Directional Expectation Tests (DIR)** assert that perturbations designed to push a feature along a known gradient produce monotonic changes in output:
   
   $$\text{If } x' = g_{\text{dir}}(x) \text{ increases risk factors, then } f(x') \ge f(x)$$
@@ -834,6 +847,7 @@ spec:
 
 **Model Answer:**  
 Linux `cgroups v2` enforces CPU allocation using the Completely Fair Scheduler (CFS) bandwidth control parameters defined in `cpu.max = quota period`.  
+
 - Default `period` is typically $100\text{ ms}$ ($100,000\text{ }\mu\text{s}$). If a container is assigned $2.0\text{ CPUs}$, its quota is $200,000\text{ }\mu\text{s}$.
 - If an inference microservice spawns 8 threads to process an incoming image batch using OpenMP/MKL, those 8 threads can exhaust the $200,000\text{ }\mu\text{s}$ quota in just $25\text{ ms}$ of elapsed wall-clock time ($8 \times 25\text{ ms} = 200\text{ ms}$).
 - For the remaining $75\text{ ms}$ of that $100\text{ ms}$ period, the CFS scheduler **completely deschedules and freezes all container threads**.
@@ -845,6 +859,7 @@ Linux `cgroups v2` enforces CPU allocation using the Completely Fair Scheduler (
 ### Q5: How do multi-stage Docker builds optimize image size, attack surface, and build cache invalidation in production ML systems?
 
 **Model Answer:**  
+
 1. **Size Reduction**: Build tools (compilers, headers, git, dev libraries) frequently exceed $2-4\text{ GB}$. Multi-stage builds compile artifacts in a builder image and copy only final compiled binaries and site-packages into a lean runtime image, slashing total image size by up to $75\%$.
 2. **Attack Surface Minimization**: Production containers should never package compilers (`gcc`, `g++`), package managers (`apt`, `pip`), or shell utilities that facilitate arbitrary code execution after remote exploit. Running as a non-root user prevents container breakout attacks.
 3. **Cache Optimization**: Docker caches layers sequentially. By copying `requirements.txt` and installing wheels in an isolated step before copying dynamic application code (`COPY src/ /app/src/`), code changes do not invalidate the heavy Python dependency installation layer, accelerating CI build cycles from minutes to seconds.

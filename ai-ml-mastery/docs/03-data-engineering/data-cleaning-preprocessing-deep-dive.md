@@ -48,6 +48,7 @@ flowchart LR
 
 1. **Variance Distortion**: Replacing 25% of points with the mean artificially shrinks the sample variance:
    $$\sigma^2_{\text{imputed}} = 0.75 \sigma^2_{\text{true}} + 0.25 (0) = 0.75 \sigma^2_{\text{true}}$$
+
 2. **Covariance Destruction**: If income naturally correlates with credit score ($\rho \approx 0.6$), imputing the static mean completely ignores the applicant's credit score, diluting the correlation toward zero.
 3. **Distribution Shift**: If wealthier individuals systematically choose not to disclose their income (Missing Not at Random - MNAR), assigning them the population average assigns high-wealth individuals an artificially low income, severely degrading the model's risk assessment.
 
@@ -71,6 +72,7 @@ flowchart TD
 
 - **Definition**: The probability of a value being missing is completely independent of both observed features and the unobserved value itself:
   $$P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(R)$$
+
 - **Real-World Example**: A lab technician accidentally drops and breaks a test tube; a random network packet drops due to physical wire noise.
 - **Consequence**: Deleting missing rows (complete-case analysis) reduces sample size and statistical power, but **does not introduce bias**.
 
@@ -78,6 +80,7 @@ flowchart TD
 
 - **Definition**: The probability of missingness depends systematically on **observed** features, but *not* on the unobserved missing value itself:
   $$P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(R \mid Y_{\text{obs}})$$
+
 - **Real-World Example**: Male patients are statistically less likely to report depression symptoms on medical surveys than female patients. If we condition on `Gender` (observed), missingness in `Depression_Score` is random.
 - **Consequence**: Complete-case analysis is biased. However, conditioned on observed covariates, principled imputation (e.g., KNN, MICE) yields **unbiased parameter estimates**.
 
@@ -85,6 +88,7 @@ flowchart TD
 
 - **Definition**: The probability of missingness depends directly on the **unobserved value itself**, even after controlling for all observed variables:
   $$P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) \ne P(R \mid Y_{\text{obs}})$$
+
 - **Real-World Example**: Individuals with severe mental health symptoms or extreme wealth systematically refuse to answer depression or income survey questions.
 - **Consequence**: Standard statistical imputation cannot recover the true distribution. You must explicitly model the missingness mechanism (e.g., Heckman selection model) or add an explicit binary missingness indicator column (`is_missing_income`).
 
@@ -153,6 +157,7 @@ $$
 
 - If features are uncorrelated with unit variance ($\Sigma = I$), Mahalanobis distance collapses to Euclidean distance:
   $$D_M(\mathbf{x}) = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T I (\mathbf{x} - \boldsymbol{\mu})} = \|\mathbf{x} - \boldsymbol{\mu}\|_2$$
+
 - Under multivariate normality $\mathbf{x} \sim \mathcal{N}(\boldsymbol{\mu}, \Sigma)$, the squared Mahalanobis distance follows a Chi-Square distribution with $d$ degrees of freedom:
   $$D_M^2(\mathbf{x}) \sim \chi^2_d$$
   Points with $D_M^2(\mathbf{x}) > \chi^2_{d, 1 - \alpha}$ (e.g., $p < 0.001$) are statistically confirmed multivariate outliers.
@@ -191,6 +196,7 @@ $$
 $$
 
 Here, $m$ is the smoothing weight parameter:
+
 - If $n_k \gg m$: $\lambda \to 1$, the estimate relies purely on category evidence $\bar{y}_k$.
 - If $n_k \ll m$: $\lambda \to 0$, the estimate shrinks entirely to the global prior $\bar{y}_{\text{global}}$.
 
@@ -206,6 +212,7 @@ flowchart TD
 
 Even with smoothing, computing target statistics using a sample's own label leaks ground truth into the feature.
 To guarantee mathematical isolation, we use **Out-of-Fold Target Encoding**:
+
 1. Partition the training set into $K$ cross-validation folds.
 2. For samples in fold $k$, compute smoothed target encoding statistics using **only samples from the other $K-1$ folds**.
 3. For test and production data, compute encodings using the entire training set.
@@ -253,6 +260,7 @@ flowchart LR
 ## 9. Python Implementation: Out-of-Fold Target Encoder and Mahalanobis Filter
 
 Below is a complete, runnable script featuring:
+
 1. A production-grade **Out-of-Fold Target Encoder with Bayesian Smoothing**.
 2. A from-scratch **Mahalanobis Distance Outlier Detector**.
 3. A **Pydantic v2 Data Integrity Contract** with field validators.
@@ -461,6 +469,7 @@ if __name__ == "__main__":
 
 ### Q1: Distinguish between MCAR, MAR, and MNAR missing data mechanisms. Give real-world examples, and explain why mean/median imputation causes severe bias under MNAR.
 **Model Answer:**
+
 - **MCAR (Missing Completely at Random):** Missingness is completely independent of both observed features and the missing value itself: $P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(R)$. Example: A random sensor battery fails due to physical shock. Complete-case analysis is inefficient but unbiased.
 - **MAR (Missing at Random):** Missingness depends systematically on observed covariates, but not on the unobserved value itself: $P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(R \mid Y_{\text{obs}})$. Example: Elderly patients miss blood glucose follow-ups more often; if age is observed, missingness is random within each age bracket. Unbiased imputation is possible by conditioning on observed features (e.g., MICE).
 - **MNAR (Missing Not at Random):** Missingness depends directly on the unobserved variable itself: $P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) \ne P(R \mid Y_{\text{obs}})$. Example: High-income individuals decline to report income on surveys.
@@ -479,6 +488,7 @@ If a category contains only 1 sample ($n_k = 1$) with label $y=1$, the encoded f
 We place a conjugate prior on the category mean: the prior is the global target mean $\bar{y}_{\text{global}}$ with pseudo-count weight $m$.
 The posterior mean combines prior and empirical likelihood:
 $$S_k = \frac{n_k \bar{y}_k + m \bar{y}_{\text{global}}}{n_k + m} = \lambda(n_k) \bar{y}_k + (1 - \lambda(n_k)) \bar{y}_{\text{global}}, \quad \text{where } \lambda(n_k) = \frac{n_k}{n_k + m}$$
+
 - As $n_k \to 0$, $S_k \to \bar{y}_{\text{global}}$ (prevents rare categories from taking extreme values).
 - As $n_k \to \infty$, $S_k \to \bar{y}_k$.
 
@@ -490,6 +500,7 @@ Even with smoothing, sample $i$'s own target $y_i$ is included in computing $\ba
 ### Q3: What is Mahalanobis distance, how does it differ from Euclidean distance, and why is it superior for multivariate outlier detection in correlated feature spaces?
 **Model Answer:**
 Euclidean distance $\|\mathbf{x} - \boldsymbol{\mu}\|_2 = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T (\mathbf{x} - \boldsymbol{\mu})}$ measures spherical distance in unweighted Cartesian space. It assumes:
+
 1. Features have identical variance ($\sigma_1 = \sigma_2 = \dots = \sigma_d$).
 2. Features are completely uncorrelated ($\text{Cov}(X_i, X_j) = 0$).
 
@@ -499,6 +510,7 @@ where $\Sigma$ is the empirical covariance matrix.
 By decomposing $\Sigma = Q \Lambda Q^T$ via the Spectral Theorem:
 $$D_M(\mathbf{x}) = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T Q \Lambda^{-1} Q^T (\mathbf{x} - \boldsymbol{\mu})}$$
 Geometrically, Mahalanobis distance:
+
 1. Multiplies by $Q^T$ to **rotate** the coordinate system into the orthogonal principal eigenbasis of the data.
 2. Scales each coordinate by $\Lambda^{-1/2}$ ($\frac{1}{\sqrt{\lambda_i}}$), **normalizing each axis by its standard deviation**.
 3. Computes Euclidean distance in this standardized, decorrelated space.
@@ -511,6 +523,7 @@ In correlated data (e.g., salary vs. years of experience), points that violate t
 ### Q4: Explain the MICE algorithm. How does it handle mixed categorical and numerical missing features iteratively?
 **Model Answer:**
 MICE (Multivariate Imputation by Chained Equations) operates on the Fully Conditional Specification (FCS) principle:
+
 1. **Initialization:** Fill all missing values in all features with simple median/mode placeholders.
 2. **Cycle Iteration ($t = 1 \dots M$):** For each feature $j \in \{1, \dots, p\}$ with missing values:
    - Reset feature $j$'s missing values back to NaN.
@@ -534,6 +547,7 @@ $$\mu_{\text{global}} = \frac{1}{N_{\text{train}} + N_{\text{test}}} \left(\sum 
 $$\sigma_{\text{global}} = \sqrt{\frac{1}{N_{\text{train}} + N_{\text{test}}} \sum (x_i - \mu_{\text{global}})^2}$$
 
 **Consequences of this Data Leakage:**
+
 1. **Information Leakage:** Information from the test set (its mean, variance, and extreme values) leaks into the training pipeline.
 2. **Over-Optimistic Cross-Validation:** Metrics computed during validation are artificially inflated because the model was trained on features normalized using knowledge of test set distribution bounds.
 3. **Production Deployment Failure:** In real-time production inference, inputs arrive as single rows ($N = 1$). Computing a batch mean on a single sample is mathematically impossible. If the pipeline was architected assuming access to test distributions, serving code crashes or generates distribution shifts.
@@ -543,10 +557,13 @@ The rule is absolute: **`fit` only on `X_train`, and `transform` on `X_test` and
 
 ### Q6: Compare StandardScaler, RobustScaler, and QuantileTransformer. When would you strictly choose RobustScaler or QuantileTransformer?
 **Model Answer:**
+
 - **StandardScaler ($z = \frac{x - \mu}{\sigma}$):**
   Centers data at 0 with unit variance. Assumes features follow an approximately Gaussian distribution. Highly sensitive to outliers because sample mean $\mu$ and variance $\sigma^2$ are heavily distorted by extreme values, squashing inliers into near-zero intervals.
+
 - **RobustScaler ($x' = \frac{x - \text{median}}{\text{IQR}}$):**
   Uses median and Interquartile Range ($Q_3 - Q_1$). Because percentiles are order statistics, RobustScaler is **strictly immune to extreme outliers**. Choose RobustScaler when features contain genuine heavy-tailed outliers that must be preserved for detection (e.g., fraud amounts, network packet spikes) without distorting normal feature ranges.
+
 - **QuantileTransformer ($x' = G^{-1}(F_X(x))$):**
   Computes empirical cumulative distribution function (CDF) $F_X(x)$ and maps values to a Uniform $[0, 1]$ or standard Gaussian distribution. Completely removes linear scaling relationships, transforming arbitrary multi-modal distributions into smooth bell curves. Choose QuantileTransformer when using linear or distance models on heavily non-linear, skewed, or multimodal data, provided you do not need to preserve exact linear ratio relationships.
 
@@ -557,6 +574,7 @@ The rule is absolute: **`fit` only on `X_train`, and `transform` on `X_test` and
 In production ML systems, upstream APIs, microservices, and databases frequently undergo schema changes: columns are renamed, optional fields start returning `None`, types change from `int` to `string`, or numerical scales change (e.g., currency reported in cents instead of dollars). Without validation, models fail silently, producing erroneous predictions.
 
 **Data Integrity Contracts** define programmatic, enforceable guarantees on data schemas:
+
 1. **Row-Level Structural Validation (Pydantic):**
    Validates incoming payloads at API boundaries in sub-millisecond runtime:
    - Type validation and strict coercion.

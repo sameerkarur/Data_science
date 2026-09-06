@@ -10,6 +10,7 @@
 Human language is intrinsically sequential, temporal, and hierarchical: the semantic meaning of a word depends on preceding words, following words, and distant syntactic structures.
 
 The architecture of sequence modeling evolved through three foundational eras:
+
 1. **Recurrent Neural Networks (RNNs)**: Processing sequences step-by-step using a shared hidden recurrence $h_t = f(h_{t-1}, x_t)$. While theoretically Turing-complete, RNNs suffer from **vanishing and exploding gradients**, preventing them from learning dependencies spanning more than $10-20$ steps.
 2. **Gated Architectures (LSTM & GRU)**: Introducing additive cell states and multiplicative gating mechanisms (forget, input, output gates) that create an **additive gradient highway**, expanding temporal memory to several hundred steps.
 3. **Seq2Seq & Attention**: Resolving the fixed-length vector bottleneck of encoder-decoder architectures by computing dynamic alignment weights over all source encoder states.
@@ -112,9 +113,11 @@ $$
 
 Because the derivative of $\tanh$ is bounded by $1$ ($0 < 1 - \tanh^2(z) \le 1$), $\|D_j\|_2 \le 1$.  
 Let $\lambda_{\max}$ be the largest eigenvalue (spectral radius) of $W_{hh}$:
+
 1. **Vanishing Gradients**: If $\|W_{hh}\|_2 < 1$ (or $\lambda_{\max} < 1$), then:
    $$\left\| \frac{\partial \mathbf{h}_t}{\partial \mathbf{h}_k} \right\|_2 \le (\lambda_{\max})^{t - k} \xrightarrow{t - k \to \infty} 0$$
    The error gradient decays exponentially to zero. The network cannot learn long-term dependencies.
+
 2. **Exploding Gradients**: If $\lambda_{\max} > 1$, then in un-saturated regions the norm grows exponentially as $(\lambda_{\max})^{t-k} \to \infty$, causing numeric overflow (`NaN`) and optimizer divergence.
 
 ---
@@ -124,6 +127,7 @@ Let $\lambda_{\max}$ be the largest eigenvalue (spectral radius) of $W_{hh}$:
 ### 4.1 LSTM Architecture (Hochreiter & Schmidhuber, 1997)
 
 Sepp Hochreiter and Jürgen Schmidhuber solved vanishing gradients by separating memory into two distinct vectors:
+
 - **Hidden State $\mathbf{h}_t \in \mathbb{R}^h$**: Short-term working memory exposed to downstream layers.
 - **Cell State $\mathbf{C}_t \in \mathbb{R}^h$**: Long-term memory flowing through a linear **Constant Error Carousel (CEC)** with additive updates.
 
@@ -151,16 +155,22 @@ flowchart TD
 ### 4.2 The Mathematical Recurrences of LSTM
 
 At each time step $t$, concatenate $[\mathbf{h}_{t-1}, \mathbf{x}_t] \in \mathbb{R}^{h + d}$:
+
 1. **Forget Gate $\mathbf{f}_t$**: Decides what fraction of old memory $\mathbf{C}_{t-1}$ to retain:
    $$\mathbf{f}_t = \sigma(W_f [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_f) \in (0, 1)^h$$
+
 2. **Input Gate $\mathbf{i}_t$**: Decides which coordinates of candidate memory to write:
    $$\mathbf{i}_t = \sigma(W_i [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_i) \in (0, 1)^h$$
+
 3. **Candidate Cell State $\widetilde{\mathbf{C}}_t$**: New information created at step $t$:
    $$\widetilde{\mathbf{C}}_t = \tanh(W_c [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_c) \in (-1, 1)^h$$
+
 4. **Cell State Update $\mathbf{C}_t$ (The Additive Highway)**:
    $$\mathbf{C}_t = \mathbf{f}_t \odot \mathbf{C}_{t-1} + \mathbf{i}_t \odot \widetilde{\mathbf{C}}_t$$
+
 5. **Output Gate $\mathbf{o}_t$**: Filters which cell states are exposed as hidden state:
    $$\mathbf{o}_t = \sigma(W_o [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_o) \in (0, 1)^h$$
+
 6. **Hidden State $\mathbf{h}_t$**:
    $$\mathbf{h}_t = \mathbf{o}_t \odot \tanh(\mathbf{C}_t)$$
 
@@ -184,12 +194,16 @@ The gradient flows backward **linearly and additively without exponential decay*
 ### 4.4 Gated Recurrent Unit (GRU, Cho et al., 2014)
 
 Kyunghyun Cho et al. streamlined the LSTM by merging the cell state and hidden state, and combining forget and input gates into a single update gate:
+
 - **Reset Gate $\mathbf{r}_t$**: Controls how much of past state to ignore:
   $$\mathbf{r}_t = \sigma(W_r [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_r)$$
+
 - **Update Gate $\mathbf{z}_t$**: Acts simultaneously as forget gate ($1 - \mathbf{z}_t$) and input gate ($\mathbf{z}_t$):
   $$\mathbf{z}_t = \sigma(W_z [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_z)$$
+
 - **Candidate Hidden State $\widetilde{\mathbf{h}}_t$**:
   $$\widetilde{\mathbf{h}}_t = \tanh(W_h [\mathbf{r}_t \odot \mathbf{h}_{t-1}, \, \mathbf{x}_t] + \mathbf{b}_h)$$
+
 - **Hidden State Update**:
   $$\mathbf{h}_t = (1 - \mathbf{z}_t) \odot \mathbf{h}_{t-1} + \mathbf{z}_t \odot \widetilde{\mathbf{h}}_t$$
 
@@ -203,6 +217,7 @@ GRUs have $\approx 25\%$ fewer parameters than LSTMs and converge faster on smal
 
 In machine translation (e.g. English $\to$ German), input and output sequences have different lengths ($T_{\text{in}} \ne T_{\text{out}}$).  
 The standard Seq2Seq model employs an **Encoder-Decoder** architecture:
+
 - **Encoder**: Reads source sequence $(\mathbf{x}_1, \dots, \mathbf{x}_{T_x})$ and compresses it into a single final hidden vector $\mathbf{c} = \mathbf{h}_{T_x}$.
 - **Decoder**: Unrolls target tokens autoregressively conditioned on this single fixed vector $\mathbf{c}$.
 
@@ -251,11 +266,14 @@ Let $\mathbf{s}_{i-1}$ be the decoder state at step $i$, and $\mathbf{h}_j$ be t
      where $W_a, U_a, \mathbf{v}_a$ are learnable projection matrices and vectors.
    - **Luong Multiplicative / Dot-Product (2015)**:
      $$e_{ij} = \mathbf{s}_i^T W_a \mathbf{h}_j \quad \text{or} \quad e_{ij} = \mathbf{s}_i^T \mathbf{h}_j \quad (\text{if dimensions match})$$
+
 2. **Attention Weights (Softmax Normalization)**:
    $$\alpha_{ij} = \frac{\exp(e_{ij})}{\sum_{k=1}^{T_x} \exp(e_{ik})}$$
    The scalar $\alpha_{ij} \in [0, 1]$ represents the probability that the decoder should focus on source word $j$ when generating target word $i$.
+
 3. **Dynamic Context Vector $\mathbf{c}_i$**:
    $$\mathbf{c}_i = \sum_{j=1}^{T_x} \alpha_{ij} \mathbf{h}_j$$
+
 4. **Decoder Update**:
    Combine context vector $\mathbf{c}_i$ with decoder state $\mathbf{s}_i$ to predict output token:
    $$\widetilde{\mathbf{s}}_i = \tanh(W_c [\mathbf{c}_i, \mathbf{s}_i])$$
@@ -336,6 +354,7 @@ A single attention head can only attend to a single weighted average of context.
 | **Self-Attention (Transformer)** | $\mathcal{O}(n^2 \cdot d)$ | $\mathcal{O}(1)$ | $\mathcal{O}(1)$ |
 
 where $n$ is sequence length and $d$ is representation dimension.
+
 - In RNNs, maximum path length between token 1 and token $n$ is $\mathcal{O}(n)$ sequential hops, making long-range credit assignment fragile.
 - In Self-Attention, any token connects to any other token in **$\mathcal{O}(1)$ steps**, and the entire sequence is computed in a single GPU matrix multiply.
 
@@ -693,6 +712,7 @@ This stabilizes softmax inputs in the active gradient region.
 ### Q3: Contrast Teacher Forcing with Free-Running Generation during Seq2Seq training, and explain Scheduled Sampling.
 
 **Model Answer:**  
+
 - **Teacher Forcing**: During training, at decoding step $t$, the decoder is fed the **ground truth target token** $y_{t-1}^*$ as its input, regardless of whether the model's prediction $\hat{y}_{t-1}$ at the previous step was correct.
   - *Advantage*: Prevents compounding error drift; stabilizes and accelerates early training convergence.
   - *Disadvantage (Exposure Bias)*: At test time, ground truth target tokens are absent; the decoder must feed its own (potentially erroneous) prior output $\hat{y}_{t-1}$. Because the model was never trained to recover from its own mistakes, a single early mistake sends the generation trajectory completely off track.
@@ -705,6 +725,7 @@ This stabilizes softmax inputs in the active gradient region.
 
 **Model Answer:**  
 Let $N$ be sequence length and $D$ be hidden dimension.
+
 - **Recurrent Layer (LSTM / GRU)**:
   - *Time Complexity*: $\mathcal{O}(N \cdot D^2)$ matrix multiplications. Computation is strictly sequential ($N$ steps).
   - *Memory Complexity*: Stores activations for BPTT: $\mathcal{O}(N \cdot D)$.

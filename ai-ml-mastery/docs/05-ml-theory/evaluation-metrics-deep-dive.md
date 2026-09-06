@@ -12,6 +12,7 @@ A machine learning algorithm optimizes an internal loss function (MSE, Cross-Ent
 Choosing an improper evaluation metric is one of the most frequent causes of catastrophic failure in production AI systems. A fraud model boasting $99.9\%$ accuracy may fail to detect a single real transaction theft; a medical diagnostic tool with high ROC-AUC may flood doctors with thousands of false alarms because the underlying class prevalence is tiny.
 
 Evaluation metrics form a rigorous hierarchy across three primary domains:
+
 1. **Classification Point Metrics**: Derived from the Confusion Matrix at a chosen decision threshold ($F_1, F_\beta$, Balanced Accuracy).
 2. **Threshold-Agnostic Curve Metrics**: Evaluating discrimination across all possible operating thresholds (ROC-AUC, PR-AUC, Brier score).
 3. **Probability Calibration**: Measuring whether predicted continuous probabilities reflect true empirical long-run frequencies (Reliability curves, ECE, Platt Scaling, Isotonic Regression).
@@ -52,14 +53,18 @@ For binary classification with ground truth $y \in \{0, 1\}$ and predicted binar
 1. **Accuracy**:
    $$\text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}$$
    *Hazard*: Deceptively inflated under class imbalance ($P \ll N$).
+
 2. **Precision (Positive Predictive Value - PPV)**:
    $$\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}$$
    "When the model predicts positive, how often is it right?" (Cost of false alarms).
+
 3. **Recall (Sensitivity / True Positive Rate - TPR)**:
    $$\text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}$$
    "Out of all actual positive cases, how many did the model catch?" (Cost of misses).
+
 4. **Specificity (True Negative Rate - TNR)**:
    $$\text{Specificity} = \frac{\text{TN}}{\text{TN} + \text{FP}} = 1 - \text{FPR}$$
+
 5. **False Positive Rate (FPR / Fall-out)**:
    $$\text{FPR} = \frac{\text{FP}}{\text{FP} + \text{TN}} = 1 - \text{Specificity}$$
 
@@ -111,6 +116,7 @@ flowchart LR
 ### 3.1 ROC Curve & The Wilcoxon-Mann-Whitney Statistic
 
 The **Receiver Operating Characteristic (ROC)** curve plots $\text{TPR}(\tau)$ against $\text{FPR}(\tau)$ for all thresholds $\tau \in [0, 1]$.
+
 - A random guesser yields a diagonal line from $(0, 0)$ to $(1, 1)$ with $\text{AUC} = 0.5$.
 - A perfect classifier achieves $\text{AUC} = 1.0$, passing through the top-left corner $(0, 1)$.
 
@@ -133,6 +139,7 @@ where $U$ is the **Mann-Whitney $U$ statistic**! This can be computed in $\mathc
 
 Consider a fraud detection problem with $100$ fraudulent transactions ($P = 100$) and $1,000,000$ legitimate transactions ($N = 10^6$).
 Suppose a model produces **10,000 False Positives** while capturing $90$ True Positives:
+
 - **True Positive Rate (Recall)**: $\text{TPR} = \frac{90}{100} = 0.90$.
 - **False Positive Rate**:
   $$\text{FPR} = \frac{\text{FP}}{N} = \frac{10,000}{1,000,000} = 0.01 \quad (1\%)$$
@@ -181,8 +188,10 @@ To quantify calibration error across $M$ probability bins $B_1, \dots, B_M$ (typ
 
 1. Compute empirical accuracy within bin $B_m$:
    $$\text{acc}(B_m) = \frac{1}{|B_m|} \sum_{i \in B_m} y_i$$
+
 2. Compute average predicted confidence within bin $B_m$:
    $$\text{conf}(B_m) = \frac{1}{|B_m|} \sum_{i \in B_m} \hat{p}_i$$
+
 3. The **Expected Calibration Error (ECE)** is the weighted average absolute difference:
    $$\text{ECE} = \sum_{m=1}^M \frac{|B_m|}{n} \Big| \text{acc}(B_m) - \text{conf}(B_m) \Big|$$
 
@@ -193,6 +202,7 @@ To quantify calibration error across $M$ probability bins $B_1, \dots, B_M$ (typ
    $$\hat{p}_{\text{calibrated}} = \frac{1}{1 + \exp\left( A \cdot s(\mathbf{x}) + B \right)}$$
    Parameters $A$ and $B$ are fit via Maximum Likelihood on an independent validation holdout set.
    *Best for*: Models whose uncalibrated scores produce an S-shaped reliability curve (e.g., SVM margin scores).
+
 2. **Isotonic Regression (Non-Parametric)**:
    Fits a non-decreasing, non-parametric step function $m(s)$ minimizing squared error:
    $$\min_{m} \sum_{i=1}^n \left( y_i - m(s_i) \right)^2 \quad \text{subject to } m(s_i) \le m(s_j) \text{ whenever } s_i \le s_j$$
@@ -245,11 +255,13 @@ If a newly added feature does not reduce $\text{SS}_{\text{res}}$ enough to offs
 ### 5.3 Percentage Metrics: MAPE and Symmetric sMAPE
 
 #### Mean Absolute Percentage Error (MAPE):
+
 $$
 \text{MAPE} = \frac{100\%}{n} \sum_{i=1}^n \left| \frac{y_i - \hat{y}_i}{y_i} \right|
 $$
 
 **Critical Flaws of MAPE**:
+
 1. **Division by Zero**: If any actual target $y_i = 0$, MAPE is undefined ($\infty$).
 2. **Asymmetry**: Over-predictions are punished much more leniently than under-predictions.
    - If true $y = 100$ and $\hat{y} = 200 \implies \text{Error} = |100 - 200| / 100 = 100\%$.
@@ -422,12 +434,15 @@ assert abs(r2_scratch - r2_sk) < 1e-6, "R2 diverges from scikit-learn!"
 ### 8.1 Macro vs. Micro vs. Weighted Averaging in Multiclass
 
 When extending binary metrics to multi-class classification ($K$ classes):
+
 - **Micro Average**: Pools total global TPs, FPs, and FNs across all classes:
   $$\text{Precision}_{\text{micro}} = \frac{\sum_{k=1}^K \text{TP}_k}{\sum_{k=1}^K (\text{TP}_k + \text{FP}_k)}$$
   *Property*: Micro-Precision, Micro-Recall, and Micro-$F_1$ are all **mathematically identical to overall Accuracy**!
+
 - **Macro Average**: Computes the metric independently for each class and calculates the unweighted arithmetic mean:
   $$\text{Macro } F_1 = \frac{1}{K} \sum_{k=1}^K F_{1, k}$$
   Weights every class equally; gives massive influence to tiny rare classes.
+
 - **Weighted Average**: Averages per-class metrics weighted by class support (sample count $N_k$).
 
 ### 8.2 Calculating Negative $R^2$ on Out-of-Sample Test Sets
@@ -445,6 +460,7 @@ Engineers are often shocked when their model produces an $R^2 = -0.42$ on test d
 Let $f_1(s)$ and $f_0(s)$ be the probability density functions of the continuous predicted scores for positive ($y = 1$) and negative ($y = 0$) instances, respectively.
 Let $F_1(s) = \int_{-\infty}^s f_1(t) dt$ and $F_0(s) = \int_{-\infty}^s f_0(t) dt$ be their cumulative distribution functions.
 For a given decision threshold $\tau$:
+
 - True Positive Rate: $\text{TPR}(\tau) = P(\hat{s} > \tau \mid y = 1) = 1 - F_1(\tau)$
 - False Positive Rate: $\text{FPR}(\tau) = P(\hat{s} > \tau \mid y = 0) = 1 - F_0(\tau)$
 
@@ -454,6 +470,7 @@ Using substitution $u = \text{FPR}(\tau) = 1 - F_0(\tau) \implies du = -f_0(\tau
 When $\tau = -\infty$, $\text{FPR} = 1$; when $\tau = \infty$, $\text{FPR} = 0$:
 $$\text{ROC-AUC} = \int_{\infty}^{-\infty} [1 - F_1(\tau)] (-f_0(\tau) d\tau) = \int_{-\infty}^{\infty} [1 - F_1(\tau)] f_0(\tau) d\tau$$
 Notice what the integral represents:
+
 - $f_0(\tau) d\tau$ is the probability that a randomly drawn negative instance $\mathbf{x}^-$ has score equal to $\tau$.
 - $1 - F_1(\tau) = P(\hat{s}(\mathbf{x}^+) > \tau)$ is the probability that an independently drawn positive instance $\mathbf{x}^+$ has score strictly greater than $\tau$.
 Integrating over all possible values of $\tau$ evaluates the joint continuous expectation:
@@ -483,12 +500,14 @@ $$F_\beta = (1 + \beta^2) \frac{P \cdot R}{\beta^2 P + R}$$
 ### Q3: Contrast Platt Scaling and Isotonic Regression for probability calibration. When should each be chosen?
 
 **Model Answer:**
+
 - **Platt Scaling:**
   *Mechanism:* A parametric approach that transforms raw model output scores $s(\mathbf{x})$ into calibrated probabilities via a 2-parameter logistic sigmoid:
   $$\hat{p} = \frac{1}{1 + \exp(As + B)}$$
   *Assumptions:* Assumes the uncalibrated scores follow an approximate Gaussian distribution within each class with equal variance, yielding a sigmoidal miscalibration profile.
   *Advantages:* Extremely robust against overfitting. Uses only 2 parameters ($A, B$), making it highly effective on tiny validation sets ($n < 500$).
   *Disadvantages:* Incapable of correcting non-sigmoidal distortion (e.g., multi-modal confidence errors produced by boosted decision trees).
+
 - **Isotonic Regression:**
   *Mechanism:* A non-parametric piecewise-constant regression model that fits a monotonic step function $m(s)$ using the Pool Adjacent Violators Algorithm (PAVA).
   *Assumptions:* Only assumes **monotonicity**—that higher raw scores should correspond to higher empirical probabilities.

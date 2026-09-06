@@ -48,6 +48,7 @@ flowchart LR
 ### 2.1 The Biological Metaphor and McCulloch-Pitts (1943)
 
 The biological neuron consists of:
+
 - **Dendrites**: Branching filaments receiving chemical neurotransmitter inputs from adjacent axon terminals.
 - **Soma (Cell Body)**: Integrates incoming post-synaptic electrical potentials over time and space.
 - **Axon Hillock & Axon**: If the accumulated membrane potential exceeds a critical threshold ($\approx -55\text{ mV}$), an all-or-none action potential (spike) propagates down the myelinated axon.
@@ -141,6 +142,7 @@ Minsky and Papert noted that multi-layer perceptrons could solve XOR, but lament
 
 Consider an $L$-layer neural network (counting hidden and output layers, excluding the input layer $l=0$).
 Let:
+
 - $n^{[l]}$ denote the number of neurons in layer $l \in \{0, 1, \dots, L\}$.
 - $\mathbf{a}^{[0]} = \mathbf{x} \in \mathbb{R}^{n^{[0]}}$ be the input vector.
 - $W^{[l]} \in \mathbb{R}^{n^{[l]} \times n^{[l-1]}}$ be the weight matrix for layer $l$.
@@ -172,6 +174,7 @@ W^{[2]} = \begin{bmatrix} 1 & -2 \end{bmatrix}, \quad b^{[2]} = 0, \quad \hat{y}
 $$
 
 Tracing the transformation:
+
 - For $\mathbf{x} = [0, 0]^T$: $\mathbf{z}^{[1]} = [0, -1]^T \implies \mathbf{a}^{[1]} = [0, 0]^T \implies \hat{y} = 0$.
 - For $\mathbf{x} = [1, 0]^T$: $\mathbf{z}^{[1]} = [1, 0]^T \implies \mathbf{a}^{[1]} = [1, 0]^T \implies \hat{y} = 1$.
 - For $\mathbf{x} = [0, 1]^T$: $\mathbf{z}^{[1]} = [1, 0]^T \implies \mathbf{a}^{[1]} = [1, 0]^T \implies \hat{y} = 1$.
@@ -186,6 +189,7 @@ The hidden layer collapses the parallel points $(1,0)$ and $(0,1)$ into the coor
 ### 4.1 The Directed Acyclic Graph (DAG) View
 
 Every deep learning framework (PyTorch `torch.autograd`, TensorFlow `tf.GradientTape`) abstracts execution as a computational DAG $\mathcal{G} = (\mathcal{V}, \mathcal{E})$:
+
 - **Vertices $\mathcal{V}$**: Represent elementary mathematical operations ($+$, $\times$, $\exp$, $\ln$) or variables (leaf tensors).
 - **Edges $\mathcal{E}$**: Directed data dependencies carrying tensor values forward and adjoint gradient tensors backward.
 
@@ -323,6 +327,7 @@ $$
 where $J_{\mathbf{a}}(\mathbf{z}) \in \mathbb{R}^{p \times n}$ is the **Jacobian matrix** whose entries are $J_{kj} = \frac{\partial a_k}{\partial z_j}$.
 
 **Why Reverse-Mode AD? Forward vs. Reverse Accumulation:**
+
 - **Forward-mode AD**: Computes Jacobian-Vector Products (JVPs) $J \cdot \mathbf{v}$. For a network mapping $n$ inputs $\to 1$ scalar loss, forward-mode requires $n$ forward passes (one per parameter). For a modern network with $10^8$ parameters, computing the full gradient would require $10^8$ passes!
 - **Reverse-mode AD (Backpropagation)**: Computes Vector-Jacobian Products (VJPs) $\mathbf{v}^T \cdot J$, starting with scalar seed $\mathbf{v} = \frac{\partial \mathcal{L}}{\partial \mathcal{L}} = 1$. It computes the exact gradient with respect to **all parameters** in a single backward pass, with compute cost bounded by $\le 3\times$ the forward pass.
 
@@ -450,6 +455,7 @@ $$
 ### 6.6 Step 4: Batched Matrix Formulation
 
 For a mini-batch of $m$ examples with design matrix $X \in \mathbb{R}^{m \times n^{[0]}}$, let:
+
 - $Z^{[l]} \in \mathbb{R}^{m \times n^{[l]}}$
 - $A^{[l]} \in \mathbb{R}^{m \times n^{[l]}}$
 - $\Delta^{[l]} = \frac{\partial \mathcal{L}}{\partial Z^{[l]}} \in \mathbb{R}^{m \times n^{[l]}}$
@@ -960,8 +966,10 @@ Conversely, forward-mode AD propagates directional derivatives forward. To compu
 **Model Answer:**  
 Let $z_j$ be the $j$-th logit, $\hat{y}_k = \frac{e^{z_k}}{\sum_m e^{z_m}}$, and $\mathcal{L} = -\sum_k y_k \ln \hat{y}_k$.  
 First, compute the derivative of $\hat{y}_k$ with respect to $z_j$:
+
 - When $k = j$:
   $$\frac{\partial \hat{y}_j}{\partial z_j} = \frac{e^{z_j} \sum_m e^{z_m} - (e^{z_j})^2}{\left(\sum_m e^{z_m}\right)^2} = \hat{y}_j - \hat{y}_j^2 = \hat{y}_j(1 - \hat{y}_j)$$
+
 - When $k \ne j$:
   $$\frac{\partial \hat{y}_k}{\partial z_j} = \frac{0 - e^{z_k} e^{z_j}}{\left(\sum_m e^{z_m}\right)^2} = -\hat{y}_k \hat{y}_j$$
 

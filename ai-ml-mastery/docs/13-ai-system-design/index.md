@@ -13,6 +13,7 @@ Design Netflix recommendations. Design a production RAG system. Design ChatGPT.
 - [x] [Failure modes](ai-system-design-methodology-framework-deep-dive.md)
 
 **Comprehensive Deep Dive:**
+
 - 📖 [AI System Design Methodology & Framework Deep Dive](ai-system-design-methodology-framework-deep-dive.md)
 
 ## Production Case Studies
@@ -22,6 +23,7 @@ Design Netflix recommendations. Design a production RAG system. Design ChatGPT.
 - [x] [High-Throughput Distributed LLM Serving Platform (Design ChatGPT)](production-case-studies-system-design-deep-dive.md)
 
 **Comprehensive Deep Dive:**
+
 - 📖 [Production AI System Design Case Studies Deep Dive](production-case-studies-system-design-deep-dive.md)
 
 !!! mastery "Mastery Roadmap"

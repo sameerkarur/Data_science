@@ -14,11 +14,13 @@ $$
 $$
 
 This naive dense approach suffers from three fundamental flaws:
+
 1. **Parameter Explosion & Overfitting**: Billions of weights for modest images, causing extreme sample inefficiency.
 2. **Loss of Spatial Topology**: Flattening an image $\mathbf{x} \in \mathbb{R}^{H \times W \times C} \to \mathbb{R}^{H \cdot W \cdot C}$ destroys spatial adjacency. A pixel at $(i, j)$ is treated as equally distant from its immediate neighbor $(i, j+1)$ as from a corner pixel $(0, 0)$.
 3. **Lack of Translation Equivariance**: If an object shifts by 5 pixels, an MLP must re-learn its detector weights for the new coordinate location from scratch.
 
 **Convolutional Neural Networks (CNNs)** solve all three problems by introducing two inductive biases rooted in the physics of the visual world:
+
 - **Spatial Locality**: Neurons only receive connections from a small local spatial patch (receptive field), reflecting the statistical property that nearby pixels are strongly correlated.
 - **Weight Sharing (Stationarity)**: The exact same kernel (feature detector) is swept across every spatial position, enforcing **translation equivariance** and slashing parameter counts by orders of magnitude.
 
@@ -42,6 +44,7 @@ flowchart TD
 ## 2. Image Representation: Pixel Tensors and Color Spaces
 
 Digital images are discrete 3-order tensors $\mathbf{I} \in \mathbb{R}^{C \times H \times W}$ (in PyTorch standard `CHW` format) or $\mathbb{R}^{H \times W \times C}$ (in TensorFlow standard `HWC` format):
+
 - $H$: Height (vertical spatial resolution, rows $i \in \{0, \dots, H-1\}$).
 - $W$: Width (horizontal spatial resolution, columns $j \in \{0, \dots, W-1\}$).
 - $C$: Number of channels ($C=1$ for Grayscale, $C=3$ for RGB, $C \ge 4$ for multispectral satellite/medical imagery).
@@ -55,6 +58,7 @@ x_{\text{norm}} = \frac{x - \mu}{\sigma} \quad \text{where } x \in [0.0, 1.0]
 $$
 
 For ImageNet pretrained models:
+
 - $\boldsymbol{\mu} = [0.485, 0.456, 0.406]$
 - $\boldsymbol{\sigma} = [0.229, 0.224, 0.225]$
 
@@ -63,6 +67,7 @@ For ImageNet pretrained models:
 1. **RGB (Additive Color Space)**: Orthogonal primary color intensities. Channels are highly correlated (luminance and chrominance are conflated).
 2. **Grayscale (Luminance Conversion via ITU-R BT.601)**:
    $$Y = 0.299 R + 0.587 G + 0.114 B$$
+
 3. **HSV (Hue, Saturation, Value)**: Decouples chromatic content (Hue: $0^\circ - 360^\circ$), color purity (Saturation: $[0, 1]$), and brightness (Value: $[0, 1]$), ideal for color-based object segmentation robust to lighting shifts.
 
 ---
@@ -78,8 +83,10 @@ $$
 $$
 
 For discrete 2D spatial images $I$ and kernel $K \in \mathbb{R}^{k_h \times k_w}$:
+
 - **True 2D Convolution (with Kernel Flip)**:
   $$(I * K)(i, j) = \sum_{m=-M}^M \sum_{n=-N}^N I(i - m, j - n) K(m, n)$$
+
 - **2D Cross-Correlation (Without Flip)**:
   $$(I \star K)(i, j) = \sum_{m=-M}^M \sum_{n=-N}^N I(i + m, j + n) K(m, n)$$
 
@@ -172,6 +179,7 @@ $$
 ### 5.1 Output Dimension Formula
 
 Given:
+
 - Input spatial dimension: $W_{\text{in}}$
 - Kernel spatial size: $K$
 - Zero-padding: $P$ (number of zero pixels added to each border)
@@ -196,6 +204,7 @@ $$
 2. **Same Padding**: Chooses padding $P$ such that $W_{\text{out}} = \lceil W_{\text{in}} / S \rceil$. For stride $S=1$ and odd kernel size $K$:
    $$P = \frac{K - 1}{2}$$
    For a $3 \times 3$ kernel, $P = 1$. For a $5 \times 5$ kernel, $P = 2$.
+
 3. **Full Padding ($P = K - 1$)**: The kernel visits every position where it overlaps with at least 1 pixel of the input, producing output dimension $W_{\text{in}} + K - 1$.
 
 ---
@@ -203,6 +212,7 @@ $$
 ## 6. Pooling Operations: Downsampling & Invariance
 
 Pooling downsamples feature maps, providing two key benefits:
+
 1. **Computational & Memory Reduction**: Halving spatial dimensions reduces memory and FLOPs of subsequent layers by $4\times$.
 2. **Translation Invariance**: While convolutions are translation *equivariant*, pooling introduces local translation *invariance* ($f(T_{\mathbf{v}} X) \approx f(X)$).
 
@@ -221,9 +231,11 @@ flowchart TD
 - **Max Pooling**: Selects the maximum value in local window $\Omega(i, j)$:
   $$Y(i, j) = \max_{(m, n) \in \Omega(i, j)} X(m, n)$$
   Preserves sharp, high-frequency structural signals (edges, corners, textures).
+
 - **Average Pooling**: Computes the arithmetic mean:
   $$Y(i, j) = \frac{1}{|\Omega|} \sum_{(m, n) \in \Omega(i, j)} X(m, n)$$
   Acts as a low-pass spatial smoothing filter.
+
 - **Global Average Pooling (GAP, Lin et al., 2013)**: Collapses each entire $(H \times W)$ channel into a single scalar:
   $$Y(c) = \frac{1}{H \cdot W} \sum_{i=1}^H \sum_{j=1}^W X(c, i, j)$$
   Replaces fragile, parameter-heavy dense classification heads with a parameter-free vector representation.
@@ -245,6 +257,7 @@ flowchart BT
 ### 7.1 Analytical Recurrence Relations
 
 Let:
+
 - $k_l$: Kernel size at layer $l$.
 - $s_l$: Stride at layer $l$.
 - $p_l$: Padding at layer $l$.
@@ -255,20 +268,24 @@ Let:
 $$RF_0 = 1, \qquad j_0 = 1$$
 
 **Inductive Step for Layer $l \ge 1$:**
+
 1. **Jump Update**:
    $$j_l = j_{l-1} \cdot s_l$$
+
 2. **Receptive Field Update**:
    $$RF_l = RF_{l-1} + (k_l - 1) \cdot j_{l-1}$$
 
 ### 7.2 Factorization of Large Convolutions (VGG Insight)
 
 Consider replacing a single $7 \times 7$ convolution ($s=1$) with a cascade of three $3 \times 3$ convolutions ($s=1$):
+
 - Layer 1 ($3 \times 3$): $RF_1 = 1 + (3 - 1) \times 1 = 3$.
 - Layer 2 ($3 \times 3$): $RF_2 = 3 + (3 - 1) \times 1 = 5$.
 - Layer 3 ($3 \times 3$): $RF_3 = 5 + (3 - 1) \times 1 = 7$.
 
 Both achieve the exact same $7 \times 7$ receptive field!  
 **Parameter Comparison ($C$ channels):**
+
 - Single $7 \times 7$: $C \times (7 \times 7 \times C) = 49 C^2$ weights.
 - Three $3 \times 3$: $3 \times (C \times 3 \times 3 \times C) = 27 C^2$ weights — **a 45% parameter reduction!**  
 Furthermore, the stacked $3 \times 3$ layers incorporate 3 non-linear activation functions instead of 1, drastically increasing representation capacity.
@@ -340,12 +357,15 @@ flowchart LR
 
 1. **`im2col` Transformation**: Every $C_{\text{in}} \times k \times k$ receptive field patch in $X$ is unrolled into a column vector of length $C_{\text{in}} \cdot k \cdot k$.  
    Gathering all $H_{\text{out}} \cdot W_{\text{out}}$ patches produces a matrix $X_{\text{col}} \in \mathbb{R}^{(C_{\text{in}} \cdot k \cdot k) \times (H_{\text{out}} \cdot W_{\text{out}})}$.
+
 2. **Weight Matrix Reshape**: The filter tensor is reshaped into $W_{\text{row}} \in \mathbb{R}^{C_{\text{out}} \times (C_{\text{in}} \cdot k \cdot k)}$.
 3. **GEMM Evaluation**:
    $$Y_{\text{mat}} = W_{\text{row}} \cdot X_{\text{col}} \in \mathbb{R}^{C_{\text{out}} \times (H_{\text{out}} \cdot W_{\text{out}})}$$
+
 4. **Reshape**: $Y_{\text{mat}}$ is reshaped to $(C_{\text{out}}, H_{\text{out}}, W_{\text{out}})$.
 
 In the backward pass:
+
 - $dW_{\text{row}} = dY_{\text{mat}} \cdot X_{\text{col}}^T$
 - $dX_{\text{col}} = W_{\text{row}}^T \cdot dY_{\text{mat}}$
 - **`col2im`**: Accumulates the columns of $dX_{\text{col}}$ back into overlapping spatial pixel buffers in $dX$.
@@ -667,6 +687,7 @@ Introduced by Lin et al. in *Network in Network* (2013), Global Average Pooling 
 $$y_c = \frac{1}{H \cdot W} \sum_{i=1}^H \sum_{j=1}^W X_{c, i, j}$$
 
 **Advantages over Dense Flattening:**
+
 1. **Dramatic Parameter Reduction**: In VGG-16, flattening a $512 \times 7 \times 7$ feature map into a 4096-neuron dense layer required $512 \times 7 \times 7 \times 4096 \approx 102.7$ million parameters ($>70\%$ of the entire network's parameters). With GAP, the $512$ channels map directly to a $512 \times K$ classification matrix, slashing parameters to a few thousand.
 2. **Elimination of Overfitting**: The vast majority of overfitting in classical CNNs occurred in dense heads. GAP has zero learnable parameters, acting as a structural regularizer.
 3. **Input Resolution Flexibility**: A flattened layer expects an exact fixed dimension ($512 \cdot 7 \cdot 7$). If test image resolution changes, the dense layer crashes. GAP produces a vector of length $C$ regardless of spatial size $(H, W)$, allowing native multi-scale evaluation.

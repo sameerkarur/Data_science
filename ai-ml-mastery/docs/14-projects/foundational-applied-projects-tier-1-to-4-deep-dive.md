@@ -17,6 +17,7 @@ flowchart TD
 ```
 
 Each tier delivers:
+
 1. **Architectural Specification**: System design, data schemas, and state transitions.
 2. **Production-Grade Implementation**: Modular, type-annotated, runnable code.
 3. **Automated Verification**: Pytest test cases verifying correctness and numerical invariants.
@@ -28,6 +29,7 @@ Each tier delivers:
 
 ### 2.1 Project Scope & Requirements
 Covers: **Calculator**, **CLI application**, **File processor**, and **Expense tracker**.
+
 - **Core Objective**: Implement a robust, thread-safe command-line financial ledger supporting multi-currency transaction logging, atomic SQLite transactions, CSV/JSON stream ingestion, and categorical budget tracking.
 - **Architectural Principles**: Separation of concerns (CLI interface $\to$ Controller $\to$ Repository), custom domain exceptions, atomic file locking to prevent race conditions during concurrent file imports, and strict type hints.
 
@@ -170,6 +172,7 @@ class FileProcessor:
 
 ### 3.1 Project Scope & Requirements
 Covers: **Data analysis**, **Sales dashboard**, and **Customer analytics**.
+
 - **Core Objective**: Build an in-memory customer analytics engine capable of ingesting millions of clickstream and order rows, computing vectorized **Recency, Frequency, Monetary (RFM)** scores, and generating monthly cohort retention heatmaps using **Polars** (Apache Arrow zero-copy memory model).
 - **Scale**: Multi-million row datasets processed in sub-second execution windows without pandas-style memory duplication.
 
@@ -191,6 +194,7 @@ flowchart TD
 
 #### RFM Scoring Mathematics
 For each customer $c \in \mathcal{C}$ observed up to snapshot date $T_{\text{ref}}$:
+
 - **Recency ($R_c$)**: $R_c = T_{\text{ref}} - \max_{t} (t_c)$ (days since last purchase).
 - **Frequency ($F_c$)**: Total count of unique completed transactions $F_c = |\{ \text{order\_id}_c \}|$.
 - **Monetary ($M_c$)**: Total historical net spend $M_c = \sum \text{amount}_c$.
@@ -286,6 +290,7 @@ class EcommerceAnalyticsEngine:
 
 ### 4.1 Project Scope & Requirements
 Covers: **House price prediction**, **Customer churn**, **Fraud detection**, and **Recommendation system**.
+
 - **Core Objective**: Implement an enterprise credit risk underwriting and valuation pipeline featuring leak-free preprocessing transformers, gradient-boosted tree ensembles (LightGBM/XGBoost), Class Imbalance Handling via SMOTE, and post-hoc model interpretability via **SHAP (SHapley Additive exPlanations)**.
 - **Constraints**: Strict prevention of data leakage across cross-validation folds, calibrated probabilities, and full explainability compliance for adverse regulatory actions.
 
@@ -417,6 +422,7 @@ class ProductionCreditRiskPipeline:
 
 ### 5.1 Project Scope & Requirements
 Covers: **Image classifier**, **Object detector**, and **Sentiment classifier**.
+
 - **Core Objective**: Build an industrial visual quality-control inspection system that classifies manufacturing defects and localizes the physical flaw regions using **Grad-CAM (Gradient-weighted Class Activation Mapping)** without requiring expensive pixel-level segmentation annotations.
 - **Engineering Requirements**: PyTorch mixed-precision training (`torch.cuda.amp`), transfer learning via pretrained ResNet-50 backbones, learning rate warmup with cosine decay, and automated Grad-CAM heatmap extraction.
 
@@ -553,6 +559,7 @@ scaler.update()
 ### Q1: In Tier 3 credit scoring pipelines, explain why TreeSHAP is mathematically superior to heuristic feature importance metrics (e.g. Gini impurity decrease or split gain in LightGBM).
 
 **Model Answer:**  
+
 - **Flaws of Split-Gain / Impurity Decrease**:
   1. *Inconsistency*: Increasing the true predictive impact of a feature in a tree model can paradoxically **lower** its calculated Gini importance score if the feature is split earlier in the tree, leaving lower sample counts for subsequent splits.
   2. *Bias towards High-Cardinality Features*: Continuous or high-cardinality categorical features present many more potential split points, artificially inflating their Gini gain relative to critical low-cardinality binary features (e.g. `prior_bankruptcy_flag`).
@@ -566,6 +573,7 @@ scaler.update()
 ### Q2: Detail the differences between the Polars and Pandas memory models. Why does Polars achieve 10x-50x higher throughput on cohort analytics?
 
 **Model Answer:**  
+
 1. **Memory Representation (Apache Arrow)**:
    - *Pandas*: Historically built on NumPy, using fragmented object pointers for strings and ragged arrays. Null values are represented via floating-point `NaN`, causing unwanted type coercions.
    - *Polars*: Built on the Apache Arrow columnar memory standard. Arrays are contiguous, aligned memory buffers with dedicated null validity bitmasks. String columns use dictionary or string-view encoding, enabling zero-copy slicing.
@@ -580,6 +588,7 @@ scaler.update()
 ### Q3: Explain why applying SMOTE to the validation or test dataset invalidates real-world performance benchmarks.
 
 **Model Answer:**  
+
 - **Data Distribution Corruption**:
   - SMOTE generates synthetic minority instances by interpolating between $k$-nearest neighbors in feature space:
     
@@ -595,6 +604,7 @@ scaler.update()
 ### Q4: How does Grad-CAM produce visual heatmaps without requiring pixel-level semantic segmentation labels during training?
 
 **Model Answer:**  
+
 - **Convolutional Feature Spatial Geometry**:
   - In a deep CNN (e.g. ResNet-50), the final convolutional layer (`layer4`) retains spatial dimensions (e.g. $7 \times 7$ grid for a $224 \times 224$ input) while encoding high-level semantic abstractions across 2,048 channels.
 - **Gradient Backpropagation as Importance Weights**:
@@ -609,6 +619,7 @@ scaler.update()
 ### Q5: How do you design an atomic SQLite transaction architecture to prevent database locks and race conditions under concurrent write traffic?
 
 **Model Answer:**  
+
 1. **Enable Write-Ahead Logging (WAL)**:
    - Default SQLite locks the entire database file during writes, blocking concurrent readers (`SQLITE_BUSY`).
    - Enabling WAL (`PRAGMA journal_mode=WAL;`) decouples readers from writers: writers append changes to a separate `-wal` log file while readers query the unchanged main database file concurrently.

@@ -34,6 +34,7 @@ flowchart TD
 ```
 
 Mastering linear algebra in machine learning is not merely about executing row reductions by hand; it is about developing **geometric intuition** for transformations:
+
 - How does a linear operator rotate, stretch, or collapse geometric space?
 - Which directions preserve the maximum variance of high-dimensional data?
 - How do we project high-dimensional signals onto lower-dimensional subspaces while minimizing reconstruction error?
@@ -107,15 +108,18 @@ where $\theta$ is the angle between the vectors.
 - **Cosine Similarity**:
   $$\text{cosine\_sim}(\mathbf{u}, \mathbf{v}) = \frac{\mathbf{u}^T \mathbf{v}}{\|\mathbf{u}\|_2 \|\mathbf{v}\|_2} = \cos \theta \in [-1, 1]$$
   This is the foundation of dense vector retrieval, semantic search, and self-attention in Transformers.
+
 - **Orthogonality**: Two non-zero vectors are orthogonal ($\mathbf{u} \perp \mathbf{v}$) if and only if $\mathbf{u}^T \mathbf{v} = 0$ ($\theta = 90^\circ$).
 
 ### 3.3 Linear Independence, Span, Basis, and Rank
 
 - **Span**: The set of all possible linear combinations of a collection of vectors $\{\mathbf{v}_1, \dots, \mathbf{v}_k\}$:
   $$\text{span}(\mathbf{v}_1, \dots, \mathbf{v}_k) = \left\{ \sum_{i=1}^k c_i \mathbf{v}_i \;\middle|\; c_i \in \mathbb{R} \right\}$$
+
 - **Linear Independence**: Vectors $\{\mathbf{v}_1, \dots, \mathbf{v}_k\}$ are linearly independent if:
   $$\sum_{i=1}^k c_i \mathbf{v}_i = \mathbf{0} \implies c_1 = c_2 = \dots = c_k = 0$$
   If any non-zero coefficients satisfy the equation, at least one vector is redundant and lies within the span of the others (multicollinearity).
+
 - **Basis**: A linearly independent set of vectors that spans vector space $\mathcal{V}$. The number of vectors in any basis for $\mathcal{V}$ defines the **dimension** of $\mathcal{V}$.
 - **Matrix Rank**:
   - The **column rank** of $A$ is the dimension of the span of its columns (the column space $\mathcal{C}(A)$).
@@ -152,11 +156,14 @@ flowchart LR
 ### 4.2 Matrix Norms
 
 For matrix $A \in \mathbb{R}^{m \times n}$:
+
 - **Frobenius Norm**: Entrywise $L_2$ norm:
   $$\|A\|_F = \sqrt{\sum_{i=1}^m \sum_{j=1}^n A_{ij}^2} = \sqrt{\text{Tr}(A^T A)} = \sqrt{\sum_{i=1}^{\min(m, n)} \sigma_i^2}$$
+
 - **Spectral Norm ($L_2$ Operator Norm)**: Maximum amplification factor:
   $$\|A\|_2 = \max_{\mathbf{x} \ne \mathbf{0}} \frac{\|A\mathbf{x}\|_2}{\|\mathbf{x}\|_2} = \sigma_{\max}(A)$$
   Used in Spectral Normalization for GANs to enforce Lipschitz continuity.
+
 - **Nuclear Norm (Trace Norm)**: Sum of singular values:
   $$\|A\|_* = \sum_{i=1}^{\min(m,n)} \sigma_i(A)$$
   The convex relaxation of matrix rank, widely used in matrix completion and collaborative filtering.
@@ -237,6 +244,7 @@ $$
 ### 6.2 Spectral Theorem for Real Symmetric Matrices
 
 If $A \in \mathbb{R}^{n \times n}$ is real and symmetric ($A = A^T$):
+
 1. All $n$ eigenvalues $\lambda_1, \dots, \lambda_n$ are strictly **real numbers** ($\lambda_i \in \mathbb{R}$).
 2. Eigenvectors corresponding to distinct eigenvalues are **mutually orthogonal**.
 3. $A$ can be orthogonally diagonalized:
@@ -246,6 +254,7 @@ If $A \in \mathbb{R}^{n \times n}$ is real and symmetric ($A = A^T$):
 ### 6.3 Positive Semi-Definite (PSD) Matrices
 
 A symmetric matrix $M \in \mathbb{R}^{n \times n}$ is:
+
 - **Positive Semi-Definite ($M \succeq 0$)** if for all non-zero $\mathbf{x} \in \mathbb{R}^n$, $\mathbf{x}^T M \mathbf{x} \ge 0$. Equivalent to: all $\lambda_i \ge 0$.
 - **Positive Definite ($M \succ 0$)** if for all non-zero $\mathbf{x} \in \mathbb{R}^n$, $\mathbf{x}^T M \mathbf{x} > 0$. Equivalent to: all $\lambda_i > 0$.
 
@@ -273,6 +282,7 @@ A = U \Sigma V^T
 $$
 
 where:
+
 - $U \in \mathbb{R}^{m \times m}$ is an orthonormal matrix whose columns $\mathbf{u}_i$ are the **left singular vectors** of $A$ (the eigenvectors of $A A^T$).
 - $\Sigma \in \mathbb{R}^{m \times n}$ is a rectangular diagonal matrix with non-negative entries $\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r > 0$ along the main diagonal, called the **singular values** of $A$ ($r = \text{rank}(A)$).
 - $V \in \mathbb{R}^{n \times n}$ is an orthonormal matrix whose columns $\mathbf{v}_i$ are the **right singular vectors** of $A$ (the eigenvectors of $A^T A$).
@@ -394,9 +404,11 @@ $$
 $$
 
 Notice that:
+
 1. The right singular vectors $V$ of $X$ are **identical** to the principal component eigenvectors of $\Sigma$.
 2. The eigenvalues of $\Sigma$ relate directly to the singular values of $X$:
    $$\lambda_i = \frac{\sigma_i^2}{N}$$
+
 3. The projected principal coordinates are simply:
    $$X V = U \Sigma_{\text{svd}} V^T V = U \Sigma_{\text{svd}}$$
 
@@ -419,6 +431,7 @@ flowchart TD
 ## 9. Python Implementation: From Scratch & Numerical Algorithms
 
 Below is a complete, runnable suite containing:
+
 1. **Power Iteration** for computing dominant eigenvalues/eigenvectors.
 2. **Gram-Schmidt QR Orthogonalization**.
 3. **PCA from scratch** using both Covariance Eigendecomposition and SVD.
@@ -611,6 +624,7 @@ if __name__ == "__main__":
 ### Q1: Prove that the eigenvalues of a real symmetric matrix are strictly real, and eigenvectors corresponding to distinct eigenvalues are mutually orthogonal.
 **Model Answer:**
 Let $A \in \mathbb{R}^{n \times n}$ with $A = A^T$.
+
 1. **Eigenvalues are real:**
    Let $\lambda \in \mathbb{C}$ be an eigenvalue with non-zero eigenvector $\mathbf{v} \in \mathbb{C}^n$:
    $$A\mathbf{v} = \lambda \mathbf{v}$$
@@ -658,6 +672,7 @@ $$P^2 = \left(A (A^T A)^{-1} A^T\right) \left(A (A^T A)^{-1} A^T\right) = A (A^T
 The **Eckart-Young-Mirsky Theorem** states that if $A \in \mathbb{R}^{m \times n}$ has SVD $A = \sum_{i=1}^r \sigma_i \mathbf{u}_i \mathbf{v}_i^T$ with $\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r > 0$, then for any integer $k < r$, the truncated SVD matrix:
 $$A_k = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T$$
 is the best rank-$k$ approximation of $A$ under both the **Frobenius norm** and the **Spectral ($L_2$) operator norm**:
+
 1. **Frobenius error:** $\min_{\text{rank}(B) \le k} \|A - B\|_F = \|A - A_k\|_F = \sqrt{\sum_{i=k+1}^r \sigma_i^2}$
 2. **Spectral error:** $\min_{\text{rank}(B) \le k} \|A - B\|_2 = \|A - A_k\|_2 = \sigma_{k+1}$
 
@@ -692,6 +707,7 @@ If $X$ has an ill-conditioned geometry ($\kappa(X) \gg 1$), $\sigma_{\min}(X) \a
 The inverse $(X^T X)^{-1}$ has an eigenvalue $\frac{1}{\lambda_{\min}} = \frac{1}{\sigma_{\min}^2} \to \infty$.
 
 **Impact on estimation:**
+
 1. **Variance Explosion:** The variance of the estimated parameter along the direction of the corresponding right singular vector explodes. Tiny changes in the training data cause massive swings in learned weights.
 2. **Loss of Interpretability:** Weight coefficients take on huge positive and negative values that cancel each other out, making individual feature attributions meaningless.
 3. **Remedy:** Ridge regression adds a regularization penalty $\lambda I$, shifting all eigenvalues upward: $\frac{1}{\sigma_i^2 + \lambda}$, bounding parameter variance.
@@ -700,6 +716,7 @@ The inverse $(X^T X)^{-1}$ has an eigenvalue $\frac{1}{\lambda_{\min}} = \frac{1
 
 ### Q6: Compare vector norms ($L_1, L_2, L_\infty$) and matrix norms (Frobenius, Spectral, Nuclear). Explain geometrically why $L_1$ induces sparsity in optimization.
 **Model Answer:**
+
 - **Vector Norms:**
   - $L_1$: $\|\mathbf{x}\|_1 = \sum |x_i|$. The unit ball is a cross-polytope (diamond in 2D) with sharp vertices positioned precisely on the coordinate axes.
   - $L_2$: $\|\mathbf{x}\|_2 = \sqrt{\sum x_i^2}$. The unit ball is a smooth hypersphere with no corners.
@@ -711,6 +728,7 @@ The inverse $(X^T X)^{-1}$ has an eigenvalue $\frac{1}{\lambda_{\min}} = \frac{1
 
 **Geometric Sparsity Mechanism:**
 In constrained optimization ($\min L(\mathbf{w})$ subject to $\|\mathbf{w}\| \le C$), the optimal solution occurs where the elliptical level curves of the objective function $L(\mathbf{w})$ first touch the constraint boundary.
+
 - For $L_2$, the constraint boundary is a smooth sphere. The tangent point between an arbitrary ellipse and a sphere can occur at any continuous angle; the probability of touching exactly on an axis ($w_i = 0$) is measure zero.
 - For $L_1$, the boundary possesses sharp corners situated exactly on the coordinate axes ($w_1 = 0, w_2 = \pm C$, etc.). As the loss contours expand outwards from the unconstrained minimum, they are statistically far more likely to first hit one of these protruding corners, forcing non-essential weights to be exactly zero.
 

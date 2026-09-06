@@ -39,6 +39,7 @@ flowchart TD
 ```
 
 Operating production AI systems requires:
+
 1. **Mathematical Drift Detection**: Distinguishing between temporary sampling noise and true statistical divergence in tabular distributions, predicted labels, and high-dimensional vector embeddings.
 2. **Unified Observability**: Correlating low-level infrastructure telemetry (GPU VRAM saturation, CUDA kernel execution times) with high-level statistical health (model confidence degradation, calibration error).
 3. **Automated Retraining Triggers**: Safely closing the feedback loop between inference drift signals, data re-annotation, model re-training, and automated evaluation gates.
@@ -180,6 +181,7 @@ Using a Radial Basis Function (RBF) Gaussian kernel $k(\mathbf{x}, \mathbf{y}) =
 ## 4. Production Drift Detection Implementation
 
 Below is a complete, runnable Python module implementing:
+
 1. Population Stability Index (PSI) with epsilon smoothing (preventing division-by-zero or $\ln(0)$ errors).
 2. Kolmogorov-Smirnov 2-sample hypothesis testing with automated $p$-value alerting.
 3. Multi-feature automated batch evaluation engine.
@@ -321,6 +323,7 @@ flowchart TD
 
 ### 5.1 Prometheus Model Metrics Suite
 A production AI service must expose the following metric categories:
+
 1. **Serving Performance (RED Method)**:
    - *Rate*: `model_prediction_requests_total{model="churn", version="v2"}`
    - *Errors*: `model_prediction_exceptions_total{type="ValidationException"}`
@@ -412,6 +415,7 @@ To detect a minimum detectable effect (MDE) $\delta$ with statistical significan
 $$N = \frac{2 \left( Z_{\alpha/2} + Z_{\beta} \right)^2 \sigma^2}{\delta^2}$$
 
 Where:
+
 - $Z_{\alpha/2}$ is the standard normal critical value ($1.96$ for $\alpha = 0.05$).
 - $Z_{\beta}$ is the power critical value ($0.84$ for $80\%$ power).
 - $\sigma^2$ is the pooled variance: $\sigma^2 \approx \bar{p}(1 - \bar{p})$ for binary conversion rates.
@@ -440,6 +444,7 @@ flowchart LR
 
 ### 7.1 Multi-Instance GPU (MIG) Slicing
 On NVIDIA Ampere and Hopper architectures (A100, H100), **Multi-Instance GPU (MIG)** hardware-partitions a single physical GPU into up to **7 independent GPU instances**:
+
 - Each instance possesses physically isolated High-Bandwidth Memory (HBM), memory crossbar paths, and Streaming Multiprocessors (SMs).
 - Unlike software multi-tenancy (which suffers from "noisy neighbor" cache thrashing), MIG provides strict hardware Quality of Service (QoS): a memory fault or OOM crash in one slice cannot crash adjacent slices.
 - *Cost Impact*: Allows running seven distinct production microservices on a single $80\text{ GB}$ GPU, reducing physical GPU instance provisioning costs by up to $85\%$.
@@ -488,6 +493,7 @@ prod_prop = (counts + 1e-4) / (total_samples + 1e-4 * num_bins)
 ### Q1: Detail the mathematical and operational differences between the Kolmogorov-Smirnov (K-S) test and the Population Stability Index (PSI) for drift detection. Under what conditions would you choose one over the other?
 
 **Model Answer:**  
+
 - **Kolmogorov-Smirnov (K-S) Test**:
   - *Mathematical Nature*: Non-parametric continuous two-sample hypothesis test computing the supremum distance between empirical cumulative distribution functions: $D = \sup_x |F_1(x) - F_2(x)|$.
   - *Advantages*: Binning-free (avoids arbitrary quantization artifacts); yields formal $p$-values based on the Kolmogorov distribution, providing statistical guarantees under the null hypothesis.
@@ -503,6 +509,7 @@ prod_prop = (counts + 1e-4) / (total_samples + 1e-4 * num_bins)
 ### Q2: How does Maximum Mean Discrepancy (MMD) detect covariate shift in high-dimensional embedding spaces, and why do univariate tests fail?
 
 **Model Answer:**  
+
 - **Failure of Univariate Tests**: In an embedding space $\mathbb{R}^d$ ($d = 768$), running 768 individual K-S or PSI tests assumes individual dimensions are mutually independent. This introduces two fatal flaws:
   1. *Multiple Testing Problem*: Testing 768 hypotheses inflates family-wise error rates ($\alpha_{\text{total}} = 1 - (1 - \alpha)^d \approx 1.0$), generating continuous false alarms unless heavily penalized by Bonferroni corrections.
   2. *Loss of Cross-Correlation*: Semantic concepts in deep representations are encoded across complex, non-linear manifolds. Two embedding distributions can have identical marginal 1D distributions along every coordinate axis while possessing entirely disjoint joint representations.
@@ -513,6 +520,7 @@ prod_prop = (counts + 1e-4) / (total_samples + 1e-4 * num_bins)
 ### Q3: Explain the concept of "peeking bias" in online A/B testing of machine learning models. How does it corrupt statistical validity?
 
 **Model Answer:**  
+
 - **The Mechanism**: Classical Neyman-Pearson hypothesis testing requires calculating the fixed sample size $N$ upfront based on desired statistical power ($1 - \beta$) and significance level ($\alpha$), collecting all $N$ observations, and conducting the test statistic evaluation exactly once.
 - **Peeking Bias**: When engineers or product teams continuously monitor A/B test dashboards daily and stop the experiment as soon as $p < 0.05$ appears, they violate the sampling distribution assumptions.
 - **Statistical Consequence**: Under the null hypothesis $H_0$, the $p$-value fluctuates as a random walk over time. Repeatedly checking whether the random walk has crossed the significance threshold is equivalent to performing multiple dependent hypothesis tests. If an experiment is checked 10 times during its collection phase, the true Type I error rate (false positive rate) escalates from the nominal $\alpha = 0.05$ to over $0.20-0.30$.
@@ -523,6 +531,7 @@ prod_prop = (counts + 1e-4) / (total_samples + 1e-4 * num_bins)
 ### Q4: Formulate an automated, event-driven model retraining architecture. What guardrails prevent a corrupted retraining pipeline from pushing a broken model to production?
 
 **Model Answer:**  
+
 1. **Trigger Phase**: The production drift detector logs consecutive drift anomalies ($\text{PSI} > 0.20$ across key features over a 24-hour window) and emits an event to a Kafka topic or Cloud Pub/Sub.
 2. **Orchestration Phase**: Apache Airflow or Kubeflow Pipelines consumes the event, spins up an isolated Kubernetes GPU training pod, pulls fresh ground-truth data from the offline feature store, and initiates warm-start fine-tuning.
 3. **Automated Quality Guardrails (Pre-Promotion Gates)**:
@@ -537,6 +546,7 @@ prod_prop = (counts + 1e-4) / (total_samples + 1e-4 * num_bins)
 ### Q5: How does Multi-Instance GPU (MIG) differ from time-slicing GPU virtualization in Kubernetes?
 
 **Model Answer:**  
+
 - **Time-Slicing (Software Virtualization)**:
   - Multiple pods share the same physical GPU by time-multiplexing access to the execution engine.
   - *Failure Modes*: No memory isolation; if one pod allocates excess VRAM, all pods on the GPU crash with CUDA OOM errors. Memory cache thrashing occurs as CUDA contexts are swapped in and out, introducing severe latency jitter.

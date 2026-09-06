@@ -10,7 +10,7 @@ Every algorithm walked through: intuition → math → from-scratch → library 
 
 ## Classification
 
-- [ ] Logistic regression
+- [x] [Logistic regression — full deep-dive](logistic-regression-deep-dive.md)
 - [ ] KNN
 - [ ] Naive Bayes
 - [ ] Decision trees

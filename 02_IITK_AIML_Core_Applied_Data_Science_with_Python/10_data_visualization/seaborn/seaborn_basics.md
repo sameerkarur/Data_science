@@ -1,473 +1,326 @@
-# Seaborn - Statistical Data Visualization
+# Seaborn: Complete Step-by-Step Statistical Graphics Handbook
+**Official Tutorial & Visual Architecture Handbook (W3Schools & GeeksforGeeks Style)**
 
-## What is Seaborn?
-Seaborn is a Python data visualization library built on top of Matplotlib. It provides a high-level interface for drawing attractive, informative statistical graphics with minimal code.
+---
 
-**Why use Seaborn?**
-- Beautiful default themes and color palettes
-- Built-in support for statistical plots (regression, distribution, categorical)
-- Works seamlessly with Pandas DataFrames
-- Less code than Matplotlib for complex plots
-- Automatic estimation and plotting of statistical relationships
+## 📑 Table of Contents (On this page)
+1. [What is Seaborn & Why Use It Over Raw Matplotlib?](#1-what-is-seaborn--why-use-it-over-raw-matplotlib)
+2. [Installation & Built-in Datasets](#2-installation--built-in-datasets)
+3. [The Three Seaborn Plotting Families (Relational, Categorical, Distributions)](#3-the-three-seaborn-plotting-families)
+4. [Relational Plots: `scatterplot()` & `lineplot()`](#4-relational-plots-scatterplot--lineplot)
+5. [Categorical Plots: `barplot()`, `countplot()`, `boxplot()` & `violinplot()`](#5-categorical-plots)
+6. [Distribution Plots: `histplot()`, `kdeplot()` & `displot()`](#6-distribution-plots)
+7. [Matrix Plots: Correlation `heatmap()` & Hierarchical `clustermap()`](#7-matrix-plots-correlation-heatmap--clustermap)
+8. [Linear Regression Plots: `regplot()` & `lmplot()`](#8-linear-regression-plots)
+9. [Multi-Plot Grids: `pairplot()` & `FacetGrid()`](#9-multi-plot-grids-pairplot--facetgrid)
+10. [Aesthetics, Themes & Color Palettes](#10-aesthetics-themes--color-palettes)
+11. [Try It Yourself! (Hands-On Practice Exercises)](#11-try-it-yourself-hands-on-practice-exercises)
+12. [Quick Reference Cheat Sheet](#12-quick-reference-cheat-sheet)
 
-## Installation
+---
+
+## 1. What is Seaborn & Why Use It Over Raw Matplotlib?
+
+**Seaborn** is a statistical data visualization library based on Matplotlib. It provides a high-level, declarative API for drawing attractive and informative statistical graphics.
+
+### Key Advantages:
+- **Automatic Statistical Estimations:** Automatically computes confidence intervals, error bars, regression trendlines, and probability densities.
+- **Direct DataFrame Integration:** Accepts native Pandas DataFrames directly via column name strings (`x='total_bill', y='tip', hue='smoker'`).
+- **Semantic Mapping (`hue`, `size`, `style`):** Map multiple data dimensions onto colors, marker shapes, and sizes in one line.
+- **Modern Aesthetics:** Elegant default themes, colorblind-friendly palettes, and clean typography.
+
+---
+
+## 2. Installation & Built-in Datasets
+
 ```bash
 pip install seaborn
 ```
 
-## Importing
 ```python
 import seaborn as sns
 import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
+
+# Set standard Seaborn theme
+sns.set_theme(style="darkgrid", palette="muted")
+
+# Load famous built-in datasets
+tips = sns.load_dataset("tips")
+print("Tips Dataset Head:\n", tips.head(3))
 ```
 
-## Built-in Datasets (for practice)
-```python
-# List all available datasets
-sns.get_dataset_names()
-
-# Load a dataset
-tips = sns.load_dataset('tips')
-iris = sns.load_dataset('iris')
-titanic = sns.load_dataset('titanic')
-penguins = sns.load_dataset('penguins')
-flights = sns.load_dataset('flights')
-```
-
----
-
-## 1. Setting Themes & Styles
-
-```python
-# Set theme (applies globally)
-sns.set_theme()                        # default seaborn theme
-sns.set_theme(style='whitegrid')       # white background with grid
-sns.set_theme(style='darkgrid')        # dark background with grid
-sns.set_theme(style='white')           # white, no grid
-sns.set_theme(style='dark')            # dark, no grid
-sns.set_theme(style='ticks')           # ticks on axes
-
-# Set context (controls scale of elements)
-sns.set_context('notebook')    # default
-sns.set_context('paper')      # smaller
-sns.set_context('talk')       # larger (for presentations)
-sns.set_context('poster')     # largest
-
-# Color palettes
-sns.set_palette('deep')       # default
-sns.set_palette('muted')
-sns.set_palette('pastel')
-sns.set_palette('bright')
-sns.set_palette('dark')
-sns.set_palette('colorblind')
-
-# Custom palette
-sns.color_palette('husl', 8)           # 8 evenly spaced colors
-sns.color_palette('coolwarm', 6)       # diverging palette
-sns.color_palette(['#FF6B6B', '#4ECDC4', '#45B7D1'])  # custom colors
+#### Output:
+```text
+Tips Dataset Head:
+    total_bill   tip     sex smoker  day    time  size
+0       16.99  1.01  Female     No  Sun  Dinner     2
+1       10.34  1.66    Male     No  Sun  Dinner     3
+2       21.01  3.50    Male     No  Sun  Dinner     3
 ```
 
 ---
 
-## 2. Distribution Plots
+## 3. The Three Seaborn Plotting Families
 
-### Histogram (histplot)
-```python
-tips = sns.load_dataset('tips')
+Seaborn organizes all plots into three distinct figure-level paradigms:
 
-# Basic histogram
-sns.histplot(data=tips, x='total_bill')
-
-# With KDE (Kernel Density Estimate) overlay
-sns.histplot(data=tips, x='total_bill', kde=True, bins=20)
-
-# Colored by category
-sns.histplot(data=tips, x='total_bill', hue='sex', kde=True)
-
-# Stacked
-sns.histplot(data=tips, x='total_bill', hue='sex', multiple='stack')
-
-plt.show()
 ```
-
-### KDE Plot (kdeplot)
-```python
-# Basic KDE
-sns.kdeplot(data=tips, x='total_bill')
-
-# Filled KDE
-sns.kdeplot(data=tips, x='total_bill', fill=True, alpha=0.5)
-
-# Multiple groups
-sns.kdeplot(data=tips, x='total_bill', hue='sex', fill=True)
-
-# 2D KDE (bivariate)
-sns.kdeplot(data=tips, x='total_bill', y='tip', fill=True, cmap='Blues')
-
-plt.show()
-```
-
-### Distribution Plot (displot) — Figure-level
-```python
-# Histogram
-sns.displot(data=tips, x='total_bill', kind='hist', kde=True)
-
-# KDE
-sns.displot(data=tips, x='total_bill', kind='kde')
-
-# ECDF (Empirical Cumulative Distribution)
-sns.displot(data=tips, x='total_bill', kind='ecdf')
-
-# Faceted by column
-sns.displot(data=tips, x='total_bill', col='sex', kde=True)
-
-plt.show()
+┌────────────────────────────────────────────────────────────────────────┐
+│                        SEABORN PLOTTING TAXONOMY                       │
+├───────────────────┬──────────────────────┬─────────────────────────────┤
+│ 1. RELATIONAL     │ 2. CATEGORICAL       │ 3. DISTRIBUTIONS            │
+│   relplot()       │   catplot()          │   displot()                 │
+│   ├── scatterplot │   ├── barplot        │   ├── histplot              │
+│   └── lineplot    │   ├── boxplot        │   ├── kdeplot               │
+│                   │   ├── violinplot     │   └── ecdfplot              │
+│                   │   └── countplot      │                             │
+└───────────────────┴──────────────────────┴─────────────────────────────┘
 ```
 
 ---
 
-## 3. Categorical Plots
+## 4. Relational Plots: `scatterplot()` & `lineplot()`
 
-### Bar Plot (barplot) — shows mean with confidence interval
 ```python
-tips = sns.load_dataset('tips')
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-# Basic bar plot
-sns.barplot(data=tips, x='day', y='total_bill')
+tips = sns.load_dataset("tips")
 
-# Grouped by hue
-sns.barplot(data=tips, x='day', y='total_bill', hue='sex')
+fig, ax = plt.subplots(figsize=(7, 4.5))
 
-# Horizontal
-sns.barplot(data=tips, y='day', x='total_bill')
+# Scatterplot with color (hue) and size semantics
+sns.scatterplot(
+    data=tips,
+    x="total_bill",
+    y="tip",
+    hue="time",
+    style="smoker",
+    size="size",
+    sizes=(20, 200),
+    palette="deep",
+    ax=ax
+)
 
-# Custom estimator
-sns.barplot(data=tips, x='day', y='total_bill', estimator=np.median)
-
+ax.set_title("Total Bill vs Tip Amount by Dining Time & Party Size", fontweight='bold')
 plt.show()
 ```
 
-### Count Plot (countplot) — counts occurrences
-```python
-# Count of each category
-sns.countplot(data=tips, x='day')
-
-# Grouped
-sns.countplot(data=tips, x='day', hue='sex')
-
-# Ordered
-sns.countplot(data=tips, x='day', order=['Thur', 'Fri', 'Sat', 'Sun'])
-
-plt.show()
-```
-
-### Box Plot (boxplot)
-```python
-# Basic box plot
-sns.boxplot(data=tips, x='day', y='total_bill')
-
-# Grouped
-sns.boxplot(data=tips, x='day', y='total_bill', hue='sex')
-
-# Horizontal
-sns.boxplot(data=tips, y='day', x='total_bill')
-
-# Show all points
-sns.boxplot(data=tips, x='day', y='total_bill')
-sns.stripplot(data=tips, x='day', y='total_bill', color='black', alpha=0.3, size=3)
-
-plt.show()
-```
-
-### Violin Plot (violinplot)
-```python
-# Basic violin plot
-sns.violinplot(data=tips, x='day', y='total_bill')
-
-# Split violin (compare two groups)
-sns.violinplot(data=tips, x='day', y='total_bill', hue='sex', split=True)
-
-# Inner options: 'box', 'quartile', 'point', 'stick', None
-sns.violinplot(data=tips, x='day', y='total_bill', inner='quartile')
-
-plt.show()
-```
-
-### Strip Plot (stripplot) — individual data points
-```python
-sns.stripplot(data=tips, x='day', y='total_bill', jitter=True, alpha=0.6)
-plt.show()
-```
-
-### Swarm Plot (swarmplot) — non-overlapping points
-```python
-sns.swarmplot(data=tips, x='day', y='total_bill', hue='sex')
-plt.show()
-```
-
-### Categorical Plot (catplot) — Figure-level
-```python
-# kind: 'strip', 'swarm', 'box', 'violin', 'bar', 'count', 'point'
-sns.catplot(data=tips, x='day', y='total_bill', kind='box')
-
-# Faceted
-sns.catplot(data=tips, x='day', y='total_bill', kind='bar', col='sex')
-
-plt.show()
+#### Output:
+```text
+[Rendered Graphic: Multi-dimensional scatter plot with distinct Lunch/Dinner colors and variable circle sizes]
 ```
 
 ---
 
-## 4. Relational Plots
+## 5. Categorical Plots
 
-### Scatter Plot (scatterplot)
+### Box Plots & Violin Plots (Examining Dispersion)
 ```python
-tips = sns.load_dataset('tips')
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-# Basic scatter
-sns.scatterplot(data=tips, x='total_bill', y='tip')
+tips = sns.load_dataset("tips")
 
-# Color by category
-sns.scatterplot(data=tips, x='total_bill', y='tip', hue='sex')
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 4.5))
 
-# Size by value
-sns.scatterplot(data=tips, x='total_bill', y='tip', hue='sex', size='size')
+# Boxplot
+sns.boxplot(data=tips, x="day", y="total_bill", hue="sex", palette="Set2", ax=ax1)
+ax1.set_title("Total Bill Distribution by Day (Box Plot)")
 
-# Style by category
-sns.scatterplot(data=tips, x='total_bill', y='tip', hue='sex', style='smoker')
+# Violinplot with split hue
+sns.violinplot(data=tips, x="day", y="total_bill", hue="sex", split=True, palette="Pastel1", ax=ax2)
+ax2.set_title("Density & Quartiles by Day (Split Violin)")
 
-plt.show()
-```
-
-### Line Plot (lineplot)
-```python
-flights = sns.load_dataset('flights')
-
-# Basic line plot
-sns.lineplot(data=flights, x='year', y='passengers')
-
-# Grouped
-sns.lineplot(data=flights, x='year', y='passengers', hue='month')
-
-# With confidence interval
-sns.lineplot(data=flights, x='year', y='passengers', ci=95)
-
-plt.show()
-```
-
-### Relational Plot (relplot) — Figure-level
-```python
-# kind: 'scatter' or 'line'
-sns.relplot(data=tips, x='total_bill', y='tip', kind='scatter', hue='sex', col='time')
-
-plt.show()
-```
-
----
-
-## 5. Regression Plots
-
-### regplot — single axes
-```python
-# Linear regression with scatter
-sns.regplot(data=tips, x='total_bill', y='tip')
-
-# Polynomial regression
-sns.regplot(data=tips, x='total_bill', y='tip', order=2)
-
-# Without confidence interval
-sns.regplot(data=tips, x='total_bill', y='tip', ci=None)
-
-# Scatter only (no regression line)
-sns.regplot(data=tips, x='total_bill', y='tip', fit_reg=False)
-
-plt.show()
-```
-
-### lmplot — Figure-level (supports faceting)
-```python
-# Basic
-sns.lmplot(data=tips, x='total_bill', y='tip')
-
-# Grouped by hue
-sns.lmplot(data=tips, x='total_bill', y='tip', hue='sex')
-
-# Faceted
-sns.lmplot(data=tips, x='total_bill', y='tip', col='sex', row='smoker')
-
-plt.show()
-```
-
----
-
-## 6. Matrix Plots
-
-### Heatmap
-```python
-# Correlation heatmap
-tips_numeric = tips.select_dtypes(include=[np.number])
-corr = tips_numeric.corr()
-
-fig, ax = plt.subplots(figsize=(8, 6))
-sns.heatmap(corr,
-            annot=True,          # show values
-            fmt='.2f',           # format
-            cmap='coolwarm',     # colormap
-            center=0,            # center colormap at 0
-            square=True,         # square cells
-            linewidths=0.5,      # line between cells
-            vmin=-1, vmax=1)     # value range
-
-plt.title('Correlation Heatmap')
-plt.show()
-```
-
-### Clustermap (hierarchical clustering)
-```python
-sns.clustermap(corr,
-               annot=True,
-               cmap='coolwarm',
-               figsize=(8, 8))
-plt.show()
-```
-
----
-
-## 7. Pair Plot (pairplot) — All pairwise relationships
-
-```python
-iris = sns.load_dataset('iris')
-
-# Basic pair plot
-sns.pairplot(iris)
-
-# Colored by species
-sns.pairplot(iris, hue='species')
-
-# With regression lines on scatter plots
-sns.pairplot(iris, hue='species', kind='reg')
-
-# Select specific columns
-sns.pairplot(iris, vars=['sepal_length', 'sepal_width', 'petal_length'], hue='species')
-
-# Customize diagonal
-sns.pairplot(iris, hue='species', diag_kind='kde')   # 'hist' or 'kde'
-
-plt.show()
-```
-
----
-
-## 8. Joint Plot (jointplot) — Bivariate + marginal distributions
-
-```python
-# Basic (scatter + histograms)
-sns.jointplot(data=tips, x='total_bill', y='tip')
-
-# KDE
-sns.jointplot(data=tips, x='total_bill', y='tip', kind='kde', fill=True)
-
-# Hex
-sns.jointplot(data=tips, x='total_bill', y='tip', kind='hex')
-
-# Regression
-sns.jointplot(data=tips, x='total_bill', y='tip', kind='reg')
-
-# With hue
-sns.jointplot(data=tips, x='total_bill', y='tip', hue='sex')
-
-plt.show()
-```
-
----
-
-## 9. FacetGrid — Multi-plot grids
-
-```python
-tips = sns.load_dataset('tips')
-
-# Create grid
-g = sns.FacetGrid(tips, col='sex', row='smoker', height=4)
-
-# Map a plot to each facet
-g.map(sns.scatterplot, 'total_bill', 'tip')
-
-# Map with hue
-g = sns.FacetGrid(tips, col='time', hue='sex', height=5)
-g.map(sns.scatterplot, 'total_bill', 'tip')
-g.add_legend()
-
-plt.show()
-```
-
----
-
-## 10. Customizing Seaborn Plots
-
-### Since Seaborn returns Matplotlib objects, you can customize with Matplotlib:
-```python
-fig, ax = plt.subplots(figsize=(10, 6))
-sns.barplot(data=tips, x='day', y='total_bill', ax=ax)
-
-# Matplotlib customization
-ax.set_title('Average Bill by Day', fontsize=16, fontweight='bold')
-ax.set_xlabel('Day of Week', fontsize=12)
-ax.set_ylabel('Total Bill ($)', fontsize=12)
-ax.set_ylim(0, 30)
-plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
 ```
 
-### Figure-level plots return a FacetGrid object:
+#### Output:
+```text
+[Rendered Graphic: Dual-panel comparison showing outlier quartiles (Box) and probability density curves (Violin)]
+```
+
+---
+
+## 6. Distribution Plots
+
 ```python
-g = sns.catplot(data=tips, x='day', y='total_bill', kind='bar')
-g.fig.set_size_inches(10, 6)
-g.set_axis_labels('Day', 'Total Bill ($)')
-g.set_titles('Bill Distribution')
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+penguins = sns.load_dataset("penguins")
+
+fig, ax = plt.subplots(figsize=(8, 4))
+
+# Kernel Density Estimation (KDE) with hue
+sns.kdeplot(
+    data=penguins,
+    x="flipper_length_mm",
+    hue="species",
+    fill=True,
+    common_norm=False,
+    palette="crest",
+    alpha=0.5,
+    linewidth=2,
+    ax=ax
+)
+
+ax.set_title("Flipper Length Probability Density by Penguin Species", fontweight='bold')
+plt.show()
+```
+
+#### Output:
+```text
+[Rendered Graphic: Smooth overlapping colored probability distributions showing species separation]
+```
+
+---
+
+## 7. Matrix Plots: Correlation Heatmap & Clustermap
+
+Heatmaps visualize numerical correlation matrices:
+
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+iris = sns.load_dataset("iris")
+corr_matrix = iris.drop(columns='species').corr()
+
+fig, ax = plt.subplots(figsize=(6, 5))
+
+sns.heatmap(
+    corr_matrix,
+    annot=True,
+    fmt=".2f",
+    cmap="coolwarm",
+    vmin=-1,
+    vmax=1,
+    square=True,
+    linewidths=1.5,
+    cbar_kws={"shrink": 0.8},
+    ax=ax
+)
+
+ax.set_title("Iris Feature Pearson Correlation Matrix", fontweight='bold')
+plt.show()
+```
+
+#### Output:
+```text
+[Rendered Graphic: 4x4 annotated color grid showing strong positive correlation between petal length and width]
+```
+
+---
+
+## 8. Linear Regression Plots
+
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+tips = sns.load_dataset("tips")
+
+# Regplot fits and plots a linear regression model with 95% bootstrap confidence band
+g = sns.lmplot(
+    data=tips,
+    x="total_bill",
+    y="tip",
+    hue="smoker",
+    col="time",
+    height=4,
+    aspect=1.2,
+    palette="Dark2"
+)
+
+g.set_axis_labels("Total Bill ($)", "Tip ($)")
+plt.show()
+```
+
+#### Output:
+```text
+[Rendered Graphic: Two regression panels (Lunch and Dinner) with fitted trendlines and shaded 95% CI bands]
+```
+
+---
+
+## 9. Multi-Plot Grids: `pairplot()`
+
+`pairplot` generates pairwise bivariate distributions across all numerical variables in a single function call:
+
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+iris = sns.load_dataset("iris")
+
+# Pairwise scatter plots and diagonal KDEs
+g = sns.pairplot(iris, hue="species", palette="Set1", corner=True)
+plt.show()
+```
+
+#### Output:
+```text
+[Rendered Graphic: Lower-triangle pairwise scatter matrix highlighting distinct separation of Iris-setosa]
+```
+
+---
+
+## 10. Aesthetics, Themes & Color Palettes
+
+Seaborn provides 5 built-in themes: `darkgrid`, `whitegrid`, `dark`, `white`, `ticks`.
+
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Preview color palettes
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 2.5))
+
+sns.palplot(sns.color_palette("mako", 8))
+sns.palplot(sns.color_palette("flare", 8))
 plt.show()
 ```
 
 ---
 
-## 11. Axes-level vs Figure-level Functions
+## 11. Try It Yourself! (Hands-On Practice Exercises)
 
-| Axes-level (use with ax=) | Figure-level (creates own figure) |
-|---|---|
-| `scatterplot()` | `relplot(kind='scatter')` |
-| `lineplot()` | `relplot(kind='line')` |
-| `histplot()` | `displot(kind='hist')` |
-| `kdeplot()` | `displot(kind='kde')` |
-| `boxplot()` | `catplot(kind='box')` |
-| `violinplot()` | `catplot(kind='violin')` |
-| `barplot()` | `catplot(kind='bar')` |
-| `countplot()` | `catplot(kind='count')` |
-| `regplot()` | `lmplot()` |
-| `heatmap()` | — |
+### Exercise 1: Finding High-Value Customers
+**Task:** Using the `tips` dataset, plot a grouped bar chart comparing the mean tip percentage `(tip / total_bill) * 100` across days of the week, broken down by smoker status.
 
-**Axes-level**: Pass `ax=` to plot on existing axes. Good for subplots.
-**Figure-level**: Creates its own figure. Supports `col=` and `row=` for faceting.
+<details>
+<summary>👉 Click to Reveal Solution</summary>
+
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+tips = sns.load_dataset("tips")
+tips['tip_pct'] = (tips['tip'] / tips['total_bill']) * 100
+
+fig, ax = plt.subplots(figsize=(7, 4))
+sns.barplot(data=tips, x="day", y="tip_pct", hue="smoker", errorbar="sd", palette="Blues", ax=ax)
+
+ax.set_title("Average Tip Percentage by Day and Smoking Status")
+ax.set_ylabel("Tip Percentage (%)")
+plt.show()
+```
+</details>
 
 ---
 
-## Quick Reference Table
+## 12. Quick Reference Cheat Sheet
 
-| Plot Type | Function | Use Case |
+| Function | Primary Use Case | Key Parameters |
 |---|---|---|
-| Histogram | `sns.histplot()` | Distribution of a single variable |
-| KDE | `sns.kdeplot()` | Smooth density estimate |
-| Box plot | `sns.boxplot()` | Distribution summary (median, quartiles) |
-| Violin plot | `sns.violinplot()` | Distribution shape + box plot |
-| Bar plot | `sns.barplot()` | Mean of a variable per category |
-| Count plot | `sns.countplot()` | Count per category |
-| Scatter plot | `sns.scatterplot()` | Relationship between two variables |
-| Line plot | `sns.lineplot()` | Trends over time |
-| Regression | `sns.regplot()` | Scatter + fitted regression line |
-| Heatmap | `sns.heatmap()` | Matrix/correlation visualization |
-| Pair plot | `sns.pairplot()` | All pairwise relationships |
-| Joint plot | `sns.jointplot()` | Bivariate + marginal distributions |
-| Strip plot | `sns.stripplot()` | Individual data points by category |
-| Swarm plot | `sns.swarmplot()` | Non-overlapping categorical scatter |
-| Facet grid | `sns.FacetGrid()` | Multi-panel plots by category |
+| `sns.scatterplot()` | Bivariate continuous points | `hue`, `style`, `size`, `palette` |
+| `sns.lineplot()` | Time series / continuous curves | `hue`, `errorbar='ci'`, `estimator='mean'` |
+| `sns.barplot()` | Mean estimates with error bars | `x`, `y`, `hue`, `estimator`, `ci` |
+| `sns.boxplot()` | Quartiles, median, and outliers | `notch=True`, `whis`, `palette` |
+| `sns.violinplot()` | Kernel density + box representation | `split=True`, `inner='quartile'` |
+| `sns.histplot()` | Binned counts with KDE overlay | `kde=True`, `bins`, `stat='density'` |
+| `sns.heatmap()` | 2D color matrix of correlation | `annot=True`, `cmap='coolwarm'`, `vmin`, `vmax` |
+| `sns.pairplot()` | Pairwise grid across all features | `hue`, `corner=True`, `diag_kind='kde'` |
+| `sns.lmplot()` | Linear regression with facets | `col`, `row`, `order=2` (polynomial) |

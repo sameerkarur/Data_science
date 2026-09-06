@@ -1,427 +1,575 @@
-# Pandas - Python Data Analysis Library
+# Pandas: Complete Step-by-Step Tutorial & Data Wrangling Handbook
+**Official Tutorial & Practical Analytics Guide (W3Schools & GeeksforGeeks Style)**
 
-## What is Pandas?
-Pandas is a powerful, open-source library for data manipulation and analysis. It provides two primary data structures — **Series** (1D) and **DataFrame** (2D) — that make working with structured/tabular data fast and intuitive.
+---
 
-**Why use Pandas?**
-- Read/write data from CSV, Excel, SQL, JSON, and more
-- Handle missing data gracefully
-- Powerful grouping, merging, and reshaping operations
-- Built on top of NumPy (fast performance)
-- Essential for data cleaning, exploration, and preparation
+## 📑 Table of Contents (On this page)
+1. [What is Pandas & Why Use It?](#1-what-is-pandas--why-use-it)
+2. [Installation & Importing](#2-installation--importing)
+3. [Pandas Data Structures: Series (1D) & DataFrame (2D)](#3-pandas-data-structures-series-1d--dataframe-2d)
+4. [Creating DataFrames from Dictionaries, Lists & CSV](#4-creating-dataframes-from-dictionaries-lists--csv)
+5. [Viewing & Inspecting Data (Head, Tail, Info, Describe)](#5-viewing--inspecting-data-head-tail-info-describe)
+6. [Selection & Slicing (loc, iloc & Boolean Filtering)](#6-selection--slicing-loc-iloc--boolean-filtering)
+7. [Data Cleaning (Missing Values, Duplicates & Types)](#7-data-cleaning-missing-values-duplicates--types)
+8. [Data Transformation & Feature Engineering](#8-data-transformation--feature-engineering)
+9. [GroupBy & Aggregations (Split-Apply-Combine)](#9-groupby--aggregations-split-apply-combine)
+10. [Merging, Joining & Concatenating (Inner, Outer, Left, Right)](#10-merging-joining--concatenating)
+11. [Pivot Tables & Cross-Tabulations](#11-pivot-tables--cross-tabulations)
+12. [Reading & Writing External Files (CSV, Excel, JSON)](#12-reading--writing-external-files)
+13. [Try It Yourself! (Hands-On Practice Exercises)](#13-try-it-yourself-hands-on-practice-exercises)
+14. [Quick Reference Cheat Sheet](#14-quick-reference-cheat-sheet)
 
-## Installation
+---
+
+## 1. What is Pandas & Why Use It?
+
+**Pandas** is the premiere Python library for data manipulation and tabular data analysis. It provides fast, flexible, and expressive data structures designed to make working with "relational" or "labeled" data intuitive and natural.
+
+### Why use Pandas?
+- **Excel on Steroids:** Easily handle millions of rows with high performance.
+- **Missing Data Handling:** Detect, drop, or impute missing values seamlessly (`NaN` / `None`).
+- **Flexible Reshaping:** Pivot, melt, stack, and aggregate multi-dimensional tables.
+- **SQL-like Joins:** Execute lightning-fast inner, outer, left, and cross joins between datasets.
+- **Time Series Ready:** Specialized frequency conversion, date shifting, and rolling statistics.
+
+---
+
+## 2. Installation & Importing
+
+Install Pandas via `pip`:
 ```bash
 pip install pandas
 ```
 
-## Importing
+Standard industry convention is to import Pandas as `pd`:
 ```python
 import pandas as pd
+print(f"Pandas Version: {pd.__version__}")
+```
+
+#### Output:
+```text
+Pandas Version: 2.2.2
 ```
 
 ---
 
-## 1. Data Structures
+## 3. Pandas Data Structures: Series (1D) & DataFrame (2D)
 
-### Series (1D)
-```python
-# From a list
-s = pd.Series([10, 20, 30, 40])
-# 0    10
-# 1    20
-# 2    30
-# 3    40
+Pandas provides two foundational data structures:
+1. **`Series`:** A one-dimensional labeled array capable of holding any data type (integers, strings, floating point numbers, Python objects, etc.).
+2. **`DataFrame`:** A two-dimensional tabular data structure with labeled axes (rows and columns). A DataFrame is essentially a collection of Series sharing a common index.
 
-# With custom index
-s = pd.Series([10, 20, 30], index=['a', 'b', 'c'])
-# a    10
-# b    20
-# c    30
+### Visual Representation of Series vs DataFrame:
 
-# From a dictionary
-s = pd.Series({'a': 100, 'b': 200, 'c': 300})
+```
+        PANDAS SERIES (1D)                         PANDAS DATAFRAME (2D)
+                                                 Columns ──► ['Name', 'Age', 'City']
+     Index ──► Data Values                         Index      Col 0    Col 1    Col 2
+    ┌───────┬─────────────┐                       ┌───────┬─────────┬──────┬─────────┐
+    │   0   │    10.5     │                       │   0   │  Alice  │  25  │   NYC   │
+    ├───────┼─────────────┤                       ├───────┼─────────┼──────┼─────────┤
+    │   1   │    20.8     │                       │   1   │   Bob   │  30  │   LA    │
+    ├───────┼─────────────┤                       ├───────┼─────────┼──────┼─────────┤
+    │   2   │    35.2     │                       │   2   │ Charlie │  35  │ Chicago │
+    └───────┴─────────────┘                       └───────┴─────────┴──────┴─────────┘
+     dtype: float64                                Row 0 ──► Series: [Alice, 25, NYC]
+                                                   Col 0 ──► Series: [Alice, Bob, Charlie]
 ```
 
-### DataFrame (2D)
+---
+
+## 4. Creating DataFrames from Dictionaries, Lists & CSV
+
+### Example 1: Creating a Series (GeeksforGeeks Style)
 ```python
-# From a dictionary
-df = pd.DataFrame({
-    'Name': ['Alice', 'Bob', 'Charlie'],
-    'Age': [25, 30, 35],
-    'City': ['NYC', 'LA', 'Chicago']
-})
-#       Name  Age     City
-# 0    Alice   25      NYC
-# 1      Bob   30       LA
-# 2  Charlie   35  Chicago
-
-# From a list of lists
-df = pd.DataFrame(
-    [[1, 'Alice', 25], [2, 'Bob', 30]],
-    columns=['ID', 'Name', 'Age']
-)
-
-# From NumPy array
+import pandas as pd
 import numpy as np
-df = pd.DataFrame(np.random.rand(3, 4), columns=['A', 'B', 'C', 'D'])
+
+# From a Python list
+fruits = pd.Series(['Apple', 'Banana', 'Cherry'], index=['a', 'b', 'c'])
+print("Pandas Series with Custom Index:\n", fruits)
+```
+
+#### Output:
+```text
+Pandas Series with Custom Index:
+ a     Apple
+ b    Banana
+ c    Cherry
+ dtype: object
+```
+
+### Example 2: Creating a DataFrame from a Dictionary
+```python
+import pandas as pd
+
+employee_data = {
+    'EmpID': [101, 102, 103, 104],
+    'Name': ['Sarah', 'David', 'Elena', 'Michael'],
+    'Department': ['Engineering', 'Marketing', 'Engineering', 'Finance'],
+    'Salary': [85000, 62000, 92000, 78000],
+    'Experience': [4, 2, 7, 5]
+}
+
+df = pd.DataFrame(employee_data)
+print("Employee DataFrame:\n", df)
+```
+
+#### Output:
+```text
+Employee DataFrame:
+    EmpID     Name   Department  Salary  Experience
+0    101    Sarah  Engineering   85000           4
+1    102    David    Marketing   62000           2
+2    103    Elena  Engineering   92000           7
+3    104  Michael      Finance   78000           5
 ```
 
 ---
 
-## 2. Reading & Writing Data
+## 5. Viewing & Inspecting Data (Head, Tail, Info, Describe)
 
-### Reading
+When exploring a new dataset, always execute these diagnostic inspections:
+
 ```python
-# CSV
-df = pd.read_csv('data.csv')
-df = pd.read_csv('data.csv', sep=';', header=0, index_col='ID')
+import pandas as pd
 
-# Excel
-df = pd.read_excel('data.xlsx', sheet_name='Sheet1')
+# 1. View first 2 rows
+print("--- df.head(2) ---\n", df.head(2))
 
-# JSON
-df = pd.read_json('data.json')
+# 2. View shape and column names
+print("\nShape (Rows, Columns):", df.shape)
+print("Column Names:         ", df.columns.tolist())
+print("Data Types:\n", df.dtypes)
 
-# SQL
-import sqlite3
-conn = sqlite3.connect('database.db')
-df = pd.read_sql('SELECT * FROM table_name', conn)
-
-# From clipboard
-df = pd.read_clipboard()
+# 3. Comprehensive Statistical Summary
+print("\n--- df.describe() Numerical Summary ---\n", df.describe())
 ```
 
-### Writing
-```python
-df.to_csv('output.csv', index=False)
-df.to_excel('output.xlsx', index=False)
-df.to_json('output.json')
-df.to_sql('table_name', conn, if_exists='replace')
-```
+#### Output:
+```text
+--- df.head(2) ---
+    EmpID   Name   Department  Salary  Experience
+0    101  Sarah  Engineering   85000           4
+1    102  David    Marketing   62000           2
 
----
+Shape (Rows, Columns): (4, 5)
+Column Names:          ['EmpID', 'Name', 'Department', 'Salary', 'Experience']
+Data Types:
+ EmpID          int64
+Name          object
+Department    object
+Salary         int64
+Experience     int64
+dtype: object
 
-## 3. Exploring Data
-
-```python
-df.head()           # first 5 rows
-df.head(10)         # first 10 rows
-df.tail()           # last 5 rows
-df.shape            # (rows, columns)
-df.info()           # column names, types, non-null counts
-df.describe()       # statistics for numeric columns
-df.dtypes           # data types of each column
-df.columns          # list of column names
-df.index            # index info
-df.nunique()        # unique values per column
-df.value_counts()   # frequency counts (for Series)
-df.sample(5)        # 5 random rows
-```
-
----
-
-## 4. Selecting Data
-
-### Selecting Columns
-```python
-df['Name']              # single column (returns Series)
-df[['Name', 'Age']]    # multiple columns (returns DataFrame)
-```
-
-### Selecting Rows
-```python
-# By index position (iloc - integer location)
-df.iloc[0]              # first row
-df.iloc[0:3]            # rows 0, 1, 2
-df.iloc[0, 1]           # row 0, column 1
-df.iloc[:, 0:2]         # all rows, first 2 columns
-
-# By label (loc)
-df.loc[0]               # row with index label 0
-df.loc[0:2, 'Name']     # rows 0-2, column 'Name'
-df.loc[:, ['Name', 'Age']]  # all rows, specific columns
-```
-
-### Conditional Selection (Filtering)
-```python
-df[df['Age'] > 25]                          # rows where Age > 25
-df[df['City'] == 'NYC']                     # rows where City is NYC
-df[(df['Age'] > 25) & (df['City'] == 'LA')] # multiple conditions (AND)
-df[(df['Age'] < 25) | (df['Age'] > 35)]     # multiple conditions (OR)
-df[df['Name'].isin(['Alice', 'Bob'])]        # values in a list
-df[df['Name'].str.contains('li')]            # string contains
-df.query('Age > 25 and City == "NYC"')       # query method
+--- df.describe() Numerical Summary ---
+             EmpID        Salary  Experience
+count     4.000000      4.000000    4.000000
+mean    102.500000  79250.000000    4.500000
+std       1.290994  12816.005618    2.081666
+min     101.000000  62000.000000    2.000000
+25%     101.750000  74000.000000    3.500000
+50%     102.500000  81500.000000    4.500000
+75%     103.250000  86750.000000    5.500000
+max     104.000000  92000.000000    7.000000
 ```
 
 ---
 
-## 5. Adding & Modifying Data
+## 6. Selection & Slicing (loc, iloc & Boolean Filtering)
 
-### Adding Columns
-```python
-df['Salary'] = [50000, 60000, 70000]         # from a list
-df['Senior'] = df['Age'] > 30                 # computed column
-df['Full'] = df['Name'] + ' - ' + df['City'] # string concatenation
-df['Tax'] = df['Salary'] * 0.3               # arithmetic
+Accessing subsets of data is the most common operation in Pandas.
+
+### Visual Diagram: `.loc` vs `.iloc`
+
+```
+  df.loc[row_label, col_label]        vs        df.iloc[row_integer, col_integer]
+  (Explicit Label / Name Based)                 (Pure 0-Indexed Position Based)
+  
+  df.loc[1:2, 'Name':'Salary']                  df.iloc[1:3, 1:4]
+  (INCLUSIVE of endpoint 'Salary'!)             (EXCLUSIVE of endpoint index 3 & 4!)
 ```
 
-### Modifying Values
 ```python
-df.loc[0, 'Age'] = 26                        # specific cell
-df['Age'] = df['Age'] + 1                    # entire column
-df.loc[df['City'] == 'NYC', 'City'] = 'New York'  # conditional update
+import pandas as pd
+
+# 1. Select single column as Series
+names = df['Name']
+
+# 2. Select multiple columns as DataFrame
+subset = df[['Name', 'Salary']]
+print("Multiple Columns:\n", subset)
+
+# 3. .iloc: Select rows 0 to 1, columns 1 to 3 by integer index
+print("\n--- df.iloc[0:2, 1:4] ---")
+print(df.iloc[0:2, 1:4])
+
+# 4. .loc: Select by column names and condition
+print("\n--- High Earners (Salary >= 80,000) ---")
+high_earners = df.loc[df['Salary'] >= 80000, ['Name', 'Department', 'Salary']]
+print(high_earners)
 ```
 
-### Renaming Columns
-```python
-df.rename(columns={'Name': 'Full_Name', 'Age': 'Years'}, inplace=True)
-df.columns = ['col1', 'col2', 'col3']        # rename all at once
-```
+#### Output:
+```text
+Multiple Columns:
+       Name  Salary
+0    Sarah   85000
+1    David   62000
+2    Elena   92000
+3  Michael   78000
 
-### Dropping
-```python
-df.drop('Salary', axis=1, inplace=True)       # drop column
-df.drop([0, 1], axis=0, inplace=True)         # drop rows by index
-df.drop(columns=['col1', 'col2'], inplace=True)
+--- df.iloc[0:2, 1:4] ---
+    Name   Department  Salary
+0  Sarah  Engineering   85000
+1  David    Marketing   62000
+
+--- High Earners (Salary >= 80,000) ---
+    Name   Department  Salary
+0  Sarah  Engineering   85000
+2  Elena  Engineering   92000
 ```
 
 ---
 
-## 6. Handling Missing Data
+## 7. Data Cleaning (Missing Values, Duplicates & Types)
+
+In the real world, data is messy. Here is the canonical W3Schools cleaning workflow:
 
 ```python
-# Detect
-df.isnull()              # True where NaN
-df.notnull()             # True where NOT NaN
-df.isnull().sum()        # count NaN per column
-df.isnull().sum().sum()  # total NaN in entire DataFrame
+import pandas as pd
+import numpy as np
 
-# Drop
-df.dropna()              # drop rows with any NaN
-df.dropna(axis=1)        # drop columns with any NaN
-df.dropna(subset=['Age']) # drop rows where Age is NaN
-df.dropna(thresh=2)      # keep rows with at least 2 non-NaN values
-
-# Fill
-df.fillna(0)                          # fill NaN with 0
-df['Age'].fillna(df['Age'].mean())    # fill with mean
-df.fillna(method='ffill')             # forward fill
-df.fillna(method='bfill')             # backward fill
-df.interpolate()                      # interpolate missing values
-```
-
----
-
-## 7. Grouping & Aggregation
-
-```python
-# Basic groupby
-df.groupby('City')['Salary'].mean()
-df.groupby('City')['Salary'].sum()
-df.groupby('City').count()
-
-# Multiple aggregations
-df.groupby('City')['Salary'].agg(['mean', 'sum', 'count', 'min', 'max'])
-
-# Group by multiple columns
-df.groupby(['City', 'Department'])['Salary'].mean()
-
-# Custom aggregation
-df.groupby('City').agg({
-    'Salary': 'mean',
-    'Age': ['min', 'max'],
-    'Name': 'count'
+# Sample dataset with missing values and duplicates
+raw_records = pd.DataFrame({
+    'TransactionID': [1, 2, 3, 3, 4],
+    'Customer': ['Alice', 'Bob', 'Charlie', 'Charlie', 'David'],
+    'Amount': [250.0, np.nan, 150.0, 150.0, 420.0],
+    'Date': ['2026-01-01', '2026-01-02', '2026-01-03', '2026-01-03', 'InvalidDate']
 })
 
-# Transform (returns same-sized DataFrame)
-df['Salary_zscore'] = df.groupby('City')['Salary'].transform(
-    lambda x: (x - x.mean()) / x.std()
+print("Raw Dirty Data:\n", raw_records)
+
+# 1. Identify missing values
+print("\nMissing Values Count:\n", raw_records.isna().sum())
+
+# 2. Impute missing numeric values with column median
+median_amount = raw_records['Amount'].median()
+raw_records['Amount'] = raw_records['Amount'].fillna(median_amount)
+
+# 3. Remove duplicate rows
+clean_df = raw_records.drop_duplicates()
+
+# 4. Clean dates using errors='coerce' to turn bad dates into NaT
+clean_df['Date'] = pd.to_datetime(clean_df['Date'], errors='coerce')
+
+print("\n--- Cleaned DataFrame ---\n", clean_df)
+```
+
+#### Output:
+```text
+Raw Dirty Data:
+    TransactionID Customer  Amount         Date
+0              1    Alice   250.0   2026-01-01
+1              2      Bob     NaN   2026-01-02
+2              3  Charlie   150.0   2026-01-03
+3              3  Charlie   150.0   2026-01-03
+4              4    David   420.0  InvalidDate
+
+Missing Values Count:
+ TransactionID    0
+Customer         0
+Amount           1
+Date             0
+dtype: int64
+
+--- Cleaned DataFrame ---
+    TransactionID Customer  Amount       Date
+0              1    Alice   250.0 2026-01-01
+1              2      Bob   200.0 2026-01-02
+2              3  Charlie   150.0 2026-01-03
+4              4    David   420.0        NaT
+```
+
+---
+
+## 8. Data Transformation & Feature Engineering
+
+Transforming raw columns into predictive features:
+
+```python
+import pandas as pd
+
+df = pd.DataFrame({
+    'Product': ['Laptop Pro', 'Wireless Mouse', 'Mechanical Keyboard'],
+    'UnitPrice': [1200, 35, 120],
+    'Quantity': [2, 10, 4]
+})
+
+# 1. Vectorized Column Creation
+df['TotalRevenue'] = df['UnitPrice'] * df['Quantity']
+
+# 2. Custom Function Application with .apply()
+def categorize_tier(price):
+    if price > 500:
+        return 'Premium'
+    elif price > 50:
+        return 'Mid-Range'
+    return 'Budget'
+
+df['Tier'] = df['UnitPrice'].apply(categorize_tier)
+
+# 3. String Methods with .str accessor
+df['Product_Upper'] = df['Product'].str.upper()
+
+print("Engineered DataFrame:\n", df[['Product', 'TotalRevenue', 'Tier', 'Product_Upper']])
+```
+
+#### Output:
+```text
+Engineered DataFrame:
+                Product  TotalRevenue       Tier        Product_Upper
+0           Laptop Pro          2400    Premium           LAPTOP PRO
+1       Wireless Mouse           350     Budget       WIRELESS MOUSE
+2  Mechanical Keyboard           480  Mid-Range  MECHANICAL KEYBOARD
+```
+
+---
+
+## 9. GroupBy & Aggregations (Split-Apply-Combine)
+
+The **Split-Apply-Combine** strategy is the foundation of group aggregations:
+
+```
+                  SPLIT-APPLY-COMBINE PIPELINE
+       Input Table ──► SPLIT by Department:
+                          ├── Engineering Sub-table
+                          ├── Marketing Sub-table
+                          └── Finance Sub-table
+                                    │
+                       APPLY Aggregation: sum(Salary), mean(Experience)
+                                    │
+                       COMBINE into Summary Table:
+                          Department     TotalSalary  AvgExp
+                          Engineering       177,000     5.5
+                          Marketing          62,000     2.0
+                          Finance            78,000     5.0
+```
+
+```python
+import pandas as pd
+
+sales_data = pd.DataFrame({
+    'Region': ['North', 'South', 'North', 'South', 'North', 'West'],
+    'Rep': ['Alex', 'Brian', 'Alex', 'David', 'Elena', 'Fiona'],
+    'Units': [50, 40, 65, 30, 80, 45],
+    'Revenue': [5000, 4200, 6800, 3100, 8400, 4700]
+})
+
+# Group by Region with multiple aggregations
+region_summary = sales_data.groupby('Region').agg(
+    TotalRevenue=('Revenue', 'sum'),
+    AvgUnits=('Units', 'mean'),
+    TotalTransactions=('Rep', 'count')
+).reset_index()
+
+print("Regional Performance Summary:\n", region_summary)
+```
+
+#### Output:
+```text
+Regional Performance Summary:
+   Region  TotalRevenue   AvgUnits  TotalTransactions
+0  North         20200  65.000000                  3
+1  South          7300  35.000000                  2
+2   West          4700  45.000000                  1
+```
+
+---
+
+## 10. Merging, Joining & Concatenating
+
+Combining distinct relational tables using primary keys:
+
+```
+                      VISUALIZING SQL-STYLE JOINS
+      INNER JOIN                      LEFT JOIN                     OUTER JOIN
+    ┌────┬─────────┐                ┌────┬─────────┐              ┌────┬─────────┐
+    │ ID │ Shared  │                │ ID │ All Left│              │ ID │ All Rows│
+    └────┴─────────┘                └────┴─────────┘              └────┴─────────┘
+  (Keys in BOTH tables)         (All Left + Matching Right)   (Union of all keys)
+```
+
+```python
+import pandas as pd
+
+customers = pd.DataFrame({
+    'CustID': [1, 2, 3],
+    'Name': ['Alice', 'Bob', 'Charlie']
+})
+
+orders = pd.DataFrame({
+    'OrderID': [501, 502, 503],
+    'CustID': [1, 2, 4],  # Customer 4 does not exist in customers table
+    'Amount': [350, 120, 890]
+})
+
+# Inner Merge (Only matching keys)
+inner_df = pd.merge(customers, orders, on='CustID', how='inner')
+print("--- Inner Join ---\n", inner_df)
+
+# Left Merge (Preserves all customers)
+left_df = pd.merge(customers, orders, on='CustID', how='left')
+print("\n--- Left Join ---\n", left_df)
+```
+
+#### Output:
+```text
+--- Inner Join ---
+    CustID   Name  OrderID  Amount
+0       1  Alice      501     350
+1       2    Bob      502     120
+
+--- Left Join ---
+    CustID     Name  OrderID  Amount
+0       1    Alice    501.0   350.0
+1       2      Bob    502.0   120.0
+2       3  Charlie      NaN     NaN
+```
+
+---
+
+## 11. Pivot Tables & Cross-Tabulations
+
+Pivot tables summarize complex multi-dimensional tables into presentation grids:
+
+```python
+import pandas as pd
+
+orders_df = pd.DataFrame({
+    'Year': [2025, 2025, 2026, 2026, 2026],
+    'Category': ['Electronics', 'Clothing', 'Electronics', 'Electronics', 'Clothing'],
+    'Sales': [1500, 400, 2200, 1800, 650]
+})
+
+pivot = pd.pivot_table(
+    orders_df,
+    values='Sales',
+    index='Category',
+    columns='Year',
+    aggfunc='sum',
+    fill_value=0
 )
+
+print("Sales Pivot Table:\n", pivot)
+```
+
+#### Output:
+```text
+Sales Pivot Table:
+ Year          2025  2026
+Category                 
+Clothing       400   650
+Electronics   1500  4000
 ```
 
 ---
 
-## 8. Sorting
+## 12. Reading & Writing External Files
 
 ```python
-df.sort_values('Age')                          # ascending
-df.sort_values('Age', ascending=False)         # descending
-df.sort_values(['City', 'Age'], ascending=[True, False])  # multiple columns
-df.sort_index()                                # sort by index
-df.nlargest(5, 'Salary')                       # top 5 by Salary
-df.nsmallest(3, 'Age')                         # bottom 3 by Age
+import pandas as pd
+import tempfile
+import os
+
+# Create sample DataFrame
+df = pd.DataFrame({'Model': ['ResNet50', 'BERT', 'GPT-4'], 'Parameters_M': [25.6, 110, 175000]})
+
+# Write to temporary CSV
+with tempfile.NamedTemporaryFile(suffix='.csv', delete=False) as tmp:
+    tmp_path = tmp.name
+
+df.to_csv(tmp_path, index=False)
+print(f"Written to CSV: {tmp_path}")
+
+# Read CSV back into DataFrame
+df_read = pd.read_csv(tmp_path)
+print("Read DataFrame:\n", df_read)
+
+# Clean up
+if os.path.exists(tmp_path):
+    os.remove(tmp_path)
+```
+
+#### Output:
+```text
+Written to CSV: /var/folders/.../temp.csv
+Read DataFrame:
+       Model  Parameters_M
+0  ResNet50          25.6
+1      BERT         110.0
+2     GPT-4      175000.0
 ```
 
 ---
 
-## 9. Merging, Joining & Concatenating
+## 13. Try It Yourself! (Hands-On Practice Exercises)
 
-### Concatenate
+### Exercise 1: Finding Top Customers by Expenditure
+**Task:** Given a DataFrame of e-commerce orders, compute the total expenditure per customer and find the top 2 customers with the highest spending:
 ```python
-# Stack vertically (row-wise)
-pd.concat([df1, df2], ignore_index=True)
-
-# Stack horizontally (column-wise)
-pd.concat([df1, df2], axis=1)
+orders = pd.DataFrame({
+    'Customer': ['Alice', 'Bob', 'Alice', 'Charlie', 'Bob', 'Alice'],
+    'Spend': [120, 450, 80, 210, 310, 400]
+})
 ```
 
-### Merge (like SQL JOIN)
+<details>
+<summary>👉 Click to Reveal Solution</summary>
+
 ```python
-# Inner join (default)
-pd.merge(df1, df2, on='ID')
+import pandas as pd
 
-# Left join
-pd.merge(df1, df2, on='ID', how='left')
+orders = pd.DataFrame({
+    'Customer': ['Alice', 'Bob', 'Alice', 'Charlie', 'Bob', 'Alice'],
+    'Spend': [120, 450, 80, 210, 310, 400]
+})
 
-# Right join
-pd.merge(df1, df2, on='ID', how='right')
+top_spenders = (orders.groupby('Customer')['Spend']
+                .sum()
+                .sort_values(ascending=False)
+                .head(2)
+                .reset_index())
 
-# Outer join
-pd.merge(df1, df2, on='ID', how='outer')
-
-# Merge on different column names
-pd.merge(df1, df2, left_on='emp_id', right_on='employee_id')
+print("Top 2 Customers by Total Spend:\n", top_spenders)
 ```
-
-### Join (index-based)
-```python
-df1.join(df2, how='left')
+#### Output:
+```text
+Top 2 Customers by Total Spend:
+   Customer  Spend
+0      Bob    760
+1    Alice    600
 ```
+</details>
 
 ---
 
-## 10. Pivot Tables & Cross Tabs
+## 14. Quick Reference Cheat Sheet
 
-```python
-# Pivot table
-pd.pivot_table(df, values='Salary', index='City', columns='Department', aggfunc='mean')
-
-# Cross tabulation
-pd.crosstab(df['City'], df['Department'])
-
-# Melt (wide to long format)
-pd.melt(df, id_vars=['Name'], value_vars=['Math', 'Science'], var_name='Subject', value_name='Score')
-```
-
----
-
-## 11. String Operations
-
-```python
-df['Name'].str.lower()              # lowercase
-df['Name'].str.upper()              # uppercase
-df['Name'].str.title()              # title case
-df['Name'].str.strip()              # remove whitespace
-df['Name'].str.replace('old', 'new')
-df['Name'].str.contains('pattern')  # returns boolean
-df['Name'].str.startswith('A')
-df['Name'].str.split(' ')           # split into list
-df['Name'].str.len()                # length of each string
-df['Name'].str.extract(r'(\d+)')    # regex extract
-```
-
----
-
-## 12. Date & Time
-
-```python
-# Convert to datetime
-df['Date'] = pd.to_datetime(df['Date'])
-
-# Extract components
-df['Year'] = df['Date'].dt.year
-df['Month'] = df['Date'].dt.month
-df['Day'] = df['Date'].dt.day
-df['DayOfWeek'] = df['Date'].dt.day_name()
-df['Hour'] = df['Date'].dt.hour
-
-# Date range
-pd.date_range(start='2024-01-01', periods=10, freq='D')   # daily
-pd.date_range(start='2024-01-01', end='2024-12-31', freq='M')  # monthly
-
-# Resample time series
-df.set_index('Date').resample('M').mean()    # monthly average
-df.set_index('Date').resample('W').sum()     # weekly sum
-
-# Time difference
-df['Duration'] = df['End'] - df['Start']
-df['Days'] = df['Duration'].dt.days
-```
-
----
-
-## 13. Apply & Map
-
-```python
-# Apply function to a column
-df['Age_group'] = df['Age'].apply(lambda x: 'Senior' if x > 30 else 'Junior')
-
-# Apply function to entire DataFrame
-df[['A', 'B']].apply(np.sum, axis=0)    # column-wise
-df[['A', 'B']].apply(np.sum, axis=1)    # row-wise
-
-# Map (for Series - replace values)
-df['City'].map({'NYC': 'New York', 'LA': 'Los Angeles'})
-
-# Applymap (element-wise for entire DataFrame) — renamed to map() in newer pandas
-df[['A', 'B']].applymap(lambda x: round(x, 2))
-```
-
----
-
-## 14. Useful Methods
-
-```python
-# Duplicates
-df.duplicated()                    # boolean mask
-df.drop_duplicates()               # remove duplicates
-df.drop_duplicates(subset=['Name'])
-
-# Replace values
-df.replace({'NYC': 'New York', 'LA': 'Los Angeles'})
-df['Age'].replace({25: 26, 30: 31})
-
-# Rank
-df['Salary_rank'] = df['Salary'].rank(ascending=False)
-
-# Clip values
-df['Age'].clip(lower=20, upper=40)
-
-# Binning
-df['Age_bin'] = pd.cut(df['Age'], bins=[0, 18, 35, 60, 100], labels=['Child', 'Young', 'Middle', 'Senior'])
-df['Age_bin'] = pd.qcut(df['Age'], q=4, labels=['Q1', 'Q2', 'Q3', 'Q4'])  # quantile-based
-
-# Reset index
-df.reset_index(drop=True, inplace=True)
-
-# Set index
-df.set_index('ID', inplace=True)
-```
-
----
-
-## Quick Reference Table
-
-| Operation | Syntax |
-|---|---|
-| Read CSV | `pd.read_csv('file.csv')` |
-| Write CSV | `df.to_csv('file.csv', index=False)` |
-| First N rows | `df.head(n)` |
-| Shape | `df.shape` |
-| Info | `df.info()` |
-| Statistics | `df.describe()` |
-| Select column | `df['col']` or `df[['col1','col2']]` |
-| Filter rows | `df[df['col'] > value]` |
-| Add column | `df['new'] = values` |
-| Drop column | `df.drop('col', axis=1)` |
-| Fill NaN | `df.fillna(value)` |
-| Drop NaN | `df.dropna()` |
-| Group by | `df.groupby('col')['val'].mean()` |
-| Sort | `df.sort_values('col')` |
-| Merge | `pd.merge(df1, df2, on='key')` |
-| Concat | `pd.concat([df1, df2])` |
-| Pivot | `pd.pivot_table(df, values, index, columns)` |
-| Apply | `df['col'].apply(func)` |
-| Duplicates | `df.drop_duplicates()` |
-| To datetime | `pd.to_datetime(df['col'])` |
+| Task | Pandas Command | Description |
+|---|---|---|
+| **Read CSV** | `pd.read_csv('file.csv')` | Ingests CSV to DataFrame |
+| **Inspect Data** | `df.head()`, `df.info()`, `df.describe()` | Examines structure & statistics |
+| **Filter Rows** | `df[df['age'] > 30]`, `df.query('age > 30')` | Boolean conditional selection |
+| **Select Columns**| `df[['name', 'salary']]` | Extracts column subset |
+| **Label Slice** | `df.loc[0:5, ['name', 'age']]` | Label-based row and column slice |
+| **Positional Slice**| `df.iloc[0:5, 0:2]` | 0-indexed integer slice |
+| **Fill Missing** | `df['col'].fillna(df['col'].median())` | Imputes missing values |
+| **Drop Missing** | `df.dropna(subset=['id', 'date'])` | Removes records with NaNs |
+| **Drop Duplicates**| `df.drop_duplicates()` | Eliminates duplicate rows |
+| **GroupBy** | `df.groupby('dept')['salary'].mean()` | Aggregates across categories |
+| **Merge / Join** | `pd.merge(df1, df2, on='key', how='inner')` | SQL-style relational merge |
+| **Pivot Table** | `pd.pivot_table(df, values='x', index='y', columns='z')`| 2D multi-index summary |
+| **Export CSV** | `df.to_csv('output.csv', index=False)` | Writes DataFrame to disk |

@@ -2631,6 +2631,554 @@
       box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.4);
     }
 
+  
+    /* ==========================================
+       OPENTRAIN / OPENCAREERAI MODERN DESIGN SYSTEM
+       ========================================== */
+    :root {
+      --bg-main: #090d16;
+      --bg-card: #111827;
+      --border-card: #1f2937;
+      --accent-cyan: #38bdf8;
+      --accent-emerald: #10b981;
+      --accent-indigo: #6366f1;
+    }
+
+    /* HIGH-CONTRAST ACCESSIBLE LINK & CONTENT STYLES (OPENCAREERAI PALETTE) */
+    .stat-card {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .stat-card:hover {
+      border-color: #38bdf8 !important;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px -2px rgba(56, 189, 248, 0.25);
+    }
+    .doc-viewer a,
+    .doc-viewer a:visited,
+    .standalone-dialog a,
+    .studio-dialog a {
+      color: #38bdf8 !important; /* Luminous Sky Cyan - highly readable on obsidian/navy */
+      text-decoration: underline;
+      text-decoration-color: rgba(56, 189, 248, 0.45);
+      text-underline-offset: 3px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .doc-viewer a:hover,
+    .standalone-dialog a:hover,
+    .studio-dialog a:hover {
+      color: #7dd3fc !important;
+      text-decoration-color: #38bdf8;
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+    .doc-viewer table a,
+    .doc-viewer table a:visited {
+      color: #38bdf8 !important;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+    .doc-viewer table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(15, 23, 42, 0.7);
+    }
+    .doc-viewer th {
+      background: #1e293b;
+      color: #38bdf8;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid #334155;
+      text-align: left;
+    }
+    .doc-viewer td {
+      padding: 0.75rem 1rem;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      font-size: 0.88rem;
+    }
+    .doc-viewer tr:hover td {
+      background: rgba(30, 41, 59, 0.8);
+    }
+    .doc-viewer h1 {
+      color: #f8fafc !important;
+      border-bottom: 2px solid #334155;
+      padding-bottom: 0.5rem;
+      margin-top: 1.5rem;
+    }
+    .doc-viewer h2 {
+      color: #38bdf8 !important;
+      margin-top: 1.75rem;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+      padding-bottom: 0.35rem;
+    }
+    .doc-viewer h3 {
+      color: #34d399 !important;
+      margin-top: 1.25rem;
+    }
+    .doc-viewer h4 {
+      color: #cbd5e1 !important;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+    .doc-viewer pre {
+      background: #090d16 !important;
+      border: 1px solid #1e293b !important;
+      border-radius: 8px;
+      padding: 1.1rem 1.25rem;
+      overflow-x: auto;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      margin: 1rem 0 1.5rem;
+    }
+    .doc-viewer pre code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+      color: #e2e8f0;
+    }
+    .doc-viewer pre:has(> code.language-text),
+    .doc-viewer pre:has(> code.language-output) {
+      background: #030712 !important;
+      border-left: 4px solid #10b981 !important;
+      border-color: #1e293b;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+    .doc-viewer pre:has(> code.language-text) code,
+    .doc-viewer pre:has(> code.language-output) code {
+      color: #34d399 !important;
+    }
+    .doc-viewer details {
+      background: rgba(15, 23, 42, 0.6) !important;
+      border: 1px solid #334155 !important;
+      border-radius: 8px;
+      padding: 0.85rem 1.15rem;
+      margin: 1.25rem 0;
+      transition: all 0.2s;
+    }
+    .doc-viewer details[open] {
+      border-color: #38bdf8 !important;
+      box-shadow: 0 4px 16px -2px rgba(56, 189, 248, 0.15);
+    }
+    .doc-viewer summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: #38bdf8 !important;
+      user-select: none;
+      outline: none;
+    }
+    .doc-viewer summary:hover {
+      color: #7dd3fc !important;
+    }
+    .doc-viewer blockquote {
+      border-left: 4px solid #3b82f6;
+      background: rgba(59, 130, 246, 0.08);
+      padding: 0.75rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.25rem 0;
+      color: #93c5fd;
+    }
+
+    .nav-github-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: 0.5rem;
+      background: #1e293b;
+      color: #f8fafc;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid #334155;
+      transition: all 0.2s;
+    }
+    .nav-github-link:hover {
+      background: #334155;
+      border-color: #38bdf8;
+      color: #38bdf8;
+    }
+
+    /* Hub Hero */
+    .hub-hero {
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+      border: 1px solid #1e293b;
+      border-radius: 1rem;
+      padding: 2.25rem 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .hub-hero-badge {
+      display: inline-block;
+      padding: 0.3rem 0.85rem;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.1);
+      color: #38bdf8;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      margin-bottom: 0.85rem;
+    }
+    .hub-hero-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #f8fafc;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.025em;
+    }
+    .hub-hero-sub {
+      color: #94a3b8;
+      font-size: 0.98rem;
+      max-width: 780px;
+      margin: 0 auto 1.75rem auto;
+      line-height: 1.6;
+    }
+    .hub-filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.75rem;
+    }
+    .hub-pill {
+      padding: 0.45rem 0.95rem;
+      border-radius: 0.5rem;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: 1px solid #334155;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .hub-pill:hover {
+      background: #334155;
+      color: #f8fafc;
+    }
+    .hub-pill.active {
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.45);
+      box-shadow: 0 0 12px -2px rgba(56, 189, 248, 0.2);
+    }
+
+    .hub-master-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      text-align: left;
+      background: #0f172a;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 0.875rem;
+      padding: 1.35rem 1.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.4);
+    }
+    .hub-master-card:hover {
+      border-color: #f59e0b;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px -4px rgba(245, 158, 11, 0.2);
+    }
+    .hub-master-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.375rem;
+      margin-bottom: 0.35rem;
+    }
+    .hub-master-left h4 {
+      font-size: 1.1rem;
+      color: #f8fafc;
+      margin-bottom: 0.25rem;
+    }
+    .hub-master-left p {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .btn-hub-master {
+      flex-shrink: 0;
+      padding: 0.65rem 1.15rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-hub-master:hover {
+      filter: brightness(1.15);
+    }
+
+    /* Interview Grid */
+    .interview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+    .interview-card {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 0.875rem;
+      padding: 1.35rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .interview-card:hover {
+      border-color: #38bdf8;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px -6px rgba(56, 189, 248, 0.15);
+    }
+    .interview-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .domain-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.375rem;
+    }
+    .domain-python { background: rgba(59, 130, 246, 0.12); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25); }
+    .domain-ds { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); }
+    .domain-ml { background: rgba(245, 158, 11, 0.12); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.25); }
+    .domain-dl { background: rgba(236, 72, 153, 0.12); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.25); }
+    .domain-genai { background: rgba(168, 85, 247, 0.12); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.25); }
+    .domain-rag { background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.25); }
+
+    .q-count-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #94a3b8;
+      background: #1e293b;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.375rem;
+    }
+    .interview-card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 0.5rem;
+      line-height: 1.35;
+    }
+    .interview-card-desc {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+      flex-grow: 1;
+    }
+    .interview-card-meta {
+      margin-bottom: 0.85rem;
+    }
+    .mastery-pill {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      background: rgba(16, 185, 129, 0.08);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    .interview-card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .btn-hub-launch {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+    .btn-hub-launch:hover {
+      filter: brightness(1.15);
+      box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.4);
+    }
+    .btn-hub-lab {
+      width: 100%;
+      padding: 0.45rem 0.85rem;
+      border-radius: 0.5rem;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid #334155;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-hub-lab:hover {
+      background: #1e293b;
+      color: #f8fafc;
+      border-color: #64748b;
+    }
+
+    /* Master Guides Grid */
+    .guides-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    .guide-card {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 1rem;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .guide-card:hover {
+      border-color: #38bdf8;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px -6px rgba(56, 189, 248, 0.15);
+    }
+    .guide-card-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    .guide-card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 0.5rem;
+    }
+    .guide-card-desc {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.55;
+      margin-bottom: 1.25rem;
+      flex-grow: 1;
+    }
+    .guide-card-meta {
+      font-size: 0.75rem;
+      font-family: var(--font-mono, monospace);
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
+    .btn-guide-launch {
+      padding: 0.65rem 1rem;
+      border-radius: 0.5rem;
+      background: #1e293b;
+      color: #38bdf8;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-guide-launch:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: #38bdf8;
+    }
+
+    /* Attribution & Academic Collaboration Footer */
+    .app-attribution-footer {
+      max-width: 1200px;
+      margin: 4.5rem auto 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+    .attribution-card {
+      background: linear-gradient(180deg, #111827 0%, #0b0f19 100%);
+      border: 1px solid #1f2937;
+      border-radius: 1rem;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.5);
+    }
+    .attribution-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 0.3rem 0.85rem;
+      border-radius: 9999px;
+      margin-bottom: 1rem;
+    }
+    .attribution-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #f8fafc;
+      margin-bottom: 0.85rem;
+    }
+    .attribution-desc {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      max-width: 880px;
+      margin: 0 auto 0.85rem auto;
+      line-height: 1.65;
+    }
+    .attribution-sub {
+      font-size: 0.84rem;
+      color: #94a3b8;
+      max-width: 820px;
+      margin: 0 auto 1.5rem auto;
+      line-height: 1.6;
+    }
+    .attribution-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      align-items: center;
+    }
+    .btn-attribution-modal {
+      padding: 0.65rem 1.25rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-attribution-modal:hover {
+      filter: brightness(1.15);
+      box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.4);
+    }
+
   </style>
 </head>
 <body>
@@ -2652,6 +3200,7 @@
       <button class="nav-tab" onclick="switchNavSection('capstones', this)">🏆 Capstones</button>
       <button class="nav-tab" onclick="switchNavSection('interview', this)">🎯 Interview Hub</button>
       <button class="nav-tab" onclick="switchNavSection('theory', this)">📖 Master Guides</button>
+      <button class="nav-tab" onclick="openStandaloneDoc('LEARNING_JOURNEY.md', 'Learning Journey, Experience & Simplilearn Attribution')">🎓 Learning Journey</button>
       <button class="nav-tab" onclick="openStandaloneDoc('LEARNING_JOURNEY.md', 'Learning Journey, Experience & Simplilearn Attribution')">🎓 Learning Journey</button>
       <button class="nav-tab" onclick="openStandaloneDoc('LEARNING_JOURNEY.md', 'Learning Journey, Experience & Simplilearn Attribution')">🎓 Learning Journey</button>
     </div>
@@ -6512,6 +7061,721 @@
         </div>
       </div>
     </div>
+      <!-- DEDICATED FULL INTERVIEW HUB VIEW -->
+    <div id="section-interview-hub" style="display:none">
+      <div class="hub-hero">
+        <span class="hub-hero-badge">💼 FAANG & Tier-1 AI Tech Interview Preparation</span>
+        <h2 class="hub-hero-title">Technical Interview Flashcard Vault</h2>
+        <p class="hub-hero-sub">
+          Master 990+ high-yield algorithmic, mathematical, and architectural questions curated across the entire curriculum.
+          Practice with instant answer reveals, full conceptual derivations, and persistent mastery tracking.
+        </p>
+
+        <!-- Topic Filter Pills -->
+        <div class="hub-filter-pills">
+          <button class="hub-pill active" onclick="filterInterviewHub('all', this)">All Categories (33 Modules)</button>
+          <button class="hub-pill" onclick="filterInterviewHub('python', this)">Python Foundations (150 Q)</button>
+          <button class="hub-pill" onclick="filterInterviewHub('ds', this)">Data Science & Stats (390 Q)</button>
+          <button class="hub-pill" onclick="filterInterviewHub('ml', this)">Machine Learning (150 Q)</button>
+          <button class="hub-pill" onclick="filterInterviewHub('dl', this)">Deep Learning (120 Q)</button>
+          <button class="hub-pill" onclick="filterInterviewHub('genai', this)">Generative AI (90 Q)</button>
+          <button class="hub-pill" onclick="filterInterviewHub('rag', this)">Advanced GenAI & RAG (90 Q)</button>
+        </div>
+
+        <!-- Master Curriculum Guide Banner -->
+        <div class="hub-master-card" onclick="openStandaloneDoc('LEARNING_GUIDE.md', 'Master AI/ML Learning Guide')">
+          <div class="hub-master-left">
+            <span class="hub-master-badge">Comprehensive Guide</span>
+            <h4>Master AI/ML & Generative AI Learning Guide (LEARNING_GUIDE.md)</h4>
+            <p>Theory foundations, mathematical cheatsheet, STAR project write-ups, and the Top 100 System Architecture Q&A.</p>
+          </div>
+          <button class="btn-hub-master">Open Master Guide ↗</button>
+        </div>
+      </div>
+
+      <!-- 33 Topic Cards Grid -->
+      <div class="interview-grid" id="interview-cards-grid">
+          <div class="interview-card" data-domain="python">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-python">Python Foundations</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Variables, Memory &amp; Data Types</h4>
+            <p class="interview-card-desc">Deep memory model, mutable vs immutable, interned strings, walrus operator, and object layout.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-01_IITK_AIML_Foundations_Programming_Refresher_01_variables_datatypes">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('01_IITK_AIML_Foundations_Programming_Refresher/01_variables_datatypes/practice.ipynb', 'Variables, Memory &amp; Data Types', '01_IITK_AIML_Foundations_Programming_Refresher/01_variables_datatypes/solutions.ipynb', '01_IITK_AIML_Foundations_Programming_Refresher/01_variables_datatypes/basics.md', '01_IITK_AIML_Foundations_Programming_Refresher/01_variables_datatypes/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('01_IITK_AIML_Foundations_Programming_Refresher/01_variables_datatypes/practice.ipynb', 'Variables, Memory &amp; Data Types', '01_IITK_AIML_Foundations_Programming_Refresher/01_variables_datatypes/solutions.ipynb', '01_IITK_AIML_Foundations_Programming_Refresher/01_variables_datatypes/basics.md', '01_IITK_AIML_Foundations_Programming_Refresher/01_variables_datatypes/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="python">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-python">Python Foundations</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Control Flow, Functions &amp; Scopes</h4>
+            <p class="interview-card-desc">LEGB scope hierarchy, closures, decorators, generator internals, and pass-by-object-reference.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-01_IITK_AIML_Foundations_Programming_Refresher_02_control_flow_functions">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('01_IITK_AIML_Foundations_Programming_Refresher/02_control_flow_functions/practice.ipynb', 'Control Flow, Functions &amp; Scopes', '01_IITK_AIML_Foundations_Programming_Refresher/02_control_flow_functions/solutions.ipynb', '01_IITK_AIML_Foundations_Programming_Refresher/02_control_flow_functions/basics.md', '01_IITK_AIML_Foundations_Programming_Refresher/02_control_flow_functions/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('01_IITK_AIML_Foundations_Programming_Refresher/02_control_flow_functions/practice.ipynb', 'Control Flow, Functions &amp; Scopes', '01_IITK_AIML_Foundations_Programming_Refresher/02_control_flow_functions/solutions.ipynb', '01_IITK_AIML_Foundations_Programming_Refresher/02_control_flow_functions/basics.md', '01_IITK_AIML_Foundations_Programming_Refresher/02_control_flow_functions/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="python">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-python">Python Foundations</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Data Structures &amp; Algorithms</h4>
+            <p class="interview-card-desc">List array over-allocation, hash table collision resolution, deques, heaps, and Timsort.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-01_IITK_AIML_Foundations_Programming_Refresher_03_data_structures">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('01_IITK_AIML_Foundations_Programming_Refresher/03_data_structures/practice.ipynb', 'Data Structures &amp; Algorithms', '01_IITK_AIML_Foundations_Programming_Refresher/03_data_structures/solutions.ipynb', '01_IITK_AIML_Foundations_Programming_Refresher/03_data_structures/basics.md', '01_IITK_AIML_Foundations_Programming_Refresher/03_data_structures/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('01_IITK_AIML_Foundations_Programming_Refresher/03_data_structures/practice.ipynb', 'Data Structures &amp; Algorithms', '01_IITK_AIML_Foundations_Programming_Refresher/03_data_structures/solutions.ipynb', '01_IITK_AIML_Foundations_Programming_Refresher/03_data_structures/basics.md', '01_IITK_AIML_Foundations_Programming_Refresher/03_data_structures/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="python">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-python">Python Foundations</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">OOP &amp; Modular Architecture</h4>
+            <p class="interview-card-desc">C3 MRO linearization, metaclasses, descriptors, __slots__, and circular import management.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-01_IITK_AIML_Foundations_Programming_Refresher_04_oop_modules">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('01_IITK_AIML_Foundations_Programming_Refresher/04_oop_modules/practice.ipynb', 'OOP &amp; Modular Architecture', '01_IITK_AIML_Foundations_Programming_Refresher/04_oop_modules/solutions.ipynb', '01_IITK_AIML_Foundations_Programming_Refresher/04_oop_modules/basics.md', '01_IITK_AIML_Foundations_Programming_Refresher/04_oop_modules/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('01_IITK_AIML_Foundations_Programming_Refresher/04_oop_modules/practice.ipynb', 'OOP &amp; Modular Architecture', '01_IITK_AIML_Foundations_Programming_Refresher/04_oop_modules/solutions.ipynb', '01_IITK_AIML_Foundations_Programming_Refresher/04_oop_modules/basics.md', '01_IITK_AIML_Foundations_Programming_Refresher/04_oop_modules/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="python">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-python">Python Foundations</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">File I/O, Exceptions &amp; Robust Systems</h4>
+            <p class="interview-card-desc">Context managers (__enter__/__exit__), memory mapping (mmap), exception chaining, and atomic I/O.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-01_IITK_AIML_Foundations_Programming_Refresher_05_file_io_exceptions">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('01_IITK_AIML_Foundations_Programming_Refresher/05_file_io_exceptions/practice.ipynb', 'File I/O, Exceptions &amp; Robust Systems', '01_IITK_AIML_Foundations_Programming_Refresher/05_file_io_exceptions/solutions.ipynb', '01_IITK_AIML_Foundations_Programming_Refresher/05_file_io_exceptions/basics.md', '01_IITK_AIML_Foundations_Programming_Refresher/05_file_io_exceptions/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('01_IITK_AIML_Foundations_Programming_Refresher/05_file_io_exceptions/practice.ipynb', 'File I/O, Exceptions &amp; Robust Systems', '01_IITK_AIML_Foundations_Programming_Refresher/05_file_io_exceptions/solutions.ipynb', '01_IITK_AIML_Foundations_Programming_Refresher/05_file_io_exceptions/basics.md', '01_IITK_AIML_Foundations_Programming_Refresher/05_file_io_exceptions/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ds">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ds">Applied Data Science</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Data Science Principles &amp; Lifecycle</h4>
+            <p class="interview-card-desc">CRISP-DM lifecycle, data leakage prevention, survivorship bias, and metric alignment.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-02_IITK_AIML_Core_Applied_Data_Science_with_Python_01_intro_data_science">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/01_intro_data_science/practice.ipynb', 'Data Science Principles &amp; Lifecycle', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/01_intro_data_science/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/01_intro_data_science/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/01_intro_data_science/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/01_intro_data_science/practice.ipynb', 'Data Science Principles &amp; Lifecycle', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/01_intro_data_science/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/01_intro_data_science/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/01_intro_data_science/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ds">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ds">Applied Data Science</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Python Essentials for Data Science</h4>
+            <p class="interview-card-desc">Vectorization mechanics, SIMD parallelization, iterator streaming, and memory profiling.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-02_IITK_AIML_Core_Applied_Data_Science_with_Python_02_python_essentials">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/02_python_essentials/practice.ipynb', 'Python Essentials for Data Science', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/02_python_essentials/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/02_python_essentials/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/02_python_essentials/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/02_python_essentials/practice.ipynb', 'Python Essentials for Data Science', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/02_python_essentials/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/02_python_essentials/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/02_python_essentials/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ds">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ds">Applied Data Science</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">NumPy Numerical Computing</h4>
+            <p class="interview-card-desc">Strides, memory layouts (C vs Fortran), broadcasting arithmetic rules, and memory views vs copies.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-02_IITK_AIML_Core_Applied_Data_Science_with_Python_03_numpy">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/03_numpy/practice.ipynb', 'NumPy Numerical Computing', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/03_numpy/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/03_numpy/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/03_numpy/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/03_numpy/practice.ipynb', 'NumPy Numerical Computing', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/03_numpy/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/03_numpy/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/03_numpy/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ds">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ds">Applied Data Science</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Linear Algebra for Machine Learning</h4>
+            <p class="interview-card-desc">Eigenvalues, eigenvectors, SVD decomposition, geometric transformations, and condition numbers.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-02_IITK_AIML_Core_Applied_Data_Science_with_Python_04_linear_algebra">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/04_linear_algebra/practice.ipynb', 'Linear Algebra for Machine Learning', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/04_linear_algebra/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/04_linear_algebra/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/04_linear_algebra/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/04_linear_algebra/practice.ipynb', 'Linear Algebra for Machine Learning', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/04_linear_algebra/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/04_linear_algebra/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/04_linear_algebra/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ds">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ds">Applied Data Science</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Statistical Foundations</h4>
+            <p class="interview-card-desc">Central Limit Theorem, sampling distributions, skewness, kurtosis, and robust estimators.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-02_IITK_AIML_Core_Applied_Data_Science_with_Python_05_statistics_fundamentals">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/05_statistics_fundamentals/practice.ipynb', 'Statistical Foundations', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/05_statistics_fundamentals/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/05_statistics_fundamentals/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/05_statistics_fundamentals/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/05_statistics_fundamentals/practice.ipynb', 'Statistical Foundations', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/05_statistics_fundamentals/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/05_statistics_fundamentals/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/05_statistics_fundamentals/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ds">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ds">Applied Data Science</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Probability &amp; Distributions</h4>
+            <p class="interview-card-desc">Bayes&#x27; theorem, probability mass vs density functions, Poisson, Gaussian, and log-normal models.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-02_IITK_AIML_Core_Applied_Data_Science_with_Python_06_probability_distributions">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/06_probability_distributions/practice.ipynb', 'Probability &amp; Distributions', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/06_probability_distributions/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/06_probability_distributions/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/06_probability_distributions/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/06_probability_distributions/practice.ipynb', 'Probability &amp; Distributions', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/06_probability_distributions/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/06_probability_distributions/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/06_probability_distributions/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ds">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ds">Applied Data Science</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Advanced Inferential Statistics</h4>
+            <p class="interview-card-desc">Hypothesis testing, p-value misinterpretations, Type I/II errors, ANOVA, and bootstrap confidence intervals.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-02_IITK_AIML_Core_Applied_Data_Science_with_Python_07_advanced_statistics">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/07_advanced_statistics/practice.ipynb', 'Advanced Inferential Statistics', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/07_advanced_statistics/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/07_advanced_statistics/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/07_advanced_statistics/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/07_advanced_statistics/practice.ipynb', 'Advanced Inferential Statistics', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/07_advanced_statistics/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/07_advanced_statistics/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/07_advanced_statistics/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ds">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ds">Applied Data Science</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Pandas High-Performance Manipulation</h4>
+            <p class="interview-card-desc">BlockManager memory internals, index alignment, merge vs join strategies, categorical performance.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-02_IITK_AIML_Core_Applied_Data_Science_with_Python_08_pandas">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/08_pandas/practice.ipynb', 'Pandas High-Performance Manipulation', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/08_pandas/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/08_pandas/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/08_pandas/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/08_pandas/practice.ipynb', 'Pandas High-Performance Manipulation', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/08_pandas/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/08_pandas/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/08_pandas/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ds">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ds">Applied Data Science</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Data Wrangling &amp; Cleaning</h4>
+            <p class="interview-card-desc">Missing data mechanisms (MCAR/MAR/MNAR), outlier detection (IQR, Isolation Forests), transformations.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-02_IITK_AIML_Core_Applied_Data_Science_with_Python_09_data_wrangling">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/09_data_wrangling/practice.ipynb', 'Data Wrangling &amp; Cleaning', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/09_data_wrangling/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/09_data_wrangling/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/09_data_wrangling/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/09_data_wrangling/practice.ipynb', 'Data Wrangling &amp; Cleaning', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/09_data_wrangling/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/09_data_wrangling/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/09_data_wrangling/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ds">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ds">Applied Data Science</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Data Visualization Architecture</h4>
+            <p class="interview-card-desc">Matplotlib Artist hierarchy, perception-driven color palettes, Seaborn statistical aggregation.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-02_IITK_AIML_Core_Applied_Data_Science_with_Python_10_data_visualization">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/practice.ipynb', 'Data Visualization Architecture', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/practice.ipynb', 'Data Visualization Architecture', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ds">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ds">Applied Data Science</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Matplotlib Deep-Dive</h4>
+            <p class="interview-card-desc">Figure vs Axes objects, custom tick formatters, twin axes, and vector graphic rendering engines.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-02_IITK_AIML_Core_Applied_Data_Science_with_Python_10_data_visualization_matplotlib">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/matplotlib/practice.ipynb', 'Matplotlib Deep-Dive', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/matplotlib/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/matplotlib/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/matplotlib/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/matplotlib/practice.ipynb', 'Matplotlib Deep-Dive', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/matplotlib/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/matplotlib/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/matplotlib/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ds">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ds">Applied Data Science</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Seaborn Statistical Graphics</h4>
+            <p class="interview-card-desc">FacetGrid, PairGrid architectures, KDE estimations, and distribution visualization.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-02_IITK_AIML_Core_Applied_Data_Science_with_Python_10_data_visualization_seaborn">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/seaborn/practice.ipynb', 'Seaborn Statistical Graphics', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/seaborn/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/seaborn/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/seaborn/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/seaborn/practice.ipynb', 'Seaborn Statistical Graphics', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/seaborn/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/seaborn/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/seaborn/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ds">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ds">Applied Data Science</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Regex, JSON &amp; Web API Extraction</h4>
+            <p class="interview-card-desc">Backtracking algorithms, lookarounds, streaming JSON parsers, and exponential backoff retry patterns.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-02_IITK_AIML_Core_Applied_Data_Science_with_Python_11_regex_json_apis">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/11_regex_json_apis/practice.ipynb', 'Regex, JSON &amp; Web API Extraction', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/11_regex_json_apis/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/11_regex_json_apis/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/11_regex_json_apis/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('02_IITK_AIML_Core_Applied_Data_Science_with_Python/11_regex_json_apis/practice.ipynb', 'Regex, JSON &amp; Web API Extraction', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/11_regex_json_apis/solutions.ipynb', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/11_regex_json_apis/basics.md', '02_IITK_AIML_Core_Applied_Data_Science_with_Python/11_regex_json_apis/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ml">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ml">Machine Learning</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">EDA &amp; Advanced Feature Engineering</h4>
+            <p class="interview-card-desc">Target encoding with smoothing, interaction features, curse of dimensionality, and permutation importance.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-03_IITK_AIML_Core_Machine_Learning_01_eda_feature_engineering">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('03_IITK_AIML_Core_Machine_Learning/01_eda_feature_engineering/practice.ipynb', 'EDA &amp; Advanced Feature Engineering', '03_IITK_AIML_Core_Machine_Learning/01_eda_feature_engineering/solutions.ipynb', '03_IITK_AIML_Core_Machine_Learning/01_eda_feature_engineering/basics.md', '03_IITK_AIML_Core_Machine_Learning/01_eda_feature_engineering/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('03_IITK_AIML_Core_Machine_Learning/01_eda_feature_engineering/practice.ipynb', 'EDA &amp; Advanced Feature Engineering', '03_IITK_AIML_Core_Machine_Learning/01_eda_feature_engineering/solutions.ipynb', '03_IITK_AIML_Core_Machine_Learning/01_eda_feature_engineering/basics.md', '03_IITK_AIML_Core_Machine_Learning/01_eda_feature_engineering/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ml">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ml">Machine Learning</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Clustering &amp; Unsupervised Learning</h4>
+            <p class="interview-card-desc">K-Means++ seeding, Voronoi partitions, Silhouette analysis, HDBSCAN density clustering.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-03_IITK_AIML_Core_Machine_Learning_02_clustering">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('03_IITK_AIML_Core_Machine_Learning/02_clustering/practice.ipynb', 'Clustering &amp; Unsupervised Learning', '03_IITK_AIML_Core_Machine_Learning/02_clustering/solutions.ipynb', '03_IITK_AIML_Core_Machine_Learning/02_clustering/basics.md', '03_IITK_AIML_Core_Machine_Learning/02_clustering/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('03_IITK_AIML_Core_Machine_Learning/02_clustering/practice.ipynb', 'Clustering &amp; Unsupervised Learning', '03_IITK_AIML_Core_Machine_Learning/02_clustering/solutions.ipynb', '03_IITK_AIML_Core_Machine_Learning/02_clustering/basics.md', '03_IITK_AIML_Core_Machine_Learning/02_clustering/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ml">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ml">Machine Learning</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Classification Algorithms</h4>
+            <p class="interview-card-desc">Logistic regression odds ratios, SVM margin maximization, Random Forest bagging vs XGBoost gradient boosting.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-03_IITK_AIML_Core_Machine_Learning_03_classification">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('03_IITK_AIML_Core_Machine_Learning/03_classification/practice.ipynb', 'Classification Algorithms', '03_IITK_AIML_Core_Machine_Learning/03_classification/solutions.ipynb', '03_IITK_AIML_Core_Machine_Learning/03_classification/basics.md', '03_IITK_AIML_Core_Machine_Learning/03_classification/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('03_IITK_AIML_Core_Machine_Learning/03_classification/practice.ipynb', 'Classification Algorithms', '03_IITK_AIML_Core_Machine_Learning/03_classification/solutions.ipynb', '03_IITK_AIML_Core_Machine_Learning/03_classification/basics.md', '03_IITK_AIML_Core_Machine_Learning/03_classification/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ml">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ml">Machine Learning</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Class Imbalance Mitigation</h4>
+            <p class="interview-card-desc">SMOTE synthetic generation, Focal Loss, cost-sensitive matrix optimization, PR-AUC vs ROC-AUC.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-03_IITK_AIML_Core_Machine_Learning_04_imbalanced_data">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('03_IITK_AIML_Core_Machine_Learning/04_imbalanced_data/practice.ipynb', 'Class Imbalance Mitigation', '03_IITK_AIML_Core_Machine_Learning/04_imbalanced_data/solutions.ipynb', '03_IITK_AIML_Core_Machine_Learning/04_imbalanced_data/basics.md', '03_IITK_AIML_Core_Machine_Learning/04_imbalanced_data/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('03_IITK_AIML_Core_Machine_Learning/04_imbalanced_data/practice.ipynb', 'Class Imbalance Mitigation', '03_IITK_AIML_Core_Machine_Learning/04_imbalanced_data/solutions.ipynb', '03_IITK_AIML_Core_Machine_Learning/04_imbalanced_data/basics.md', '03_IITK_AIML_Core_Machine_Learning/04_imbalanced_data/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="ml">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-ml">Machine Learning</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Model Evaluation &amp; Validation Rigor</h4>
+            <p class="interview-card-desc">Stratified K-Fold, Purged Time-Series split, Brier Score calibration, and bias-variance decomposition.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-03_IITK_AIML_Core_Machine_Learning_05_model_evaluation">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('03_IITK_AIML_Core_Machine_Learning/05_model_evaluation/practice.ipynb', 'Model Evaluation &amp; Validation Rigor', '03_IITK_AIML_Core_Machine_Learning/05_model_evaluation/solutions.ipynb', '03_IITK_AIML_Core_Machine_Learning/05_model_evaluation/basics.md', '03_IITK_AIML_Core_Machine_Learning/05_model_evaluation/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('03_IITK_AIML_Core_Machine_Learning/05_model_evaluation/practice.ipynb', 'Model Evaluation &amp; Validation Rigor', '03_IITK_AIML_Core_Machine_Learning/05_model_evaluation/solutions.ipynb', '03_IITK_AIML_Core_Machine_Learning/05_model_evaluation/basics.md', '03_IITK_AIML_Core_Machine_Learning/05_model_evaluation/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="dl">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-dl">Deep Learning</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Neural Network Fundamentals</h4>
+            <p class="interview-card-desc">Backpropagation chain rule, vanishing/exploding gradients, Xavier/He weight initialization, activation functions.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow_01_neural_network_basics">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/01_neural_network_basics/practice.ipynb', 'Neural Network Fundamentals', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/01_neural_network_basics/solutions.ipynb', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/01_neural_network_basics/basics.md', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/01_neural_network_basics/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/01_neural_network_basics/practice.ipynb', 'Neural Network Fundamentals', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/01_neural_network_basics/solutions.ipynb', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/01_neural_network_basics/basics.md', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/01_neural_network_basics/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="dl">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-dl">Deep Learning</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Keras &amp; TensorFlow Architecture</h4>
+            <p class="interview-card-desc">Sequential vs Functional vs Subclassing APIs, custom GradientTape training loops, tf.data pipeline optimization.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow_02_keras_tensorflow">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/02_keras_tensorflow/practice.ipynb', 'Keras &amp; TensorFlow Architecture', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/02_keras_tensorflow/solutions.ipynb', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/02_keras_tensorflow/basics.md', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/02_keras_tensorflow/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/02_keras_tensorflow/practice.ipynb', 'Keras &amp; TensorFlow Architecture', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/02_keras_tensorflow/solutions.ipynb', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/02_keras_tensorflow/basics.md', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/02_keras_tensorflow/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="dl">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-dl">Deep Learning</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Deep Learning Data Pipelines &amp; Imbalance</h4>
+            <p class="interview-card-desc">Data augmentation invariance, class-weighted cross-entropy, mixed-precision (FP16/BF16) training.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow_03_preprocessing_imbalance">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/03_preprocessing_imbalance/practice.ipynb', 'Deep Learning Data Pipelines &amp; Imbalance', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/03_preprocessing_imbalance/solutions.ipynb', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/03_preprocessing_imbalance/basics.md', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/03_preprocessing_imbalance/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/03_preprocessing_imbalance/practice.ipynb', 'Deep Learning Data Pipelines &amp; Imbalance', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/03_preprocessing_imbalance/solutions.ipynb', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/03_preprocessing_imbalance/basics.md', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/03_preprocessing_imbalance/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="dl">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-dl">Deep Learning</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Deep Learning Evaluation &amp; Interpretability</h4>
+            <p class="interview-card-desc">Grad-CAM visual explanations, saliency maps, Monte Carlo Dropout uncertainty estimation, ROC/PR curves.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow_04_model_evaluation_dl">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/04_model_evaluation_dl/practice.ipynb', 'Deep Learning Evaluation &amp; Interpretability', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/04_model_evaluation_dl/solutions.ipynb', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/04_model_evaluation_dl/basics.md', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/04_model_evaluation_dl/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/04_model_evaluation_dl/practice.ipynb', 'Deep Learning Evaluation &amp; Interpretability', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/04_model_evaluation_dl/solutions.ipynb', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/04_model_evaluation_dl/basics.md', '04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/04_model_evaluation_dl/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="genai">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-genai">Generative AI</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Prompt Engineering Foundations</h4>
+            <p class="interview-card-desc">Zero-shot, Few-shot, Chain-of-Thought (CoT), Tree of Thoughts (ToT), prompt injection defenses.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT_01_prompt_engineering">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/01_prompt_engineering/practice.ipynb', 'Prompt Engineering Foundations', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/01_prompt_engineering/solutions.ipynb', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/01_prompt_engineering/basics.md', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/01_prompt_engineering/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/01_prompt_engineering/practice.ipynb', 'Prompt Engineering Foundations', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/01_prompt_engineering/solutions.ipynb', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/01_prompt_engineering/basics.md', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/01_prompt_engineering/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="genai">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-genai">Generative AI</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">ChatGPT &amp; Enterprise LLM Applications</h4>
+            <p class="interview-card-desc">Tool use / Function calling, structured JSON output enforcement, temperature vs top_p, context window limits.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT_02_chatgpt_applications">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/02_chatgpt_applications/practice.ipynb', 'ChatGPT &amp; Enterprise LLM Applications', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/02_chatgpt_applications/solutions.ipynb', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/02_chatgpt_applications/basics.md', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/02_chatgpt_applications/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/02_chatgpt_applications/practice.ipynb', 'ChatGPT &amp; Enterprise LLM Applications', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/02_chatgpt_applications/solutions.ipynb', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/02_chatgpt_applications/basics.md', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/02_chatgpt_applications/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="genai">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-genai">Generative AI</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">GenAI Optimization &amp; Fine-Tuning</h4>
+            <p class="interview-card-desc">LoRA / QLoRA low-rank adaptation, PEFT architectures, quantization (INT8/INT4), RLHF and DPO alignments.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT_03_genai_optimization">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/03_genai_optimization/practice.ipynb', 'GenAI Optimization &amp; Fine-Tuning', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/03_genai_optimization/solutions.ipynb', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/03_genai_optimization/basics.md', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/03_genai_optimization/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/03_genai_optimization/practice.ipynb', 'GenAI Optimization &amp; Fine-Tuning', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/03_genai_optimization/solutions.ipynb', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/03_genai_optimization/basics.md', '05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/03_genai_optimization/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="rag">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-rag">Advanced GenAI & RAG</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">RAG Architectures &amp; Retrieval Engineering</h4>
+            <p class="interview-card-desc">Dense vs sparse retrieval, hybrid search with Reciprocal Rank Fusion (RRF), Cross-Encoder re-ranking, HyDE.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-06_IITK_AIML_Advanced_Generative_AI_01_rag_architectures">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('06_IITK_AIML_Advanced_Generative_AI/01_rag_architectures/practice.ipynb', 'RAG Architectures &amp; Retrieval Engineering', '06_IITK_AIML_Advanced_Generative_AI/01_rag_architectures/solutions.ipynb', '06_IITK_AIML_Advanced_Generative_AI/01_rag_architectures/basics.md', '06_IITK_AIML_Advanced_Generative_AI/01_rag_architectures/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('06_IITK_AIML_Advanced_Generative_AI/01_rag_architectures/practice.ipynb', 'RAG Architectures &amp; Retrieval Engineering', '06_IITK_AIML_Advanced_Generative_AI/01_rag_architectures/solutions.ipynb', '06_IITK_AIML_Advanced_Generative_AI/01_rag_architectures/basics.md', '06_IITK_AIML_Advanced_Generative_AI/01_rag_architectures/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="rag">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-rag">Advanced GenAI & RAG</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Vector Databases &amp; High-Dimensional Indexing</h4>
+            <p class="interview-card-desc">HNSW graph search, IVFFlat inverted indices, cosine similarity vs dot product, metadata filtering.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-06_IITK_AIML_Advanced_Generative_AI_02_vector_databases_chroma">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('06_IITK_AIML_Advanced_Generative_AI/02_vector_databases_chroma/practice.ipynb', 'Vector Databases &amp; High-Dimensional Indexing', '06_IITK_AIML_Advanced_Generative_AI/02_vector_databases_chroma/solutions.ipynb', '06_IITK_AIML_Advanced_Generative_AI/02_vector_databases_chroma/basics.md', '06_IITK_AIML_Advanced_Generative_AI/02_vector_databases_chroma/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('06_IITK_AIML_Advanced_Generative_AI/02_vector_databases_chroma/practice.ipynb', 'Vector Databases &amp; High-Dimensional Indexing', '06_IITK_AIML_Advanced_Generative_AI/02_vector_databases_chroma/solutions.ipynb', '06_IITK_AIML_Advanced_Generative_AI/02_vector_databases_chroma/basics.md', '06_IITK_AIML_Advanced_Generative_AI/02_vector_databases_chroma/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+          <div class="interview-card" data-domain="rag">
+            <div class="interview-card-top">
+              <span class="domain-tag domain-rag">Advanced GenAI & RAG</span>
+              <span class="q-count-badge">30 High-Yield Questions</span>
+            </div>
+            <h4 class="interview-card-title">Multimodal Generative Models</h4>
+            <p class="interview-card-desc">Latent Diffusion Models, CLIP joint embeddings, Classifier-Free Guidance (CFG), ControlNet conditioning.</p>
+            <div class="interview-card-meta">
+              <span class="mastery-pill" id="mastery-badge-06_IITK_AIML_Advanced_Generative_AI_03_multimodal_generative_models">0 / 30 Mastered</span>
+            </div>
+            <div class="interview-card-actions">
+              <button class="btn-hub-launch" onclick="openStudio('06_IITK_AIML_Advanced_Generative_AI/03_multimodal_generative_models/practice.ipynb', 'Multimodal Generative Models', '06_IITK_AIML_Advanced_Generative_AI/03_multimodal_generative_models/solutions.ipynb', '06_IITK_AIML_Advanced_Generative_AI/03_multimodal_generative_models/basics.md', '06_IITK_AIML_Advanced_Generative_AI/03_multimodal_generative_models/interview_qa.md', 'qa')">
+                <span>🎯</span> Open Flashcards Studio
+              </button>
+              <button class="btn-hub-lab" onclick="openStudio('06_IITK_AIML_Advanced_Generative_AI/03_multimodal_generative_models/practice.ipynb', 'Multimodal Generative Models', '06_IITK_AIML_Advanced_Generative_AI/03_multimodal_generative_models/solutions.ipynb', '06_IITK_AIML_Advanced_Generative_AI/03_multimodal_generative_models/basics.md', '06_IITK_AIML_Advanced_Generative_AI/03_multimodal_generative_models/interview_qa.md', 'notebook')">
+                💻 Run Lab Notebook
+              </button>
+            </div>
+          </div>
+      </div>
+    </div>
+    <!-- DEDICATED MASTER GUIDES VIEW -->
+    <div id="section-guides-group" style="display:none">
+      <div class="hub-hero">
+        <span class="hub-hero-badge">📚 Architectural Reference & Deep Learning Manuals</span>
+        <h2 class="hub-hero-title">Curriculum Master Guides & Cheatsheets</h2>
+        <p class="hub-hero-sub">
+          Authoritative technical specifications, comprehensive mathematical formulations, and engineering guides.
+        </p>
+      </div>
+
+      <div class="guides-grid">
+        <div class="guide-card" onclick="openStandaloneDoc('LEARNING_GUIDE.md', 'Master AI/ML Learning Guide')">
+          <div class="guide-card-icon">📘</div>
+          <h3 class="guide-card-title">Master AI/ML Learning Guide</h3>
+          <p class="guide-card-desc">Complete curriculum theory, mathematical formulas, course-by-course deep dives, and system architecture.</p>
+          <div class="guide-card-meta">LEARNING_GUIDE.md · 88KB</div>
+          <button class="btn-guide-launch">Read Master Guide ↗</button>
+        </div>
+
+        <div class="guide-card" onclick="openStandaloneDoc('PRACTICE_GUIDE.md', 'Practice Guide & Curriculum Overview')">
+          <div class="guide-card-icon">⚡</div>
+          <h3 class="guide-card-title">Practice & Execution Guide</h3>
+          <p class="guide-card-desc">Step-by-step roadmap for all 1,650+ practice problems, solutions notebooks, and local setup environments.</p>
+          <div class="guide-card-meta">PRACTICE_GUIDE.md · 24KB</div>
+          <button class="btn-guide-launch">Read Practice Guide ↗</button>
+        </div>
+
+        <div class="guide-card" onclick="openStandaloneDoc('projects_version2/README.md', 'Version 2 Advanced Projects Suite')">
+          <div class="guide-card-icon">🚀</div>
+          <h3 class="guide-card-title">Version 2 Projects Executive Brief</h3>
+          <p class="guide-card-desc">Comprehensive index and architectural documentation of the 15 re-engineered advanced portfolio projects.</p>
+          <div class="guide-card-meta">projects_version2/README.md · 16KB</div>
+          <button class="btn-guide-launch">Explore V2 Suite ↗</button>
+        </div>
+
+        <div class="guide-card" onclick="openStandaloneDoc('README.md', 'Repository Overview & System Architecture')">
+          <div class="guide-card-icon">🌟</div>
+          <h3 class="guide-card-title">Repository Documentation</h3>
+          <p class="guide-card-desc">Full repository index, course mapping, quickstart instructions, and GitHub Pages deployment details.</p>
+          <div class="guide-card-meta">README.md · 12KB</div>
+          <button class="btn-guide-launch">Read README ↗</button>
+        </div>
+
+        <div class="guide-card" onclick="openStandaloneDoc('LEARNING_JOURNEY.md', 'Learning Journey, Experience & Simplilearn Attribution')">
+          <div class="guide-card-icon">🎓</div>
+          <h3 class="guide-card-title">Learning Journey & Attribution</h3>
+          <p class="guide-card-desc">Personal coursework experience, Simplilearn and IIT Kanpur acknowledgments, engineering philosophy, and copyright fair-use terms.</p>
+          <div class="guide-card-meta">LEARNING_JOURNEY.md · Educational Fair Use</div>
+          <button class="btn-guide-launch">Read Learning Journey ↗</button>
+        </div>
+      </div>
+    </div>
   </main>
 
   <!-- UNIFIED WORKSPACE STUDIO MODAL -->
@@ -6534,7 +7798,7 @@
           <button id="tab-btn-notebook" class="s-tab" onclick="switchStudioTab('notebook')">💻 Practice Notebook</button>
         </div>
         <div class="studio-quick-links">
-                                                  <a id="studio-colab-link" class="btn-colab-launch" href="#" target="_blank" rel="noopener noreferrer" title="Run in Google Colab">
+                                                            <a id="studio-colab-link" class="btn-colab-launch" href="#" target="_blank" rel="noopener noreferrer" title="Run in Google Colab">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="vertical-align:middle"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm4 0h-2v-6h2v6z" fill="#f59e0b"/></svg>
             <span>Run in Google Colab</span>
           </a>
@@ -6898,6 +8162,82 @@ if(__exports != exports)module.exports = exports;return module.exports}));
 //# sourceMappingURL=marked.umd.js.map
 
 
+/**
+ * marked v17.0.4 - a markdown parser
+ * Copyright (c) 2018-2026, MarkedJS. (MIT License)
+ * Copyright (c) 2011-2018, Christopher Jeffrey. (MIT License)
+ * https://github.com/markedjs/marked
+ */
+
+/**
+ * DO NOT EDIT THIS FILE
+ * The code in this file is generated from files in ./src/
+ */
+(function(g,f){if(typeof exports=="object"&&typeof module<"u"){module.exports=f()}else if("function"==typeof define && define.amd){define("marked",f)}else {g["marked"]=f()}}(typeof globalThis < "u" ? globalThis : typeof self < "u" ? self : this,function(){var exports={};var __exports=exports;var module={exports};
+"use strict";var G=Object.defineProperty;var Te=Object.getOwnPropertyDescriptor;var Oe=Object.getOwnPropertyNames;var we=Object.prototype.hasOwnProperty;var ye=(l,e)=>{for(var t in e)G(l,t,{get:e[t],enumerable:!0})},Pe=(l,e,t,n)=>{if(e&&typeof e=="object"||typeof e=="function")for(let r of Oe(e))!we.call(l,r)&&r!==t&&G(l,r,{get:()=>e[r],enumerable:!(n=Te(e,r))||n.enumerable});return l};var Se=l=>Pe(G({},"__esModule",{value:!0}),l);var Tt={};ye(Tt,{Hooks:()=>P,Lexer:()=>x,Marked:()=>I,Parser:()=>b,Renderer:()=>y,TextRenderer:()=>S,Tokenizer:()=>w,defaults:()=>R,getDefaults:()=>_,lexer:()=>Rt,marked:()=>g,options:()=>kt,parse:()=>xt,parseInline:()=>mt,parser:()=>bt,setOptions:()=>dt,use:()=>gt,walkTokens:()=>ft});module.exports=Se(Tt);function _(){return{async:!1,breaks:!1,extensions:null,gfm:!0,hooks:null,pedantic:!1,renderer:null,silent:!1,tokenizer:null,walkTokens:null}}var R=_();function Z(l){R=l}var L={exec:()=>null};function k(l,e=""){let t=typeof l=="string"?l:l.source,n={replace:(r,i)=>{let s=typeof i=="string"?i:i.source;return s=s.replace(m.caret,"$1"),t=t.replace(r,s),n},getRegex:()=>new RegExp(t,e)};return n}var $e=(()=>{try{return!!new RegExp("(?<=1)(?<!1)")}catch{return!1}})(),m={codeRemoveIndent:/^(?: {1,4}| {0,3}\t)/gm,outputLinkReplace:/\\([\[\]])/g,indentCodeCompensation:/^(\s+)(?:```)/,beginningSpace:/^\s+/,endingHash:/#$/,startingSpaceChar:/^ /,endingSpaceChar:/ $/,nonSpaceChar:/[^ ]/,newLineCharGlobal:/\n/g,tabCharGlobal:/\t/g,multipleSpaceGlobal:/\s+/g,blankLine:/^[ \t]*$/,doubleBlankLine:/\n[ \t]*\n[ \t]*$/,blockquoteStart:/^ {0,3}>/,blockquoteSetextReplace:/\n {0,3}((?:=+|-+) *)(?=\n|$)/g,blockquoteSetextReplace2:/^ {0,3}>[ \t]?/gm,listReplaceNesting:/^ {1,4}(?=( {4})*[^ ])/g,listIsTask:/^\[[ xX]\] +\S/,listReplaceTask:/^\[[ xX]\] +/,listTaskCheckbox:/\[[ xX]\]/,anyLine:/\n.*\n/,hrefBrackets:/^<(.*)>$/,tableDelimiter:/[:|]/,tableAlignChars:/^\||\| *$/g,tableRowBlankLine:/\n[ \t]*$/,tableAlignRight:/^ *-+: *$/,tableAlignCenter:/^ *:-+: *$/,tableAlignLeft:/^ *:-+ *$/,startATag:/^<a /i,endATag:/^<\/a>/i,startPreScriptTag:/^<(pre|code|kbd|script)(\s|>)/i,endPreScriptTag:/^<\/(pre|code|kbd|script)(\s|>)/i,startAngleBracket:/^</,endAngleBracket:/>$/,pedanticHrefTitle:/^([^'"]*[^\s])\s+(['"])(.*)\2/,unicodeAlphaNumeric:/[\p{L}\p{N}]/u,escapeTest:/[&<>"']/,escapeReplace:/[&<>"']/g,escapeTestNoEncode:/[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/,escapeReplaceNoEncode:/[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/g,caret:/(^|[^\[])\^/g,percentDecode:/%25/g,findPipe:/\|/g,splitPipe:/ \|/,slashPipe:/\\\|/g,carriageReturn:/\r\n|\r/g,spaceLine:/^ +$/gm,notSpaceStart:/^\S*/,endingNewline:/\n$/,listItemRegex:l=>new RegExp(`^( {0,3}${l})((?:[	 ][^\\n]*)?(?:\\n|$))`),nextBulletRegex:l=>new RegExp(`^ {0,${Math.min(3,l-1)}}(?:[*+-]|\\d{1,9}[.)])((?:[ 	][^\\n]*)?(?:\\n|$))`),hrRegex:l=>new RegExp(`^ {0,${Math.min(3,l-1)}}((?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$)`),fencesBeginRegex:l=>new RegExp(`^ {0,${Math.min(3,l-1)}}(?:\`\`\`|~~~)`),headingBeginRegex:l=>new RegExp(`^ {0,${Math.min(3,l-1)}}#`),htmlBeginRegex:l=>new RegExp(`^ {0,${Math.min(3,l-1)}}<(?:[a-z].*>|!--)`,"i"),blockquoteBeginRegex:l=>new RegExp(`^ {0,${Math.min(3,l-1)}}>`)},_e=/^(?:[ \t]*(?:\n|$))+/,Le=/^((?: {4}| {0,3}\t)[^\n]+(?:\n(?:[ \t]*(?:\n|$))*)?)+/,Me=/^ {0,3}(`{3,}(?=[^`\n]*(?:\n|$))|~{3,})([^\n]*)(?:\n|$)(?:|([\s\S]*?)(?:\n|$))(?: {0,3}\1[~`]* *(?=\n|$)|$)/,C=/^ {0,3}((?:-[\t ]*){3,}|(?:_[ \t]*){3,}|(?:\*[ \t]*){3,})(?:\n+|$)/,ze=/^ {0,3}(#{1,6})(?=\s|$)(.*)(?:\n+|$)/,Q=/ {0,3}(?:[*+-]|\d{1,9}[.)])/,se=/^(?!bull |blockCode|fences|blockquote|heading|html|table)((?:.|\n(?!\s*?\n|bull |blockCode|fences|blockquote|heading|html|table))+?)\n {0,3}(=+|-+) *(?:\n+|$)/,ie=k(se).replace(/bull/g,Q).replace(/blockCode/g,/(?: {4}| {0,3}\t)/).replace(/fences/g,/ {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g,/ {0,3}>/).replace(/heading/g,/ {0,3}#{1,6}/).replace(/html/g,/ {0,3}<[^\n>]+>\n/).replace(/\|table/g,"").getRegex(),Ee=k(se).replace(/bull/g,Q).replace(/blockCode/g,/(?: {4}| {0,3}\t)/).replace(/fences/g,/ {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g,/ {0,3}>/).replace(/heading/g,/ {0,3}#{1,6}/).replace(/html/g,/ {0,3}<[^\n>]+>\n/).replace(/table/g,/ {0,3}\|?(?:[:\- ]*\|)+[\:\- ]*\n/).getRegex(),j=/^([^\n]+(?:\n(?!hr|heading|lheading|blockquote|fences|list|html|table| +\n)[^\n]+)*)/,Ie=/^[^\n]+/,F=/(?!\s*\])(?:\\[\s\S]|[^\[\]\\])+/,Ae=k(/^ {0,3}\[(label)\]: *(?:\n[ \t]*)?([^<\s][^\s]*|<.*?>)(?:(?: +(?:\n[ \t]*)?| *\n[ \t]*)(title))? *(?:\n+|$)/).replace("label",F).replace("title",/(?:"(?:\\"?|[^"\\])*"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\([^()]*\))/).getRegex(),Ce=k(/^(bull)([ \t][^\n]+?)?(?:\n|$)/).replace(/bull/g,Q).getRegex(),q="address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|search|section|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul",U=/<!--(?:-?>|[\s\S]*?(?:-->|$))/,Be=k("^ {0,3}(?:<(script|pre|style|textarea)[\\s>][\\s\\S]*?(?:</\\1>[^\\n]*\\n+|$)|comment[^\\n]*(\\n+|$)|<\\?[\\s\\S]*?(?:\\?>\\n*|$)|<![A-Z][\\s\\S]*?(?:>\\n*|$)|<!\\[CDATA\\[[\\s\\S]*?(?:\\]\\]>\\n*|$)|</?(tag)(?: +|\\n|/?>)[\\s\\S]*?(?:(?:\\n[ 	]*)+\\n|$)|<(?!script|pre|style|textarea)([a-z][\\w-]*)(?:attribute)*? */?>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n[ 	]*)+\\n|$)|</(?!script|pre|style|textarea)[a-z][\\w-]*\\s*>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n[ 	]*)+\\n|$))","i").replace("comment",U).replace("tag",q).replace("attribute",/ +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/).getRegex(),oe=k(j).replace("hr",C).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("|lheading","").replace("|table","").replace("blockquote"," {0,3}>").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)])[ \\t]").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",q).getRegex(),De=k(/^( {0,3}> ?(paragraph|[^\n]*)(?:\n|$))+/).replace("paragraph",oe).getRegex(),K={blockquote:De,code:Le,def:Ae,fences:Me,heading:ze,hr:C,html:Be,lheading:ie,list:Ce,newline:_e,paragraph:oe,table:L,text:Ie},ne=k("^ *([^\\n ].*)\\n {0,3}((?:\\| *)?:?-+:? *(?:\\| *:?-+:? *)*(?:\\| *)?)(?:\\n((?:(?! *\\n|hr|heading|blockquote|code|fences|list|html).*(?:\\n|$))*)\\n*|$)").replace("hr",C).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("blockquote"," {0,3}>").replace("code","(?: {4}| {0,3}	)[^\\n]").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)])[ \\t]").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",q).getRegex(),qe={...K,lheading:Ee,table:ne,paragraph:k(j).replace("hr",C).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("|lheading","").replace("table",ne).replace("blockquote"," {0,3}>").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)])[ \\t]").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",q).getRegex()},ve={...K,html:k(`^ *(?:comment *(?:\\n|\\s*$)|<(tag)[\\s\\S]+?</\\1> *(?:\\n{2,}|\\s*$)|<tag(?:"[^"]*"|'[^']*'|\\s[^'"/>\\s]*)*?/?> *(?:\\n{2,}|\\s*$))`).replace("comment",U).replace(/tag/g,"(?!(?:a|em|strong|small|s|cite|q|dfn|abbr|data|time|code|var|samp|kbd|sub|sup|i|b|u|mark|ruby|rt|rp|bdi|bdo|span|br|wbr|ins|del|img)\\b)\\w+(?!:|[^\\w\\s@]*@)\\b").getRegex(),def:/^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +(["(][^\n]+[")]))? *(?:\n+|$)/,heading:/^(#{1,6})(.*)(?:\n+|$)/,fences:L,lheading:/^(.+?)\n {0,3}(=+|-+) *(?:\n+|$)/,paragraph:k(j).replace("hr",C).replace("heading",` *#{1,6} *[^
+]`).replace("lheading",ie).replace("|table","").replace("blockquote"," {0,3}>").replace("|fences","").replace("|list","").replace("|html","").replace("|tag","").getRegex()},He=/^\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/,Ge=/^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/,ae=/^( {2,}|\\)\n(?!\s*$)/,Ze=/^(`+|[^`])(?:(?= {2,}\n)|[\s\S]*?(?:(?=[\\<!\[`*_]|\b_|$)|[^ ](?= {2,}\n)))/,v=/[\p{P}\p{S}]/u,W=/[\s\p{P}\p{S}]/u,le=/[^\s\p{P}\p{S}]/u,Ne=k(/^((?![*_])punctSpace)/,"u").replace(/punctSpace/g,W).getRegex(),ue=/(?!~)[\p{P}\p{S}]/u,Qe=/(?!~)[\s\p{P}\p{S}]/u,je=/(?:[^\s\p{P}\p{S}]|~)/u,pe=/(?![*_])[\p{P}\p{S}]/u,Fe=/(?![*_])[\s\p{P}\p{S}]/u,Ue=/(?:[^\s\p{P}\p{S}]|[*_])/u,Ke=k(/link|precode-code|html/,"g").replace("link",/\[(?:[^\[\]`]|(?<a>`+)[^`]+\k<a>(?!`))*?\]\((?:\\[\s\S]|[^\\\(\)]|\((?:\\[\s\S]|[^\\\(\)])*\))*\)/).replace("precode-",$e?"(?<!`)()":"(^^|[^`])").replace("code",/(?<b>`+)[^`]+\k<b>(?!`)/).replace("html",/<(?! )[^<>]*?>/).getRegex(),ce=/^(?:\*+(?:((?!\*)punct)|[^\s*]))|^_+(?:((?!_)punct)|([^\s_]))/,We=k(ce,"u").replace(/punct/g,v).getRegex(),Xe=k(ce,"u").replace(/punct/g,ue).getRegex(),he="^[^_*]*?__[^_*]*?\\*[^_*]*?(?=__)|[^*]+(?=[^*])|(?!\\*)punct(\\*+)(?=[\\s]|$)|notPunctSpace(\\*+)(?!\\*)(?=punctSpace|$)|(?!\\*)punctSpace(\\*+)(?=notPunctSpace)|[\\s](\\*+)(?!\\*)(?=punct)|(?!\\*)punct(\\*+)(?!\\*)(?=punct)|notPunctSpace(\\*+)(?=notPunctSpace)",Je=k(he,"gu").replace(/notPunctSpace/g,le).replace(/punctSpace/g,W).replace(/punct/g,v).getRegex(),Ve=k(he,"gu").replace(/notPunctSpace/g,je).replace(/punctSpace/g,Qe).replace(/punct/g,ue).getRegex(),Ye=k("^[^_*]*?\\*\\*[^_*]*?_[^_*]*?(?=\\*\\*)|[^_]+(?=[^_])|(?!_)punct(_+)(?=[\\s]|$)|notPunctSpace(_+)(?!_)(?=punctSpace|$)|(?!_)punctSpace(_+)(?=notPunctSpace)|[\\s](_+)(?!_)(?=punct)|(?!_)punct(_+)(?!_)(?=punct)","gu").replace(/notPunctSpace/g,le).replace(/punctSpace/g,W).replace(/punct/g,v).getRegex(),et=k(/^~~?(?:((?!~)punct)|[^\s~])/,"u").replace(/punct/g,pe).getRegex(),tt="^[^~]+(?=[^~])|(?!~)punct(~~?)(?=[\\s]|$)|notPunctSpace(~~?)(?!~)(?=punctSpace|$)|(?!~)punctSpace(~~?)(?=notPunctSpace)|[\\s](~~?)(?!~)(?=punct)|(?!~)punct(~~?)(?!~)(?=punct)|notPunctSpace(~~?)(?=notPunctSpace)",nt=k(tt,"gu").replace(/notPunctSpace/g,Ue).replace(/punctSpace/g,Fe).replace(/punct/g,pe).getRegex(),rt=k(/\\(punct)/,"gu").replace(/punct/g,v).getRegex(),st=k(/^<(scheme:[^\s\x00-\x1f<>]*|email)>/).replace("scheme",/[a-zA-Z][a-zA-Z0-9+.-]{1,31}/).replace("email",/[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+(@)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+(?![-_])/).getRegex(),it=k(U).replace("(?:-->|$)","-->").getRegex(),ot=k("^comment|^</[a-zA-Z][\\w:-]*\\s*>|^<[a-zA-Z][\\w-]*(?:attribute)*?\\s*/?>|^<\\?[\\s\\S]*?\\?>|^<![a-zA-Z]+\\s[\\s\\S]*?>|^<!\\[CDATA\\[[\\s\\S]*?\\]\\]>").replace("comment",it).replace("attribute",/\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*"[^"]*"|\s*=\s*'[^']*'|\s*=\s*[^\s"'=<>`]+)?/).getRegex(),D=/(?:\[(?:\\[\s\S]|[^\[\]\\])*\]|\\[\s\S]|`+[^`]*?`+(?!`)|[^\[\]\\`])*?/,at=k(/^!?\[(label)\]\(\s*(href)(?:(?:[ \t]+(?:\n[ \t]*)?|\n[ \t]*)(title))?\s*\)/).replace("label",D).replace("href",/<(?:\\.|[^\n<>\\])+>|[^ \t\n\x00-\x1f]*/).replace("title",/"(?:\\"?|[^"\\])*"|'(?:\\'?|[^'\\])*'|\((?:\\\)?|[^)\\])*\)/).getRegex(),ke=k(/^!?\[(label)\]\[(ref)\]/).replace("label",D).replace("ref",F).getRegex(),de=k(/^!?\[(ref)\](?:\[\])?/).replace("ref",F).getRegex(),lt=k("reflink|nolink(?!\\()","g").replace("reflink",ke).replace("nolink",de).getRegex(),re=/[hH][tT][tT][pP][sS]?|[fF][tT][pP]/,X={_backpedal:L,anyPunctuation:rt,autolink:st,blockSkip:Ke,br:ae,code:Ge,del:L,delLDelim:L,delRDelim:L,emStrongLDelim:We,emStrongRDelimAst:Je,emStrongRDelimUnd:Ye,escape:He,link:at,nolink:de,punctuation:Ne,reflink:ke,reflinkSearch:lt,tag:ot,text:Ze,url:L},ut={...X,link:k(/^!?\[(label)\]\((.*?)\)/).replace("label",D).getRegex(),reflink:k(/^!?\[(label)\]\s*\[([^\]]*)\]/).replace("label",D).getRegex()},N={...X,emStrongRDelimAst:Ve,emStrongLDelim:Xe,delLDelim:et,delRDelim:nt,url:k(/^((?:protocol):\/\/|www\.)(?:[a-zA-Z0-9\-]+\.?)+[^\s<]*|^email/).replace("protocol",re).replace("email",/[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/).getRegex(),_backpedal:/(?:[^?!.,:;*_'"~()&]+|\([^)]*\)|&(?![a-zA-Z0-9]+;$)|[?!.,:;*_'"~)]+(?!$))+/,del:/^(~~?)(?=[^\s~])((?:\\[\s\S]|[^\\])*?(?:\\[\s\S]|[^\s~\\]))\1(?=[^~]|$)/,text:k(/^([`~]+|[^`~])(?:(?= {2,}\n)|(?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)|[\s\S]*?(?:(?=[\\<!\[`*~_]|\b_|protocol:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-](?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)))/).replace("protocol",re).getRegex()},pt={...N,br:k(ae).replace("{2,}","*").getRegex(),text:k(N.text).replace("\\b_","\\b_| {2,}\\n").replace(/\{2,\}/g,"*").getRegex()},B={normal:K,gfm:qe,pedantic:ve},z={normal:X,gfm:N,breaks:pt,pedantic:ut};var ct={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"},ge=l=>ct[l];function O(l,e){if(e){if(m.escapeTest.test(l))return l.replace(m.escapeReplace,ge)}else if(m.escapeTestNoEncode.test(l))return l.replace(m.escapeReplaceNoEncode,ge);return l}function J(l){try{l=encodeURI(l).replace(m.percentDecode,"%")}catch{return null}return l}function V(l,e){let t=l.replace(m.findPipe,(i,s,a)=>{let o=!1,u=s;for(;--u>=0&&a[u]==="\\";)o=!o;return o?"|":" |"}),n=t.split(m.splitPipe),r=0;if(n[0].trim()||n.shift(),n.length>0&&!n.at(-1)?.trim()&&n.pop(),e)if(n.length>e)n.splice(e);else for(;n.length<e;)n.push("");for(;r<n.length;r++)n[r]=n[r].trim().replace(m.slashPipe,"|");return n}function E(l,e,t){let n=l.length;if(n===0)return"";let r=0;for(;r<n;){let i=l.charAt(n-r-1);if(i===e&&!t)r++;else if(i!==e&&t)r++;else break}return l.slice(0,n-r)}function fe(l,e){if(l.indexOf(e[1])===-1)return-1;let t=0;for(let n=0;n<l.length;n++)if(l[n]==="\\")n++;else if(l[n]===e[0])t++;else if(l[n]===e[1]&&(t--,t<0))return n;return t>0?-2:-1}function me(l,e=0){let t=e,n="";for(let r of l)if(r==="	"){let i=4-t%4;n+=" ".repeat(i),t+=i}else n+=r,t++;return n}function xe(l,e,t,n,r){let i=e.href,s=e.title||null,a=l[1].replace(r.other.outputLinkReplace,"$1");n.state.inLink=!0;let o={type:l[0].charAt(0)==="!"?"image":"link",raw:t,href:i,title:s,text:a,tokens:n.inlineTokens(a)};return n.state.inLink=!1,o}function ht(l,e,t){let n=l.match(t.other.indentCodeCompensation);if(n===null)return e;let r=n[1];return e.split(`
+`).map(i=>{let s=i.match(t.other.beginningSpace);if(s===null)return i;let[a]=s;return a.length>=r.length?i.slice(r.length):i}).join(`
+`)}var w=class{options;rules;lexer;constructor(e){this.options=e||R}space(e){let t=this.rules.block.newline.exec(e);if(t&&t[0].length>0)return{type:"space",raw:t[0]}}code(e){let t=this.rules.block.code.exec(e);if(t){let n=t[0].replace(this.rules.other.codeRemoveIndent,"");return{type:"code",raw:t[0],codeBlockStyle:"indented",text:this.options.pedantic?n:E(n,`
+`)}}}fences(e){let t=this.rules.block.fences.exec(e);if(t){let n=t[0],r=ht(n,t[3]||"",this.rules);return{type:"code",raw:n,lang:t[2]?t[2].trim().replace(this.rules.inline.anyPunctuation,"$1"):t[2],text:r}}}heading(e){let t=this.rules.block.heading.exec(e);if(t){let n=t[2].trim();if(this.rules.other.endingHash.test(n)){let r=E(n,"#");(this.options.pedantic||!r||this.rules.other.endingSpaceChar.test(r))&&(n=r.trim())}return{type:"heading",raw:t[0],depth:t[1].length,text:n,tokens:this.lexer.inline(n)}}}hr(e){let t=this.rules.block.hr.exec(e);if(t)return{type:"hr",raw:E(t[0],`
+`)}}blockquote(e){let t=this.rules.block.blockquote.exec(e);if(t){let n=E(t[0],`
+`).split(`
+`),r="",i="",s=[];for(;n.length>0;){let a=!1,o=[],u;for(u=0;u<n.length;u++)if(this.rules.other.blockquoteStart.test(n[u]))o.push(n[u]),a=!0;else if(!a)o.push(n[u]);else break;n=n.slice(u);let p=o.join(`
+`),c=p.replace(this.rules.other.blockquoteSetextReplace,`
+    $1`).replace(this.rules.other.blockquoteSetextReplace2,"");r=r?`${r}
+${p}`:p,i=i?`${i}
+${c}`:c;let d=this.lexer.state.top;if(this.lexer.state.top=!0,this.lexer.blockTokens(c,s,!0),this.lexer.state.top=d,n.length===0)break;let h=s.at(-1);if(h?.type==="code")break;if(h?.type==="blockquote"){let T=h,f=T.raw+`
+`+n.join(`
+`),$=this.blockquote(f);s[s.length-1]=$,r=r.substring(0,r.length-T.raw.length)+$.raw,i=i.substring(0,i.length-T.text.length)+$.text;break}else if(h?.type==="list"){let T=h,f=T.raw+`
+`+n.join(`
+`),$=this.list(f);s[s.length-1]=$,r=r.substring(0,r.length-h.raw.length)+$.raw,i=i.substring(0,i.length-T.raw.length)+$.raw,n=f.substring(s.at(-1).raw.length).split(`
+`);continue}}return{type:"blockquote",raw:r,tokens:s,text:i}}}list(e){let t=this.rules.block.list.exec(e);if(t){let n=t[1].trim(),r=n.length>1,i={type:"list",raw:"",ordered:r,start:r?+n.slice(0,-1):"",loose:!1,items:[]};n=r?`\\d{1,9}\\${n.slice(-1)}`:`\\${n}`,this.options.pedantic&&(n=r?n:"[*+-]");let s=this.rules.other.listItemRegex(n),a=!1;for(;e;){let u=!1,p="",c="";if(!(t=s.exec(e))||this.rules.block.hr.test(e))break;p=t[0],e=e.substring(p.length);let d=me(t[2].split(`
+`,1)[0],t[1].length),h=e.split(`
+`,1)[0],T=!d.trim(),f=0;if(this.options.pedantic?(f=2,c=d.trimStart()):T?f=t[1].length+1:(f=d.search(this.rules.other.nonSpaceChar),f=f>4?1:f,c=d.slice(f),f+=t[1].length),T&&this.rules.other.blankLine.test(h)&&(p+=h+`
+`,e=e.substring(h.length+1),u=!0),!u){let $=this.rules.other.nextBulletRegex(f),Y=this.rules.other.hrRegex(f),ee=this.rules.other.fencesBeginRegex(f),te=this.rules.other.headingBeginRegex(f),be=this.rules.other.htmlBeginRegex(f),Re=this.rules.other.blockquoteBeginRegex(f);for(;e;){let H=e.split(`
+`,1)[0],A;if(h=H,this.options.pedantic?(h=h.replace(this.rules.other.listReplaceNesting,"  "),A=h):A=h.replace(this.rules.other.tabCharGlobal,"    "),ee.test(h)||te.test(h)||be.test(h)||Re.test(h)||$.test(h)||Y.test(h))break;if(A.search(this.rules.other.nonSpaceChar)>=f||!h.trim())c+=`
+`+A.slice(f);else{if(T||d.replace(this.rules.other.tabCharGlobal,"    ").search(this.rules.other.nonSpaceChar)>=4||ee.test(d)||te.test(d)||Y.test(d))break;c+=`
+`+h}T=!h.trim(),p+=H+`
+`,e=e.substring(H.length+1),d=A.slice(f)}}i.loose||(a?i.loose=!0:this.rules.other.doubleBlankLine.test(p)&&(a=!0)),i.items.push({type:"list_item",raw:p,task:!!this.options.gfm&&this.rules.other.listIsTask.test(c),loose:!1,text:c,tokens:[]}),i.raw+=p}let o=i.items.at(-1);if(o)o.raw=o.raw.trimEnd(),o.text=o.text.trimEnd();else return;i.raw=i.raw.trimEnd();for(let u of i.items){if(this.lexer.state.top=!1,u.tokens=this.lexer.blockTokens(u.text,[]),u.task){if(u.text=u.text.replace(this.rules.other.listReplaceTask,""),u.tokens[0]?.type==="text"||u.tokens[0]?.type==="paragraph"){u.tokens[0].raw=u.tokens[0].raw.replace(this.rules.other.listReplaceTask,""),u.tokens[0].text=u.tokens[0].text.replace(this.rules.other.listReplaceTask,"");for(let c=this.lexer.inlineQueue.length-1;c>=0;c--)if(this.rules.other.listIsTask.test(this.lexer.inlineQueue[c].src)){this.lexer.inlineQueue[c].src=this.lexer.inlineQueue[c].src.replace(this.rules.other.listReplaceTask,"");break}}let p=this.rules.other.listTaskCheckbox.exec(u.raw);if(p){let c={type:"checkbox",raw:p[0]+" ",checked:p[0]!=="[ ]"};u.checked=c.checked,i.loose?u.tokens[0]&&["paragraph","text"].includes(u.tokens[0].type)&&"tokens"in u.tokens[0]&&u.tokens[0].tokens?(u.tokens[0].raw=c.raw+u.tokens[0].raw,u.tokens[0].text=c.raw+u.tokens[0].text,u.tokens[0].tokens.unshift(c)):u.tokens.unshift({type:"paragraph",raw:c.raw,text:c.raw,tokens:[c]}):u.tokens.unshift(c)}}if(!i.loose){let p=u.tokens.filter(d=>d.type==="space"),c=p.length>0&&p.some(d=>this.rules.other.anyLine.test(d.raw));i.loose=c}}if(i.loose)for(let u of i.items){u.loose=!0;for(let p of u.tokens)p.type==="text"&&(p.type="paragraph")}return i}}html(e){let t=this.rules.block.html.exec(e);if(t)return{type:"html",block:!0,raw:t[0],pre:t[1]==="pre"||t[1]==="script"||t[1]==="style",text:t[0]}}def(e){let t=this.rules.block.def.exec(e);if(t){let n=t[1].toLowerCase().replace(this.rules.other.multipleSpaceGlobal," "),r=t[2]?t[2].replace(this.rules.other.hrefBrackets,"$1").replace(this.rules.inline.anyPunctuation,"$1"):"",i=t[3]?t[3].substring(1,t[3].length-1).replace(this.rules.inline.anyPunctuation,"$1"):t[3];return{type:"def",tag:n,raw:t[0],href:r,title:i}}}table(e){let t=this.rules.block.table.exec(e);if(!t||!this.rules.other.tableDelimiter.test(t[2]))return;let n=V(t[1]),r=t[2].replace(this.rules.other.tableAlignChars,"").split("|"),i=t[3]?.trim()?t[3].replace(this.rules.other.tableRowBlankLine,"").split(`
+`):[],s={type:"table",raw:t[0],header:[],align:[],rows:[]};if(n.length===r.length){for(let a of r)this.rules.other.tableAlignRight.test(a)?s.align.push("right"):this.rules.other.tableAlignCenter.test(a)?s.align.push("center"):this.rules.other.tableAlignLeft.test(a)?s.align.push("left"):s.align.push(null);for(let a=0;a<n.length;a++)s.header.push({text:n[a],tokens:this.lexer.inline(n[a]),header:!0,align:s.align[a]});for(let a of i)s.rows.push(V(a,s.header.length).map((o,u)=>({text:o,tokens:this.lexer.inline(o),header:!1,align:s.align[u]})));return s}}lheading(e){let t=this.rules.block.lheading.exec(e);if(t)return{type:"heading",raw:t[0],depth:t[2].charAt(0)==="="?1:2,text:t[1],tokens:this.lexer.inline(t[1])}}paragraph(e){let t=this.rules.block.paragraph.exec(e);if(t){let n=t[1].charAt(t[1].length-1)===`
+`?t[1].slice(0,-1):t[1];return{type:"paragraph",raw:t[0],text:n,tokens:this.lexer.inline(n)}}}text(e){let t=this.rules.block.text.exec(e);if(t)return{type:"text",raw:t[0],text:t[0],tokens:this.lexer.inline(t[0])}}escape(e){let t=this.rules.inline.escape.exec(e);if(t)return{type:"escape",raw:t[0],text:t[1]}}tag(e){let t=this.rules.inline.tag.exec(e);if(t)return!this.lexer.state.inLink&&this.rules.other.startATag.test(t[0])?this.lexer.state.inLink=!0:this.lexer.state.inLink&&this.rules.other.endATag.test(t[0])&&(this.lexer.state.inLink=!1),!this.lexer.state.inRawBlock&&this.rules.other.startPreScriptTag.test(t[0])?this.lexer.state.inRawBlock=!0:this.lexer.state.inRawBlock&&this.rules.other.endPreScriptTag.test(t[0])&&(this.lexer.state.inRawBlock=!1),{type:"html",raw:t[0],inLink:this.lexer.state.inLink,inRawBlock:this.lexer.state.inRawBlock,block:!1,text:t[0]}}link(e){let t=this.rules.inline.link.exec(e);if(t){let n=t[2].trim();if(!this.options.pedantic&&this.rules.other.startAngleBracket.test(n)){if(!this.rules.other.endAngleBracket.test(n))return;let s=E(n.slice(0,-1),"\\");if((n.length-s.length)%2===0)return}else{let s=fe(t[2],"()");if(s===-2)return;if(s>-1){let o=(t[0].indexOf("!")===0?5:4)+t[1].length+s;t[2]=t[2].substring(0,s),t[0]=t[0].substring(0,o).trim(),t[3]=""}}let r=t[2],i="";if(this.options.pedantic){let s=this.rules.other.pedanticHrefTitle.exec(r);s&&(r=s[1],i=s[3])}else i=t[3]?t[3].slice(1,-1):"";return r=r.trim(),this.rules.other.startAngleBracket.test(r)&&(this.options.pedantic&&!this.rules.other.endAngleBracket.test(n)?r=r.slice(1):r=r.slice(1,-1)),xe(t,{href:r&&r.replace(this.rules.inline.anyPunctuation,"$1"),title:i&&i.replace(this.rules.inline.anyPunctuation,"$1")},t[0],this.lexer,this.rules)}}reflink(e,t){let n;if((n=this.rules.inline.reflink.exec(e))||(n=this.rules.inline.nolink.exec(e))){let r=(n[2]||n[1]).replace(this.rules.other.multipleSpaceGlobal," "),i=t[r.toLowerCase()];if(!i){let s=n[0].charAt(0);return{type:"text",raw:s,text:s}}return xe(n,i,n[0],this.lexer,this.rules)}}emStrong(e,t,n=""){let r=this.rules.inline.emStrongLDelim.exec(e);if(!r||r[3]&&n.match(this.rules.other.unicodeAlphaNumeric))return;if(!(r[1]||r[2]||"")||!n||this.rules.inline.punctuation.exec(n)){let s=[...r[0]].length-1,a,o,u=s,p=0,c=r[0][0]==="*"?this.rules.inline.emStrongRDelimAst:this.rules.inline.emStrongRDelimUnd;for(c.lastIndex=0,t=t.slice(-1*e.length+s);(r=c.exec(t))!=null;){if(a=r[1]||r[2]||r[3]||r[4]||r[5]||r[6],!a)continue;if(o=[...a].length,r[3]||r[4]){u+=o;continue}else if((r[5]||r[6])&&s%3&&!((s+o)%3)){p+=o;continue}if(u-=o,u>0)continue;o=Math.min(o,o+u+p);let d=[...r[0]][0].length,h=e.slice(0,s+r.index+d+o);if(Math.min(s,o)%2){let f=h.slice(1,-1);return{type:"em",raw:h,text:f,tokens:this.lexer.inlineTokens(f)}}let T=h.slice(2,-2);return{type:"strong",raw:h,text:T,tokens:this.lexer.inlineTokens(T)}}}}codespan(e){let t=this.rules.inline.code.exec(e);if(t){let n=t[2].replace(this.rules.other.newLineCharGlobal," "),r=this.rules.other.nonSpaceChar.test(n),i=this.rules.other.startingSpaceChar.test(n)&&this.rules.other.endingSpaceChar.test(n);return r&&i&&(n=n.substring(1,n.length-1)),{type:"codespan",raw:t[0],text:n}}}br(e){let t=this.rules.inline.br.exec(e);if(t)return{type:"br",raw:t[0]}}del(e,t,n=""){let r=this.rules.inline.delLDelim.exec(e);if(!r)return;if(!(r[1]||"")||!n||this.rules.inline.punctuation.exec(n)){let s=[...r[0]].length-1,a,o,u=s,p=this.rules.inline.delRDelim;for(p.lastIndex=0,t=t.slice(-1*e.length+s);(r=p.exec(t))!=null;){if(a=r[1]||r[2]||r[3]||r[4]||r[5]||r[6],!a||(o=[...a].length,o!==s))continue;if(r[3]||r[4]){u+=o;continue}if(u-=o,u>0)continue;o=Math.min(o,o+u);let c=[...r[0]][0].length,d=e.slice(0,s+r.index+c+o),h=d.slice(s,-s);return{type:"del",raw:d,text:h,tokens:this.lexer.inlineTokens(h)}}}}autolink(e){let t=this.rules.inline.autolink.exec(e);if(t){let n,r;return t[2]==="@"?(n=t[1],r="mailto:"+n):(n=t[1],r=n),{type:"link",raw:t[0],text:n,href:r,tokens:[{type:"text",raw:n,text:n}]}}}url(e){let t;if(t=this.rules.inline.url.exec(e)){let n,r;if(t[2]==="@")n=t[0],r="mailto:"+n;else{let i;do i=t[0],t[0]=this.rules.inline._backpedal.exec(t[0])?.[0]??"";while(i!==t[0]);n=t[0],t[1]==="www."?r="http://"+t[0]:r=t[0]}return{type:"link",raw:t[0],text:n,href:r,tokens:[{type:"text",raw:n,text:n}]}}}inlineText(e){let t=this.rules.inline.text.exec(e);if(t){let n=this.lexer.state.inRawBlock;return{type:"text",raw:t[0],text:t[0],escaped:n}}}};var x=class l{tokens;options;state;inlineQueue;tokenizer;constructor(e){this.tokens=[],this.tokens.links=Object.create(null),this.options=e||R,this.options.tokenizer=this.options.tokenizer||new w,this.tokenizer=this.options.tokenizer,this.tokenizer.options=this.options,this.tokenizer.lexer=this,this.inlineQueue=[],this.state={inLink:!1,inRawBlock:!1,top:!0};let t={other:m,block:B.normal,inline:z.normal};this.options.pedantic?(t.block=B.pedantic,t.inline=z.pedantic):this.options.gfm&&(t.block=B.gfm,this.options.breaks?t.inline=z.breaks:t.inline=z.gfm),this.tokenizer.rules=t}static get rules(){return{block:B,inline:z}}static lex(e,t){return new l(t).lex(e)}static lexInline(e,t){return new l(t).inlineTokens(e)}lex(e){e=e.replace(m.carriageReturn,`
+`),this.blockTokens(e,this.tokens);for(let t=0;t<this.inlineQueue.length;t++){let n=this.inlineQueue[t];this.inlineTokens(n.src,n.tokens)}return this.inlineQueue=[],this.tokens}blockTokens(e,t=[],n=!1){for(this.options.pedantic&&(e=e.replace(m.tabCharGlobal,"    ").replace(m.spaceLine,""));e;){let r;if(this.options.extensions?.block?.some(s=>(r=s.call({lexer:this},e,t))?(e=e.substring(r.raw.length),t.push(r),!0):!1))continue;if(r=this.tokenizer.space(e)){e=e.substring(r.raw.length);let s=t.at(-1);r.raw.length===1&&s!==void 0?s.raw+=`
+`:t.push(r);continue}if(r=this.tokenizer.code(e)){e=e.substring(r.raw.length);let s=t.at(-1);s?.type==="paragraph"||s?.type==="text"?(s.raw+=(s.raw.endsWith(`
+`)?"":`
+`)+r.raw,s.text+=`
+`+r.text,this.inlineQueue.at(-1).src=s.text):t.push(r);continue}if(r=this.tokenizer.fences(e)){e=e.substring(r.raw.length),t.push(r);continue}if(r=this.tokenizer.heading(e)){e=e.substring(r.raw.length),t.push(r);continue}if(r=this.tokenizer.hr(e)){e=e.substring(r.raw.length),t.push(r);continue}if(r=this.tokenizer.blockquote(e)){e=e.substring(r.raw.length),t.push(r);continue}if(r=this.tokenizer.list(e)){e=e.substring(r.raw.length),t.push(r);continue}if(r=this.tokenizer.html(e)){e=e.substring(r.raw.length),t.push(r);continue}if(r=this.tokenizer.def(e)){e=e.substring(r.raw.length);let s=t.at(-1);s?.type==="paragraph"||s?.type==="text"?(s.raw+=(s.raw.endsWith(`
+`)?"":`
+`)+r.raw,s.text+=`
+`+r.raw,this.inlineQueue.at(-1).src=s.text):this.tokens.links[r.tag]||(this.tokens.links[r.tag]={href:r.href,title:r.title},t.push(r));continue}if(r=this.tokenizer.table(e)){e=e.substring(r.raw.length),t.push(r);continue}if(r=this.tokenizer.lheading(e)){e=e.substring(r.raw.length),t.push(r);continue}let i=e;if(this.options.extensions?.startBlock){let s=1/0,a=e.slice(1),o;this.options.extensions.startBlock.forEach(u=>{o=u.call({lexer:this},a),typeof o=="number"&&o>=0&&(s=Math.min(s,o))}),s<1/0&&s>=0&&(i=e.substring(0,s+1))}if(this.state.top&&(r=this.tokenizer.paragraph(i))){let s=t.at(-1);n&&s?.type==="paragraph"?(s.raw+=(s.raw.endsWith(`
+`)?"":`
+`)+r.raw,s.text+=`
+`+r.text,this.inlineQueue.pop(),this.inlineQueue.at(-1).src=s.text):t.push(r),n=i.length!==e.length,e=e.substring(r.raw.length);continue}if(r=this.tokenizer.text(e)){e=e.substring(r.raw.length);let s=t.at(-1);s?.type==="text"?(s.raw+=(s.raw.endsWith(`
+`)?"":`
+`)+r.raw,s.text+=`
+`+r.text,this.inlineQueue.pop(),this.inlineQueue.at(-1).src=s.text):t.push(r);continue}if(e){let s="Infinite loop on byte: "+e.charCodeAt(0);if(this.options.silent){console.error(s);break}else throw new Error(s)}}return this.state.top=!0,t}inline(e,t=[]){return this.inlineQueue.push({src:e,tokens:t}),t}inlineTokens(e,t=[]){let n=e,r=null;if(this.tokens.links){let o=Object.keys(this.tokens.links);if(o.length>0)for(;(r=this.tokenizer.rules.inline.reflinkSearch.exec(n))!=null;)o.includes(r[0].slice(r[0].lastIndexOf("[")+1,-1))&&(n=n.slice(0,r.index)+"["+"a".repeat(r[0].length-2)+"]"+n.slice(this.tokenizer.rules.inline.reflinkSearch.lastIndex))}for(;(r=this.tokenizer.rules.inline.anyPunctuation.exec(n))!=null;)n=n.slice(0,r.index)+"++"+n.slice(this.tokenizer.rules.inline.anyPunctuation.lastIndex);let i;for(;(r=this.tokenizer.rules.inline.blockSkip.exec(n))!=null;)i=r[2]?r[2].length:0,n=n.slice(0,r.index+i)+"["+"a".repeat(r[0].length-i-2)+"]"+n.slice(this.tokenizer.rules.inline.blockSkip.lastIndex);n=this.options.hooks?.emStrongMask?.call({lexer:this},n)??n;let s=!1,a="";for(;e;){s||(a=""),s=!1;let o;if(this.options.extensions?.inline?.some(p=>(o=p.call({lexer:this},e,t))?(e=e.substring(o.raw.length),t.push(o),!0):!1))continue;if(o=this.tokenizer.escape(e)){e=e.substring(o.raw.length),t.push(o);continue}if(o=this.tokenizer.tag(e)){e=e.substring(o.raw.length),t.push(o);continue}if(o=this.tokenizer.link(e)){e=e.substring(o.raw.length),t.push(o);continue}if(o=this.tokenizer.reflink(e,this.tokens.links)){e=e.substring(o.raw.length);let p=t.at(-1);o.type==="text"&&p?.type==="text"?(p.raw+=o.raw,p.text+=o.text):t.push(o);continue}if(o=this.tokenizer.emStrong(e,n,a)){e=e.substring(o.raw.length),t.push(o);continue}if(o=this.tokenizer.codespan(e)){e=e.substring(o.raw.length),t.push(o);continue}if(o=this.tokenizer.br(e)){e=e.substring(o.raw.length),t.push(o);continue}if(o=this.tokenizer.del(e,n,a)){e=e.substring(o.raw.length),t.push(o);continue}if(o=this.tokenizer.autolink(e)){e=e.substring(o.raw.length),t.push(o);continue}if(!this.state.inLink&&(o=this.tokenizer.url(e))){e=e.substring(o.raw.length),t.push(o);continue}let u=e;if(this.options.extensions?.startInline){let p=1/0,c=e.slice(1),d;this.options.extensions.startInline.forEach(h=>{d=h.call({lexer:this},c),typeof d=="number"&&d>=0&&(p=Math.min(p,d))}),p<1/0&&p>=0&&(u=e.substring(0,p+1))}if(o=this.tokenizer.inlineText(u)){e=e.substring(o.raw.length),o.raw.slice(-1)!=="_"&&(a=o.raw.slice(-1)),s=!0;let p=t.at(-1);p?.type==="text"?(p.raw+=o.raw,p.text+=o.text):t.push(o);continue}if(e){let p="Infinite loop on byte: "+e.charCodeAt(0);if(this.options.silent){console.error(p);break}else throw new Error(p)}}return t}};var y=class{options;parser;constructor(e){this.options=e||R}space(e){return""}code({text:e,lang:t,escaped:n}){let r=(t||"").match(m.notSpaceStart)?.[0],i=e.replace(m.endingNewline,"")+`
+`;return r?'<pre><code class="language-'+O(r)+'">'+(n?i:O(i,!0))+`</code></pre>
+`:"<pre><code>"+(n?i:O(i,!0))+`</code></pre>
+`}blockquote({tokens:e}){return`<blockquote>
+${this.parser.parse(e)}</blockquote>
+`}html({text:e}){return e}def(e){return""}heading({tokens:e,depth:t}){return`<h${t}>${this.parser.parseInline(e)}</h${t}>
+`}hr(e){return`<hr>
+`}list(e){let t=e.ordered,n=e.start,r="";for(let a=0;a<e.items.length;a++){let o=e.items[a];r+=this.listitem(o)}let i=t?"ol":"ul",s=t&&n!==1?' start="'+n+'"':"";return"<"+i+s+`>
+`+r+"</"+i+`>
+`}listitem(e){return`<li>${this.parser.parse(e.tokens)}</li>
+`}checkbox({checked:e}){return"<input "+(e?'checked="" ':"")+'disabled="" type="checkbox"> '}paragraph({tokens:e}){return`<p>${this.parser.parseInline(e)}</p>
+`}table(e){let t="",n="";for(let i=0;i<e.header.length;i++)n+=this.tablecell(e.header[i]);t+=this.tablerow({text:n});let r="";for(let i=0;i<e.rows.length;i++){let s=e.rows[i];n="";for(let a=0;a<s.length;a++)n+=this.tablecell(s[a]);r+=this.tablerow({text:n})}return r&&(r=`<tbody>${r}</tbody>`),`<table>
+<thead>
+`+t+`</thead>
+`+r+`</table>
+`}tablerow({text:e}){return`<tr>
+${e}</tr>
+`}tablecell(e){let t=this.parser.parseInline(e.tokens),n=e.header?"th":"td";return(e.align?`<${n} align="${e.align}">`:`<${n}>`)+t+`</${n}>
+`}strong({tokens:e}){return`<strong>${this.parser.parseInline(e)}</strong>`}em({tokens:e}){return`<em>${this.parser.parseInline(e)}</em>`}codespan({text:e}){return`<code>${O(e,!0)}</code>`}br(e){return"<br>"}del({tokens:e}){return`<del>${this.parser.parseInline(e)}</del>`}link({href:e,title:t,tokens:n}){let r=this.parser.parseInline(n),i=J(e);if(i===null)return r;e=i;let s='<a href="'+e+'"';return t&&(s+=' title="'+O(t)+'"'),s+=">"+r+"</a>",s}image({href:e,title:t,text:n,tokens:r}){r&&(n=this.parser.parseInline(r,this.parser.textRenderer));let i=J(e);if(i===null)return O(n);e=i;let s=`<img src="${e}" alt="${O(n)}"`;return t&&(s+=` title="${O(t)}"`),s+=">",s}text(e){return"tokens"in e&&e.tokens?this.parser.parseInline(e.tokens):"escaped"in e&&e.escaped?e.text:O(e.text)}};var S=class{strong({text:e}){return e}em({text:e}){return e}codespan({text:e}){return e}del({text:e}){return e}html({text:e}){return e}text({text:e}){return e}link({text:e}){return""+e}image({text:e}){return""+e}br(){return""}checkbox({raw:e}){return e}};var b=class l{options;renderer;textRenderer;constructor(e){this.options=e||R,this.options.renderer=this.options.renderer||new y,this.renderer=this.options.renderer,this.renderer.options=this.options,this.renderer.parser=this,this.textRenderer=new S}static parse(e,t){return new l(t).parse(e)}static parseInline(e,t){return new l(t).parseInline(e)}parse(e){let t="";for(let n=0;n<e.length;n++){let r=e[n];if(this.options.extensions?.renderers?.[r.type]){let s=r,a=this.options.extensions.renderers[s.type].call({parser:this},s);if(a!==!1||!["space","hr","heading","code","table","blockquote","list","html","def","paragraph","text"].includes(s.type)){t+=a||"";continue}}let i=r;switch(i.type){case"space":{t+=this.renderer.space(i);break}case"hr":{t+=this.renderer.hr(i);break}case"heading":{t+=this.renderer.heading(i);break}case"code":{t+=this.renderer.code(i);break}case"table":{t+=this.renderer.table(i);break}case"blockquote":{t+=this.renderer.blockquote(i);break}case"list":{t+=this.renderer.list(i);break}case"checkbox":{t+=this.renderer.checkbox(i);break}case"html":{t+=this.renderer.html(i);break}case"def":{t+=this.renderer.def(i);break}case"paragraph":{t+=this.renderer.paragraph(i);break}case"text":{t+=this.renderer.text(i);break}default:{let s='Token with "'+i.type+'" type was not found.';if(this.options.silent)return console.error(s),"";throw new Error(s)}}}return t}parseInline(e,t=this.renderer){let n="";for(let r=0;r<e.length;r++){let i=e[r];if(this.options.extensions?.renderers?.[i.type]){let a=this.options.extensions.renderers[i.type].call({parser:this},i);if(a!==!1||!["escape","html","link","image","strong","em","codespan","br","del","text"].includes(i.type)){n+=a||"";continue}}let s=i;switch(s.type){case"escape":{n+=t.text(s);break}case"html":{n+=t.html(s);break}case"link":{n+=t.link(s);break}case"image":{n+=t.image(s);break}case"checkbox":{n+=t.checkbox(s);break}case"strong":{n+=t.strong(s);break}case"em":{n+=t.em(s);break}case"codespan":{n+=t.codespan(s);break}case"br":{n+=t.br(s);break}case"del":{n+=t.del(s);break}case"text":{n+=t.text(s);break}default:{let a='Token with "'+s.type+'" type was not found.';if(this.options.silent)return console.error(a),"";throw new Error(a)}}}return n}};var P=class{options;block;constructor(e){this.options=e||R}static passThroughHooks=new Set(["preprocess","postprocess","processAllTokens","emStrongMask"]);static passThroughHooksRespectAsync=new Set(["preprocess","postprocess","processAllTokens"]);preprocess(e){return e}postprocess(e){return e}processAllTokens(e){return e}emStrongMask(e){return e}provideLexer(){return this.block?x.lex:x.lexInline}provideParser(){return this.block?b.parse:b.parseInline}};var I=class{defaults=_();options=this.setOptions;parse=this.parseMarkdown(!0);parseInline=this.parseMarkdown(!1);Parser=b;Renderer=y;TextRenderer=S;Lexer=x;Tokenizer=w;Hooks=P;constructor(...e){this.use(...e)}walkTokens(e,t){let n=[];for(let r of e)switch(n=n.concat(t.call(this,r)),r.type){case"table":{let i=r;for(let s of i.header)n=n.concat(this.walkTokens(s.tokens,t));for(let s of i.rows)for(let a of s)n=n.concat(this.walkTokens(a.tokens,t));break}case"list":{let i=r;n=n.concat(this.walkTokens(i.items,t));break}default:{let i=r;this.defaults.extensions?.childTokens?.[i.type]?this.defaults.extensions.childTokens[i.type].forEach(s=>{let a=i[s].flat(1/0);n=n.concat(this.walkTokens(a,t))}):i.tokens&&(n=n.concat(this.walkTokens(i.tokens,t)))}}return n}use(...e){let t=this.defaults.extensions||{renderers:{},childTokens:{}};return e.forEach(n=>{let r={...n};if(r.async=this.defaults.async||r.async||!1,n.extensions&&(n.extensions.forEach(i=>{if(!i.name)throw new Error("extension name required");if("renderer"in i){let s=t.renderers[i.name];s?t.renderers[i.name]=function(...a){let o=i.renderer.apply(this,a);return o===!1&&(o=s.apply(this,a)),o}:t.renderers[i.name]=i.renderer}if("tokenizer"in i){if(!i.level||i.level!=="block"&&i.level!=="inline")throw new Error("extension level must be 'block' or 'inline'");let s=t[i.level];s?s.unshift(i.tokenizer):t[i.level]=[i.tokenizer],i.start&&(i.level==="block"?t.startBlock?t.startBlock.push(i.start):t.startBlock=[i.start]:i.level==="inline"&&(t.startInline?t.startInline.push(i.start):t.startInline=[i.start]))}"childTokens"in i&&i.childTokens&&(t.childTokens[i.name]=i.childTokens)}),r.extensions=t),n.renderer){let i=this.defaults.renderer||new y(this.defaults);for(let s in n.renderer){if(!(s in i))throw new Error(`renderer '${s}' does not exist`);if(["options","parser"].includes(s))continue;let a=s,o=n.renderer[a],u=i[a];i[a]=(...p)=>{let c=o.apply(i,p);return c===!1&&(c=u.apply(i,p)),c||""}}r.renderer=i}if(n.tokenizer){let i=this.defaults.tokenizer||new w(this.defaults);for(let s in n.tokenizer){if(!(s in i))throw new Error(`tokenizer '${s}' does not exist`);if(["options","rules","lexer"].includes(s))continue;let a=s,o=n.tokenizer[a],u=i[a];i[a]=(...p)=>{let c=o.apply(i,p);return c===!1&&(c=u.apply(i,p)),c}}r.tokenizer=i}if(n.hooks){let i=this.defaults.hooks||new P;for(let s in n.hooks){if(!(s in i))throw new Error(`hook '${s}' does not exist`);if(["options","block"].includes(s))continue;let a=s,o=n.hooks[a],u=i[a];P.passThroughHooks.has(s)?i[a]=p=>{if(this.defaults.async&&P.passThroughHooksRespectAsync.has(s))return(async()=>{let d=await o.call(i,p);return u.call(i,d)})();let c=o.call(i,p);return u.call(i,c)}:i[a]=(...p)=>{if(this.defaults.async)return(async()=>{let d=await o.apply(i,p);return d===!1&&(d=await u.apply(i,p)),d})();let c=o.apply(i,p);return c===!1&&(c=u.apply(i,p)),c}}r.hooks=i}if(n.walkTokens){let i=this.defaults.walkTokens,s=n.walkTokens;r.walkTokens=function(a){let o=[];return o.push(s.call(this,a)),i&&(o=o.concat(i.call(this,a))),o}}this.defaults={...this.defaults,...r}}),this}setOptions(e){return this.defaults={...this.defaults,...e},this}lexer(e,t){return x.lex(e,t??this.defaults)}parser(e,t){return b.parse(e,t??this.defaults)}parseMarkdown(e){return(n,r)=>{let i={...r},s={...this.defaults,...i},a=this.onError(!!s.silent,!!s.async);if(this.defaults.async===!0&&i.async===!1)return a(new Error("marked(): The async option was set to true by an extension. Remove async: false from the parse options object to return a Promise."));if(typeof n>"u"||n===null)return a(new Error("marked(): input parameter is undefined or null"));if(typeof n!="string")return a(new Error("marked(): input parameter is of type "+Object.prototype.toString.call(n)+", string expected"));if(s.hooks&&(s.hooks.options=s,s.hooks.block=e),s.async)return(async()=>{let o=s.hooks?await s.hooks.preprocess(n):n,p=await(s.hooks?await s.hooks.provideLexer():e?x.lex:x.lexInline)(o,s),c=s.hooks?await s.hooks.processAllTokens(p):p;s.walkTokens&&await Promise.all(this.walkTokens(c,s.walkTokens));let h=await(s.hooks?await s.hooks.provideParser():e?b.parse:b.parseInline)(c,s);return s.hooks?await s.hooks.postprocess(h):h})().catch(a);try{s.hooks&&(n=s.hooks.preprocess(n));let u=(s.hooks?s.hooks.provideLexer():e?x.lex:x.lexInline)(n,s);s.hooks&&(u=s.hooks.processAllTokens(u)),s.walkTokens&&this.walkTokens(u,s.walkTokens);let c=(s.hooks?s.hooks.provideParser():e?b.parse:b.parseInline)(u,s);return s.hooks&&(c=s.hooks.postprocess(c)),c}catch(o){return a(o)}}}onError(e,t){return n=>{if(n.message+=`
+Please report this to https://github.com/markedjs/marked.`,e){let r="<p>An error occurred:</p><pre>"+O(n.message+"",!0)+"</pre>";return t?Promise.resolve(r):r}if(t)return Promise.reject(n);throw n}}};var M=new I;function g(l,e){return M.parse(l,e)}g.options=g.setOptions=function(l){return M.setOptions(l),g.defaults=M.defaults,Z(g.defaults),g};g.getDefaults=_;g.defaults=R;g.use=function(...l){return M.use(...l),g.defaults=M.defaults,Z(g.defaults),g};g.walkTokens=function(l,e){return M.walkTokens(l,e)};g.parseInline=M.parseInline;g.Parser=b;g.parser=b.parse;g.Renderer=y;g.TextRenderer=S;g.Lexer=x;g.lexer=x.lex;g.Tokenizer=w;g.Hooks=P;g.parse=g;var kt=g.options,dt=g.setOptions,gt=g.use,ft=g.walkTokens,mt=g.parseInline,xt=g,bt=b.parse,Rt=x.lex;
+
+if(__exports != exports)module.exports = exports;return module.exports}));
+//# sourceMappingURL=marked.umd.js.map
+
+
     const GITHUB_REPO = "sameerkarur/Data_science";
     const BRANCH = "main";
 
@@ -6917,6 +8257,14 @@ if(__exports != exports)module.exports = exports;return module.exports}));
     // ==========================================
     // 1. BUILT-IN PURE JAVASCRIPT MARKDOWN PARSER (ZERO EXTERNAL DEPENDENCY)
     // ==========================================
+    
+    if (typeof marked !== 'undefined') {
+      marked.setOptions({
+        gfm: true,
+        breaks: true
+      });
+    }
+
     
     if (typeof marked !== 'undefined') {
       marked.setOptions({
@@ -7233,12 +8581,17 @@ if(__exports != exports)module.exports = exports;return module.exports}));
 
     // Utility fetcher (supports raw github with relative fallback)
     function fetchFile(path) {
-      const rawUrl = `https://raw.githubusercontent.com/${GITHUB_REPO}/${BRANCH}/${path}`;
-      return fetch(rawUrl).then(res => {
-        if (!res.ok) throw new Error('Network error');
+      // 1. Try local/relative fetch first (immediate & always freshest when served locally or on GitHub Pages)
+      return fetch(path, { cache: 'no-cache' }).then(res => {
+        if (!res.ok) throw new Error('Relative fetch failed');
         return res.text();
       }).catch(() => {
-        return fetch(path).then(res => res.text());
+        // 2. Fallback to raw github with cache-busting timestamp
+        const rawUrl = `https://raw.githubusercontent.com/${GITHUB_REPO}/${BRANCH}/${path}?v=${Date.now()}`;
+        return fetch(rawUrl).then(res => {
+          if (!res.ok) throw new Error('Raw fetch failed');
+          return res.text();
+        });
       });
     }
 
@@ -7344,6 +8697,7 @@ if(__exports != exports)module.exports = exports;return module.exports}));
     // Navigation & Section Filter
     // Navigation & Section Filter
     // Navigation & Section Filter
+    // Navigation & Section Filter
     function switchNavSection(sec, btn) {
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
       if (btn) btn.classList.add('active');
@@ -7383,6 +8737,37 @@ if(__exports != exports)module.exports = exports;return module.exports}));
         if (guidesSec) guidesSec.style.display = '';
         window.scrollTo({ top: document.querySelector('.controls-panel')?.offsetTop || 350, behavior: 'smooth' });
       }
+    }
+
+    function filterInterviewHub(domainClass, btn) {
+      document.querySelectorAll('.hub-pill').forEach(p => p.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const cards = document.querySelectorAll('.interview-card');
+      cards.forEach(c => {
+        if (domainClass === 'all' || c.getAttribute('data-domain') === domainClass) {
+          c.style.display = '';
+        } else {
+          c.style.display = 'none';
+        }
+      });
+    }
+
+    function updateAllMasteryBadges() {
+      const stored = JSON.parse(localStorage.getItem('aiml_mastered_q') || '{}');
+      document.querySelectorAll('.interview-card').forEach(card => {
+        const idBadge = card.querySelector('.mastery-pill');
+        if (!idBadge || !idBadge.id) return;
+        const topicKey = idBadge.id.replace('mastery-badge-', '');
+        let count = 0;
+        Object.keys(stored).forEach(k => {
+          if (k.includes(topicKey) && stored[k]) count++;
+        });
+        idBadge.innerText = `${count} / 30 Mastered`;
+        if (count > 0) {
+          idBadge.style.background = 'rgba(16, 185, 129, 0.2)';
+          idBadge.style.borderColor = '#10b981';
+        }
+      });
     }
 
     function filterInterviewHub(domainClass, btn) {

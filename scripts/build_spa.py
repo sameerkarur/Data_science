@@ -269,12 +269,79 @@ extra_css = """
     .doc-viewer h1 {
       color: #f8fafc !important;
       border-bottom: 2px solid #334155;
+      padding-bottom: 0.5rem;
+      margin-top: 1.5rem;
     }
     .doc-viewer h2 {
       color: #38bdf8 !important;
+      margin-top: 1.75rem;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+      padding-bottom: 0.35rem;
     }
     .doc-viewer h3 {
       color: #34d399 !important;
+      margin-top: 1.25rem;
+    }
+    .doc-viewer h4 {
+      color: #cbd5e1 !important;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+    .doc-viewer pre {
+      background: #090d16 !important;
+      border: 1px solid #1e293b !important;
+      border-radius: 8px;
+      padding: 1.1rem 1.25rem;
+      overflow-x: auto;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      margin: 1rem 0 1.5rem;
+    }
+    .doc-viewer pre code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+      color: #e2e8f0;
+    }
+    .doc-viewer pre:has(> code.language-text),
+    .doc-viewer pre:has(> code.language-output) {
+      background: #030712 !important;
+      border-left: 4px solid #10b981 !important;
+      border-color: #1e293b;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+    .doc-viewer pre:has(> code.language-text) code,
+    .doc-viewer pre:has(> code.language-output) code {
+      color: #34d399 !important;
+    }
+    .doc-viewer details {
+      background: rgba(15, 23, 42, 0.6) !important;
+      border: 1px solid #334155 !important;
+      border-radius: 8px;
+      padding: 0.85rem 1.15rem;
+      margin: 1.25rem 0;
+      transition: all 0.2s;
+    }
+    .doc-viewer details[open] {
+      border-color: #38bdf8 !important;
+      box-shadow: 0 4px 16px -2px rgba(56, 189, 248, 0.15);
+    }
+    .doc-viewer summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: #38bdf8 !important;
+      user-select: none;
+      outline: none;
+    }
+    .doc-viewer summary:hover {
+      color: #7dd3fc !important;
+    }
+    .doc-viewer blockquote {
+      border-left: 4px solid #3b82f6;
+      background: rgba(59, 130, 246, 0.08);
+      padding: 0.75rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.25rem 0;
+      color: #93c5fd;
     }
 
     .nav-github-link {
@@ -927,6 +994,27 @@ def build():
         lambda m: marked_parser_logic + '\n    function parseInline',
         head_html,
     )
+
+    # Ensure robust local-first + cache-busted fetch in fetchFile
+    old_fetch_re = re.compile(
+        r'function fetchFile\(path\)\s*\{[\s\S]*?\n    \}',
+        re.DOTALL,
+    )
+    new_fetch_func = """function fetchFile(path) {
+      // 1. Try local/relative fetch first (immediate & always freshest when served locally or on GitHub Pages)
+      return fetch(path, { cache: 'no-cache' }).then(res => {
+        if (!res.ok) throw new Error('Relative fetch failed');
+        return res.text();
+      }).catch(() => {
+        // 2. Fallback to raw github with cache-busting timestamp
+        const rawUrl = `https://raw.githubusercontent.com/${GITHUB_REPO}/${BRANCH}/${path}?v=${Date.now()}`;
+        return fetch(rawUrl).then(res => {
+          if (!res.ok) throw new Error('Raw fetch failed');
+          return res.text();
+        });
+      });
+    }"""
+    head_html = old_fetch_re.sub(new_fetch_func, head_html)
 
     # Prepend marked_code at start of script
     head_html = head_html.replace(

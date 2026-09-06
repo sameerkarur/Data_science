@@ -1,138 +1,225 @@
-# Chapter 3: Python Data Structures & Algorithmic Complexity
-**Comprehensive Textbook Guide — Advanced Python & Scientific Computing**
+# Python Data Structures: Lists, Tuples, Sets & Dictionaries
+**Official Tutorial & Visual Architecture Handbook (W3Schools & GeeksforGeeks Style)**
 
 ---
 
-## 1. Executive Overview & Mental Models
-
-Data structures are physical layouts in memory designed to enforce specific access, insertion, and deletion characteristics. Choosing between a continuous pointer array (`list`), an open-addressed hash table (`dict`, `set`), or a ring buffer (`deque`) can alter pipeline throughput by several orders of magnitude.
-
-```
-       DYNAMIC LIST (PyListObject)              HASH TABLE (PyDictObject)
-    ┌───────────────────────────────┐        ┌───────────────────────────────┐
-    | Array of Pointers (Contiguous)|        | Hash Table with Compact Array |
-    | ┌─────┬─────┬─────┬─────┬───┐ |        | Hash Index Table ──► Indices  |
-    | | *P1 | *P2 | *P3 | *P4 |...| |        | Entries Table:                |
-    | └─────┴─────┴─────┴─────┴───┘ |        | [hash, *key_ptr, *val_ptr]    |
-    └───────────────────────────────┘        └───────────────────────────────┘
-          Index Access: O(1)                        Key Lookup: O(1) avg
-          Insert at Head: O(n)                      Hash Collision: Open Addressing
-```
+## 📑 Table of Contents (On this page)
+1. [The 4 Built-in Collection Data Structures](#1-the-4-built-in-collection-data-structures)
+2. [Python Lists: Dynamic Arrays, Methods & Memory](#2-python-lists-dynamic-arrays-methods--memory)
+3. [Python Tuples: Immutable Sequences & Packing/Unpacking](#3-python-tuples-immutable-sequences--packingunpacking)
+4. [Python Dictionaries: Hash Tables, Key-Value Pairs & Views](#4-python-dictionaries-hash-tables-key-value-pairs--views)
+5. [Python Sets: Unique Elements & Mathematical Set Theory](#5-python-sets-unique-elements--mathematical-set-theory)
+6. [List, Dictionary & Set Comprehensions](#6-list-dictionary--set-comprehensions)
+7. [Algorithmic Complexity Matrix (Big-O Comparison)](#7-algorithmic-complexity-matrix-big-o-comparison)
+8. [Try It Yourself! (Hands-On Practice Exercises)](#8-try-it-yourself-hands-on-practice-exercises)
+9. [Quick Reference Cheat Sheet](#9-quick-reference-cheat-sheet)
 
 ---
 
-## 2. Architectural Flowchart: Hash Table Insertion & Open Addressing
+## 1. The 4 Built-in Collection Data Structures
 
-```
-                     HASH TABLE INSERTION & PROBING PIPELINE
-                     
-       Key Insertion: d["batch_size"] = 64
-                           │
-                           ▼
-                 1. Compute 64-bit Hash Value
-                    h = hash("batch_size") = 0x5a7b3c2e1f0...
-                           │
-                           ▼
-                 2. Modulo Table Size Mask
-                    bucket_index = h & (table_size - 1)
-                           │
-                           ▼
-                 3. Inspect Bucket State
-                    ├── Empty? ──► Write entry into compact array & set index!
-                    │
-                    └── Occupied?
-                         ├── Same Key? ──► Overwrite value pointer (Update)
-                         │
-                         └── Collision! ──► Open Addressing Perturbation Probing:
-                                           perturb >>= 5
-                                           i = (5*i + 1 + perturb) & mask
-                                           Repeat until empty slot found!
-```
+| Collection | Ordered? | Mutable? | Allows Duplicates? | Syntax Example |
+|---|---|---|---|---|
+| **List** | Yes | Yes (Append, Remove) | Yes | `['apple', 'banana', 'apple']` |
+| **Tuple** | Yes | No (Immutable) | Yes | `(10, 20, 30)` |
+| **Set** | No (Unordered) | Yes | No (Unique only) | `{'red', 'green', 'blue'}` |
+| **Dictionary**| Yes (Insertion order)| Yes | Keys Unique, Values Dup | `{'user': 'Alex', 'id': 101}` |
 
 ---
 
-## 3. Deep Theoretical Foundations
+## 2. Python Lists: Dynamic Arrays, Methods & Memory
 
-### 1. Dynamic Array Growth Formula
-CPython lists are variable-length arrays of 64-bit object pointers (`PyObject**`). When appending items, the memory buffer expands according to an over-allocation formula:
-$$\text{new\_allocated} = \text{new\_size} + (\text{new\_size} \gg 3) + (\text{new\_size} < 9 \,?\, 3 : 6)$$
-This dynamic reallocation amortizes the cost of array resizing, guaranteeing that while an individual expansion takes $O(N)$ memory copying, $N$ sequential appends execute in $O(N)$ total time, yielding an **amortized cost of $O(1)$ per append**.
-
-### 2. Modern Compact Dictionary Architecture (PEP 468 & PyPy Design)
-Prior to Python 3.6, dictionaries consumed significant memory because each hash table row stored empty padding (`hash`, `key`, `value` tuples in a sparse table). Modern CPython separates the table into:
-1. **Indices Table (Sparse):** A simple byte/integer array of indices pointing to the entries array.
-2. **Entries Table (Dense):** A compact, contiguous array of entries `[me_hash, me_key, me_value]` stored in the exact chronological order of insertion.
-This innovation reduced dictionary memory consumption by 25–40% and enabled deterministic iteration ordering.
-
-### 3. Timsort Algorithm
-Python's built-in sorting routine (`list.sort()` and `sorted()`) implements **Timsort**, an adaptive hybrid sorting algorithm created by Tim Peters:
-- It scans the array for natural non-decreasing or strictly decreasing segments called **runs**.
-- Short runs are extended to a minimum run size (`minrun`, typically 32–64) and sorted using **Binary Insertion Sort**.
-- Runs are subsequently merged using **Merge Sort** with a stack-based merge policy maintaining balanced run sizes.
-- **Galloping Mode:** When elements from one run consistently win during merging, Timsort switches to exponential search (binary search) to skip large blocks of elements in $O(\log N)$ comparisons.
-
----
-
-## 4. Production Implementation: High-Throughput Buffers & Priority Queues
+Python lists are contiguous arrays of pointers that over-allocate memory to achieve $O(1)$ amortized append operations:
 
 ```python
-from collections import deque
-import heapq
-from typing import Any
+# List creation and operations
+items = ["GPU", "RAM", "CPU"]
 
-class PriorityTaskQueue:
-    """Thread-safe priority scheduler using a min-heap."""
-    def __init__(self):
-        self._heap: list[tuple[int, int, Any]] = []
-        self._counter = 0  # Tie-breaker for identical priorities
+# 1. Appending & Inserting
+items.append("SSD")           # Adds to end: O(1)
+items.insert(1, "Motherboard")# Inserts at index 1: O(N)
 
-    def push(self, task: Any, priority: int) -> None:
-        """Pushes task with priority (lower number = higher priority)."""
-        heapq.heappush(self._heap, (priority, self._counter, task))
-        self._counter += 1
+# 2. Removing elements
+popped_item = items.pop()     # Removes and returns last element: O(1)
+items.remove("RAM")           # Removes first occurrence by value: O(N)
 
-    def pop(self) -> Any:
-        """Pops highest-priority task in O(log N) time."""
-        if not self._heap:
-            raise IndexError("Queue is empty")
-        priority, _, task = heapq.heappop(self._heap)
-        return task
+# 3. Sorting & Reversing
+numbers = [42, 12, 88, 5, 23]
+numbers.sort()                # In-place Timsort: O(N log N)
 
-# Demonstrating O(1) Sliding Window with Deque vs O(N) List Slicing
-window = deque(maxlen=5)
-for sample in [10.2, 11.5, 12.1, 10.8, 11.9, 13.4, 14.1]:
-    window.append(sample)
-    # Average computed over sliding window without any list reallocations
-    rolling_mean = sum(window) / len(window)
+print("Modified Hardware List:\n", items)
+print("Sorted Numbers:\n", numbers)
+```
+
+#### Output:
+```text
+Modified Hardware List:
+ ['GPU', 'Motherboard', 'CPU']
+Sorted Numbers:
+ [5, 12, 23, 42, 88]
 ```
 
 ---
 
-## 5. Algorithmic Complexity Comparison Matrix
+## 3. Python Tuples: Immutable Sequences
 
-| Data Structure | Lookup / Access | Insertion (Head) | Insertion (Tail) | Deletion | Memory Overhead |
-|---|---|---|---|---|---|
-| **Python List** | $O(1)$ | $O(N)$ (Shifts memory) | $O(1)$ amortized | $O(N)$ (General) | Low (Contiguous pointers) |
-| **Collections Deque** | $O(N)$ | $O(1)$ | $O(1)$ | $O(1)$ (At ends) | Medium (Doubly linked blocks) |
-| **Dictionary (`dict`)** | $O(1)$ avg / $O(N)$ | $O(1)$ avg | $O(1)$ avg | $O(1)$ avg | High (Hash tables & indices) |
-| **Set (`set`)** | $O(1)$ avg / $O(N)$ | N/A | $O(1)$ avg | $O(1)$ avg | High (Hash table keys only) |
-| **Binary Heap (`heapq`)** | $O(1)$ min element | $O(\log N)$ | $O(\log N)$ | $O(\log N)$ | Low (Packed in list) |
+Because tuples are immutable, Python optimizes them for faster iteration and memory efficiency. They can also be used as dictionary keys:
 
----
-
-## 6. Subtle Pitfalls, Bugs & Production Best Practices
-
-### Pitfall 1: Mutating a Collection While Iterating
 ```python
-# BROKEN: Modifying collection indices causes skipped elements!
-records = [1, 2, 3, 4, 5]
-for item in records:
-    if item % 2 == 0:
-        records.remove(item)
+# Tuple packing and unpacking
+coordinate = (37.7749, -122.4194)
+lat, lon = coordinate  # Unpacking
 
-# PRODUCTION FIX: List comprehension or filtering into fresh memory:
-records_clean = [item for item in records if item % 2 != 0]
+# Return multiple values from function
+def get_user_status():
+    return "Alex", 25, "Active"
+
+name, age, status = get_user_status()
+print(f"Latitude: {lat}, Longitude: {lon}")
+print(f"User: {name} (Age {age}) - Status: {status}")
 ```
 
-### Pitfall 2: Using Lists for Membership Testing
-Checking `if item in my_list` takes $O(N)$ linear scan time. If this check is executed inside a loop of size $M$, total complexity explodes to $O(M \cdot N)$. Converting the lookup collection to a `set` drops membership testing to $O(1)$ average time, collapsing overall complexity to $O(M)$.
+#### Output:
+```text
+Latitude: 37.7749, Longitude: -122.4194
+User: Alex (Age 25) - Status: Active
+```
+
+---
+
+## 4. Python Dictionaries: Hash Tables & Key-Value Pairs
+
+Dictionaries in Python are hash tables that guarantee average $O(1)$ lookup, insertion, and deletion:
+
+```python
+model_cfg = {
+    "architecture": "Transformer",
+    "layers": 12,
+    "heads": 8,
+    "hidden_dim": 768
+}
+
+# Safe lookup with .get(key, default)
+dropout = model_cfg.get("dropout_rate", 0.1)
+
+# Updating & Iterating
+model_cfg["vocab_size"] = 50257
+
+print("Config Keys:  ", list(model_cfg.keys()))
+print("Config Values:", list(model_cfg.values()))
+print(f"Dropout Rate:  {dropout}")
+```
+
+#### Output:
+```text
+Config Keys:   ['architecture', 'layers', 'heads', 'hidden_dim', 'vocab_size']
+Config Values: ['Transformer', 12, 8, 768, 50257]
+Dropout Rate:  0.1
+```
+
+---
+
+## 5. Python Sets: Unique Elements & Mathematical Set Operations
+
+Sets use hashing to maintain distinct elements and perform set algebra:
+
+```python
+python_devs = {"Alice", "Bob", "Charlie", "David"}
+ml_engineers = {"Charlie", "David", "Elena", "Frank"}
+
+# Set Operations
+both = python_devs & ml_engineers        # Intersection
+all_talent = python_devs | ml_engineers  # Union
+only_python = python_devs - ml_engineers # Difference
+
+print("Intersection (Both Roles):   ", both)
+print("Union (All Unique Talent):   ", all_talent)
+print("Difference (Only Python Devs):", only_python)
+```
+
+#### Output:
+```text
+Intersection (Both Roles):    {'Charlie', 'David'}
+Union (All Unique Talent):    {'David', 'Elena', 'Bob', 'Alice', 'Charlie', 'Frank'}
+Difference (Only Python Devs): {'Bob', 'Alice'}
+```
+
+---
+
+## 6. List, Dictionary & Set Comprehensions
+
+Comprehensions provide concise syntax for creating collections:
+
+```python
+# 1. List Comprehension with condition
+squared_evens = [x**2 for x in range(10) if x % 2 == 0]
+
+# 2. Dictionary Comprehension (Inverting key-value pairs)
+id_map = {"Alice": 101, "Bob": 102, "Charlie": 103}
+inv_map = {v: k for k, v in id_map.items()}
+
+# 3. Set Comprehension
+unique_lengths = {len(name) for name in ["apple", "banana", "kiwi", "orange", "pear"]}
+
+print("Squared Evens:  ", squared_evens)
+print("Inverted Dict:  ", inv_map)
+print("Unique Lengths: ", sorted(unique_lengths))
+```
+
+#### Output:
+```text
+Squared Evens:   [0, 4, 16, 36, 64]
+Inverted Dict:   {101: 'Alice', 102: 'Bob', 103: 'Charlie'}
+Unique Lengths:  [4, 5, 6]
+```
+
+---
+
+## 7. Algorithmic Complexity Matrix (Big-O Comparison)
+
+| Operation | List | Tuple | Set | Dictionary |
+|---|---|---|---|---|
+| **Access by Index / Key** | $O(1)$ | $O(1)$ | N/A | $O(1)$ avg |
+| **Search / Contains (`in`)** | $O(N)$ | $O(N)$ | $O(1)$ avg | $O(1)$ avg |
+| **Insert / Append** | $O(1)$ amortized | N/A | $O(1)$ avg | $O(1)$ avg |
+| **Delete** | $O(N)$ | N/A | $O(1)$ avg | $O(1)$ avg |
+
+---
+
+## 8. Try It Yourself! (Hands-On Practice Exercises)
+
+### Exercise 1: Word Frequency Counter
+**Task:** Given a sentence, use a dictionary comprehension or dictionary counting logic to return word frequencies:
+
+<details>
+<summary>👉 Click to Reveal Solution</summary>
+
+```python
+text = "machine learning and deep learning are branches of artificial intelligence"
+words = text.split()
+
+frequency = {}
+for word in words:
+    frequency[word] = frequency.get(word, 0) + 1
+
+print("Word Frequency Count:\n", frequency)
+```
+#### Output:
+```text
+Word Frequency Count:
+ {'machine': 1, 'learning': 2, 'and': 1, 'deep': 1, 'are': 1, 'branches': 1, 'of': 1, 'artificial': 1, 'intelligence': 1}
+```
+</details>
+
+---
+
+## 9. Quick Reference Cheat Sheet
+
+| Task | Syntax | Collection |
+|---|---|---|
+| **Add Item** | `lst.append(x)` | List |
+| **Unpack Tuple** | `a, b = (10, 20)` | Tuple |
+| **Safe Lookup** | `d.get('key', default)` | Dict |
+| **Set Union** | `set1 | set2` | Set |
+| **Set Intersect** | `set1 & set2` | Set |
+| **List Comp** | `[f(x) for x in seq if cond]` | List |

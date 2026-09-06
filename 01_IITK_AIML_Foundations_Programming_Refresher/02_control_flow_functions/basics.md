@@ -1,167 +1,281 @@
-# Chapter 2: Control Flow, Scopes & Functional Programming
-**Comprehensive Textbook Guide — Advanced Python & Scientific Computing**
+# Python Control Flow, Scopes & Functions: Complete Beginner-to-Pro Guide
+**Official Tutorial & Visual Architecture Handbook (W3Schools & GeeksforGeeks Style)**
 
 ---
 
-## 1. Executive Overview & Mental Models
-
-Execution flow in Python is governed by the **CPython Virtual Machine (VM)**, which interprets high-level language constructs into stack-based bytecode instructions. Functions in Python are **first-class citizens**: they can be passed as arguments, returned from other functions, bound to variables, and dynamically augmented using decorators and metaprogramming.
-
-```
-                    CPYTHON EVALUATION LOOP & BYTECODE DISPATCH
-                    
-       Source Code: if threshold > 0.8: trigger_alert()
-                                │
-                                ▼
-                     CPYTHON BYTECODE EMISSION
-       0 LOAD_NAME                0 (threshold)
-       2 LOAD_CONST               0 (0.8)
-       4 COMPARE_OP               4 (>)
-       6 POP_JUMP_IF_FALSE       12 ────────┐ (Skips block if false)
-       8 LOAD_NAME                1 (trigger_alert)
-      10 CALL_FUNCTION            0
-      12 ...
-```
+## 📑 Table of Contents (On this page)
+1. [Conditional Statements (`if`, `elif`, `else`)](#1-conditional-statements-if-elif-else)
+2. [Loops: `for` Loop & `range()` Function](#2-loops-for-loop--range-function)
+3. [Loops: `while` Loop, `break`, `continue` & `else`](#3-loops-while-loop-break-continue--else)
+4. [Function Architecture: `def`, Parameters & Return](#4-function-architecture-def-parameters--return)
+5. [Arbitrary Arguments: `*args` and `**kwargs`](#5-arbitrary-arguments-args-and-kwargs)
+6. [Lambda Expressions (Anonymous Functions)](#6-lambda-expressions-anonymous-functions)
+7. [Variable Scope: LEGB Rule (Local, Enclosing, Global, Built-in)](#7-variable-scope-legb-rule)
+8. [Decorators & Higher-Order Functions](#8-decorators--higher-order-functions)
+9. [Try It Yourself! (Hands-On Practice Exercises)](#9-try-it-yourself-hands-on-practice-exercises)
+10. [Quick Reference Cheat Sheet](#10-quick-reference-cheat-sheet)
 
 ---
 
-## 2. Architectural Flowchart: Scoping & The LEGB Resolution Pipeline
+## 1. Conditional Statements (`if`, `elif`, `else`)
 
-Whenever an identifier is referenced, CPython queries four nested namespaces in a strict chronological sequence:
-
-```
-                  LEGB SCOPE RESOLUTION PIPELINE
-    ┌────────────────────────────────────────────────────────┐
-    │ 1. LOCAL (L): Current function execution frame         │
-    │    └── Found? ──► Use variable                         │
-    │    └── Not Found?                                      │
-    │         ▼                                              │
-    │ 2. ENCLOSING (E): Outer nested function closures       │
-    │    └── Found? ──► Use variable                         │
-    │    └── Not Found?                                      │
-    │         ▼                                              │
-    │ 3. GLOBAL (G): Module-level symbol table (__main__)    │
-    │    └── Found? ──► Use variable                         │
-    │    └── Not Found?                                      │
-    │         ▼                                              │
-    │ 4. BUILT-IN (B): Python built-in namespace (len, etc.) │
-    │    └── Not Found? ──► RAISE NameError!                 │
-    └────────────────────────────────────────────────────────┘
-
-    FRAME OBJECTS & CLOSURE STATE RETENTION (CELL OBJECTS):
-    Outer Function Scope                   Inner Closure Scope
-    ┌────────────────────────┐             ┌────────────────────────┐
-    │ def outer(learning_rate)             │ def inner(x):          │
-    │   rate = learning_rate ├──[cell_obj]─┤   return x * rate      │
-    │   return inner         │             └────────────────────────┘
-    └────────────────────────┘             (Persists on Heap even after outer exits!)
-```
-
----
-
-## 3. Deep Theoretical Foundations
-
-### 1. The Call Stack & `PyFrameObject`
-Every function invocation pushes a new `PyFrameObject` onto the runtime call stack. A frame encapsulates:
-- `f_code`: The immutable code object (`co_code`, `co_varnames`, `co_consts`).
-- `f_localsplus`: A pre-allocated C array providing $O(1)$ indexed lookup for local variables via `LOAD_FAST` and `STORE_FAST` bytecode instructions (significantly faster than global dictionary lookups).
-- `f_valuestack`: Evaluation stack for intermediate operand computations.
-- `f_back`: Pointer to caller's frame (enabling traceback generation).
-
-### 2. Closures & Free Variables
-A closure occurs when a nested function references variables from its enclosing lexical scope. CPython packages these variables into heap-allocated `cell` objects. Even after the outer function's stack frame is popped and destroyed, the cell object maintains a reference count $> 0$, allowing the inner function to access its enclosing environment indefinitely.
-
-### 3. Generators, Coroutines & Asynchronous Execution
-Unlike normal subroutines that adhere to the standard LIFO call/return paradigm, **generators** utilize the `yield` keyword to implement cooperative multitasking:
-- Calling a generator function does not execute its body; it instantiates a `PyGenObject`.
-- Executing `next(gen)` or `gen.send(val)` activates the frame until a `yield` statement is hit.
-- The instruction pointer (`f_lasti`) is frozen, and execution yields control back to the caller with zero heap reallocation.
-
----
-
-## 4. Production Implementation: Advanced Decorators & Coroutine Streaming
+Control flow executes different blocks of code based on Boolean truth conditions:
 
 ```python
-import functools
+score = 85
+
+if score >= 90:
+    grade = 'A'
+elif score >= 80:
+    grade = 'B'
+elif score >= 70:
+    grade = 'C'
+else:
+    grade = 'F'
+
+print(f"Student Score: {score} -> Grade Assigned: {grade}")
+
+# Ternary Conditional Expression (One-line if-else)
+status = "Passing" if score >= 70 else "Failing"
+print(f"Status: {status}")
+```
+
+#### Output:
+```text
+Student Score: 85 -> Grade Assigned: B
+Status: Passing
+```
+
+---
+
+## 2. Loops: `for` Loop & `range()` Function
+
+```python
+# Iterating over range(start, stop, step)
+print("Range Step Loop:")
+for i in range(10, 35, 5):
+    print(f"Current Value: {i}")
+
+# Iterating over list with enumerate() for index & value
+tech_stack = ["Python", "NumPy", "Pandas", "Scikit-Learn"]
+print("\nEnumerate Loop:")
+for idx, tool in enumerate(tech_stack, start=1):
+    print(f"Step {idx}: Learn {tool}")
+```
+
+#### Output:
+```text
+Range Step Loop:
+Current Value: 10
+Current Value: 15
+Current Value: 20
+Current Value: 25
+Current Value: 30
+
+Enumerate Loop:
+Step 1: Learn Python
+Step 2: Learn NumPy
+Step 3: Learn Pandas
+Step 4: Learn Scikit-Learn
+```
+
+---
+
+## 3. Loops: `while` Loop, `break`, `continue` & `else`
+
+```python
+attempts = 0
+max_attempts = 5
+
+while attempts < max_attempts:
+    attempts += 1
+    if attempts == 2:
+        print(f"Attempt {attempts}: Transient timeout, skipping with continue...")
+        continue
+    if attempts == 4:
+        print(f"Attempt {attempts}: Success! Exiting with break.")
+        break
+    print(f"Attempt {attempts}: Processing request...")
+```
+
+#### Output:
+```text
+Attempt 1: Processing request...
+Attempt 2: Transient timeout, skipping with continue...
+Attempt 3: Processing request...
+Attempt 4: Success! Exiting with break.
+```
+
+---
+
+## 4. Function Architecture: `def`, Parameters & Return
+
+```python
+def calculate_compound_interest(principal: float, rate: float = 0.05, years: int = 1) -> float:
+    """Computes compound interest balance: A = P(1 + r)^t"""
+    final_amount = principal * ((1 + rate) ** years)
+    return round(final_amount, 2)
+
+# Call with positional and keyword arguments
+bal1 = calculate_compound_interest(1000)
+bal2 = calculate_compound_interest(1000, rate=0.08, years=5)
+
+print(f"1 Year @ Default 5%:  ${bal1}")
+print(f"5 Years @ Custom 8%:  ${bal2}")
+```
+
+#### Output:
+```text
+1 Year @ Default 5%:  $1050.0
+5 Years @ Custom 8%:  $1469.33
+```
+
+---
+
+## 5. Arbitrary Arguments: `*args` and `**kwargs`
+
+```
+  *args   ──► Packs positional arguments into a Tuple: (arg1, arg2, ...)
+  **kwargs ──► Packs keyword arguments into a Dictionary: {'key': value, ...}
+```
+
+```python
+def build_ml_pipeline(model_name, *metrics, **hyperparameters):
+    print(f"Configuring Model: {model_name}")
+    print(f"Evaluation Metrics (*args tuple):   {metrics}")
+    print(f"Hyperparameters (**kwargs dict):    {hyperparameters}")
+
+build_ml_pipeline(
+    "XGBoost Classifier",
+    "Accuracy", "F1-Score", "ROC-AUC",
+    learning_rate=0.05,
+    n_estimators=300,
+    max_depth=6
+)
+```
+
+#### Output:
+```text
+Configuring Model: XGBoost Classifier
+Evaluation Metrics (*args tuple):   ('Accuracy', 'F1-Score', 'ROC-AUC')
+Hyperparameters (**kwargs dict):    {'learning_rate': 0.05, 'n_estimators': 300, 'max_depth': 6}
+```
+
+---
+
+## 6. Lambda Expressions (Anonymous Functions)
+
+Small one-line functions written without `def`:
+
+```python
+# Sorting a list of tuples by second element using lambda
+students = [("Alice", 88), ("Bob", 95), ("Charlie", 72), ("David", 91)]
+
+sorted_by_score = sorted(students, key=lambda student: student[1], reverse=True)
+print("Ranked by Score:\n", sorted_by_score)
+```
+
+#### Output:
+```text
+Ranked by Score:
+ [('Bob', 95), ('David', 91), ('Alice', 88), ('Charlie', 72)]
+```
+
+---
+
+## 7. Variable Scope: LEGB Rule
+
+Python resolves variable names using the **LEGB** hierarchy:
+1. **L**ocal: Inside the current function.
+2. **E**nclosing: Inside any enclosing outer function.
+3. **G**lobal: At the top module level.
+4. **B**uilt-in: Python built-in namespace (`print`, `len`, `range`).
+
+```python
+counter = 10  # Global scope
+
+def outer():
+    tag = "OuterEnclosure"  # Enclosing scope
+    def inner():
+        local_val = 42      # Local scope
+        print(f"Inside: local={local_val}, tag={tag}, global_counter={counter}")
+    inner()
+
+outer()
+```
+
+#### Output:
+```text
+Inside: local=42, tag=OuterEnclosure, global_counter=10
+```
+
+---
+
+## 8. Decorators & Higher-Order Functions
+
+A decorator wraps a function to modify or measure its behavior:
+
+```python
 import time
-from typing import Callable, Any, Generator
 
-def rate_limiter(max_per_second: float) -> Callable:
-    """Production-grade rate-limiting decorator with high-resolution token bucket."""
-    min_interval = 1.0 / max_per_second
-    last_called = 0.0
+def execution_timer(func):
+    """Decorator measuring runtime execution in milliseconds."""
+    def wrapper(*args, **kwargs):
+        t0 = time.perf_counter()
+        result = func(*args, **kwargs)
+        elapsed_ms = (time.perf_counter() - t0) * 1000
+        print(f"⚡ [{func.__name__}] completed in {elapsed_ms:.3f} ms")
+        return result
+    return wrapper
 
-    def decorator(func: Callable) -> Callable:
-        @functools.wraps(func)
-        def wrapper(*args: Any, **kwargs: Any) -> Any:
-            nonlocal last_called  # Explicitly binds to enclosing closure state
-            now = time.perf_counter()
-            elapsed = now - last_called
-            if elapsed < min_interval:
-                time.sleep(min_interval - elapsed)
-            result = func(*args, **kwargs)
-            last_called = time.perf_counter()
-            return result
-        return wrapper
-    return decorator
+@execution_timer
+def compute_sum_of_squares(n):
+    return sum(i * i for i in range(n))
 
-def memory_efficient_batcher(data_stream: Generator[dict, None, None], 
-                             batch_size: int = 128) -> Generator[list[dict], None, None]:
-    """Streams and yields batches of records in O(1) auxiliary memory."""
-    batch = []
-    for item in data_stream:
-        batch.append(item)
-        if len(batch) >= batch_size:
-            yield batch
-            batch = []
-    if batch:
-        yield batch
+val = compute_sum_of_squares(500_000)
+print(f"Sum of squares computed: {val}")
+```
 
-@rate_limiter(max_per_second=50.0)
-def query_model_endpoint(payload: dict) -> dict:
-    """Simulated inference call protected by rate limiting."""
-    return {"prediction": 0.942, "status": "ok"}
+#### Output:
+```text
+⚡ [compute_sum_of_squares] completed in 22.450 ms
+Sum of squares computed: 41666541666750000
 ```
 
 ---
 
-## 5. Scope & Iteration Complexity Matrix
+## 9. Try It Yourself! (Hands-On Practice Exercises)
 
-| Mechanism | Memory Footprint | Invocation Overhead | State Lifetime |
-|---|---|---|---|
-| Regular Function | $O(\text{stack depth})$ | Minimal (Push/Pop C frame) | Terminated on `return` |
-| Closure (`cell` object) | $O(\text{free vars})$ | Frame push + Cell dereference | Persists as long as inner ref exists |
-| Generator (`yield`) | $O(1)$ constant buffer | Minimal (`GEN_START` / `YIELD_VALUE`) | Persists across iterations |
-| List Comprehension | $O(N)$ heap buffer | Fast C-loop loop evaluation | Full eager evaluation |
-| Generator Expression | $O(1)$ memory | Lazy iteration on demand | Evaluates one element at a time |
+### Exercise 1: Custom Filter Function with Lambda
+**Task:** Write a function `custom_filter(numbers, predicate)` that takes a list of integers and returns only the elements where `predicate(num)` returns `True`. Test it with a lambda that selects all even numbers greater than 10.
+
+<details>
+<summary>👉 Click to Reveal Solution</summary>
+
+```python
+def custom_filter(numbers, predicate):
+    return [x for x in numbers if predicate(x)]
+
+raw_nums = [4, 12, 7, 18, 22, 9, 30, 2, 14]
+evens_above_10 = custom_filter(raw_nums, lambda n: n % 2 == 0 and n > 10)
+print("Filtered Numbers:", evens_above_10)
+```
+#### Output:
+```text
+Filtered Numbers: [12, 18, 22, 30, 14]
+```
+</details>
 
 ---
 
-## 6. Subtle Pitfalls, Bugs & Production Best Practices
+## 10. Quick Reference Cheat Sheet
 
-### Pitfall 1: Late Binding in Closures and Lambdas
-```python
-# BROKEN: All lambdas capture the variable 'i' by reference, not by value:
-multipliers = [lambda x: x * i for i in range(4)]
-results = [m(2) for m in multipliers]
-# Returns [6, 6, 6, 6] instead of [0, 2, 4, 6]!
-
-# PRODUCTION FIX: Bind eagerly via default argument:
-multipliers_fixed = [lambda x, i=i: x * i for i in range(4)]
-assert [m(2) for m in multipliers_fixed] == [0, 2, 4, 6]
-```
-
-### Pitfall 2: Mutable Default Arguments
-```python
-# DANGEROUS: Evaluated once at definition time!
-def log_event(event_id: str, tags: list = []):
-    tags.append(event_id)
-    return tags
-
-# PRODUCTION FIX:
-def log_event_fixed(event_id: str, tags: list | None = None) -> list:
-    if tags is None:
-        tags = []
-    tags.append(event_id)
-    return tags
-```
+| Construct | Syntax | Key Feature |
+|---|---|---|
+| **Ternary Operator** | `x if condition else y` | One-line conditional |
+| **Enumerate** | `for idx, val in enumerate(lst)` | Returns index and value |
+| **Zip** | `for a, b in zip(list1, list2)` | Parallel iteration across lists |
+| **Default Arg** | `def f(x=10):` | Evaluated once at definition time |
+| **Args Pack** | `*args` | Arbitrary positional arguments as tuple |
+| **Kwargs Pack** | `**kwargs` | Arbitrary keyword arguments as dict |
+| **Lambda** | `lambda x: x * 2` | Anonymous single-expression function |

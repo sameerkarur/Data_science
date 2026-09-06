@@ -126,7 +126,11 @@ nav:
       - "Deep-dive: Model Validation & Generalization": 05-ml-theory/model-validation-generalization-deep-dive.md
       - "Deep-dive: Evaluation Metrics": 05-ml-theory/evaluation-metrics-deep-dive.md
       - "Deep-dive: Hyperparameter Optimization": 05-ml-theory/hyperparameter-optimization-deep-dive.md
-  - Book 6 – Deep Learning: 06-deep-learning/index.md
+  - Book 6 – Deep Learning:
+      - Overview: 06-deep-learning/index.md
+      - "Deep-dive: Neural Network Foundations": 06-deep-learning/neural-network-foundations-deep-dive.md
+      - "Deep-dive: Architecture Components & Regularization": 06-deep-learning/architecture-components-regularization-deep-dive.md
+      - "Deep-dive: Deep Learning Optimizers": 06-deep-learning/deep-learning-optimizers-deep-dive.md
   - Book 7 – Computer Vision: 07-computer-vision/index.md
   - Book 8 – NLP: 08-nlp/index.md
   - Book 9 – Transformers & LLMs: 09-transformers-llms/index.md

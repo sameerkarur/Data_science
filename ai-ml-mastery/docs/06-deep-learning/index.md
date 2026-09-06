@@ -4,25 +4,25 @@ Neural networks built from the ground up.
 
 ## Foundations
 
-- [ ] Perceptron & neuron
-- [ ] Layers, weights, bias, activation
-- [ ] Forward propagation
-- [ ] Loss & backpropagation
-- [ ] Gradient descent
+- [x] [Perceptron & neuron](neural-network-foundations-deep-dive.md)
+- [x] [Layers, weights, bias, activation](neural-network-foundations-deep-dive.md)
+- [x] [Forward propagation](neural-network-foundations-deep-dive.md)
+- [x] [Loss & backpropagation](neural-network-foundations-deep-dive.md)
+- [x] [Gradient descent](neural-network-foundations-deep-dive.md)
 
 ## Architecture Components
 
-- [ ] MLP
-- [ ] ReLU / Sigmoid / Tanh / Softmax
-- [ ] Batch normalization
-- [ ] Dropout
-- [ ] Weight initialization
+- [x] [MLP](architecture-components-regularization-deep-dive.md)
+- [x] [ReLU / Sigmoid / Tanh / Softmax](architecture-components-regularization-deep-dive.md)
+- [x] [Batch normalization](architecture-components-regularization-deep-dive.md)
+- [x] [Dropout](architecture-components-regularization-deep-dive.md)
+- [x] [Weight initialization](architecture-components-regularization-deep-dive.md)
 
 ## Optimizers
 
-- [ ] SGD & momentum
-- [ ] AdaGrad / RMSProp
-- [ ] Adam / AdamW
+- [x] [SGD & momentum](deep-learning-optimizers-deep-dive.md)
+- [x] [AdaGrad / RMSProp](deep-learning-optimizers-deep-dive.md)
+- [x] [Adam / AdamW](deep-learning-optimizers-deep-dive.md)
 
 !!! mastery "Status"
-    These are chapter stubs — each topic gets its own deep-dive page as it's written. See the [Python Functions](../01-python/functions-deep-dive.md) chapter for the target depth and format.
+    Complete deep-dive coverage of neural network foundations, modern architecture components and regularization, and deep learning optimizers.

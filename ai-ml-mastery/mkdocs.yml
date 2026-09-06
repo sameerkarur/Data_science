@@ -159,5 +159,7 @@ nav:
       - "Deep-dive: Production Tooling, Containerization & CI/CD": 12-mlops/production-tooling-containerization-cicd-deep-dive.md
       - "Deep-dive: Model Serving, Pipelines & Distributed Orchestration": 12-mlops/serving-pipelines-orchestration-deep-dive.md
       - "Deep-dive: Model Monitoring, Observability & Automated Retraining": 12-mlops/model-monitoring-observability-retraining-deep-dive.md
-  - Book 13 – AI System Design: 13-ai-system-design/index.md
+  - Book 13 – AI System Design:
+      - Overview: 13-ai-system-design/index.md
+      - "Deep-dive: AI System Design Methodology & Framework": 13-ai-system-design/ai-system-design-methodology-framework-deep-dive.md
   - Book 14 – Projects & Interview: 14-projects/index.md

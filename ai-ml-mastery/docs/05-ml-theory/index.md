@@ -21,9 +21,9 @@ How to know if a model is actually good.
 
 ## Tuning
 
-- [ ] Grid search
-- [ ] Random search
-- [ ] Bayesian optimization
+- [x] [Grid search](hyperparameter-optimization-deep-dive.md)
+- [x] [Random search](hyperparameter-optimization-deep-dive.md)
+- [x] [Bayesian optimization — full deep-dive](hyperparameter-optimization-deep-dive.md)
 
 !!! mastery "Status"
     These are chapter stubs — each topic gets its own deep-dive page as it's written. See the [Python Functions](../01-python/functions-deep-dive.md) chapter for the target depth and format.

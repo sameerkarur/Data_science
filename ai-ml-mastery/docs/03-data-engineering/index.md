@@ -17,11 +17,11 @@ The unglamorous 80% of ML work.
 
 ## Cleaning
 
-- [ ] Missing values
-- [ ] Duplicates
-- [ ] Outliers
-- [ ] Incorrect types
-- [ ] Encoding & scaling/normalization
+- [x] [Missing values](data-cleaning-preprocessing-deep-dive.md#3-missing-data-mechanisms-rubins-taxonomy)
+- [x] [Duplicates](data-cleaning-preprocessing-deep-dive.md#1-the-big-picture)
+- [x] [Outliers](data-cleaning-preprocessing-deep-dive.md#5-outlier-detection-iqr-z-score-and-mahalanobis-distance)
+- [x] [Incorrect types](data-cleaning-preprocessing-deep-dive.md#8-data-integrity-contracts-pydantic-and-great-expectations)
+- [x] [Encoding & scaling/normalization](data-cleaning-preprocessing-deep-dive.md#7-feature-scaling-and-normalization)
 
 ## Feature Engineering
 

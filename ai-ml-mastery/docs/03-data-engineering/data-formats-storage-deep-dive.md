@@ -11,17 +11,17 @@ Machine learning models rarely consume pristine data from an in-memory array. Pr
 
 ```mermaid
 flowchart TD
-    subgraph Operational Ingestion (OLTP)
+    subgraph "Operational Ingestion (OLTP)"
         APP["Application Event Producers"] --> API["REST / gRPC APIs (Token Bucket Rate Limiting)"]
         API --> OLTP["OLTP RDBMS: PostgreSQL / MySQL (Row-Oriented, B-Tree, ACID)"]
     end
-    subgraph Analytical Transformation (OLAP)
+    subgraph "Analytical Transformation (OLAP)"
         OLTP --> CDC["Change Data Capture (Debezium / Kafka)"]
         CDC --> LAKE["Cloud Object Storage (AWS S3 / GCS / Azure Blob)"]
         LAKE --> LH["Lakehouse Table Format: Delta Lake / Apache Iceberg (ACID, Snapshot Isolation)"]
         LH --> PAR["Columnar Storage: Apache Parquet (Snappy/ZSTD, Dictionary Encoding)"]
     end
-    subgraph Query Execution & Feature Serving
+    subgraph "Query Execution & Feature Serving"
         PAR --> DUCK["Vectorized Query Engines: DuckDB / ClickHouse / Snowflake / BigQuery"]
         DUCK --> ML["ML Feature Stores & Training Pipelines"]
     end
@@ -61,12 +61,12 @@ GROUP BY Category;
 
 ```mermaid
 flowchart TD
-    subgraph Row Storage (CSV / OLTP)
+    subgraph "Row Storage (CSV / OLTP)"
         R1["Row 1: [ID: 1 | Cat: Shoes | Price: 50.0 | User: Bob]"]
         R2["Row 2: [ID: 2 | Cat: Tech  | Price: 900.0| User: Ann]"]
         R1 --- R2
     end
-    subgraph Columnar Storage (Parquet / OLAP)
+    subgraph "Columnar Storage (Parquet / OLAP)"
         C1["Column 'Category': ['Shoes', 'Tech'] (High compression, RLE)"]
         C2["Column 'Price': [50.0, 900.0] (SIMD float vectorization)"]
         C3["Column 'User': ['Bob', 'Ann'] (Dictionary encoded)"]
@@ -94,27 +94,27 @@ A Parquet file is organized hierarchically to allow parallel reading and fine-gr
 flowchart TD
     subgraph Parquet File
         MAGIC1["Magic Number: 'PAR1'"]
-        subgraph Row Group 1 (e.g. 512MB / 1,000,000 rows)
-            subgraph Column Chunk 1 (Feature A)
+        subgraph RG1Group["Row Group 1 (e.g. 512MB / 1,000,000 rows)"]
+            subgraph "Column Chunk 1 (Feature A)"
                 P1["Dictionary Page"]
                 P2["Data Page 1 (Snappy compressed)"]
                 P3["Data Page 2 (Snappy compressed)"]
             end
-            subgraph Column Chunk 2 (Feature B)
+            subgraph "Column Chunk 2 (Feature B)"
                 P4["Data Page 1"]
             end
         end
-        subgraph Row Group 2
+        subgraph RG2Group["Row Group 2"]
             RG2["Row Group 2 Chunks..."]
         end
-        subgraph File Footer Metadata
+        subgraph Footer["File Footer Metadata"]
             META["Schema Definition"]
             STATS["Column Statistics: min/max/null_count per Row Group"]
             OFFSETS["Byte Offsets to every Column Chunk & Page"]
         end
         MAGIC2["Magic Number: 'PAR1'"]
     end
-    MAGIC1 --> Row Group 1 --> Row Group 2 --> File Footer Metadata --> MAGIC2
+    MAGIC1 --> RG1Group --> RG2Group --> Footer --> MAGIC2
 ```
 
 #### Why Parquet Reads Are Fast:
@@ -133,13 +133,13 @@ Indexes are auxiliary data structures used by query engines to locate records wi
 
 ```mermaid
 flowchart TD
-    subgraph B-Tree (Read-Optimized, In-Place Updates)
+    subgraph "B-Tree (Read-Optimized, In-Place Updates)"
         ROOT["Root Node [50]"] --> N1["Internal Node [20, 35]"]
         ROOT --> N2["Internal Node [65, 80]"]
         N1 --> L1["Leaf: [10, 15]"]
         N1 --> L2["Leaf: [25, 30]"]
     end
-    subgraph LSM-Tree (Write-Optimized, Append-Only)
+    subgraph "LSM-Tree (Write-Optimized, Append-Only)"
         W["Incoming Writes"] --> WAL["Write-Ahead Log (Disk)"]
         W --> MEM["MemTable (RAM Red-Black Tree)"]
         MEM -- Flush --> L0["SSTable Level 0 (Immutable sorted disk files)"]
@@ -243,13 +243,13 @@ When ingesting millions of records across an HTTP REST API or database query:
 
 ```mermaid
 flowchart TD
-    subgraph Offset Pagination (O(N) Degradation)
+    subgraph "Offset Pagination (O(N) Degradation)"
         O1["SELECT * FROM events ORDER BY id LIMIT 10 OFFSET 1000000;"]
         O2["Database must scan and discard 1,000,000 rows in index!"]
         O3["Concurrent inserts cause duplicate / skipped records!"]
         O1 --> O2 --> O3
     end
-    subgraph Keyset / Cursor Pagination (O(1) Seek)
+    subgraph "Keyset / Cursor Pagination (O(1) Seek)"
         K1["SELECT * FROM events WHERE id > 1000000 ORDER BY id LIMIT 10;"]
         K2["B-Tree seeks directly to key 1000000 in O(log N) time!"]
         K3["Completely immune to concurrent insert shifts!"]
@@ -265,12 +265,12 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    subgraph OLTP (Transactional)
+    subgraph "OLTP (Transactional)"
         T1["PostgreSQL / MySQL"]
         T2["Row-oriented, Normalized (3NF), B-Trees, Short ACID transactions"]
         T1 --- T2
     end
-    subgraph OLAP (Analytical Warehouse)
+    subgraph "OLAP (Analytical Warehouse)"
         A1["Snowflake / BigQuery / ClickHouse"]
         A2["Columnar, Denormalized, Massively Parallel Processing (MPP)"]
         A1 --- A2
@@ -290,13 +290,13 @@ Modern lakehouse table formats (**Apache Iceberg**, **Delta Lake**) decouple tab
 
 ```mermaid
 flowchart TD
-    subgraph Metadata Layer (ACID & Snapshots)
+    subgraph "Metadata Layer (ACID & Snapshots)"
         LOG["Table Metadata / Commit Log: snapshot_v3.json"]
         M1["Manifest List: Identifies valid manifest files for snapshot"]
         M2["Manifest Files: Tracks list of active Parquet files + min/max stats"]
         LOG --> M1 --> M2
     end
-    subgraph Physical Storage Layer (Immutable Parquet)
+    subgraph "Physical Storage Layer (Immutable Parquet)"
         M2 --> F1["data_file_001.parquet"]
         M2 --> F2["data_file_002.parquet"]
         M2 --> F3["data_file_003.parquet (Added in v3)"]

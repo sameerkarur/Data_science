@@ -16,7 +16,7 @@ Linear regression predicts continuous real values $\hat{y} \in (-\infty, \infty)
 
 ```mermaid
 flowchart TD
-    subgraph Input & Latent Score
+    subgraph "Input & Latent Score"
         X["Input Features: x ∈ ℝᵖ"] --> Z["Logit / Margin: z = wᵀx + b ∈ (-∞, ∞)"]
     end
 

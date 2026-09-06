@@ -28,17 +28,11 @@ flowchart TD
 
     OLS & MC & HD & OVERFIT --> REG["Regularization Penalty R(w)"]
 
-    REG --> RIDGE["Ridge (L2 Penalty: λ||w||₂²)
-    Analytical Solution: (XᵀX + λI)⁻¹Xᵀy
-    Shrinks weights smoothly toward zero"]
+    REG --> RIDGE["Ridge (L2 Penalty: λ||w||₂²)\nAnalytical Solution: (XᵀX + λI)⁻¹Xᵀy\nShrinks weights smoothly toward zero"]
 
-    REG --> LASSO["Lasso (L1 Penalty: α||w||₁)
-    Non-differentiable at w=0
-    Induces exact parameter sparsity via Soft-Thresholding"]
+    REG --> LASSO["Lasso (L1 Penalty: α||w||₁)\nNon-differentiable at w=0\nInduces exact parameter sparsity via Soft-Thresholding"]
 
-    REG --> ELNET["Elastic Net (L1 + L2)
-    Combines feature selection with grouping effect
-    Robust to high collinearity"]
+    REG --> ELNET["Elastic Net (L1 + L2)\nCombines feature selection with grouping effect\nRobust to high collinearity"]
 ```
 
 ---
@@ -318,13 +312,13 @@ Consider the constrained formulations:
 
 ```mermaid
 flowchart TD
-    subgraph L2 Ball (Ridge)
+    subgraph "L2 Ball (Ridge)"
         C["Smooth circular boundary: w₁² + w₂² ≤ t²"]
         E1["Elliptical loss contours: (w - w_ols)ᵀ (XᵀX) (w - w_ols)"]
         E1 -. Tangency Point .-> C
         T1["Tangency almost never occurs on coordinate axes (w₁ ≠ 0, w₂ ≠ 0)"]
     end
-    subgraph L1 Diamond (Lasso)
+    subgraph "L1 Diamond (Lasso)"
         D["Pointy diamond boundary: |w₁| + |w₂| ≤ t with sharp corners at axes"]
         E2["Elliptical loss contours"]
         E2 -. Tangency Point .-> D

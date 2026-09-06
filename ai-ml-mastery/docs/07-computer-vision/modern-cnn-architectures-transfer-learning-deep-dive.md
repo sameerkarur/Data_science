@@ -152,14 +152,14 @@ The gradient $\frac{\partial \mathcal{E}}{\partial \mathbf{x}_l}$ decomposes int
 
 ```mermaid
 flowchart TD
-    subgraph BasicBlock (ResNet-18, 34)
+    subgraph "BasicBlock (ResNet-18, 34)"
         B_IN["Input x: (C, H, W)"] --> B_C1["Conv 3x3, C"] --> B_BN1["BatchNorm"] --> B_R1["ReLU"]
         B_R1 --> B_C2["Conv 3x3, C"] --> B_BN2["BatchNorm"]
         B_IN ----> B_ADD((+))
         B_BN2 --> B_ADD --> B_OUT["ReLU(F(x) + x)"]
     end
 
-    subgraph BottleneckBlock (ResNet-50, 101, 152)
+    subgraph "BottleneckBlock (ResNet-50, 101, 152)"
         BT_IN["Input x: (4C, H, W)"] --> BT_C1["Conv 1x1, C (Reduce)"] --> BT_BN1["BatchNorm"] --> BT_R1["ReLU"]
         BT_R1 --> BT_C2["Conv 3x3, C (Process)"] --> BT_BN2["BatchNorm"] --> BT_R2["ReLU"]
         BT_R2 --> BT_C3["Conv 1x1, 4C (Restore)"] --> BT_BN3["BatchNorm"]

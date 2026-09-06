@@ -69,7 +69,7 @@ flowchart LR
     SharedMem <--> PyTorchWorker
     PyTorchWorker -->|Syscalls: mmap, epoll, io_uring_enter| KernelSpace
     CgroupEngine -->|Throttle CPU / Reclaim Page Cache| PyTorchWorker
-    OOM -.->|SIGKILL (Exit Code 137)| PyTorchWorker
+    OOM -.->|"SIGKILL (Exit Code 137)"| PyTorchWorker
 ```
 
 ### 2.1 Virtual Memory, Page Faults, and the OOM Killer
@@ -324,7 +324,7 @@ sequenceDiagram
     Note over Engine: Timer starts (Window W = 5ms)
     C2->>Engine: Enqueue Request 2
     C3->>Engine: Enqueue Request 3
-    Note over Engine: Timer expires at t = 5ms; Batch size = 3
+    Note over Engine: Timer expires at t = 5ms, Batch size = 3
     Engine->>GPU: Execute forward_pass(Tensor[3, Dim])
     GPU-->>Engine: Returns Tensor[3, OutDim]
     Engine-->>C1: Return Response 1

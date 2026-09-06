@@ -23,21 +23,13 @@ flowchart TD
         ROOT["Model Predictions"] --> CLAS["Classification Task"]
         ROOT --> REG["Regression Task"]
 
-        CLAS --> CONF["Point Metrics (Fixed Threshold θ)
-        Accuracy, Precision, Recall, Specificity, F_β"]
-        CLAS --> CURV["Curve Metrics (All Thresholds)
-        ROC-AUC (Wilcoxon Rank-Sum)
-        PR-AUC (Mandatory for Imbalance)"]
-        CLAS --> CALIB["Calibration Quality
-        Expected Calibration Error (ECE)
-        Platt Scaling vs Isotonic PAVA"]
+        CLAS --> CONF["Point Metrics (Fixed Threshold θ)\nAccuracy, Precision, Recall, Specificity, F_β"]
+        CLAS --> CURV["Curve Metrics (All Thresholds)\nROC-AUC (Wilcoxon Rank-Sum)\nPR-AUC (Mandatory for Imbalance)"]
+        CLAS --> CALIB["Calibration Quality\nExpected Calibration Error (ECE)\nPlatt Scaling vs Isotonic PAVA"]
 
-        REG --> L1L2["Absolute vs Squared Residuals
-        MAE (Robust L1) vs RMSE (Penalizing L2)"]
-        REG --> VAR["Variance Explained
-        R² vs Adjusted R² (Feature Penalized)"]
-        REG --> REL["Relative Scale
-        MAPE vs Symmetric sMAPE"]
+        REG --> L1L2["Absolute vs Squared Residuals\nMAE (Robust L1) vs RMSE (Penalizing L2)"]
+        REG --> VAR["Variance Explained\nR² vs Adjusted R² (Feature Penalized)"]
+        REG --> REL["Relative Scale\nMAPE vs Symmetric sMAPE"]
     end
 ```
 

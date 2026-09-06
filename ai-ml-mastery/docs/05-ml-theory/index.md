@@ -26,4 +26,4 @@ How to know if a model is actually good.
 - [x] [Bayesian optimization — full deep-dive](hyperparameter-optimization-deep-dive.md)
 
 !!! mastery "Status"
-    These are chapter stubs — each topic gets its own deep-dive page as it's written. See the [Python Functions](../01-python/functions-deep-dive.md) chapter for the target depth and format.
+    Complete deep-dive coverage of model validation and generalization, the bias-variance decomposition, leakage and class imbalance, classification and regression evaluation metrics, and hyperparameter optimization from grid search to Bayesian methods.

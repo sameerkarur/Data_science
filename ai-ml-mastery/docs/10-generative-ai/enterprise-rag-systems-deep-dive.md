@@ -145,7 +145,7 @@ flowchart TD
     end
 
     subgraph Layer0["Layer 0 (Bottom Dense Layer: All Nodes)"]
-        L0_1["Node A"] -> L0_2["Node B"] -> L0_3["Node C"] -> L0_4["Node D"] -> L0_5["Node E"] -> L0_6["Node F"] -> L0_7["Node G"]
+        L0_1["Node A"] --> L0_2["Node B"] --> L0_3["Node C"] --> L0_4["Node D"] --> L0_5["Node E"] --> L0_6["Node F"] --> L0_7["Node G"]
     end
 
     Layer2 -. "Zoom In" .-> Layer1 -. "Zoom In" .-> Layer0

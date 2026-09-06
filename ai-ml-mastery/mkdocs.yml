@@ -54,10 +54,14 @@ extra_css:
   - stylesheets/extra.css
 
 extra:
-  # Razorpay Payment Page / Payment Link. This is the single place the
-  # site-wide "Support me" banner and end-of-chapter card read from.
-  # Safe to publish: a hosted payment URL exposes no API credentials.
-  support_url: "REPLACE_WITH_RAZORPAY_PAYMENT_PAGE_URL"
+  # Razorpay hosted Payment Page / Payment Link, e.g.
+  # https://pages.razorpay.com/<slug> or https://rzp.io/l/<slug>
+  #
+  # Single source of truth for the site-wide "Support me" banner and the
+  # end-of-chapter support card. Safe to publish: a hosted payment URL carries
+  # no API credentials, so RAZORPAY_KEY_SECRET never has to reach the client.
+  # Leave empty to hide both call-to-actions rather than emit a dead link.
+  support_url: ""
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/sameerkarur/Data_science

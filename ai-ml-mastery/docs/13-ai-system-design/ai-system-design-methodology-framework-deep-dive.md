@@ -276,7 +276,7 @@ sequenceDiagram
     Draft->>Draft: Generate K = 4 candidate tokens autoregressively (Very Fast)
     Draft->>Target: Pass prompt + 4 candidate tokens in a SINGLE forward pass
     Target->>Target: Verify tokens in parallel via modified rejection sampling
-    Target-->>Draft: Accept 3 tokens; reject 4th; emit corrected 4th token!
+    Target-->>Draft: Accept 3 tokens, reject 4th, emit corrected 4th token!
 ```
 
 - **Speedup**: The target model evaluates all $K$ candidate tokens simultaneously in a **single compute-bound forward pass** rather than $K$ individual memory-bound decoding passes.

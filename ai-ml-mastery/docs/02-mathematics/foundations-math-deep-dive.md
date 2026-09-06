@@ -17,10 +17,10 @@ Without absolute mastery over algebraic identities, function graphs, logarithmic
 
 ```mermaid
 flowchart TD
-    subgraph Inputs & Affine Maps
+    subgraph "Inputs & Affine Maps"
         X["Input Vector x ∈ R^d"] --> W["Linear Transformation: z = W^T x + b"]
     end
-    subgraph Non-Linear & Exponential Warping
+    subgraph "Non-Linear & Exponential Warping"
         W --> A["Activation Function σ(z) or Exp(z)"]
         A --> P["Probability Distribution: p_i = exp(z_i) / Σ exp(z_j)"]
     end

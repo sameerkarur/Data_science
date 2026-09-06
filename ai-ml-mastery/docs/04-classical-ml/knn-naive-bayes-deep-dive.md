@@ -14,13 +14,13 @@ Machine learning classifiers generally fall into two distinct philosophical para
 
 ```mermaid
 flowchart TD
-    subgraph Non-Parametric Paradigm: KNN
+    subgraph "Non-Parametric Paradigm: KNN"
         D1["Training Data memorized in Metric Space"] --> MET["Distance Metric: Euclidean, Manhattan, Minkowski, Cosine"]
         MET --> SPAT["Spatial Partitioning: KD-Tree / Ball-Tree"]
         SPAT --> VOR["Voronoi Tessellation & Local Voting"]
     end
 
-    subgraph Generative Paradigm: Naive Bayes
+    subgraph "Generative Paradigm: Naive Bayes"
         D2["Training Data"] --> BAY["Bayes' Rule: P(y|x) ∝ P(y) P(x|y)"]
         BAY --> IND["Conditional Independence: P(x|y) = ∏ P(xᵢ|y)"]
         IND --> GNB["Gaussian NB (Continuous Features)"]

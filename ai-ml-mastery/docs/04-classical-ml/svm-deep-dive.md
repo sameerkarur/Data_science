@@ -20,19 +20,16 @@ flowchart TD
 
     subgraph Dual Space via KKT Conditions
         MAXM & SOFT --> LAGR["Primal Lagrangian: L_P(w, b, ξ, α, μ)"]
-        LAGR --> DUAL["Wolfe Dual: max ∑ αᵢ - 0.5 ∑ αᵢαⱼ yᵢyⱼ (xᵢᵀ xⱼ)
-        subject to 0 ≤ αᵢ ≤ C and ∑ αᵢ yᵢ = 0"]
+        LAGR --> DUAL["Wolfe Dual: max ∑ αᵢ - 0.5 ∑ αᵢαⱼ yᵢyⱼ (xᵢᵀ xⱼ)\nsubject to 0 ≤ αᵢ ≤ C and ∑ αᵢ yᵢ = 0"]
     end
 
     subgraph Non-Linear Generalization
         DUAL --> KERN["Kernel Trick: Replace xᵢᵀ xⱼ with K(xᵢ, xⱼ)"]
-        KERN --> RBF["Gaussian RBF Kernel: exp(-γ ||x - z||²)
-        Infinite-Dimensional Hilbert Space Mapping"]
+        KERN --> RBF["Gaussian RBF Kernel: exp(-γ ||x - z||²)\nInfinite-Dimensional Hilbert Space Mapping"]
     end
 
     subgraph Solvers
-        DUAL --> SMO["Sequential Minimal Optimization (SMO)
-        Analytic 2-variable updates"]
+        DUAL --> SMO["Sequential Minimal Optimization (SMO)\nAnalytic 2-variable updates"]
     end
 ```
 
@@ -239,7 +236,7 @@ $$
 ```mermaid
 flowchart LR
     A["Input Space ℝ² (Non-separable)"] -->|Implicit Mapping φ| B["Feature Space ℋ (Linearly Separable)"]
-    A -->|Kernel Function K(x, z)| C["Direct Inner Product in ℋ without computing φ(x)!"]
+    A -->|"Kernel Function K(x, z)"| C["Direct Inner Product in ℋ without computing φ(x)!"]
 ```
 
 ### 5.1 Mercer's Theorem

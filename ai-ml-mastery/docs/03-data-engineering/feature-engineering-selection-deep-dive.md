@@ -61,11 +61,11 @@ The geometry of the feature space now mirrors the physical reality: 23:00 and 00
 
 ```mermaid
 flowchart TD
-    subgraph Linear Integer Line (Flawed)
+    subgraph "Linear Integer Line (Flawed)"
         L1["0 (Midnight)"] --- L2["6 (Dawn)"] --- L3["12 (Noon)"] --- L4["18 (Dusk)"] --- L5["23 (Night)"]
         L5 -. "False Discontinuous Distance = 23" .-> L1
     end
-    subgraph Cyclical Unit Circle (Preserves Physical Topology)
+    subgraph "Cyclical Unit Circle (Preserves Physical Topology)"
         C["2D Unit Circle: (sin(2πt/24), cos(2πt/24))"]
         C --> N1["00:00 (1.0, 0.0)"]
         C --> N2["23:00 (0.96, -0.26)"]
@@ -156,12 +156,12 @@ In temporal machine learning (financial forecasting, fraud detection, churn pred
 
 ```mermaid
 flowchart TD
-    subgraph Data Leakage (Flawed Future Leak)
+    subgraph "Data Leakage (Flawed Future Leak)"
         E1["Event Timestamp: 2024-06-01 14:00"]
         F1["Rolling Average includes data up to 2024-06-01 23:59!"]
         E1 -. Lookahead Bias .-> F1
     end
-    subgraph Point-in-Time Correct (Leak-Free)
+    subgraph "Point-in-Time Correct (Leak-Free)"
         E2["Event Timestamp: 2024-06-01 14:00"]
         F2["Rolling Average strictly filtered: timestamp < 2024-06-01 14:00"]
         E2 --> F2

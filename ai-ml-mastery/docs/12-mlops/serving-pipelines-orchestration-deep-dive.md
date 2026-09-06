@@ -297,9 +297,11 @@ $$v^* = \mathcal{F}(e_i, T^*) \quad \text{where} \quad T^* = \max \{ T_F \in \ma
 ```mermaid
 timeline
     title Point-in-Time Feature Join (As-Of Logic)
-    t = 08:00 : Feature Update v = 12.5 (T_F1)
-    t = 11:30 : Prediction Event Observation (T_E) -> Joins v = 12.5!
-    t = 12:00 : Feature Update v = 19.8 (T_F2) -> IGNORED (Future Leakage!)
+    section Valid As-Of Window
+      t 08.00 : Feature Update v = 12.5 (T_F1)
+      t 11.30 : Prediction Event Observation (T_E) joins v = 12.5
+    section Future Leakage Zone
+      t 12.00 : Feature Update v = 19.8 (T_F2) is correctly ignored
 ```
 
 Any join that includes feature updates where $T_F > T_E$ leaks future ground truth, artificially inflating offline evaluation metrics while causing severe performance drops in production.
@@ -475,7 +477,7 @@ flowchart TD
     Ingress --> Service
     Service --> Pod1
     Service --> Pod2
-    KEDA -->|Scale Replicas (2 -> 8)| Deployment
+    KEDA -->|"Scale Replicas (2 -> 8)"| Deployment
     GPUOperator -.->|Manages Drivers & Metrics| Pod1
     GPUOperator -.->|Manages Drivers & Metrics| Pod2
 ```

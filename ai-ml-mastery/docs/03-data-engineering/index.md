@@ -33,4 +33,4 @@ The unglamorous 80% of ML work.
 - [x] [Feature selection](feature-engineering-selection-deep-dive.md#6-feature-selection-filter-wrapper-and-embedded-paradigms)
 
 !!! mastery "Status"
-    These are chapter stubs — each topic gets its own deep-dive page as it's written. See the [Python Functions](../01-python/functions-deep-dive.md) chapter for the target depth and format.
+    Complete deep-dive coverage of the Python data ecosystem (NumPy, Pandas, Polars and visualization), storage formats and query engines, data cleaning and preprocessing, and feature engineering and selection.

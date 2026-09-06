@@ -25,7 +25,7 @@ This single formula is *why* array access is $O(1)$ (constant time) — the CPU 
 
 ```mermaid
 flowchart LR
-    subgraph Array in memory - base address 1000, 4 bytes per int
+    subgraph "Array in memory - base address 1000, 4 bytes per int"
         A0["Addr 1000: 10 (index 0)"]
         A1["Addr 1004: 20 (index 1)"]
         A2["Addr 1008: 30 (index 2)"]

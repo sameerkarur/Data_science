@@ -23,20 +23,16 @@ Evaluating $f(\boldsymbol{\theta})$ requires training a complete model and calcu
 flowchart TD
     subgraph HPO Search Paradigms
         BB["Black-Box Objective: f(θ) = Cross-Validation Score"]
-        BB --> GRID["Grid Search: Uniform Lattice O(Gᵈ)
-        Suffers combinatorial explosion"]
-        BB --> RAND["Random Search: Uniform Independent Draws
-        Bergstra-Bengio: 60 draws guarantee top 5%"]
+        BB --> GRID["Grid Search: Uniform Lattice O(Gᵈ)\nSuffers combinatorial explosion"]
+        BB --> RAND["Random Search: Uniform Independent Draws\nBergstra-Bengio: 60 draws guarantee top 5%"]
         BB --> BAYES["Bayesian Optimization: Sequential Surrogate Modeling"]
-        BB --> MF["Multi-Fidelity: Successive Halving & Hyperband
-        Prunes underperforming trials early"]
+        BB --> MF["Multi-Fidelity: Successive Halving & Hyperband\nPrunes underperforming trials early"]
     end
 
     subgraph Bayesian Optimization Mechanics
         BAYES --> GP["Gaussian Process BO: Surrogate μ(θ), σ²(θ)"]
         BAYES --> TPE["Tree-Structured Parzen Estimator: Models p(θ|y) via ℓ(θ)/g(θ)"]
-        GP --> ACQ["Acquisition Functions: EI, UCB, PI
-        Balances Exploration vs Exploitation"]
+        GP --> ACQ["Acquisition Functions: EI, UCB, PI\nBalances Exploration vs Exploitation"]
     end
 ```
 
@@ -59,10 +55,10 @@ Furthermore, Bergstra & Bengio (2012) proved that in real-world ML problems, **m
 
 ```mermaid
 flowchart TD
-    subgraph Grid Search (9 Evaluations on 2D Grid)
+    subgraph "Grid Search (9 Evaluations on 2D Grid)"
         G1["Only 3 unique values tested for the Important Feature! (Redundant columns)"]
     end
-    subgraph Random Search (9 Random Evaluations)
+    subgraph "Random Search (9 Random Evaluations)"
         R1["9 distinct values tested for the Important Feature! (3x higher resolution)"]
     end
 ```
@@ -289,16 +285,16 @@ In Optuna, this is implemented natively via the `HyperbandPruner` and `MedianPru
 
 ```mermaid
 flowchart TD
-    subgraph Iteration 1: 81 Configurations (Budget: 1 epoch)
+    subgraph "Iteration 1: 81 Configurations (Budget: 1 epoch)"
         A1["81 Candidates"] --> B1["Prune bottom 2/3"]
     end
-    subgraph Iteration 2: 27 Survivors (Budget: 3 epochs)
+    subgraph "Iteration 2: 27 Survivors (Budget: 3 epochs)"
         B1 --> A2["27 Candidates"] --> B2["Prune bottom 2/3"]
     end
-    subgraph Iteration 3: 9 Survivors (Budget: 9 epochs)
+    subgraph "Iteration 3: 9 Survivors (Budget: 9 epochs)"
         B2 --> A3["9 Candidates"] --> B3["Prune bottom 2/3"]
     end
-    subgraph Final Round: 3 Survivors (Budget: 27 epochs)
+    subgraph "Final Round: 3 Survivors (Budget: 27 epochs)"
         B3 --> A4["3 Candidates"] --> BEST["Winner Evaluated to Full Budget (81 epochs)"]
     end
 ```

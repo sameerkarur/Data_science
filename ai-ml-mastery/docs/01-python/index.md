@@ -8,23 +8,23 @@ Fundamentals → OOP → advanced Python → CPython internals (bytecode, frames
 
 ## Part B — Control Flow
 
-- [x] Covered in the Fundamentals/Control Flow/Collections deep-dive above
+- [x] [Conditionals, loops, comprehension-style iteration and flow-control keywords](fundamentals-control-flow-collections-deep-dive.md)
 
 ## Part C — Collections
 
-- [x] Covered in the Fundamentals/Control Flow/Collections deep-dive above
+- [x] [Lists, tuples, dictionaries, sets and their performance characteristics](fundamentals-control-flow-collections-deep-dive.md)
 
 ## Part D — Functions
 
 - [x] [Parameters & arguments](functions-deep-dive.md)
 - [x] [Return & scope (LEGB)](functions-deep-dive.md)
 - [x] [Default & keyword args](functions-deep-dive.md)
-- [x] [*args / **kwargs](functions-deep-dive.md)
+- [x] [`*args` / `**kwargs`](functions-deep-dive.md)
 - [x] [Lambda](functions-deep-dive.md)
 - [x] [Closures](functions-deep-dive.md)
 - [x] [Recursion](functions-deep-dive.md)
 - [x] [Decorators](functions-deep-dive.md)
-- [x] [Functions — full deep-dive](functions-deep-dive.md) *(written, use as the depth template)*
+- [x] [Functions — full deep-dive](functions-deep-dive.md)
 
 ## Part E — OOP
 
@@ -39,4 +39,4 @@ Fundamentals → OOP → advanced Python → CPython internals (bytecode, frames
 - [x] [Python Internals — full deep-dive (CPython, bytecode, AST, stack frames, GC, GIL, import system, descriptors, attribute lookup)](internals-deep-dive.md)
 
 !!! mastery "Status"
-    These are chapter stubs — each topic gets its own deep-dive page as it's written. See the [Python Functions](../01-python/functions-deep-dive.md) chapter for the target depth and format.
+    Complete deep-dive coverage of Python fundamentals, control flow and collections, functions and closures, object-oriented design, advanced language features (iterators, generators, context managers, async and concurrency), and CPython internals.

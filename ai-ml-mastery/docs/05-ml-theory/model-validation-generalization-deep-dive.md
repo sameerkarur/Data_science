@@ -31,7 +31,7 @@ flowchart TD
         ERR --> NOISE["Irreducible Noise σ² (Bayes Error Floor)"]
     end
 
-    subgraph Generalization & Remediation
+    subgraph "Generalization & Remediation"
         VAR --> REG["Structural Risk Minimization (L1/L2, Pruning)"]
         BIAS --> CAP["Capacity Expansion / Feature Engineering"]
         ERR --> IMB["Class Imbalance Handling: SMOTE, Focal Loss, Cost Matrices"]
@@ -126,14 +126,14 @@ Learning curves plot model performance (training error vs. cross-validation erro
 
 ```mermaid
 flowchart TD
-    subgraph High Bias (Underfitting)
+    subgraph "High Bias (Underfitting)"
         HB1["Training Error: High"]
         HB2["Validation Error: High"]
         HB1 -. "Narrow Gap (Both Plateau Poorly)" .-> HB2
         HB3["Remedy: Increase model capacity, add polynomial features, reduce regularization"]
     end
 
-    subgraph High Variance (Overfitting)
+    subgraph "High Variance (Overfitting)"
         HV1["Training Error: Near Zero"]
         HV2["Validation Error: Substantially Higher"]
         HV1 -. "Wide Generalization Gap" .-> HV2
@@ -164,7 +164,7 @@ A simple train/test split provides a noisy, high-variance estimate of generaliza
 
 ```mermaid
 flowchart TD
-    subgraph Group K-Fold (No Entity Leakage)
+    subgraph "Group K-Fold (No Entity Leakage)"
         G1["Group A: Patient 101 (3 scans)"] --> FOLD1["Fold 1 (Train)"]
         G2["Group B: Patient 102 (5 scans)"] --> FOLD1
         G3["Group C: Patient 103 (2 scans)"] --> FOLD2["Fold 2 (Validation)"]
@@ -220,13 +220,13 @@ In Vladimir Vapnik's Statistical Learning Theory:
 
 ```mermaid
 flowchart TD
-    subgraph Fatal Contamination (Broken)
+    subgraph "Fatal Contamination (Broken)"
         ALL["All Data (Train + Test)"] --> SC["fit_transform StandardScaler"]
         SC --> SPLIT1["train_test_split"]
         SPLIT1 --> TRAIN1["Train Model (Contaminated!)"]
     end
 
-    subgraph Strict Encapsulation (Production)
+    subgraph "Strict Encapsulation (Production)"
         RAW["Raw Data"] --> SPLIT2["train_test_split"]
         SPLIT2 --> TR["X_train"] & TE["X_test"]
         TR --> PIPE["Pipeline: fit(StandardScaler) -> fit(Model)"]

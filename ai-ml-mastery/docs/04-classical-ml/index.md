@@ -19,4 +19,4 @@ Every algorithm walked through: intuition → math → from-scratch → library 
 - [x] [SVM — full deep-dive](svm-deep-dive.md)
 
 !!! mastery "Status"
-    These are chapter stubs — each topic gets its own deep-dive page as it's written. See the [Python Functions](../01-python/functions-deep-dive.md) chapter for the target depth and format.
+    Complete deep-dive coverage of linear, polynomial, regularized and logistic regression, KNN and Naive Bayes, decision trees, ensemble methods (random forests and gradient boosting), and support vector machines.

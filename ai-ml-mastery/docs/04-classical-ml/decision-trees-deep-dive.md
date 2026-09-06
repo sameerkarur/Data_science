@@ -7,7 +7,7 @@
 
 ## 1. The Big Picture
 
-Linear models construct global hyperplanes that span the entire feature space. When real-world data contains complex localized non-linearities, conditional hierarchies, or nested rules (e.g., "if credit score < 600 AND income > $100k, then approve"), fitting global linear coefficients requires manual interaction feature engineering.
+Linear models construct global hyperplanes that span the entire feature space. When real-world data contains complex localized non-linearities, conditional hierarchies, or nested rules (e.g., "if credit score < 600 AND income > \$100k, then approve"), fitting global linear coefficients requires manual interaction feature engineering.
 
 **Decision Trees (CART — Classification and Regression Trees)** solve this by recursively partitioning the feature space into disjoint **axis-aligned hyper-rectangles** (boxes). Predictions within each region are simple local constants: the majority class for classification, or the conditional sample mean for regression.
 

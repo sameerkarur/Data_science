@@ -383,8 +383,8 @@ flowchart TD
 
     subgraph AB["3. A/B Hypothesis Testing"]
         UserAB["Randomized Users"] --> Splitter["Salted Hash User Splitter"]
-        Splitter -->|Bucket A (Control)| ModelA["Model A (Baseline)"]
-        Splitter -->|Bucket B (Treatment)| ModelB["Model B (Retrained)"]
+        Splitter -->|"Bucket A (Control)"| ModelA["Model A (Baseline)"]
+        Splitter -->|"Bucket B (Treatment)"| ModelB["Model B (Retrained)"]
         ModelA --> MetricDB["Business Conversion / Revenue Tracking"]
         ModelB --> MetricDB
     end

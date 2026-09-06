@@ -16,7 +16,7 @@ Individual machine learning models face a fundamental dilemma: simple models suf
 
 ```mermaid
 flowchart TD
-    subgraph Bagging Paradigm (Variance Reduction)
+    subgraph "Bagging Paradigm (Variance Reduction)"
         D1["Dataset D"] --> B1["Bootstrap Sample 1"] & B2["Bootstrap Sample 2"] & B3["Bootstrap Sample B"]
         B1 --> T1["Deep Tree 1 (Low Bias, High Var)"]
         B2 --> T2["Deep Tree 2 (Low Bias, High Var)"]
@@ -24,7 +24,7 @@ flowchart TD
         T1 & T2 & TB --> AVG["Parallel Averaging / Voting: Var = ρσ² + (1-ρ)σ²/B"]
     end
 
-    subgraph Boosting Paradigm (Bias & Variance Reduction)
+    subgraph "Boosting Paradigm (Bias & Variance Reduction)"
         D2["Dataset D"] --> F0["Initial Base Prediction F₀(x)"]
         F0 --> R1["Compute Residuals / Gradients -g₁"]
         R1 --> H1["Fit Tree h₁(x) to Gradients"]
@@ -266,12 +266,12 @@ LightGBM grows trees **leaf-wise** (best-first): it always splits the single lea
 
 ```mermaid
 flowchart TD
-    subgraph Level-Wise (Depth-First)
+    subgraph "Level-Wise (Depth-First)"
         L0["Root"] --> L1A["Node A"] & L1B["Node B"]
         L1A --> L2A["Leaf"] & L2B["Leaf"]
         L1B --> L2C["Leaf"] & L2D["Leaf"]
     end
-    subgraph Leaf-Wise (Best-First)
+    subgraph "Leaf-Wise (Best-First)"
         R0["Root"] --> R1A["Node A (High Gain)"] & R1B["Leaf B (Low Gain)"]
         R1A --> R2A["Node C (High Gain)"] & R2B["Leaf D"]
         R2A --> R3A["Leaf E"] & R3B["Leaf F"]

@@ -41,4 +41,4 @@ Every concept here is built to connect directly to an ML mechanism.
 - [x] [MLE / MAP / Bayesian inference](probability-statistics-deep-dive.md#7-point-estimation-mle-map-and-conjugate-bayesian-inference)
 
 !!! mastery "Status"
-    These are chapter stubs — each topic gets its own deep-dive page as it's written. See the [Python Functions](../01-python/functions-deep-dive.md) chapter for the target depth and format.
+    Complete deep-dive coverage of mathematical foundations, linear algebra through SVD and PCA, calculus and optimization from limits to Adam, and probability and statistics through MLE, MAP and Bayesian inference.

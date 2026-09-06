@@ -71,7 +71,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    subgraph Two-Stage Detection (Faster R-CNN)
+    subgraph "Two-Stage Detection (Faster R-CNN)"
         IMG1["Input Image"] --> BB1["Backbone CNN / ResNet"]
         BB1 --> RPN["Region Proposal Network (RPN)\nGenerates ~2000 Candidate RoIs"]
         RPN --> POOL["RoI Pooling / RoIAlign"]
@@ -79,7 +79,7 @@ flowchart TD
         HEAD --> OUT1["High Accuracy, Lower FPS (~15 FPS)"]
     end
 
-    subgraph One-Stage Detection (YOLO / SSD)
+    subgraph "One-Stage Detection (YOLO / SSD)"
         IMG2["Input Image"] --> BB2["Backbone + Feature Pyramid Network (FPN)"]
         BB2 --> DENSE["Dense Grid Anchor Prediction (S x S)"]
         DENSE --> OUT2["Direct Class + Box Coordinates\nReal-Time Speed (60-140 FPS)"]
@@ -113,7 +113,7 @@ Olaf Ronneberger et al. introduced **U-Net** for biomedical microscopy segmentat
 
 ```mermaid
 flowchart TD
-    subgraph Contracting Path (Encoder)
+    subgraph "Contracting Path (Encoder)"
         E0["Input Image: (1, 572, 572)"] --> E1["Double Conv (64)"]
         E1 -->|MaxPool 2x2| E2["Double Conv (128)"]
         E2 -->|MaxPool 2x2| E3["Double Conv (256)"]
@@ -121,7 +121,7 @@ flowchart TD
         E4 -->|MaxPool 2x2| B["Bottleneck Double Conv (1024)"]
     end
 
-    subgraph Expansive Path (Decoder)
+    subgraph "Expansive Path (Decoder)"
         B -->|UpConv 2x2| D4["Concat + Double Conv (512)"]
         D4 -->|UpConv 2x2| D3["Concat + Double Conv (256)"]
         D3 -->|UpConv 2x2| D2["Concat + Double Conv (128)"]

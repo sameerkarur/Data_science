@@ -208,7 +208,7 @@ Pooling downsamples feature maps, providing two key benefits:
 
 ```mermaid
 flowchart TD
-    subgraph 2x2 Max Pooling (Stride 2)
+    subgraph "2x2 Max Pooling (Stride 2)"
         P1["[ 1  3 ]\n[ 2  9 ]"] -->|max| M1["9"]
         P2["[ 4  6 ]\n[ 5  1 ]"] -->|max| M2["6"]
         P3["[ 8  2 ]\n[ 3  0 ]"] -->|max| M3["8"]

@@ -33,7 +33,7 @@ flowchart LR
         S2 --> LOSS["Loss L(a², y)"]
     end
 
-    subgraph Backward Pass (Reverse-Mode AD)
+    subgraph "Backward Pass (Reverse-Mode AD)"
         LOSS -. "∂L/∂a²" .-> D2["δ² = ∂L/∂z²"]
         D2 -. "δ² (a¹)ᵀ" .-> GW2["∂L/∂W²"]
         D2 -. "(W²)ᵀ δ² ⊙ σ'(z¹)" .-> D1["δ¹ = ∂L/∂z¹"]
@@ -482,20 +482,20 @@ sequenceDiagram
 
     Note over In,Loss: FORWARD PROPAGATION
     In->>L1: a⁰ (Features X)
-    L1->>L1: z¹ = a⁰ (W¹)ᵀ + b¹; a¹ = σ(z¹)
+    L1->>L1: z¹ = a⁰ (W¹)ᵀ + b¹, a¹ = σ(z¹)
     L1->>L2: a¹
-    L2->>L2: z² = a¹ (W²)ᵀ + b²; a² = σ(z²)
+    L2->>L2: z² = a¹ (W²)ᵀ + b², a² = σ(z²)
     L2->>Loss: a² (Predictions)
     Loss->>Loss: L = NLL(a², y)
 
     Note over In,Loss: BACKWARD PROPAGATION
     Loss->>L2: Δ² = (a² - y) / m
-    L2->>L2: dW² = (Δ²)ᵀ a¹; db² = sum(Δ², axis=0)
+    L2->>L2: dW² = (Δ²)ᵀ a¹, db² = sum(Δ², axis=0)
     L2->>L1: Backprop error: Δ¹ = (Δ² W²) ⊙ σ'(z¹)
-    L1->>L1: dW¹ = (Δ¹)ᵀ a⁰; db¹ = sum(Δ¹, axis=0)
+    L1->>L1: dW¹ = (Δ¹)ᵀ a⁰, db¹ = sum(Δ¹, axis=0)
     Note over In,Loss: PARAMETER UPDATE (SGD)
-    L1->>L1: W¹ = W¹ - η dW¹; b¹ = b¹ - η db¹
-    L2->>L2: W² = W² - η dW²; b² = b² - η db²
+    L1->>L1: W¹ = W¹ - η dW¹, b¹ = b¹ - η db¹
+    L2->>L2: W² = W² - η dW², b² = b² - η db²
 ```
 
 ---

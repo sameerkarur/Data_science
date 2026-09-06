@@ -11,7 +11,7 @@ All machine learning models learn by adjusting parameters to minimize an objecti
 
 ```mermaid
 flowchart TD
-    subgraph Sensitivity & Differential Operators
+    subgraph "Sensitivity & Differential Operators"
         F["Multivariate Objective: L(θ)"] --> G["Gradient ∇_θ L: Steepest Ascent Direction"]
         F --> J["Jacobian J: Matrix of First-Order Partial Derivatives"]
         F --> H["Hessian H: Matrix of Second-Order Curvatures (∇^2 L)"]
@@ -198,12 +198,12 @@ In machine learning, we optimize a **single scalar loss** $L \in \mathbb{R}$ wit
 
 ```mermaid
 flowchart LR
-    subgraph Forward Pass (Evaluation)
+    subgraph "Forward Pass (Evaluation)"
         X["Inputs: x1, x2"] --> N1["Node v1 = x1 * x2"]
         N1 --> N2["Node v2 = sin(v1)"]
         N2 --> L["Scalar Loss L = v2 + x1"]
     end
-    subgraph Backward Pass (Adjoint Propagation)
+    subgraph "Backward Pass (Adjoint Propagation)"
         L_adj["dL/dL = 1.0"] --> N2_adj["dL/dv2 = 1.0"]
         N2_adj --> N1_adj["dL/dv1 = cos(v1) * dL/dv2"]
         N1_adj --> X_adj["dL/dx1, dL/dx2 via VJPs"]

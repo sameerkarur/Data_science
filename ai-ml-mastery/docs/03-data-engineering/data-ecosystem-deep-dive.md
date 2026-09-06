@@ -142,13 +142,13 @@ Two arrays are compatible for broadcasting if, starting from the **trailing (rig
 
 ```mermaid
 flowchart TD
-    subgraph Array A: Shape (3, 1, 5)
+    subgraph "Array A: Shape (3, 1, 5)"
         A1["Dim 0: 3"] --- A2["Dim 1: 1"] --- A3["Dim 2: 5"]
     end
-    subgraph Array B: Shape (4, 5)
+    subgraph "Array B: Shape (4, 5)"
         B0["Prepended: 1"] --- B1["Dim 0: 4"] --- B2["Dim 1: 5"]
     end
-    subgraph Broadcast Output: Shape (3, 4, 5)
+    subgraph "Broadcast Output: Shape (3, 4, 5)"
         O1["Dim 0: max(3, 1) = 3"] --- O2["Dim 1: max(1, 4) = 4"] --- O3["Dim 2: max(5, 5) = 5"]
     end
     A1 & B0 --> O1

@@ -16,7 +16,7 @@ flowchart TD
     subgraph Raw Data Ingestion
         RAW["Raw Uncleaned Records"] --> VAL["Schema Validation & Data Contracts (Pydantic / Great Expectations)"]
     end
-    subgraph Cleaning & Remediation
+    subgraph "Cleaning & Remediation"
         VAL --> DEDUP["Deduplication (Exact Hashing & Fuzzy MinHash/LSH)"]
         DEDUP --> MISS["Missing Data Imputation (MCAR / MAR / MNAR Analysis, KNN, MICE)"]
         MISS --> OUT["Multivariate Outlier Detection (Mahalanobis Distance, Isolation Forest)"]

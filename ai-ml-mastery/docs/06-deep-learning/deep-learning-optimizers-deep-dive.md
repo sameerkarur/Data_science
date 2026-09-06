@@ -131,7 +131,7 @@ $$
 
 ```mermaid
 flowchart LR
-    P0["Position θ_{t-1}"] -->|Momentum Step: -β v_{t-1}| LA["Lookahead: θ_{t-1} - β v_{t-1}"]
+    P0["Position θ_{t-1}"] -->|"Momentum Step: -β v_{t-1}"| LA["Lookahead: θ_{t-1} - β v_{t-1}"]
     LA -->|Lookahead Gradient: -η ∇L| P1["Next Position θ_t"]
     P0 -. "Direct Classical Momentum" .-> P1
 ```

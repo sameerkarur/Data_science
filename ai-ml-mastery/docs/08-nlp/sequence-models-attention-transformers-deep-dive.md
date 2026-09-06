@@ -17,12 +17,12 @@ The architecture of sequence modeling evolved through three foundational eras:
 
 ```mermaid
 flowchart TD
-    subgraph Recurrent Paradigm (O(T) Sequential Steps)
+    subgraph "Recurrent Paradigm (O(T) Sequential Steps)"
         RNN["Vanilla RNN: h_t = tanh(W_hh h_{t-1} + W_xh x_t)"] -. "Vanishing / Exploding Gradients" .-> LSTM["LSTM / GRU: Gated Additive Highway C_t = f_t ⊙ C_{t-1} + i_t ⊙ C̃_t"]
         LSTM --> SEQ2SEQ["Seq2Seq Encoder-Decoder: Fixed Vector Bottleneck c = h_T"]
     end
 
-    subgraph Attention Paradigm (Dynamic Memory Routing)
+    subgraph "Attention Paradigm (Dynamic Memory Routing)"
         SEQ2SEQ -. "Dynamic Attention" .-> BAH["Additive / Multiplicative Attention (Bahdanau / Luong)"]
         BAH -. "Eliminate Recurrence Entirely" .-> TRANS["Transformer: Scaled Dot-Product Self-Attention Attention(Q,K,V) = softmax(QKᵀ / √d_k) V"]
     end

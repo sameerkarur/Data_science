@@ -1,0 +1,119 @@
+site_name: AI/ML Mastery Program
+site_description: A complete, deep-dive AI/ML curriculum — from Python internals to production AI systems.
+site_author: Your Name
+repo_url: https://github.com/YOUR_USERNAME/YOUR_REPO
+repo_name: YOUR_USERNAME/YOUR_REPO
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  font:
+    text: Inter
+    code: JetBrains Mono
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - navigation.footer
+    - navigation.instant
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - toc.follow
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - md_in_html
+  - footnotes
+  - tables
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+plugins:
+  - search
+
+nav:
+  - Home: index.md
+  - Book 0 – CS Foundations:
+      - Overview: 00-computer-science/index.md
+      - "Deep-dive: How Computers Execute Programs": 00-computer-science/how-computers-execute-programs.md
+      - "Deep-dive: Arrays": 00-computer-science/arrays-deep-dive.md
+      - "Deep-dive: Linked Lists, Stacks & Queues": 00-computer-science/linked-lists-stacks-queues-deep-dive.md
+      - "Deep-dive: Hash Tables & Sets": 00-computer-science/hash-tables-sets-deep-dive.md
+      - "Deep-dive: Trees (Binary, BST, Heaps)": 00-computer-science/trees-deep-dive.md
+      - "Deep-dive: Graphs & Tries": 00-computer-science/graphs-tries-deep-dive.md
+      - "Deep-dive: Algorithms (Big-O, Searching, Sorting, Recursion, Greedy, DP, Graphs)": 00-computer-science/algorithms-deep-dive.md
+  - Book 1 – Python:
+      - Overview: 01-python/index.md
+      - "Deep-dive: Fundamentals, Control Flow & Collections": 01-python/fundamentals-control-flow-collections-deep-dive.md
+      - "Deep-dive: Functions": 01-python/functions-deep-dive.md
+      - "Deep-dive: OOP": 01-python/oop-deep-dive.md
+      - "Deep-dive: Advanced Python (Iterators, Generators, Async, Concurrency)": 01-python/advanced-python-deep-dive.md
+      - "Deep-dive: Python Internals (CPython, Bytecode, GC, GIL)": 01-python/internals-deep-dive.md
+  - Book 2 – Mathematics:
+      - Overview: 02-mathematics/index.md
+      - "Deep-dive: Foundations of Mathematics": 02-mathematics/foundations-math-deep-dive.md
+  - Book 3 – Data Engineering: 03-data-engineering/index.md
+  - Book 4 – Classical ML:
+      - Overview: 04-classical-ml/index.md
+      - "Deep-dive: Linear Regression": 04-classical-ml/linear-regression-deep-dive.md
+  - Book 5 – ML Theory & Evaluation: 05-ml-theory/index.md
+  - Book 6 – Deep Learning: 06-deep-learning/index.md
+  - Book 7 – Computer Vision: 07-computer-vision/index.md
+  - Book 8 – NLP: 08-nlp/index.md
+  - Book 9 – Transformers & LLMs: 09-transformers-llms/index.md
+  - Book 10 – Generative AI: 10-generative-ai/index.md
+  - Book 11 – AI Agents: 11-ai-agents/index.md
+  - Book 12 – MLOps: 12-mlops/index.md
+  - Book 13 – AI System Design: 13-ai-system-design/index.md
+  - Book 14 – Projects & Interview: 14-projects/index.md

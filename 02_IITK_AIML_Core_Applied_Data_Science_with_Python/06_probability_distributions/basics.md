@@ -1,21 +1,29 @@
-# Probability & Distributions — Basics & Cheat Sheet
+# Probability Theory & Parametric Distributions
+**Comprehensive Architectural Guide & Execution Foundations**
 
-## Overview
-Normal, Bernoulli, PDF/CDF
+---
 
-## Key concepts
-- Core ideas for Probability & Distributions
-- Used in AIML interviews and projects
+## 📌 Executive Architecture & Visual Flowchart
 
-## Code snippets
-```python
-from scipy.stats import norm
-norm.pdf(0)
+```
+                    BAYESIAN INFERENCE PIPELINE
+            Prior Knowledge P(θ)  ×  Observed Likelihood P(D|θ)
+    ──────────────────────────────────────────────────────────────────
+                        Marginal Evidence P(D)
+                                  │
+                                  ▼
+                    Posterior Distribution P(θ|D)
 ```
 
-## Common interview topics
-See `interview_qa.md` in this folder.
+---
 
-## Next steps
-- Complete `practice.ipynb`
-- Review course project in `../projects/`
+## 🧭 Deep Theoretical Foundations
+
+### 1. Bayes' Theorem & Conditional Probability
+$$P(A | B) = rac{P(B | A) \cdot P(A)}{P(B)}$$
+Forms the probabilistic engine for Naive Bayes classifiers, Bayesian optimization, and Kalman filters.
+
+### 2. Core Distribution Taxonomies
+- **Binomial Distribution:** $P(X = k) = inom{n}{k} p^k (1-p)^{n-k}$ (Discrete binary success rate).
+- **Poisson Distribution:** $P(X = k) = rac{\lambda^k e^{-\lambda}}{k!}$ (Arrival rate in fixed intervals).
+- **Normal (Gaussian) Distribution:** $f(x) = rac{1}{\sigma \sqrt{2\pi}} e^{-rac{1}{2}\left(rac{x-\mu}{\sigma}ight)^2}$.

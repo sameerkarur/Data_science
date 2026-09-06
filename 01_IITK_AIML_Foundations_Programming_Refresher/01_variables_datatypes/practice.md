@@ -128,7 +128,7 @@
 
 **Q48.** Create variable annotations: `count: int = 0` and print annotation.
 
-**Q49.** Simulate `input` with variable `name='Sameer'` and greet.
+**Q49.** Simulate `input` with variable `user_name = 'Alex'` and greet.
 
 **Q50.** Combine types in f-string: int, float, bool in one line.
 

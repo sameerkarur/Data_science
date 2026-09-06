@@ -1,20 +1,27 @@
-# Data Wrangling & Cleaning — Basics & Cheat Sheet
+# Data Wrangling, Imputation & Outlier Engineering
+**Comprehensive Architectural Guide & Execution Foundations**
 
-## Overview
-Cleaning, transforming, feature prep
+---
 
-## Key concepts
-- Core ideas for Data Wrangling & Cleaning
-- Used in AIML interviews and projects
+## 📌 Executive Architecture & Visual Flowchart
 
-## Code snippets
-```python
-df.dropna(); df.fillna(0)
+```
+                 DATA CLEANING & IMPUTATION LIFECYCLE
+       Raw Data ──► Detect Missingness Patterns:
+                      ├── MCAR (Missing Completely at Random)
+                      ├── MAR  (Missing at Random)
+                      └── MNAR (Missing Not at Random)
+                           │
+       Screen Outliers via IQR Tukey Fences / Z-score
+                           │
+       Apply Domain Scalers (StandardScaler / RobustScaler)
 ```
 
-## Common interview topics
-See `interview_qa.md` in this folder.
+---
 
-## Next steps
-- Complete `practice.ipynb`
-- Review course project in `../projects/`
+## 🧭 Deep Theoretical Foundations
+
+### 1. Tukey's Fences for Outlier Detection
+$$	ext{IQR} = Q_3 - Q_1$$
+$$	ext{Lower Bound} = Q_1 - 1.5 	imes 	ext{IQR}, \quad 	ext{Upper Bound} = Q_3 + 1.5 	imes 	ext{IQR}$$
+Points outside these bounds are flagged as distributional anomalies.

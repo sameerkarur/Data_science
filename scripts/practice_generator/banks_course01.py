@@ -62,7 +62,7 @@ VARIABLES_QUESTIONS = [
     _q("Section 5: Mixed challenges", "Use `ord('A')` and `chr(65)` to show ASCII mapping.", "print(ord('A'), chr(65))"),
     _q("Section 5: Mixed challenges", "Evaluate truthiness of `None or 0 or '' or 'ok'`.", "print(None or 0 or '' or 'ok')"),
     _q("Section 5: Mixed challenges", "Create variable annotations: `count: int = 0` and print annotation.", "count: int = 0\nprint(count, count.__annotations__ if hasattr(count, '__annotations__') else type(count))"),
-    _q("Section 5: Mixed challenges", "Simulate `input` with variable `name='Sameer'` and greet.", "name = 'Sameer'\nprint(f'Hello, {name}!')"),
+    _q("Section 5: Mixed challenges", "Simulate `input` with variable `user_name='Alex'` and greet.", "user_name = 'Alex'\nprint(f'Hello, {name}!')"),
     _q("Section 5: Mixed challenges", "Combine types in f-string: int, float, bool in one line.", "print(f'{42=}, {3.14=}, {True=}')"),
 ]
 
@@ -123,7 +123,7 @@ CONTROL_FLOW_QUESTIONS = [
     _q("Section 2: Loops", "Loop `else`: search for 7 in list, print 'not found' in else.", "for x in [1, 2, 3]:\n    if x == 7:\n        print('found')\n        break\nelse:\n    print('not found')"),
     _q("Section 2: Loops", "Iterate dict `{'a':1,'b':2}` keys, values, items.", "d = {'a': 1, 'b': 2}\nfor k in d: print('k', k)\nfor v in d.values(): print('v', v)\nfor k, v in d.items(): print(k, v)"),
     _q("Section 3: Functions basics", "Define `add(a,b)` returning sum. Call with 3,4.", "def add(a, b):\n    return a + b\nprint(add(3, 4))"),
-    _q("Section 3: Functions basics", "Function with default arg `greet(name='World')`.", "def greet(name='World'):\n    return f'Hello, {name}!'\nprint(greet(), greet('Sameer'))"),
+    _q("Section 3: Functions basics", "Function with default arg `greet(name='World')`.", "def greet(name='World'):\n    return f'Hello, {name}!'\nprint(greet(), greet('Engineer'))"),
     _q("Section 3: Functions basics", "Use *args to sum arbitrary numbers.", "def sum_all(*args):\n    return sum(args)\nprint(sum_all(1, 2, 3, 4))"),
     _q("Section 3: Functions basics", "Use **kwargs to build formatted string.", "def show(**kwargs):\n    return ', '.join(f'{k}={v}' for k, v in kwargs.items())\nprint(show(a=1, b=2))"),
     _q("Section 3: Functions basics", "Return multiple values: quotient and remainder.", "def divmod2(a, b):\n    return a // b, a % b\nprint(divmod2(17, 5))"),

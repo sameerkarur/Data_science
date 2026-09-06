@@ -180,6 +180,14 @@ def generate_guides_view_html() -> str:
           <div class="guide-card-meta">README.md · 12KB</div>
           <button class="btn-guide-launch">Read README ↗</button>
         </div>
+
+        <div class="guide-card" onclick="openStandaloneDoc('LEARNING_JOURNEY.md', 'Learning Journey, Experience & Simplilearn Attribution')">
+          <div class="guide-card-icon">🎓</div>
+          <h3 class="guide-card-title">Learning Journey & Attribution</h3>
+          <p class="guide-card-desc">Personal coursework experience, Simplilearn and IIT Kanpur acknowledgments, engineering philosophy, and copyright fair-use terms.</p>
+          <div class="guide-card-meta">LEARNING_JOURNEY.md · Educational Fair Use</div>
+          <button class="btn-guide-launch">Read Learning Journey ↗</button>
+        </div>
       </div>
     </div>"""
 
@@ -594,6 +602,76 @@ extra_css = """
       background: rgba(56, 189, 248, 0.15);
       border-color: #38bdf8;
     }
+
+    /* Attribution & Academic Collaboration Footer */
+    .app-attribution-footer {
+      max-width: 1200px;
+      margin: 4.5rem auto 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+    .attribution-card {
+      background: linear-gradient(180deg, #111827 0%, #0b0f19 100%);
+      border: 1px solid #1f2937;
+      border-radius: 1rem;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.5);
+    }
+    .attribution-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 0.3rem 0.85rem;
+      border-radius: 9999px;
+      margin-bottom: 1rem;
+    }
+    .attribution-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #f8fafc;
+      margin-bottom: 0.85rem;
+    }
+    .attribution-desc {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      max-width: 880px;
+      margin: 0 auto 0.85rem auto;
+      line-height: 1.65;
+    }
+    .attribution-sub {
+      font-size: 0.84rem;
+      color: #94a3b8;
+      max-width: 820px;
+      margin: 0 auto 1.5rem auto;
+      line-height: 1.6;
+    }
+    .attribution-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      align-items: center;
+    }
+    .btn-attribution-modal {
+      padding: 0.65rem 1.25rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-attribution-modal:hover {
+      filter: brightness(1.15);
+      box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.4);
+    }
 """
 
 updated_switch_nav = """
@@ -772,6 +850,62 @@ def build():
         head_html,
     )
     head_html = head_html.replace('closeDomainModal();', '')
+
+    # Fix relative project links that 404 in raw/preview
+    head_html = head_html.replace(
+        'href="01_IITK_AIML_Foundations_Programming_Refresher/projects/Personal_Expense_Tracker/" target="_blank">View Project Folder</a>',
+        'href="https://github.com/sameerkarur/Data_science/tree/main/01_IITK_AIML_Foundations_Programming_Refresher/projects/Personal_Expense_Tracker" target="_blank">View on GitHub</a>'
+    )
+    head_html = head_html.replace(
+        'href="01_IITK_AIML_Foundations_Programming_Refresher/projects/Task_Manager/" target="_blank">View Project Folder</a>',
+        'href="https://github.com/sameerkarur/Data_science/tree/main/01_IITK_AIML_Foundations_Programming_Refresher/projects/Task_Manager" target="_blank">View on GitHub</a>'
+    )
+
+    # Add Learning Journey tab to navigation
+    head_html = head_html.replace(
+        '<button class="nav-tab" onclick="switchNavSection(\'theory\', this)">📖 Master Guides</button>',
+        '<button class="nav-tab" onclick="switchNavSection(\'theory\', this)">📖 Master Guides</button>\n      <button class="nav-tab" onclick="openStandaloneDoc(\'LEARNING_JOURNEY.md\', \'Learning Journey, Experience & Simplilearn Attribution\')">🎓 Learning Journey</button>'
+    )
+
+    # Update title and header branding
+    head_html = head_html.replace(
+        '<title>AI/ML Practice Academy — Sameer Karur</title>',
+        '<title>AI/ML Practice Academy — Machine Learning & Generative AI Studio</title>'
+    )
+    head_html = head_html.replace(
+        '<span>IITK AIML Professional Certificate · Sameer Karur</span>',
+        '<span>IITK AIML Professional Certificate · Comprehensive Learning Studio</span>'
+    )
+
+    # Replace footer with comprehensive attribution and gratitude block
+    attribution_footer = """  <!-- CURRICULUM ATTRIBUTION & FAIR USE FOOTER -->
+  <footer class="app-attribution-footer">
+    <div class="attribution-card">
+      <div class="attribution-badge">🎓 Academic Collaboration & Coursework Synthesis</div>
+      <h4 class="attribution-title">Learning Journey, Educational Synthesis & Simplilearn Attribution</h4>
+      <p class="attribution-desc">
+        This interactive studio, 1,650+ practice problems, 990+ interview flashcards, and dual-architecture project implementations were independently synthesized and engineered as a self-study mastery resource while completing the <strong>Professional Certificate Program in Generative AI and Machine Learning</strong>, delivered by <strong>Simplilearn</strong> in academic collaboration with <strong>E&ICT Academy, IIT Kanpur</strong>.
+      </p>
+      <p class="attribution-sub">
+        Special thanks and profound gratitude to <strong>Simplilearn</strong> for providing the structured curriculum, live faculty mentorship, and industrial problem statements, and to <strong>IIT Kanpur</strong> for foundational theoretical guidance. All curriculum titles, program syllabi, and trademarks belong to their respective holders. Published strictly under <strong>Educational Fair Use</strong>.
+      </p>
+      <div class="attribution-actions">
+        <button class="btn-attribution-modal" onclick="openStandaloneDoc('LEARNING_JOURNEY.md', 'Learning Journey, Experience & Simplilearn Attribution')">
+          📖 Read Full Learning Journey & Experience Writeup ↗
+        </button>
+        <a href="https://github.com/sameerkarur/Data_science" target="_blank" class="nav-github-link">
+          ⭐ Star on GitHub (Support More Free Educational Guides)
+        </a>
+      </div>
+    </div>
+  </footer>"""
+
+    head_html = re.sub(
+        r'<footer>[\s\S]*?</footer>',
+        attribution_footer,
+        head_html,
+        count=1,
+    )
 
     # Replace switchNavSection in script
     old_switch_re = re.compile(

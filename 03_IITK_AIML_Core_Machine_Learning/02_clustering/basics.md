@@ -1,20 +1,33 @@
-# Clustering (K-Means, Hierarchical) — Basics & Cheat Sheet
+# Unsupervised Clustering & Density-Based Partitioning
+**Comprehensive Architectural Guide & Execution Foundations**
 
-## Overview
-Practice for Clustering (K-Means, Hierarchical)
+---
 
-## Key concepts
-- Core ideas for Clustering (K-Means, Hierarchical)
-- Used in AIML interviews and projects
+## 📌 Executive Architecture & Visual Flowchart
 
-## Code snippets
-```python
-# your code
+```
+                 K-MEANS++ INITIALIZATION & VORONOI TESSELLATION
+       Choose Initial Centroid c₁ Uniformly at Random
+                           │
+       Compute Squared Distance D(x)² from Nearest Centroid
+                           │
+       Sample Next Centroid cᵢ with Probability P(x) = D(x)² / Σ D(x')²
+                           │
+       Iterate: E-Step (Voronoi Assignment) ➔ M-Step (Mean Relocation)
+                           │
+       Convergence: Centroid Drift Δc < Tolerance ε
 ```
 
-## Common interview topics
-See `interview_qa.md` in this folder.
+---
 
-## Next steps
-- Complete `practice.ipynb`
-- Review course project in `../projects/`
+## 🧭 Deep Theoretical Foundations
+
+### 1. K-Means Objective (Inertia)
+$$\mathcal{J} = \sum_{k=1}^K \sum_{x \in S_k} \| x - \mu_k \|^2$$
+K-Means minimizes within-cluster sum of squares, assuming spherical clusters with isotropic variance.
+
+### 2. Density-Based Clustering (DBSCAN & HDBSCAN)
+Unlike K-Means, DBSCAN separates dense regions from sparse noise:
+- Core Point: At least `min_samples` within radius $\epsilon$.
+- Border Point: Within $\epsilon$ of a core point.
+- Noise Point: Neither; filtered out as an anomaly.

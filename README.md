@@ -7,6 +7,16 @@ Folder layout matches the Simplilearn LMS learning path (mandatory courses + ele
 
 ---
 
+## 🎓 Academic Collaboration, Simplilearn Attribution & Educational Fair Use
+
+👉 **Read [LEARNING_JOURNEY.md](LEARNING_JOURNEY.md)** for:
+- Detailed narrative of the coursework journey across all mandatory courses and electives.
+- Sincere appreciation and gratitude to **Simplilearn** for curriculum structure, live masterclasses, and industrial problem statements.
+- Gratitude to distinguished faculty at **E&ICT Academy, IIT Kanpur** for academic rigor and theoretical foundations.
+- Clarification on independent synthesis, educational non-commercial purpose, and open-source terms.
+
+---
+
 ## 🌐 Interactive Practice Web View
 
 > 💡 **Quick Launch:** Jump straight into the interactive visual course explorer with full subtopic roadmaps, 1,650+ practice problems, step-by-step solutions, and project deliverables.
@@ -107,13 +117,12 @@ jupyter notebook
 
 ---
 
-## Current Status & Next Steps
+## Program Structure & Specialization Tracks
 
-- ✅ **Courses 1 to 5** — All self-learning, assessments, and projects passed.
-- ✅ **Course 6** — Both projects packaged and submitted.
-- ✅ **Course 7 Capstone** — All 3 projects completed and deliverables staged in `lms_upload/`.
-- 🔄 **Electives 2 & 3** — Registered; live sessions scheduled from Sep 19 to Nov 1, 2026.
-- 🔄 **Electives 1 & 4** — Coordinating with POC regarding session recordings.
+- ✅ **Courses 1 to 5:** Programming Refresher, Applied Data Science, Classical ML, Deep Learning & Prompt Engineering.
+- ✅ **Course 6:** Advanced Generative AI (RAG with ChromaDB & Multimodal Generative Studio).
+- ✅ **Course 7 Capstone:** Autonomous Driving Perception, 365-Day Hierarchical Sales Forecasting & Heritage Tourism Recommender.
+- 🚀 **Elective Tracks:** Advanced Computer Vision, NLP & Speech Recognition, Reinforcement Learning, Azure AI, and Academic Masterclasses.
 
 ---
 

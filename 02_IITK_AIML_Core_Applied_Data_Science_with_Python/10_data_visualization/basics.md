@@ -1,20 +1,27 @@
-# Data Visualization — Basics & Cheat Sheet
+# Data Visualization & Matplotlib/Seaborn Architecture
+**Comprehensive Architectural Guide & Execution Foundations**
 
-## Overview
-Practice for Data Visualization
+---
 
-## Key concepts
-- Core ideas for Data Visualization
-- Used in AIML interviews and projects
+## 📌 Executive Architecture & Visual Flowchart
 
-## Code snippets
-```python
-# your code
+Matplotlib visual graphics follow an explicit hierarchical **Artist Tree**.
+
+```
+                    MATPLOTLIB ARTIST OBJECT TREE
+    ┌────────────────────────────────────────────────────────┐
+    │ Figure (The Canvas Container)                          │
+    │  └── Axes (The Actual Plotting Area / Coordinate Space)│
+    │       ├── XAxis & YAxis (Ticks, TickLabels, Scale)     │
+    │       ├── Line2D / BarContainer (The Data Plots)       │
+    │       ├── Legend & Title Text Objects                  │
+    └────────────────────────────────────────────────────────┘
 ```
 
-## Common interview topics
-See `interview_qa.md` in this folder.
+---
 
-## Next steps
-- Complete `practice.ipynb`
-- Review course project in `../projects/`
+## 🧭 Deep Theoretical Foundations
+
+### Figure vs Axes Mechanics
+- `Figure`: The top-level window or file surface (`plt.figure()`).
+- `Axes`: The coordinate system containing data lines, bars, contours, and coordinate transforms (`fig.subplots()`). Always use the object-oriented API (`ax.plot()`) rather than stateful `plt.plot()`.

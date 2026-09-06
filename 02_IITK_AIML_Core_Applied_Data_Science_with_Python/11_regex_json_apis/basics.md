@@ -1,21 +1,24 @@
-# Regex, JSON & REST APIs — Basics & Cheat Sheet
+# Regex Engines, JSON Streaming & Web API Extraction
+**Comprehensive Architectural Guide & Execution Foundations**
 
-## Overview
-re module, JSON, REST
+---
 
-## Key concepts
-- Core ideas for Regex, JSON & REST APIs
-- Used in AIML interviews and projects
+## 📌 Executive Architecture & Visual Flowchart
 
-## Code snippets
-```python
-import re, json
-re.findall(r'\d+', text)
+```
+                  REST API EXTRACTION & BACKOFF PIPELINE
+       Client Request ──► Send HTTPS GET / POST
+                                │
+                      Status 429 / 503?
+                      ├── YES ──► Sleep = Base × (2 ^ attempt) + Jitter
+                      │           Retry Request!
+                      │
+                      └── NO  ──► Parse JSON Payload via Streaming Parser
 ```
 
-## Common interview topics
-See `interview_qa.md` in this folder.
+---
 
-## Next steps
-- Complete `practice.ipynb`
-- Review course project in `../projects/`
+## 🧭 Deep Theoretical Foundations
+
+### Regular Expression Engines & Catastrophic Backtracking
+Python's `re` module uses a Non-Deterministic Finite Automaton (NFA). Pathological patterns like `(a+)+b` tested against `aaaaX` lead to $O(2^n)$ exponential backtracking complexity. Use atomic grouping, possessive quantifiers, or non-overlapping token anchors.

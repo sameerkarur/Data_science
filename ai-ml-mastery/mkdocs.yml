@@ -5,8 +5,15 @@ repo_url: https://github.com/sameerkarur/Data_science
 repo_name: sameerkarur/Data_science
 edit_uri: edit/main/docs/
 
+copyright: >
+  Study notes written from scratch while completing the Professional Certificate
+  Program in AI &amp; Machine Learning — Simplilearn in collaboration with
+  E&amp;ICT Academy, IIT Kanpur. All explanations, diagrams and code are original
+  work; no course material is reproduced.
+
 theme:
   name: material
+  custom_dir: overrides
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -45,6 +52,17 @@ theme:
 
 extra_css:
   - stylesheets/extra.css
+
+extra:
+  # Razorpay Payment Page / Payment Link. This is the single place the
+  # site-wide "Support me" banner and end-of-chapter card read from.
+  # Safe to publish: a hosted payment URL exposes no API credentials.
+  support_url: "REPLACE_WITH_RAZORPAY_PAYMENT_PAGE_URL"
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/sameerkarur/Data_science
+      name: Source repository
+  generator: false
 
 markdown_extensions:
   - toc:

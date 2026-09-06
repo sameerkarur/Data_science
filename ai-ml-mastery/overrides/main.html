@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{#
+  Site-wide chrome for the AI/ML Mastery Program.
+
+  Two support call-to-actions are injected on every page:
+    1. A dismissible announcement bar pinned above the header.
+    2. A closing card rendered after the chapter body.
+
+  The destination is read from `extra.support_url` in mkdocs.yml so the
+  payment link lives in exactly one place.
+#}
+
+{% block announce %}
+  {% if config.extra.support_url %}
+    <div class="support-announce">
+      <span class="support-announce__text">
+        This entire curriculum is free and always will be.
+      </span>
+      <a
+        class="support-announce__cta"
+        href="{{ config.extra.support_url }}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Support me
+      </a>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {{ super() }}
+
+  {% if config.extra.support_url %}
+    <aside class="support-card">
+      <div class="support-card__body">
+        <h2 class="support-card__title">Found this chapter useful?</h2>
+        <p class="support-card__text">
+          Every book here is written and maintained by one person, and it stays
+          free for everyone. If it helped you learn something, a contribution
+          funds the time that goes into the next chapter.
+        </p>
+        <div class="support-card__actions">
+          <a
+            class="support-card__button support-card__button--primary"
+            href="{{ config.extra.support_url }}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Support this project
+          </a>
+          {% if config.repo_url %}
+            <a
+              class="support-card__button support-card__button--ghost"
+              href="{{ config.repo_url }}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Star it on GitHub
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </aside>
+  {% endif %}
+{% endblock %}

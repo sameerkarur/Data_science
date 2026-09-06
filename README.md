@@ -17,19 +17,39 @@ Folder layout matches the Simplilearn LMS learning path (mandatory courses + ele
 
 ---
 
-## 🌐 Interactive Practice Web View
+## 🌐 AI/ML Mastery Program — Read it as a book
 
-> 💡 **Quick Launch:** Jump straight into the interactive visual course explorer with full subtopic roadmaps, 1,650+ practice problems, step-by-step solutions, and project deliverables.
+🚀 **[Open the curriculum site →](https://sameerkarur.github.io/Data_science/)**
 
-- 🚀 **[Click Here for Live Web View (GitHub Pages)](https://sameerkarur.github.io/Data_science/)** *(Recommended — opens fully rendered interactive dashboard)*
-- 🌐 **[Instant Web Preview (HTMLPreview)](https://htmlpreview.github.io/?https://github.com/sameerkarur/Data_science/blob/main/index.html)** *(Alternative direct render in browser)*
-- 💻 **Local / Offline View:** Double-click [`index.html`](index.html) in your file manager or browser.
+A 15-book deep-dive curriculum that runs from binary arithmetic and CPython
+internals all the way to transformers, RAG, agents, MLOps and AI system design.
+Published as a documentation site, so every chapter is a real rendered page —
+full-text search, dark mode, Mermaid diagrams, typeset LaTeX and copyable code.
 
-*(Note: Clicking raw `index.html` inside GitHub displays source code. To view as a webpage, use the live links above or enable GitHub Pages in repo Settings → Pages → main branch).*
+| | Books |
+|---|---|
+| **Foundations** | 0 · CS Foundations — 1 · Python — 2 · Mathematics — 3 · Data Engineering |
+| **Machine learning** | 4 · Classical ML — 5 · ML Theory & Evaluation — 6 · Deep Learning |
+| **Domains** | 7 · Computer Vision — 8 · NLP — 9 · Transformers & LLMs |
+| **Applied AI** | 10 · Generative AI — 11 · AI Agents — 12 · MLOps — 13 · AI System Design |
+| **Practice** | 14 · Projects & Interview Question Banks |
 
-- 📚 **Interactive Course Navigation:** Jump directly to any `practice.ipynb` or `solutions.ipynb` notebook across all courses.
-- 🎯 **1,650+ Curated Problems:** Systematic progression through Python, NumPy, Pandas, Matplotlib, Seaborn, ML, DL, and GenAI (including Course 6 RAG, Vector DBs & Multimodal).
-- 💼 **Project Deliverables & V2 Suite:** One-click links to all foundational deliverables and the 15 next-generation `projects_version2/` architectures.
+Every deep-dive chapter follows the same ladder: prerequisites → intuition →
+mathematical derivation → multiple code implementations → internals → debugging
+→ optimization → real-world use → interview questions → mastery checklist.
+
+The site is free and always will be. If it helps you, there's a **Support me**
+link on every page.
+
+**Building the site locally:**
+
+```bash
+pip install mkdocs-material pymdown-extensions
+mkdocs serve        # http://127.0.0.1:8000
+```
+
+Source lives in [`ai-ml-mastery/`](ai-ml-mastery/) (`docs/` for chapters,
+`overrides/` for theme, `mkdocs.yml` for config).
 
 ---
 
@@ -110,7 +130,7 @@ git lfs install && git lfs pull   # large Home Loan dataset
 jupyter notebook
 ```
 
-1. Open **[index.html](index.html)** or pick a course folder above  
+1. Read the **[AI/ML Mastery Program](https://sameerkarur.github.io/Data_science/)** curriculum site, or pick a course folder above  
 2. Read **[LEARNING_GUIDE.md](LEARNING_GUIDE.md)** for foundational theory and interview preparation  
 3. Read **[PRACTICE_GUIDE.md](PRACTICE_GUIDE.md)** for day-by-day practice workflow  
 4. Explore **[`projects_version2/`](projects_version2/)** for advanced implementations

@@ -11,15 +11,15 @@ Every concept here is built to connect directly to an ML mechanism.
 
 ## Linear Algebra
 
-- [ ] Scalars, vectors, matrices, tensors
-- [ ] Dot product & matrix multiplication
-- [ ] Transpose, inverse, rank
-- [ ] Linear independence, basis, span
-- [ ] Eigenvalues & eigenvectors
-- [ ] Orthogonality & projections
-- [ ] Norms
-- [ ] SVD
-- [ ] PCA mathematics
+- [x] [Scalars, vectors, matrices, tensors](linear-algebra-deep-dive.md#31-scalars-vectors-matrices-and-tensors)
+- [x] [Dot product & matrix multiplication](linear-algebra-deep-dive.md#32-dot-product-cosine-similarity-and-orthogonality)
+- [x] [Transpose, inverse, rank](linear-algebra-deep-dive.md#33-linear-independence-span-basis-and-rank)
+- [x] [Linear independence, basis, span](linear-algebra-deep-dive.md#33-linear-independence-span-basis-and-rank)
+- [x] [Eigenvalues & eigenvectors](linear-algebra-deep-dive.md#6-spectral-theory-eigenvalues-eigenvectors-and-eigendecomposition)
+- [x] [Orthogonality & projections](linear-algebra-deep-dive.md#5-orthogonality-projections-and-the-normal-equations)
+- [x] [Norms](linear-algebra-deep-dive.md#4-vector-and-matrix-norms)
+- [x] [SVD](linear-algebra-deep-dive.md#7-singular-value-decomposition-svd)
+- [x] [PCA mathematics](linear-algebra-deep-dive.md#8-principal-component-analysis-pca-full-mathematical-derivation)
 
 ## Calculus
 

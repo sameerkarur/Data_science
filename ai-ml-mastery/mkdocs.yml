@@ -103,6 +103,7 @@ nav:
   - Book 2 – Mathematics:
       - Overview: 02-mathematics/index.md
       - "Deep-dive: Foundations of Mathematics": 02-mathematics/foundations-math-deep-dive.md
+      - "Deep-dive: Linear Algebra": 02-mathematics/linear-algebra-deep-dive.md
   - Book 3 – Data Engineering: 03-data-engineering/index.md
   - Book 4 – Classical ML:
       - Overview: 04-classical-ml/index.md

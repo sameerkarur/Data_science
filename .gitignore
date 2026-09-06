@@ -42,4 +42,9 @@ datasets/shared/Home_loan_data.csv
 *.h5
 *.keras
 
+# MkDocs build and local dependencies
+pip_packages/
+site/
+
+
 

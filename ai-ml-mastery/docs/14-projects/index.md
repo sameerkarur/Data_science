@@ -4,29 +4,32 @@ Progressive projects, tier by tier, plus interview question banks per topic.
 
 ## Tier 1 — Python
 
-- [ ] Calculator
-- [ ] CLI application
-- [ ] File processor
-- [ ] Expense tracker
+- [x] [Calculator](foundational-applied-projects-tier-1-to-4-deep-dive.md)
+- [x] [CLI application](foundational-applied-projects-tier-1-to-4-deep-dive.md)
+- [x] [File processor](foundational-applied-projects-tier-1-to-4-deep-dive.md)
+- [x] [Expense tracker](foundational-applied-projects-tier-1-to-4-deep-dive.md)
 
 ## Tier 2 — Data
 
-- [ ] Data analysis project
-- [ ] Sales dashboard
-- [ ] Customer analytics
+- [x] [Data analysis project](foundational-applied-projects-tier-1-to-4-deep-dive.md)
+- [x] [Sales dashboard](foundational-applied-projects-tier-1-to-4-deep-dive.md)
+- [x] [Customer analytics](foundational-applied-projects-tier-1-to-4-deep-dive.md)
 
 ## Tier 3 — Classical ML
 
-- [ ] House price prediction
-- [ ] Customer churn
-- [ ] Fraud detection
-- [ ] Recommendation system
+- [x] [House price prediction](foundational-applied-projects-tier-1-to-4-deep-dive.md)
+- [x] [Customer churn](foundational-applied-projects-tier-1-to-4-deep-dive.md)
+- [x] [Fraud detection](foundational-applied-projects-tier-1-to-4-deep-dive.md)
+- [x] [Recommendation system](foundational-applied-projects-tier-1-to-4-deep-dive.md)
 
 ## Tier 4 — Deep Learning
 
-- [ ] Image classifier
-- [ ] Object detector
-- [ ] Sentiment classifier
+- [x] [Image classifier](foundational-applied-projects-tier-1-to-4-deep-dive.md)
+- [x] [Object detector](foundational-applied-projects-tier-1-to-4-deep-dive.md)
+- [x] [Sentiment classifier](foundational-applied-projects-tier-1-to-4-deep-dive.md)
+
+**Foundational Deep Dive:**
+- 📖 [Foundational Applied Projects (Tiers 1–4) Deep Dive](foundational-applied-projects-tier-1-to-4-deep-dive.md)
 
 ## Tier 5 — Transformers
 

@@ -14,10 +14,10 @@ How to know if a model is actually good.
 
 ## Metrics
 
-- [ ] Precision, recall, F1
-- [ ] ROC, AUC, PR-AUC
-- [ ] Calibration & confusion matrix
-- [ ] Regression metrics
+- [x] [Precision, recall, F1](evaluation-metrics-deep-dive.md)
+- [x] [ROC, AUC, PR-AUC](evaluation-metrics-deep-dive.md)
+- [x] [Calibration & confusion matrix](evaluation-metrics-deep-dive.md)
+- [x] [Regression metrics — full deep-dive](evaluation-metrics-deep-dive.md)
 
 ## Tuning
 

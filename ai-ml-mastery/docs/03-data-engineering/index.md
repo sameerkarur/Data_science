@@ -4,10 +4,10 @@ The unglamorous 80% of ML work.
 
 ## Python Data Ecosystem
 
-- [ ] NumPy
-- [ ] Pandas
-- [ ] Polars
-- [ ] Matplotlib / Seaborn / Plotly
+- [x] [NumPy](data-ecosystem-deep-dive.md#3-numpy-internals-strides-buffers-views-and-broadcasting)
+- [x] [Pandas](data-ecosystem-deep-dive.md#4-pandas-architecture-series-dataframe-and-the-blockmanager)
+- [x] [Polars](data-ecosystem-deep-dive.md#5-polars-apache-arrow-and-the-rust-multi-threaded-engine)
+- [x] [Matplotlib / Seaborn / Plotly](data-ecosystem-deep-dive.md#6-visualization-architecture-matplotlib-seaborn-and-plotly)
 
 ## Data Formats & Sources
 

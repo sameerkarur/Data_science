@@ -4402,10 +4402,12 @@
 </div>
 <hr />
 <h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
-<p>Between 2012 and 2020, computer vision underwent a structural revolution catalyzed by the ImageNet Large Scale Visual Recognition Challenge (ILSVRC). The timeline of modern Convolutional Neural Networks is the history of solving three fundamental bottlenecks:
-1. <strong>Vanishing/Exploding Gradients</strong>: Solved sequentially by ReLU, Batch Normalization, and Residual Connections.
-2. <strong>The Degradation Problem</strong>: Deeper plain networks performing worse on training data than shallow ones—solved definitively by <strong>ResNet's additive identity shortcuts</strong>.
-3. <strong>Computational &amp; Edge Efficiency</strong>: Enabling high-accuracy vision on edge devices and mobile phones via <strong>Depthwise Separable Convolutions (MobileNet)</strong> and <strong>Compound Scaling (EfficientNet)</strong>.</p>
+<p>Between 2012 and 2020, computer vision underwent a structural revolution catalyzed by the ImageNet Large Scale Visual Recognition Challenge (ILSVRC). The timeline of modern Convolutional Neural Networks is the history of solving three fundamental bottlenecks:</p>
+<ol>
+<li><strong>Vanishing/Exploding Gradients</strong>: Solved sequentially by ReLU, Batch Normalization, and Residual Connections.</li>
+<li><strong>The Degradation Problem</strong>: Deeper plain networks performing worse on training data than shallow ones—solved definitively by <strong>ResNet's additive identity shortcuts</strong>.</li>
+<li><strong>Computational &amp; Edge Efficiency</strong>: Enabling high-accuracy vision on edge devices and mobile phones via <strong>Depthwise Separable Convolutions (MobileNet)</strong> and <strong>Compound Scaling (EfficientNet)</strong>.</li>
+</ol>
 <p>Rather than training multimillion-parameter networks from scratch on limited domain datasets, the modern paradigm leverages <strong>Transfer Learning</strong>: using representations pretrained on millions of images (ImageNet, LAION) and fine-tuning them on target tasks with discriminative learning rates and warmup schedules.</p>
 <pre class="mermaid"><code>timeline
     title The CNN Architecture Evolution
@@ -4419,27 +4421,35 @@
 <hr />
 <h2 id="2-classical-cnn-architectural-timeline">2. Classical CNN Architectural Timeline<a class="headerlink" href="#2-classical-cnn-architectural-timeline" title="Permanent link">&para;</a></h2>
 <h3 id="21-lenet-5-lecun-et-al-1998">2.1 LeNet-5 (LeCun et al., 1998)<a class="headerlink" href="#21-lenet-5-lecun-et-al-1998" title="Permanent link">&para;</a></h3>
-<p>Yann LeCun's LeNet-5 processed <span class="arithmatex">\(32 \times 32\)</span> handwritten grayscale digits for automated banking check processing:
-- Architecture: <code>Input (32x32) -&gt; Conv (5x5) -&gt; AvgPool -&gt; Conv (5x5) -&gt; AvgPool -&gt; FC120 -&gt; FC84 -&gt; Output (10)</code>.
-- Key limitations: Used saturating Sigmoid/Tanh activations, average pooling, and had only <span class="arithmatex">\(\approx 60,000\)</span> parameters, limited by 1990s CPU compute.</p>
+<p>Yann LeCun's LeNet-5 processed <span class="arithmatex">\(32 \times 32\)</span> handwritten grayscale digits for automated banking check processing:</p>
+<ul>
+<li>Architecture: <code>Input (32x32) -&gt; Conv (5x5) -&gt; AvgPool -&gt; Conv (5x5) -&gt; AvgPool -&gt; FC120 -&gt; FC84 -&gt; Output (10)</code>.</li>
+<li>Key limitations: Used saturating Sigmoid/Tanh activations, average pooling, and had only <span class="arithmatex">\(\approx 60,000\)</span> parameters, limited by 1990s CPU compute.</li>
+</ul>
 <h3 id="22-alexnet-krizhevsky-sutskever-hinton-2012">2.2 AlexNet (Krizhevsky, Sutskever, Hinton, 2012)<a class="headerlink" href="#22-alexnet-krizhevsky-sutskever-hinton-2012" title="Permanent link">&para;</a></h3>
-<p>AlexNet won ILSVRC 2012 by an astonishing 10.8 percentage point margin, inaugurating the modern deep learning era:
-- <strong>Depth</strong>: 8 learned layers (5 convolutional, 3 dense).
-- <strong>GPU Parallelism</strong>: Split across two 3GB NVIDIA GeForce GTX 580 GPUs.
-- <strong>Architectural Innovations</strong>:
-  - Replaced Sigmoid with <strong>ReLU</strong>, preventing vanishing gradients and speeding up convergence by <span class="arithmatex">\(6\times\)</span>.
-  - Introduced <strong>Dropout (<span class="arithmatex">\(p=0.5\)</span>)</strong> in the dense layers to control overfitting on 60 million parameters.
-  - Used heavy data augmentations (random cropping, horizontal reflections, PCA color jittering).
-  - Used Max Pooling with stride (<span class="arithmatex">\(S=2, K=3\)</span>) rather than non-overlapping average pooling.</p>
+<p>AlexNet won ILSVRC 2012 by an astonishing 10.8 percentage point margin, inaugurating the modern deep learning era:</p>
+<ul>
+<li><strong>Depth</strong>: 8 learned layers (5 convolutional, 3 dense).</li>
+<li><strong>GPU Parallelism</strong>: Split across two 3GB NVIDIA GeForce GTX 580 GPUs.</li>
+<li><strong>Architectural Innovations</strong>:</li>
+<li>Replaced Sigmoid with <strong>ReLU</strong>, preventing vanishing gradients and speeding up convergence by <span class="arithmatex">\(6\times\)</span>.</li>
+<li>Introduced <strong>Dropout (<span class="arithmatex">\(p=0.5\)</span>)</strong> in the dense layers to control overfitting on 60 million parameters.</li>
+<li>Used heavy data augmentations (random cropping, horizontal reflections, PCA color jittering).</li>
+<li>Used Max Pooling with stride (<span class="arithmatex">\(S=2, K=3\)</span>) rather than non-overlapping average pooling.</li>
+</ul>
 <h3 id="23-vgg-network-simonyan-zisserman-2014">2.3 VGG Network (Simonyan &amp; Zisserman, 2014)<a class="headerlink" href="#23-vgg-network-simonyan-zisserman-2014" title="Permanent link">&para;</a></h3>
-<p>VGG established the fundamental design rule of modern modular CNNs:
-- <strong>Homogeneous Modular Design</strong>: Replaced arbitrary large filter sizes (<span class="arithmatex">\(11 \times 11\)</span>, <span class="arithmatex">\(7 \times 7\)</span>, <span class="arithmatex">\(5 \times 5\)</span>) strictly with uniform stacks of <strong><span class="arithmatex">\(3 \times 3\)</span> convolutions</strong> with stride 1 and padding 1, followed by <span class="arithmatex">\(2 \times 2\)</span> Max Pooling (stride 2).
-- <strong>Rule of Thumb</strong>: Whenever spatial dimensions are halved by pooling, the channel depth is doubled (<span class="arithmatex">\(64 \to 128 \to 256 \to 512\)</span>).
-- <strong>Bottleneck</strong>: The three fully connected layers (4096 <span class="arithmatex">\(\to\)</span> 4096 <span class="arithmatex">\(\to\)</span> 1000) contained <span class="arithmatex">\(&gt;100\)</span> million parameters, making VGG-16 (<span class="arithmatex">\(138\text{M}\)</span> parameters) computationally bloated.</p>
+<p>VGG established the fundamental design rule of modern modular CNNs:</p>
+<ul>
+<li><strong>Homogeneous Modular Design</strong>: Replaced arbitrary large filter sizes (<span class="arithmatex">\(11 \times 11\)</span>, <span class="arithmatex">\(7 \times 7\)</span>, <span class="arithmatex">\(5 \times 5\)</span>) strictly with uniform stacks of <strong><span class="arithmatex">\(3 \times 3\)</span> convolutions</strong> with stride 1 and padding 1, followed by <span class="arithmatex">\(2 \times 2\)</span> Max Pooling (stride 2).</li>
+<li><strong>Rule of Thumb</strong>: Whenever spatial dimensions are halved by pooling, the channel depth is doubled (<span class="arithmatex">\(64 \to 128 \to 256 \to 512\)</span>).</li>
+<li><strong>Bottleneck</strong>: The three fully connected layers (4096 <span class="arithmatex">\(\to\)</span> 4096 <span class="arithmatex">\(\to\)</span> 1000) contained <span class="arithmatex">\(&gt;100\)</span> million parameters, making VGG-16 (<span class="arithmatex">\(138\text{M}\)</span> parameters) computationally bloated.</li>
+</ul>
 <h3 id="24-inception-googlenet-szegedy-et-al-2014">2.4 Inception / GoogLeNet (Szegedy et al., 2014)<a class="headerlink" href="#24-inception-googlenet-szegedy-et-al-2014" title="Permanent link">&para;</a></h3>
-<p>GoogLeNet achieved 22 layers with only <span class="arithmatex">\(6.8\)</span> million parameters (a <span class="arithmatex">\(20\times\)</span> parameter reduction over AlexNet) through the <strong>Inception Block</strong>:
-- <strong>Multi-Scale Processing</strong>: Rather than choosing a single kernel size, an Inception block runs <span class="arithmatex">\(1 \times 1\)</span>, <span class="arithmatex">\(3 \times 3\)</span>, <span class="arithmatex">\(5 \times 5\)</span> convolutions and <span class="arithmatex">\(3 \times 3\)</span> max pooling in parallel on the same input, concatenating their output channels.
-- <strong><span class="arithmatex">\(1 \times 1\)</span> Bottleneck Convolutions</strong>: Performing <span class="arithmatex">\(3 \times 3\)</span> convolutions on high-dimensional channels (<span class="arithmatex">\(C=256\)</span>) is computationally prohibitive. A <span class="arithmatex">\(1 \times 1\)</span> convolution reduces channels first (<span class="arithmatex">\(256 \to 64\)</span>), applies the spatial <span class="arithmatex">\(3 \times 3\)</span> filter, and expands back.</p>
+<p>GoogLeNet achieved 22 layers with only <span class="arithmatex">\(6.8\)</span> million parameters (a <span class="arithmatex">\(20\times\)</span> parameter reduction over AlexNet) through the <strong>Inception Block</strong>:</p>
+<ul>
+<li><strong>Multi-Scale Processing</strong>: Rather than choosing a single kernel size, an Inception block runs <span class="arithmatex">\(1 \times 1\)</span>, <span class="arithmatex">\(3 \times 3\)</span>, <span class="arithmatex">\(5 \times 5\)</span> convolutions and <span class="arithmatex">\(3 \times 3\)</span> max pooling in parallel on the same input, concatenating their output channels.</li>
+<li><strong><span class="arithmatex">\(1 \times 1\)</span> Bottleneck Convolutions</strong>: Performing <span class="arithmatex">\(3 \times 3\)</span> convolutions on high-dimensional channels (<span class="arithmatex">\(C=256\)</span>) is computationally prohibitive. A <span class="arithmatex">\(1 \times 1\)</span> convolution reduces channels first (<span class="arithmatex">\(256 \to 64\)</span>), applies the spatial <span class="arithmatex">\(3 \times 3\)</span> filter, and expands back.</li>
+</ul>
 <pre class="mermaid"><code>flowchart TD
     IN["Input Feature Map"] --&gt; C1["1x1 Conv"]
     IN --&gt; R3["1x1 Conv (Reduce)"] --&gt; C3["3x3 Conv"]
@@ -4492,9 +4502,11 @@ By recursive substitution, the representation at any deeper layer <span class="a
 \frac{\partial \mathcal{E}}{\partial \mathbf{x}_l} = \frac{\partial \mathcal{E}}{\partial \mathbf{x}_L} + \frac{\partial \mathcal{E}}{\partial \mathbf{x}_L} \left( \sum_{i=l}^{L-1} \frac{\partial \mathcal{F}(\mathbf{x}_i, \mathcal{W}_i)}{\partial \mathbf{x}_l} \right)
 \]</div>
 <p><strong>The Core Insight:</strong><br />
-The gradient <span class="arithmatex">\(\frac{\partial \mathcal{E}}{\partial \mathbf{x}_l}\)</span> decomposes into two additive terms:
-1. The <strong>Direct Gradient Highway</strong>: <span class="arithmatex">\(\frac{\partial \mathcal{E}}{\partial \mathbf{x}_L} \cdot \mathbf{I}\)</span>. The error gradient from the output layer flows directly backward to layer <span class="arithmatex">\(l\)</span> <strong>unimpeded, without passing through any weight matrices or diminishing multiplicative terms!</strong>
-2. Even if the learned residual gradients <span class="arithmatex">\(\sum \frac{\partial \mathcal{F}}{\partial \mathbf{x}_l}\)</span> approach zero, the term <span class="arithmatex">\(\mathbf{I}\)</span> ensures that <span class="arithmatex">\(\frac{\partial \mathcal{E}}{\partial \mathbf{x}_l}\)</span> never vanishes.</p>
+The gradient <span class="arithmatex">\(\frac{\partial \mathcal{E}}{\partial \mathbf{x}_l}\)</span> decomposes into two additive terms:</p>
+<ol>
+<li>The <strong>Direct Gradient Highway</strong>: <span class="arithmatex">\(\frac{\partial \mathcal{E}}{\partial \mathbf{x}_L} \cdot \mathbf{I}\)</span>. The error gradient from the output layer flows directly backward to layer <span class="arithmatex">\(l\)</span> <strong>unimpeded, without passing through any weight matrices or diminishing multiplicative terms!</strong></li>
+<li>Even if the learned residual gradients <span class="arithmatex">\(\sum \frac{\partial \mathcal{F}}{\partial \mathbf{x}_l}\)</span> approach zero, the term <span class="arithmatex">\(\mathbf{I}\)</span> ensures that <span class="arithmatex">\(\frac{\partial \mathcal{E}}{\partial \mathbf{x}_l}\)</span> never vanishes.</li>
+</ol>
 <hr />
 <h2 id="4-resnet-building-blocks-basicblock-vs-bottleneck">4. ResNet Building Blocks: BasicBlock vs. Bottleneck<a class="headerlink" href="#4-resnet-building-blocks-basicblock-vs-bottleneck" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
@@ -4513,20 +4525,32 @@ The gradient <span class="arithmatex">\(\frac{\partial \mathcal{E}}{\partial \ma
         BT_BN3 --&gt; BT_ADD --&gt; BT_OUT["ReLU(F(x) + x)"]
     end</code></pre>
 <h3 id="41-basicblock-resnet-18-resnet-34">4.1 BasicBlock (ResNet-18 &amp; ResNet-34)<a class="headerlink" href="#41-basicblock-resnet-18-resnet-34" title="Permanent link">&para;</a></h3>
-<p>Used for shallow networks with moderate channel counts:
-- Two consecutive <span class="arithmatex">\(3 \times 3\)</span> convolutions with equal channel dimension <span class="arithmatex">\(C\)</span>.
-- Parameter count: <span class="arithmatex">\(2 \times (3 \times 3 \times C^2) = 18 C^2\)</span>.</p>
+<p>Used for shallow networks with moderate channel counts:</p>
+<ul>
+<li>Two consecutive <span class="arithmatex">\(3 \times 3\)</span> convolutions with equal channel dimension <span class="arithmatex">\(C\)</span>.</li>
+<li>Parameter count: <span class="arithmatex">\(2 \times (3 \times 3 \times C^2) = 18 C^2\)</span>.</li>
+</ul>
 <h3 id="42-bottleneck-block-resnet-50-resnet-101-resnet-152">4.2 Bottleneck Block (ResNet-50, ResNet-101, ResNet-152)<a class="headerlink" href="#42-bottleneck-block-resnet-50-resnet-101-resnet-152" title="Permanent link">&para;</a></h3>
-<p>Used for deep networks where channel counts reach <span class="arithmatex">\(512\)</span> or <span class="arithmatex">\(2048\)</span>:
-- <strong><span class="arithmatex">\(1 \times 1\)</span> Conv</strong>: Reduces channel dimension from <span class="arithmatex">\(4C \to C\)</span> (dimension reduction).
-- <strong><span class="arithmatex">\(3 \times 3\)</span> Conv</strong>: Performs spatial filtering on the compact <span class="arithmatex">\(C\)</span>-dimensional representation.
-- <strong><span class="arithmatex">\(1 \times 1\)</span> Conv</strong>: Restores channel dimension from <span class="arithmatex">\(C \to 4C\)</span> (dimension expansion).</p>
-<p><strong>Computational Efficiency Comparison (for <span class="arithmatex">\(4C = 256 \implies C = 64\)</span>):</strong>
-- Two <span class="arithmatex">\(3 \times 3\)</span> convolutions on 256 channels:
-  $<span class="arithmatex">\(2 \times (3 \times 3 \times 256 \times 256) \approx 1,179,648 \text{ operations}\)</span>$
-- Bottleneck block (<span class="arithmatex">\(256 \to 64 \to 64 \to 256\)</span>):
-  $<span class="arithmatex">\((1 \times 1 \times 256 \times 64) + (3 \times 3 \times 64 \times 64) + (1 \times 1 \times 64 \times 256) = 16,384 + 36,864 + 16,384 \approx 69,632 \text{ operations}\)</span>$
-- <strong>A <span class="arithmatex">\(17\times\)</span> reduction in computational cost!</strong></p>
+<p>Used for deep networks where channel counts reach <span class="arithmatex">\(512\)</span> or <span class="arithmatex">\(2048\)</span>:</p>
+<ul>
+<li><strong><span class="arithmatex">\(1 \times 1\)</span> Conv</strong>: Reduces channel dimension from <span class="arithmatex">\(4C \to C\)</span> (dimension reduction).</li>
+<li><strong><span class="arithmatex">\(3 \times 3\)</span> Conv</strong>: Performs spatial filtering on the compact <span class="arithmatex">\(C\)</span>-dimensional representation.</li>
+<li><strong><span class="arithmatex">\(1 \times 1\)</span> Conv</strong>: Restores channel dimension from <span class="arithmatex">\(C \to 4C\)</span> (dimension expansion).</li>
+</ul>
+<p><strong>Computational Efficiency Comparison (for <span class="arithmatex">\(4C = 256 \implies C = 64\)</span>):</strong></p>
+<ul>
+<li>
+<p>Two <span class="arithmatex">\(3 \times 3\)</span> convolutions on 256 channels:
+  $<span class="arithmatex">\(2 \times (3 \times 3 \times 256 \times 256) \approx 1,179,648 \text{ operations}\)</span>$</p>
+</li>
+<li>
+<p>Bottleneck block (<span class="arithmatex">\(256 \to 64 \to 64 \to 256\)</span>):
+  $<span class="arithmatex">\((1 \times 1 \times 256 \times 64) + (3 \times 3 \times 64 \times 64) + (1 \times 1 \times 64 \times 256) = 16,384 + 36,864 + 16,384 \approx 69,632 \text{ operations}\)</span>$</p>
+</li>
+<li>
+<p><strong>A <span class="arithmatex">\(17\times\)</span> reduction in computational cost!</strong></p>
+</li>
+</ul>
 <h3 id="43-projection-shortcuts">4.3 Projection Shortcuts<a class="headerlink" href="#43-projection-shortcuts" title="Permanent link">&para;</a></h3>
 <p>When spatial resolution is halved (<span class="arithmatex">\(S=2\)</span>) or channels expand (<span class="arithmatex">\(C_{\text{in}} \ne C_{\text{out}}\)</span>), the dimensions of <span class="arithmatex">\(\mathcal{F}(\mathbf{x})\)</span> and <span class="arithmatex">\(\mathbf{x}\)</span> no longer match, making simple addition <span class="arithmatex">\(\mathcal{F}(\mathbf{x}) + \mathbf{x}\)</span> impossible.<br />
 In this case, a <strong>projection shortcut</strong> with a <span class="arithmatex">\(1 \times 1\)</span> convolution of stride <span class="arithmatex">\(S=2\)</span> aligns dimensions:</p>
@@ -4537,12 +4561,14 @@ In this case, a <strong>projection shortcut</strong> with a <span class="arithma
 <h2 id="5-mobilenet-depthwise-separable-convolutions-howard-et-al-2017">5. MobileNet: Depthwise Separable Convolutions (Howard et al., 2017)<a class="headerlink" href="#5-mobilenet-depthwise-separable-convolutions-howard-et-al-2017" title="Permanent link">&para;</a></h2>
 <p>MobileNet was engineered to run high-accuracy computer vision on edge devices and mobile phones under strict milliwatt power and latency constraints.</p>
 <h3 id="51-factorizing-standard-convolutions">5.1 Factorizing Standard Convolutions<a class="headerlink" href="#51-factorizing-standard-convolutions" title="Permanent link">&para;</a></h3>
-<p>Standard 2D convolution applies spatial filtering and channel cross-correlation simultaneously:
-- Input: <span class="arithmatex">\(D_F \times D_F \times M\)</span> (<span class="arithmatex">\(H \times W \times C_{\text{in}}\)</span>)
-- Output: <span class="arithmatex">\(D_F \times D_F \times N\)</span> (<span class="arithmatex">\(H \times W \times C_{\text{out}}\)</span>)
-- Kernel: <span class="arithmatex">\(D_K \times D_K\)</span> (<span class="arithmatex">\(k \times k\)</span>)
-- <strong>Standard Computational Cost</strong>:
-  $<span class="arithmatex">\(\text{FLOPs}_{\text{std}} = D_K \cdot D_K \cdot M \cdot N \cdot D_F \cdot D_F\)</span>$</p>
+<p>Standard 2D convolution applies spatial filtering and channel cross-correlation simultaneously:</p>
+<ul>
+<li>Input: <span class="arithmatex">\(D_F \times D_F \times M\)</span> (<span class="arithmatex">\(H \times W \times C_{\text{in}}\)</span>)</li>
+<li>Output: <span class="arithmatex">\(D_F \times D_F \times N\)</span> (<span class="arithmatex">\(H \times W \times C_{\text{out}}\)</span>)</li>
+<li>Kernel: <span class="arithmatex">\(D_K \times D_K\)</span> (<span class="arithmatex">\(k \times k\)</span>)</li>
+<li><strong>Standard Computational Cost</strong>:
+  $<span class="arithmatex">\(\text{FLOPs}_{\text{std}} = D_K \cdot D_K \cdot M \cdot N \cdot D_F \cdot D_F\)</span>$</li>
+</ul>
 <pre class="mermaid"><code>flowchart TD
     subgraph Depthwise Separable Factorization
         IN["Input: (M, H, W)"] --&gt; DW["Depthwise Conv: M filters of (1, Dk, Dk)\nSpatial filtering per channel"]
@@ -4570,10 +4596,12 @@ $<span class="arithmatex">\(\text{FLOPs}_{\text{pw}} = M \cdot N \cdot D_F \cdot
 <p><strong>Depthwise Separable Convolutions achieve an <span class="arithmatex">\(\approx 89\%\)</span> reduction in computational cost and parameters with negligible drop in top-1 accuracy!</strong></p>
 <hr />
 <h2 id="6-efficientnet-principled-compound-scaling-tan-le-2019">6. EfficientNet: Principled Compound Scaling (Tan &amp; Le, 2019)<a class="headerlink" href="#6-efficientnet-principled-compound-scaling-tan-le-2019" title="Permanent link">&para;</a></h2>
-<p>Prior to EfficientNet, scaling up CNNs was arbitrary:
-- Deeper models (more layers, e.g. ResNet-18 <span class="arithmatex">\(\to\)</span> ResNet-152).
-- Wider models (more channels per layer, e.g. WideResNet).
-- Higher resolution (larger input images, e.g. <span class="arithmatex">\(224 \times 224 \to 480 \times 480\)</span>).</p>
+<p>Prior to EfficientNet, scaling up CNNs was arbitrary:</p>
+<ul>
+<li>Deeper models (more layers, e.g. ResNet-18 <span class="arithmatex">\(\to\)</span> ResNet-152).</li>
+<li>Wider models (more channels per layer, e.g. WideResNet).</li>
+<li>Higher resolution (larger input images, e.g. <span class="arithmatex">\(224 \times 224 \to 480 \times 480\)</span>).</li>
+</ul>
 <p>Mingxing Tan and Quoc V. Le proved that scaling only one dimension yields diminishing returns because higher resolution requires more depth (larger receptive fields) and more width (finer feature patterns).</p>
 <pre class="mermaid"><code>flowchart TD
     PHI["Compound User Coefficient: φ"] --&gt; D["Depth: d = α^φ (Layers)"]
@@ -4863,37 +4891,51 @@ In ResNet, the term <span class="arithmatex">\(\frac{\partial \mathcal{E}}{\part
 <h3 id="q2-why-is-the-degradation-problem-in-deep-networks-distinct-from-overfitting">Q2: Why is the Degradation Problem in deep networks distinct from overfitting?<a class="headerlink" href="#q2-why-is-the-degradation-problem-in-deep-networks-distinct-from-overfitting" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
 Overfitting is characterized by a divergence between training performance and generalization performance: the network memorizes training data noise, achieving near-zero training error while exhibiting high validation/test error.<br />
-The <strong>Degradation Problem</strong> is the counterintuitive phenomenon where increasing depth causes <strong>training error to worsen</strong>:
-- A 56-layer plain network exhibits higher training error than a 20-layer plain network on the exact same training set.
-- This cannot be overfitting, because an overfitted model would easily achieve lower training error.
-- Rather, the degradation problem is an <strong>optimization failure</strong>: the non-convex loss surface of deep plain networks becomes riddled with pathological curvature and vanishing gradients, preventing first-order optimizers (SGD) from converging to even the identity function solution that the deeper architecture trivially contains in its parameter space.</p>
+The <strong>Degradation Problem</strong> is the counterintuitive phenomenon where increasing depth causes <strong>training error to worsen</strong>:</p>
+<ul>
+<li>A 56-layer plain network exhibits higher training error than a 20-layer plain network on the exact same training set.</li>
+<li>This cannot be overfitting, because an overfitted model would easily achieve lower training error.</li>
+<li>Rather, the degradation problem is an <strong>optimization failure</strong>: the non-convex loss surface of deep plain networks becomes riddled with pathological curvature and vanishing gradients, preventing first-order optimizers (SGD) from converging to even the identity function solution that the deeper architecture trivially contains in its parameter space.</li>
+</ul>
 <hr />
 <h3 id="q3-derive-the-exact-flop-reduction-of-depthwise-separable-convolutions-in-mobilenet-compared-to-standard-2d-convolutions">Q3: Derive the exact FLOP reduction of Depthwise Separable Convolutions in MobileNet compared to standard 2D convolutions.<a class="headerlink" href="#q3-derive-the-exact-flop-reduction-of-depthwise-separable-convolutions-in-mobilenet-compared-to-standard-2d-convolutions" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
-Let the input feature map have spatial size <span class="arithmatex">\(D_F \times D_F\)</span> with <span class="arithmatex">\(M\)</span> channels, producing an output of size <span class="arithmatex">\(D_F \times D_F\)</span> with <span class="arithmatex">\(N\)</span> channels using a kernel of size <span class="arithmatex">\(D_K \times D_K\)</span>.<br />
-1. <strong>Standard Convolution</strong>:
+Let the input feature map have spatial size <span class="arithmatex">\(D_F \times D_F\)</span> with <span class="arithmatex">\(M\)</span> channels, producing an output of size <span class="arithmatex">\(D_F \times D_F\)</span> with <span class="arithmatex">\(N\)</span> channels using a kernel of size <span class="arithmatex">\(D_K \times D_K\)</span>.  </p>
+<ol>
+<li>
+<p><strong>Standard Convolution</strong>:
    Computes <span class="arithmatex">\(N\)</span> filters, each of shape <span class="arithmatex">\(D_K \times D_K \times M\)</span>, over <span class="arithmatex">\(D_F \times D_F\)</span> spatial locations:
-   $<span class="arithmatex">\(\text{Cost}_{\text{std}} = D_K \cdot D_K \cdot M \cdot N \cdot D_F \cdot D_F\)</span>$
-2. <strong>Depthwise Separable Convolution</strong>:
-   - <em>Depthwise Step</em>: Applies <span class="arithmatex">\(M\)</span> spatial filters of size <span class="arithmatex">\(D_K \times D_K \times 1\)</span>:
-     $<span class="arithmatex">\(\text{Cost}_{\text{dw}} = D_K \cdot D_K \cdot M \cdot D_F \cdot D_F\)</span>$
-   - <em>Pointwise Step</em>: Applies <span class="arithmatex">\(N\)</span> linear projection filters of size <span class="arithmatex">\(1 \times 1 \times M\)</span>:
-     $<span class="arithmatex">\(\text{Cost}_{\text{pw}} = M \cdot N \cdot D_F \cdot D_F\)</span>$
-   - Total Cost:
-     $<span class="arithmatex">\(\text{Cost}_{\text{sep}} = D_F^2 \cdot M \cdot (D_K^2 + N)\)</span>$
-3. <strong>Reduction Ratio</strong>:
+   $<span class="arithmatex">\(\text{Cost}_{\text{std}} = D_K \cdot D_K \cdot M \cdot N \cdot D_F \cdot D_F\)</span>$</p>
+</li>
+<li>
+<p><strong>Depthwise Separable Convolution</strong>:</p>
+</li>
+<li><em>Depthwise Step</em>: Applies <span class="arithmatex">\(M\)</span> spatial filters of size <span class="arithmatex">\(D_K \times D_K \times 1\)</span>:
+     $<span class="arithmatex">\(\text{Cost}_{\text{dw}} = D_K \cdot D_K \cdot M \cdot D_F \cdot D_F\)</span>$</li>
+<li><em>Pointwise Step</em>: Applies <span class="arithmatex">\(N\)</span> linear projection filters of size <span class="arithmatex">\(1 \times 1 \times M\)</span>:
+     $<span class="arithmatex">\(\text{Cost}_{\text{pw}} = M \cdot N \cdot D_F \cdot D_F\)</span>$</li>
+<li>
+<p>Total Cost:
+     $<span class="arithmatex">\(\text{Cost}_{\text{sep}} = D_F^2 \cdot M \cdot (D_K^2 + N)\)</span>$</p>
+</li>
+<li>
+<p><strong>Reduction Ratio</strong>:
    $<span class="arithmatex">\(\frac{\text{Cost}_{\text{sep}}}{\text{Cost}_{\text{std}}} = \frac{D_F^2 \cdot M \cdot (D_K^2 + N)}{D_F^2 \cdot M \cdot N \cdot D_K^2} = \frac{D_K^2 + N}{N \cdot D_K^2} = \frac{1}{N} + \frac{1}{D_K^2}\)</span>$
 For a typical <span class="arithmatex">\(3 \times 3\)</span> kernel (<span class="arithmatex">\(D_K = 3\)</span>) and <span class="arithmatex">\(N \gg 1\)</span>:
 $<span class="arithmatex">\(\frac{\text{Cost}_{\text{sep}}}{\text{Cost}_{\text{std}}} \approx \frac{1}{9} \approx 0.111\)</span>$
 This yields an exact <span class="arithmatex">\(\approx 89\%\)</span> reduction in multiply-accumulate operations.</p>
+</li>
+</ol>
 <hr />
 <h3 id="q4-explain-the-mathematical-rationale-behind-efficientnets-compound-scaling-constraint-alpha-cdot-beta2-cdot-gamma2-approx-2">Q4: Explain the mathematical rationale behind EfficientNet's compound scaling constraint <span class="arithmatex">\(\alpha \cdot \beta^2 \cdot \gamma^2 \approx 2\)</span>.<a class="headerlink" href="#q4-explain-the-mathematical-rationale-behind-efficientnets-compound-scaling-constraint-alpha-cdot-beta2-cdot-gamma2-approx-2" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
 Let network depth be scaled by <span class="arithmatex">\(d = \alpha^\phi\)</span>, width by <span class="arithmatex">\(w = \beta^\phi\)</span>, and input resolution by <span class="arithmatex">\(r = \gamma^\phi\)</span>, where <span class="arithmatex">\(\phi\)</span> is a user-controlled compound scaling coefficient.<br />
-Consider how each dimension impacts the computational cost (FLOPs):
-- <strong>Depth (<span class="arithmatex">\(d\)</span>)</strong>: Doubling the number of layers doubles the operations linearly: <span class="arithmatex">\(\text{FLOPs} \propto d \propto \alpha^\phi\)</span>.
-- <strong>Width (<span class="arithmatex">\(w\)</span>)</strong>: Doubling channels multiplies both input channels <span class="arithmatex">\(C_{\text{in}}\)</span> and output channels <span class="arithmatex">\(C_{\text{out}}\)</span> by 2. Because convolution FLOPs scale as <span class="arithmatex">\(C_{\text{in}} \cdot C_{\text{out}}\)</span>, doubling width quadruples FLOPs: <span class="arithmatex">\(\text{FLOPs} \propto w^2 \propto \beta^{2\phi}\)</span>.
-- <strong>Resolution (<span class="arithmatex">\(r\)</span>)</strong>: Doubling the spatial height and width quadruples the total pixel count <span class="arithmatex">\(H \cdot W\)</span>. Because convolution applies filters across all spatial positions, doubling resolution quadruples FLOPs: <span class="arithmatex">\(\text{FLOPs} \propto r^2 \propto \gamma^{2\phi}\)</span>.</p>
+Consider how each dimension impacts the computational cost (FLOPs):</p>
+<ul>
+<li><strong>Depth (<span class="arithmatex">\(d\)</span>)</strong>: Doubling the number of layers doubles the operations linearly: <span class="arithmatex">\(\text{FLOPs} \propto d \propto \alpha^\phi\)</span>.</li>
+<li><strong>Width (<span class="arithmatex">\(w\)</span>)</strong>: Doubling channels multiplies both input channels <span class="arithmatex">\(C_{\text{in}}\)</span> and output channels <span class="arithmatex">\(C_{\text{out}}\)</span> by 2. Because convolution FLOPs scale as <span class="arithmatex">\(C_{\text{in}} \cdot C_{\text{out}}\)</span>, doubling width quadruples FLOPs: <span class="arithmatex">\(\text{FLOPs} \propto w^2 \propto \beta^{2\phi}\)</span>.</li>
+<li><strong>Resolution (<span class="arithmatex">\(r\)</span>)</strong>: Doubling the spatial height and width quadruples the total pixel count <span class="arithmatex">\(H \cdot W\)</span>. Because convolution applies filters across all spatial positions, doubling resolution quadruples FLOPs: <span class="arithmatex">\(\text{FLOPs} \propto r^2 \propto \gamma^{2\phi}\)</span>.</li>
+</ul>
 <p>The total FLOP growth factor under scaling coefficient <span class="arithmatex">\(\phi\)</span> is:</p>
 <div class="arithmatex">\[\text{FLOPs}(\phi) \propto (\alpha \cdot \beta^2 \cdot \gamma^2)^\phi\]</div>
 <p>To ensure that increasing <span class="arithmatex">\(\phi\)</span> by 1 corresponds to doubling total network FLOPs (<span class="arithmatex">\(2^\phi\)</span>), Tan &amp; Le constrained:</p>
@@ -4913,17 +4955,17 @@ If the scale parameter <span class="arithmatex">\(\gamma\)</span> of <span class
 <p>Every residual block behaves as a <strong>pure identity mapping at initialization</strong>. The network starts training as if it were a shallow model, preserving signal variance across arbitrary depth and allowing the optimizer to gradually introduce residual non-linearities as needed.</p>
 <hr />
 <h2 id="12-mastery-ladder">12. Mastery Ladder<a class="headerlink" href="#12-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Trace the architectural evolution from LeNet-5 through AlexNet and VGG, explaining the key breakthroughs of each.</li>
-<li>[ ] <strong>L2:</strong> Explain the Inception module and show how <span class="arithmatex">\(1 \times 1\)</span> convolutions act as bottleneck dimension reducers.</li>
-<li>[ ] <strong>L3:</strong> State the Degradation Problem and explain why it is an optimization failure rather than statistical overfitting.</li>
-<li>[ ] <strong>L4:</strong> Formulate the residual mapping <span class="arithmatex">\(\mathcal{H}(\mathbf{x}) = \mathcal{F}(\mathbf{x}) + \mathbf{x}\)</span> and draw the basic residual block diagram.</li>
-<li>[ ] <strong>L5:</strong> Prove mathematically that the gradient in ResNet decomposes into an identity term and a residual sum, explaining the gradient highway.</li>
-<li>[ ] <strong>L6:</strong> Compare the BasicBlock and BottleneckBlock in terms of parameter efficiency and FLOP count.</li>
-<li>[ ] <strong>L7:</strong> Derive the computational cost reduction factor <span class="arithmatex">\(\frac{1}{N} + \frac{1}{D_K^2} \approx \frac{1}{9}\)</span> for Depthwise Separable Convolutions in MobileNet.</li>
-<li>[ ] <strong>L8:</strong> Explain EfficientNet's compound scaling constraint <span class="arithmatex">\(\alpha \cdot \beta^2 \cdot \gamma^2 \approx 2\)</span>.</li>
-<li>[ ] <strong>L9:</strong> Formulate transfer learning strategies (linear probing vs full fine-tuning) using discriminative learning rates and gradual unfreezing.</li>
-<li>[ ] <strong>L10:</strong> Implement a complete ResNet-18 architecture from scratch in PyTorch, verify forward/backward pass shapes, and construct an end-to-end transfer learning fine-tuning pipeline.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Trace the architectural evolution from LeNet-5 through AlexNet and VGG, explaining the key breakthroughs of each.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Explain the Inception module and show how <span class="arithmatex">\(1 \times 1\)</span> convolutions act as bottleneck dimension reducers.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> State the Degradation Problem and explain why it is an optimization failure rather than statistical overfitting.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Formulate the residual mapping <span class="arithmatex">\(\mathcal{H}(\mathbf{x}) = \mathcal{F}(\mathbf{x}) + \mathbf{x}\)</span> and draw the basic residual block diagram.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Prove mathematically that the gradient in ResNet decomposes into an identity term and a residual sum, explaining the gradient highway.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Compare the BasicBlock and BottleneckBlock in terms of parameter efficiency and FLOP count.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Derive the computational cost reduction factor <span class="arithmatex">\(\frac{1}{N} + \frac{1}{D_K^2} \approx \frac{1}{9}\)</span> for Depthwise Separable Convolutions in MobileNet.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Explain EfficientNet's compound scaling constraint <span class="arithmatex">\(\alpha \cdot \beta^2 \cdot \gamma^2 \approx 2\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Formulate transfer learning strategies (linear probing vs full fine-tuning) using discriminative learning rates and gradual unfreezing.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Implement a complete ResNet-18 architecture from scratch in PyTorch, verify forward/backward pass shapes, and construct an end-to-end transfer learning fine-tuning pipeline.</li>
 </ul>
 
 

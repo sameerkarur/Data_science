@@ -4159,19 +4159,25 @@
 <hr />
 <h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
 <p>Computers cannot natively perform arithmetic on raw strings of Unicode characters. To train machine learning algorithms on human natural language, text must be translated into real-valued vectors <span class="arithmatex">\(\mathbf{x} \in \mathbb{R}^D\)</span>.</p>
-<p>The history of natural language processing is the evolutionary shift between two paradigms:
-1. <strong>Discrete Sparse Representations (Count-Based)</strong>:
-   - One-hot vectors, Bag of Words (BoW), and TF-IDF.
-   - Vector dimensions equal the entire vocabulary size <span class="arithmatex">\(|V| \sim 10^5 - 10^7\)</span>.
-   - <strong>Orthogonality Catastrophe</strong>: Every word is mathematically orthogonal to every other word:
+<p>The history of natural language processing is the evolutionary shift between two paradigms:</p>
+<ol>
+<li><strong>Discrete Sparse Representations (Count-Based)</strong>:</li>
+<li>One-hot vectors, Bag of Words (BoW), and TF-IDF.</li>
+<li>Vector dimensions equal the entire vocabulary size <span class="arithmatex">\(|V| \sim 10^5 - 10^7\)</span>.</li>
+<li>
+<p><strong>Orthogonality Catastrophe</strong>: Every word is mathematically orthogonal to every other word:
      $<span class="arithmatex">\(\mathbf{w}_{\text{motel}}^T \mathbf{w}_{\text{hotel}} = 0\)</span>$
-     The representation is completely blind to synonymous meaning, semantics, and context.
-2. <strong>Dense Distributed Representations (Embeddings)</strong>:
-   - Rooted in the <strong>Distributional Hypothesis</strong> (Firth, 1957): <em>"You shall know a word by the company it keeps."</em>
-   - Words are projected into a continuous low-dimensional metric space <span class="arithmatex">\(\mathbb{R}^d\)</span> (<span class="arithmatex">\(d \sim 100 - 1024\)</span>) where geometric distance correlates with semantic similarity:
-     $<span class="arithmatex">\(\cos(\mathbf{w}_{\text{motel}}, \mathbf{w}_{\text{hotel}}) \approx 0.92\)</span>$
-   - Linear algebraic vector arithmetic captures relational semantics:
-     $<span class="arithmatex">\(\vec{v}_{\text{King}} - \vec{v}_{\text{Man}} + \vec{v}_{\text{Woman}} \approx \vec{v}_{\text{Queen}}\)</span>$</p>
+     The representation is completely blind to synonymous meaning, semantics, and context.</p>
+</li>
+<li>
+<p><strong>Dense Distributed Representations (Embeddings)</strong>:</p>
+</li>
+<li>Rooted in the <strong>Distributional Hypothesis</strong> (Firth, 1957): <em>"You shall know a word by the company it keeps."</em></li>
+<li>Words are projected into a continuous low-dimensional metric space <span class="arithmatex">\(\mathbb{R}^d\)</span> (<span class="arithmatex">\(d \sim 100 - 1024\)</span>) where geometric distance correlates with semantic similarity:
+     $<span class="arithmatex">\(\cos(\mathbf{w}_{\text{motel}}, \mathbf{w}_{\text{hotel}}) \approx 0.92\)</span>$</li>
+<li>Linear algebraic vector arithmetic captures relational semantics:
+     $<span class="arithmatex">\(\vec{v}_{\text{King}} - \vec{v}_{\text{Man}} + \vec{v}_{\text{Woman}} \approx \vec{v}_{\text{Queen}}\)</span>$</li>
+</ol>
 <pre class="mermaid"><code>flowchart TD
     RAW["Raw Text Corpus: 'The quick brown fox...'"] --&gt; PRE["Preprocessing: Unicode Normalization &amp; Regex"]
     PRE --&gt; TOK["Tokenization: Word vs Char vs Subword (BPE / WordPiece)"]
@@ -4191,24 +4197,61 @@
     D --&gt; E["Tokenization (Subword BPE)"]
     E --&gt; F["Vocabulary Indexing: token_id ∈ [0, |V|-1]"]</code></pre>
 <h3 id="21-the-tokenization-taxonomy">2.1 The Tokenization Taxonomy<a class="headerlink" href="#21-the-tokenization-taxonomy" title="Permanent link">&para;</a></h3>
-<p>| Paradigm | Unit | Vocabulary Size <span class="arithmatex">\(|V|\)</span> | Sequence Length | Out-Of-Vocabulary (OOV) Handling | Primary Failure Mode |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| <strong>Word-Level</strong> | Whitespace/Punctuation words | Massive (<span class="arithmatex">\(10^5 - 10^7\)</span>) | Short | Catastrophic (maps rare/misspelled words to <code>[UNK]</code>) | Inability to generalize across morphological variants (<code>run</code>, <code>running</code>, <code>runs</code>). |
-| <strong>Character-Level</strong> | Individual characters | Tiny (<span class="arithmatex">\(256\)</span> ASCII, <span class="arithmatex">\(\sim 1000\)</span> Unicode) | Extremely Long (<span class="arithmatex">\(5-10\times\)</span>) | Zero OOV | Weak semantic density per token; prohibitive self-attention memory. |
-| <strong>Subword Tokenization</strong> | Frequent substrings / byte sequences | Compact (<span class="arithmatex">\(30,000 - 100,000\)</span>) | Balanced | Zero OOV (falls back to characters/bytes) | The modern universal standard (GPT, BERT, LLaMA). |</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Paradigm</th>
+<th style="text-align: center;">Unit</th>
+<th style="text-align: center;">Vocabulary Size <span class="arithmatex">\(\lvert V \rvert\)</span></th>
+<th style="text-align: center;">Sequence Length</th>
+<th style="text-align: center;">Out-Of-Vocabulary (OOV) Handling</th>
+<th style="text-align: center;">Primary Failure Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Word-Level</strong></td>
+<td style="text-align: center;">Whitespace/Punctuation words</td>
+<td style="text-align: center;">Massive (<span class="arithmatex">\(10^5 - 10^7\)</span>)</td>
+<td style="text-align: center;">Short</td>
+<td style="text-align: center;">Catastrophic (maps rare/misspelled words to <code>[UNK]</code>)</td>
+<td style="text-align: center;">Inability to generalize across morphological variants (<code>run</code>, <code>running</code>, <code>runs</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Character-Level</strong></td>
+<td style="text-align: center;">Individual characters</td>
+<td style="text-align: center;">Tiny (<span class="arithmatex">\(256\)</span> ASCII, <span class="arithmatex">\(\sim 1000\)</span> Unicode)</td>
+<td style="text-align: center;">Extremely Long (<span class="arithmatex">\(5-10\times\)</span>)</td>
+<td style="text-align: center;">Zero OOV</td>
+<td style="text-align: center;">Weak semantic density per token; prohibitive self-attention memory.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Subword Tokenization</strong></td>
+<td style="text-align: center;">Frequent substrings / byte sequences</td>
+<td style="text-align: center;">Compact (<span class="arithmatex">\(30,000 - 100,000\)</span>)</td>
+<td style="text-align: center;">Balanced</td>
+<td style="text-align: center;">Zero OOV (falls back to characters/bytes)</td>
+<td style="text-align: center;">The modern universal standard (GPT, BERT, LLaMA).</td>
+</tr>
+</tbody>
+</table>
 <h3 id="22-byte-pair-encoding-bpe-sennrich-et-al-2016">2.2 Byte-Pair Encoding (BPE, Sennrich et al., 2016)<a class="headerlink" href="#22-byte-pair-encoding-bpe-sennrich-et-al-2016" title="Permanent link">&para;</a></h3>
-<p>Originally a data compression algorithm (Gage, 1994), BPE was adapted for subword tokenization in NLP:
-1. Initialize vocabulary with all unique base characters plus end-of-word token <code>&lt;/w&gt;</code>.
-2. Represent every word in the training corpus as a sequence of individual characters.
-3. Iteratively count the frequency of all adjacent character/token pairs across the corpus.
-4. Merge the most frequent pair <span class="arithmatex">\((t_a, t_b) \to t_{ab}\)</span> and append <span class="arithmatex">\(t_{ab}\)</span> to vocabulary.
-5. Repeat for <span class="arithmatex">\(k\)</span> merge operations until desired vocabulary size is achieved.</p>
-<p><strong>Example</strong>:
-- Words: <code>{"low": 5, "lower": 2, "newest": 6, "widest": 3}</code>
-- Initial tokens: <code>l, o, w, e, r, n, s, t, d, i</code>
-- Frequent pair <code>('e', 's')</code> <span class="arithmatex">\(\to\)</span> merge to <code>es</code>
-- Frequent pair <code>('es', 't')</code> <span class="arithmatex">\(\to\)</span> merge to <code>est</code>
-- Unseen compound word <code>lowest</code> splits gracefully into subwords <code>['low', 'est']</code> with zero information loss!</p>
+<p>Originally a data compression algorithm (Gage, 1994), BPE was adapted for subword tokenization in NLP:</p>
+<ol>
+<li>Initialize vocabulary with all unique base characters plus end-of-word token <code>&lt;/w&gt;</code>.</li>
+<li>Represent every word in the training corpus as a sequence of individual characters.</li>
+<li>Iteratively count the frequency of all adjacent character/token pairs across the corpus.</li>
+<li>Merge the most frequent pair <span class="arithmatex">\((t_a, t_b) \to t_{ab}\)</span> and append <span class="arithmatex">\(t_{ab}\)</span> to vocabulary.</li>
+<li>Repeat for <span class="arithmatex">\(k\)</span> merge operations until desired vocabulary size is achieved.</li>
+</ol>
+<p><strong>Example</strong>:</p>
+<ul>
+<li>Words: <code>{"low": 5, "lower": 2, "newest": 6, "widest": 3}</code></li>
+<li>Initial tokens: <code>l, o, w, e, r, n, s, t, d, i</code></li>
+<li>Frequent pair <code>('e', 's')</code> <span class="arithmatex">\(\to\)</span> merge to <code>es</code></li>
+<li>Frequent pair <code>('es', 't')</code> <span class="arithmatex">\(\to\)</span> merge to <code>est</code></li>
+<li>Unseen compound word <code>lowest</code> splits gracefully into subwords <code>['low', 'est']</code> with zero information loss!</li>
+</ul>
 <hr />
 <h2 id="3-sparse-representations-bag-of-words-tf-idf">3. Sparse Representations: Bag of Words &amp; TF-IDF<a class="headerlink" href="#3-sparse-representations-bag-of-words-tf-idf" title="Permanent link">&para;</a></h2>
 <h3 id="31-bag-of-words-bow-countvectorizer">3.1 Bag of Words (BoW) &amp; CountVectorizer<a class="headerlink" href="#31-bag-of-words-bow-countvectorizer" title="Permanent link">&para;</a></h3>
@@ -4221,23 +4264,33 @@ x_j = \text{count of token } v_j \text{ in document } d
 <p>Count vectors are heavily biased toward stop words (<code>the</code>, <code>is</code>, <code>at</code>, <code>of</code>) that appear frequently across <em>all</em> documents but carry zero discriminative semantic information.<br />
 TF-IDF reweights term counts by multiplying local term importance by global specificity.</p>
 <ol>
-<li><strong>Term Frequency (TF)</strong>:
+<li>
+<p><strong>Term Frequency (TF)</strong>:
    $<span class="arithmatex">\(\text{TF}(t, d) = \frac{f_{t, d}}{\sum_{t' \in d} f_{t', d}}\)</span>$
-   where <span class="arithmatex">\(f_{t, d}\)</span> is the raw count of term <span class="arithmatex">\(t\)</span> in document <span class="arithmatex">\(d\)</span>.</li>
-<li><strong>Inverse Document Frequency (IDF)</strong>:
+   where <span class="arithmatex">\(f_{t, d}\)</span> is the raw count of term <span class="arithmatex">\(t\)</span> in document <span class="arithmatex">\(d\)</span>.</p>
+</li>
+<li>
+<p><strong>Inverse Document Frequency (IDF)</strong>:
    $<span class="arithmatex">\(\text{IDF}(t, D) = \log\left( \frac{1 + |D|}{1 + |\{d \in D : t \in d\}|} \right) + 1\)</span>$
-   (using Scikit-Learn's smooth IDF formulation, adding 1 to numerator and denominator to prevent division by zero).</li>
-<li><strong>Composite TF-IDF Score</strong>:
-   $<span class="arithmatex">\(\text{TF-IDF}(t, d, D) = \text{TF}(t, d) \times \text{IDF}(t, D)\)</span>$</li>
-<li><strong><span class="arithmatex">\(L_2\)</span> Normalization</strong>:
+   (using Scikit-Learn's smooth IDF formulation, adding 1 to numerator and denominator to prevent division by zero).</p>
+</li>
+<li>
+<p><strong>Composite TF-IDF Score</strong>:
+   $<span class="arithmatex">\(\text{TF-IDF}(t, d, D) = \text{TF}(t, d) \times \text{IDF}(t, D)\)</span>$</p>
+</li>
+<li>
+<p><strong><span class="arithmatex">\(L_2\)</span> Normalization</strong>:
    To prevent document length bias:
-   $<span class="arithmatex">\(\mathbf{v}_{\text{norm}} = \frac{\mathbf{v}}{\|\mathbf{v}\|_2}\)</span>$</li>
+   $<span class="arithmatex">\(\mathbf{v}_{\text{norm}} = \frac{\mathbf{v}}{\|\mathbf{v}\|_2}\)</span>$</p>
+</li>
 </ol>
 <hr />
 <h2 id="4-dense-distributed-representations-the-word2vec-framework">4. Dense Distributed Representations: The Word2Vec Framework<a class="headerlink" href="#4-dense-distributed-representations-the-word2vec-framework" title="Permanent link">&para;</a></h2>
-<p>Tomas Mikolov et al. (2013) proposed two complementary log-linear architectures to train dense embeddings <span class="arithmatex">\(\mathbf{v}_w \in \mathbb{R}^d\)</span> from unannotated text corpora:
-- <strong>Continuous Bag of Words (CBOW)</strong>: Predicts center word <span class="arithmatex">\(w_t\)</span> given context words <span class="arithmatex">\(\{w_{t-c}, \dots, w_{t+c}\} \setminus \{w_t\}\)</span>.
-- <strong>Skip-Gram</strong>: Predicts context words given center word <span class="arithmatex">\(w_t\)</span>.</p>
+<p>Tomas Mikolov et al. (2013) proposed two complementary log-linear architectures to train dense embeddings <span class="arithmatex">\(\mathbf{v}_w \in \mathbb{R}^d\)</span> from unannotated text corpora:</p>
+<ul>
+<li><strong>Continuous Bag of Words (CBOW)</strong>: Predicts center word <span class="arithmatex">\(w_t\)</span> given context words <span class="arithmatex">\(\{w_{t-c}, \dots, w_{t+c}\} \setminus \{w_t\}\)</span>.</li>
+<li><strong>Skip-Gram</strong>: Predicts context words given center word <span class="arithmatex">\(w_t\)</span>.</li>
+</ul>
 <pre class="mermaid"><code>flowchart TD
     subgraph CBOW Architecture
         C_IN["Context: w_{t-2}, w_{t-1}, w_{t+1}, w_{t+2}"] --&gt; C_PROJ["Average Projection Matrix W"]
@@ -4252,9 +4305,11 @@ TF-IDF reweights term counts by multiplying local term importance by global spec
         S_PROJ --&gt; S_OUT4["Predict Context: w_{t+2}"]
     end</code></pre>
 <h3 id="41-the-full-softmax-objective-computational-bottleneck">4.1 The Full Softmax Objective &amp; Computational Bottleneck<a class="headerlink" href="#41-the-full-softmax-objective-computational-bottleneck" title="Permanent link">&para;</a></h3>
-<p>In the Skip-Gram model, each word <span class="arithmatex">\(w\)</span> has two vectors:
-- Center vector <span class="arithmatex">\(\mathbf{v}_w \in \mathbb{R}^d\)</span> (from input weight matrix <span class="arithmatex">\(W \in \mathbb{R}^{|V| \times d}\)</span>)
-- Context vector <span class="arithmatex">\(\mathbf{u}_w \in \mathbb{R}^d\)</span> (from output weight matrix <span class="arithmatex">\(W' \in \mathbb{R}^{d \times |V|}\)</span>)</p>
+<p>In the Skip-Gram model, each word <span class="arithmatex">\(w\)</span> has two vectors:</p>
+<ul>
+<li>Center vector <span class="arithmatex">\(\mathbf{v}_w \in \mathbb{R}^d\)</span> (from input weight matrix <span class="arithmatex">\(W \in \mathbb{R}^{|V| \times d}\)</span>)</li>
+<li>Context vector <span class="arithmatex">\(\mathbf{u}_w \in \mathbb{R}^d\)</span> (from output weight matrix <span class="arithmatex">\(W' \in \mathbb{R}^{d \times |V|}\)</span>)</li>
+</ul>
 <p>The conditional probability of context word <span class="arithmatex">\(w_O\)</span> given center word <span class="arithmatex">\(w_I\)</span> is defined via Softmax:</p>
 <div class="arithmatex">\[
 P(w_O | w_I) = \frac{\exp(\mathbf{u}_{w_O}^T \mathbf{v}_{w_I})}{\sum_{w=1}^{|V|} \exp(\mathbf{u}_w^T \mathbf{v}_{w_I})}
@@ -4299,9 +4354,11 @@ Differentiating <span class="arithmatex">\(\mathcal{L}\)</span> with respect to 
 <p>Computing these updates costs <span class="arithmatex">\(\mathcal{O}(k \cdot d)\)</span>, completely independent of vocabulary size <span class="arithmatex">\(|V|\)</span>.</p>
 <hr />
 <h2 id="5-glove-global-vectors-for-word-representation-pennington-et-al-2014">5. GloVe: Global Vectors for Word Representation (Pennington et al., 2014)<a class="headerlink" href="#5-glove-global-vectors-for-word-representation-pennington-et-al-2014" title="Permanent link">&para;</a></h2>
-<p>Jeffrey Pennington, Richard Socher, and Christopher Manning recognized a fundamental dichotomy in NLP:
-- <strong>Global Matrix Factorization methods (LSA / SVD)</strong>: Capture global corpus statistical co-occurrences efficiently, but do poorly on local linear analogy tasks.
-- <strong>Local Context Window methods (Skip-Gram)</strong>: Excel on linear analogies, but waste compute sweeping across local windows without directly leveraging global co-occurrence statistics.</p>
+<p>Jeffrey Pennington, Richard Socher, and Christopher Manning recognized a fundamental dichotomy in NLP:</p>
+<ul>
+<li><strong>Global Matrix Factorization methods (LSA / SVD)</strong>: Capture global corpus statistical co-occurrences efficiently, but do poorly on local linear analogy tasks.</li>
+<li><strong>Local Context Window methods (Skip-Gram)</strong>: Excel on linear analogies, but waste compute sweeping across local windows without directly leveraging global co-occurrence statistics.</li>
+</ul>
 <p>GloVe unifies both paradigms into a <strong>global log-bilinear matrix factorization</strong>.</p>
 <pre class="mermaid"><code>flowchart LR
     CORPUS["Corpus (Billions of Words)"] --&gt; COOC["Global Co-occurrence Matrix X ∈ ℝ^{|V| x |V|}"]
@@ -4312,11 +4369,13 @@ Differentiating <span class="arithmatex">\(\mathcal{L}\)</span> with respect to 
 <p>Let <span class="arithmatex">\(X_{ij}\)</span> be the number of times word <span class="arithmatex">\(j\)</span> appears in the context of word <span class="arithmatex">\(i\)</span>.<br />
 Let <span class="arithmatex">\(X_i = \sum_k X_{ik}\)</span> be the total frequency of word <span class="arithmatex">\(i\)</span>.<br />
 The conditional probability is <span class="arithmatex">\(P_{ij} = P(j | i) = \frac{X_{ij}}{X_i}\)</span>.</p>
-<p>Consider words <span class="arithmatex">\(i = \text{ice}\)</span>, <span class="arithmatex">\(j = \text{steam}\)</span>, and probe words <span class="arithmatex">\(k\)</span>:
-- For <span class="arithmatex">\(k = \text{solid}\)</span>: <span class="arithmatex">\(P(\text{solid}|\text{ice})\)</span> is large, <span class="arithmatex">\(P(\text{solid}|\text{steam})\)</span> is small <span class="arithmatex">\(\implies \frac{P(\text{solid}|\text{ice})}{P(\text{solid}|\text{steam})} \gg 1\)</span>.
-- For <span class="arithmatex">\(k = \text{gas}\)</span>: <span class="arithmatex">\(\frac{P(\text{gas}|\text{ice})}{P(\text{gas}|\text{steam})} \ll 1\)</span>.
-- For <span class="arithmatex">\(k = \text{water}\)</span>: both are large <span class="arithmatex">\(\implies \frac{P(\text{water}|\text{ice})}{P(\text{water}|\text{steam})} \approx 1\)</span>.
-- For <span class="arithmatex">\(k = \text{fashion}\)</span>: both are small <span class="arithmatex">\(\implies \frac{P(\text{fashion}|\text{ice})}{P(\text{fashion}|\text{steam})} \approx 1\)</span>.</p>
+<p>Consider words <span class="arithmatex">\(i = \text{ice}\)</span>, <span class="arithmatex">\(j = \text{steam}\)</span>, and probe words <span class="arithmatex">\(k\)</span>:</p>
+<ul>
+<li>For <span class="arithmatex">\(k = \text{solid}\)</span>: <span class="arithmatex">\(P(\text{solid}|\text{ice})\)</span> is large, <span class="arithmatex">\(P(\text{solid}|\text{steam})\)</span> is small <span class="arithmatex">\(\implies \frac{P(\text{solid}|\text{ice})}{P(\text{solid}|\text{steam})} \gg 1\)</span>.</li>
+<li>For <span class="arithmatex">\(k = \text{gas}\)</span>: <span class="arithmatex">\(\frac{P(\text{gas}|\text{ice})}{P(\text{gas}|\text{steam})} \ll 1\)</span>.</li>
+<li>For <span class="arithmatex">\(k = \text{water}\)</span>: both are large <span class="arithmatex">\(\implies \frac{P(\text{water}|\text{ice})}{P(\text{water}|\text{steam})} \approx 1\)</span>.</li>
+<li>For <span class="arithmatex">\(k = \text{fashion}\)</span>: both are small <span class="arithmatex">\(\implies \frac{P(\text{fashion}|\text{ice})}{P(\text{fashion}|\text{steam})} \approx 1\)</span>.</li>
+</ul>
 <p>The <strong>ratio of co-occurrence probabilities</strong> cleanly isolates relevant semantic dimensions and filters out irrelevant baseline noise.</p>
 <h3 id="52-the-mathematical-derivation-of-glove">5.2 The Mathematical Derivation of GloVe<a class="headerlink" href="#52-the-mathematical-derivation-of-glove" title="Permanent link">&para;</a></h3>
 <p>GloVe seeks an embedding function <span class="arithmatex">\(F\)</span> that relates word vectors <span class="arithmatex">\(\mathbf{w}_i, \mathbf{w}_j, \tilde{\mathbf{w}}_k\)</span> to the probability ratio:</p>
@@ -4344,10 +4403,12 @@ F((\mathbf{w}_i - \mathbf{w}_j)^T \tilde{\mathbf{w}}_k) = \frac{F(\mathbf{w}_i^T
 <div class="arithmatex">\[
 J = \sum_{i, j=1}^{|V|} f(X_{ij}) \left( \mathbf{w}_i^T \tilde{\mathbf{w}}_j + b_i + \tilde{b}_j - \ln X_{ij} \right)^2
 \]</div>
-<p>where the weighting function <span class="arithmatex">\(f(X)\)</span> satisfies:
-1. <span class="arithmatex">\(f(0) = 0\)</span> (so <span class="arithmatex">\(\lim_{X \to 0} f(X) \ln^2(X) = 0\)</span>, handling zero co-occurrences).
-2. <span class="arithmatex">\(f(X)\)</span> is non-decreasing to give more weight to frequent pairs.
-3. <span class="arithmatex">\(f(X)\)</span> is bounded for large <span class="arithmatex">\(X\)</span> so stop words do not dominate the loss:</p>
+<p>where the weighting function <span class="arithmatex">\(f(X)\)</span> satisfies:</p>
+<ol>
+<li><span class="arithmatex">\(f(0) = 0\)</span> (so <span class="arithmatex">\(\lim_{X \to 0} f(X) \ln^2(X) = 0\)</span>, handling zero co-occurrences).</li>
+<li><span class="arithmatex">\(f(X)\)</span> is non-decreasing to give more weight to frequent pairs.</li>
+<li><span class="arithmatex">\(f(X)\)</span> is bounded for large <span class="arithmatex">\(X\)</span> so stop words do not dominate the loss:</li>
+</ol>
 <div class="arithmatex">\[
 f(X) = \begin{cases} \left( \frac{X}{x_{\max}} \right)^\alpha &amp; \text{if } X &lt; x_{\max} \\ 1 &amp; \text{otherwise} \end{cases}
 \]</div>
@@ -4643,32 +4704,40 @@ If negative words were sampled according to their raw unigram frequency <span cl
 If negative words were sampled uniformly (<span class="arithmatex">\(P(w) \propto 1\)</span>), rare words would be sampled far too frequently relative to their true probability of being noise, degrading context representations.<br />
 Raising unigram frequencies to <span class="arithmatex">\(3/4\)</span>:</p>
 <div class="arithmatex">\[P_n(w) \propto f(w)^{0.75}\]</div>
-<p>acts as a non-linear probability redistributor:
-- For a frequent word with <span class="arithmatex">\(f = 1,000,000\)</span>: <span class="arithmatex">\(1,000,000^{0.75} = 31,622\)</span> (compressed by <span class="arithmatex">\(31\times\)</span>).
-- For a rare word with <span class="arithmatex">\(f = 16\)</span>: <span class="arithmatex">\(16^{0.75} = 8\)</span> (compressed by only <span class="arithmatex">\(2\times\)</span>).
-- The relative sampling probability of rare words is significantly elevated while preserving overall unigram rank ordering, striking the empirical sweet spot for noise contrastive estimation.</p>
+<p>acts as a non-linear probability redistributor:</p>
+<ul>
+<li>For a frequent word with <span class="arithmatex">\(f = 1,000,000\)</span>: <span class="arithmatex">\(1,000,000^{0.75} = 31,622\)</span> (compressed by <span class="arithmatex">\(31\times\)</span>).</li>
+<li>For a rare word with <span class="arithmatex">\(f = 16\)</span>: <span class="arithmatex">\(16^{0.75} = 8\)</span> (compressed by only <span class="arithmatex">\(2\times\)</span>).</li>
+<li>The relative sampling probability of rare words is significantly elevated while preserving overall unigram rank ordering, striking the empirical sweet spot for noise contrastive estimation.</li>
+</ul>
 <hr />
 <h3 id="q3-contrast-word2vec-and-glove-in-terms-of-optimization-mechanics-and-computational-scaling">Q3: Contrast Word2Vec and GloVe in terms of optimization mechanics and computational scaling.<a class="headerlink" href="#q3-contrast-word2vec-and-glove-in-terms-of-optimization-mechanics-and-computational-scaling" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Word2Vec (Online Streaming SGD)</strong>:
-  - Iterates over text as a temporal stream via a sliding window.
-  - Scales linearly with total token count <span class="arithmatex">\(T\)</span> of the corpus (<span class="arithmatex">\(\mathcal{O}(T)\)</span>).
-  - Wasteful for massive corpora because it must repeatedly sweep over millions of redundant occurrences of identical word-context pairs.
-- <strong>GloVe (Global Matrix Optimization)</strong>:
-  - Separates training into two distinct phases:
-    1. Single pass over the corpus to build the sparse co-occurrence matrix <span class="arithmatex">\(X \in \mathbb{R}^{|V| \times |V|}\)</span>.
-    2. Optimization over the non-zero entries of <span class="arithmatex">\(X\)</span> (<span class="arithmatex">\(|X| \ll |V|^2\)</span>).
-  - Scaling: Once the co-occurrence matrix is constructed, training time depends only on <span class="arithmatex">\(|X|\)</span> (the number of distinct non-zero co-occurrences), <strong>not on corpus token length <span class="arithmatex">\(T\)</span></strong>.
-  - Objective: GloVe optimizes a global log-bilinear least-squares loss with an explicit weighting function <span class="arithmatex">\(f(X_{ij})\)</span>, providing tighter control over stop-word distortion.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Word2Vec (Online Streaming SGD)</strong>:</li>
+<li>Iterates over text as a temporal stream via a sliding window.</li>
+<li>Scales linearly with total token count <span class="arithmatex">\(T\)</span> of the corpus (<span class="arithmatex">\(\mathcal{O}(T)\)</span>).</li>
+<li>Wasteful for massive corpora because it must repeatedly sweep over millions of redundant occurrences of identical word-context pairs.</li>
+<li><strong>GloVe (Global Matrix Optimization)</strong>:</li>
+<li>Separates training into two distinct phases:<ol>
+<li>Single pass over the corpus to build the sparse co-occurrence matrix <span class="arithmatex">\(X \in \mathbb{R}^{|V| \times |V|}\)</span>.</li>
+<li>Optimization over the non-zero entries of <span class="arithmatex">\(X\)</span> (<span class="arithmatex">\(|X| \ll |V|^2\)</span>).</li>
+</ol>
+</li>
+<li>Scaling: Once the co-occurrence matrix is constructed, training time depends only on <span class="arithmatex">\(|X|\)</span> (the number of distinct non-zero co-occurrences), <strong>not on corpus token length <span class="arithmatex">\(T\)</span></strong>.</li>
+<li>Objective: GloVe optimizes a global log-bilinear least-squares loss with an explicit weighting function <span class="arithmatex">\(f(X_{ij})\)</span>, providing tighter control over stop-word distortion.</li>
+</ul>
 <hr />
 <h3 id="q4-explain-the-byte-pair-encoding-bpe-algorithm-and-how-it-guarantees-zero-out-of-vocabulary-oov-tokens-at-inference-time">Q4: Explain the Byte-Pair Encoding (BPE) algorithm and how it guarantees zero Out-of-Vocabulary (OOV) tokens at inference time.<a class="headerlink" href="#q4-explain-the-byte-pair-encoding-bpe-algorithm-and-how-it-guarantees-zero-out-of-vocabulary-oov-tokens-at-inference-time" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
-BPE constructs a subword vocabulary through bottom-up iterative merges:
-1. Base tokens are initialized as all raw UTF-8 byte characters (<span class="arithmatex">\(256\)</span> tokens) or ASCII characters.
-2. The most frequent co-occurring adjacent token pairs are merged and added to the vocabulary.
-3. At test time, any unseen word is first broken down into its constituent base characters.
-4. The learned merge table is applied deterministically to combine adjacent characters into the largest recognized subwords.
-5. If a word is completely novel, it safely falls back to individual base characters. Because every possible Unicode string can be represented as a sequence of UTF-8 bytes, the model <strong>never produces an Out-of-Vocabulary token</strong>.</p>
+BPE constructs a subword vocabulary through bottom-up iterative merges:</p>
+<ol>
+<li>Base tokens are initialized as all raw UTF-8 byte characters (<span class="arithmatex">\(256\)</span> tokens) or ASCII characters.</li>
+<li>The most frequent co-occurring adjacent token pairs are merged and added to the vocabulary.</li>
+<li>At test time, any unseen word is first broken down into its constituent base characters.</li>
+<li>The learned merge table is applied deterministically to combine adjacent characters into the largest recognized subwords.</li>
+<li>If a word is completely novel, it safely falls back to individual base characters. Because every possible Unicode string can be represented as a sequence of UTF-8 bytes, the model <strong>never produces an Out-of-Vocabulary token</strong>.</li>
+</ol>
 <hr />
 <h3 id="q5-why-can-linear-word-vectors-capture-semantic-analogies-like-vecv_textking-vecv_textman-vecv_textwoman-approx-vecv_textqueen">Q5: Why can linear word vectors capture semantic analogies like <span class="arithmatex">\(\vec{v}_{\text{King}} - \vec{v}_{\text{Man}} + \vec{v}_{\text{Woman}} \approx \vec{v}_{\text{Queen}}\)</span>?<a class="headerlink" href="#q5-why-can-linear-word-vectors-capture-semantic-analogies-like-vecv_textking-vecv_textman-vecv_textwoman-approx-vecv_textqueen" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
@@ -4681,17 +4750,17 @@ Similarly, for gender-specific words:</p>
 <p>Because log-probability ratios isolate semantic differences into orthogonal directional vectors, the vector difference <span class="arithmatex">\((\mathbf{w}_{\text{King}} - \mathbf{w}_{\text{Man}})\)</span> directly encodes the abstract concept of <strong>"Royalty minus Male"</strong>. Adding <span class="arithmatex">\(\mathbf{w}_{\text{Woman}}\)</span> adds the "Female" direction, aligning geometrically with <span class="arithmatex">\(\mathbf{w}_{\text{Queen}}\)</span>.</p>
 <hr />
 <h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Contrast discrete sparse representations (One-Hot, BoW) with dense continuous embeddings.</li>
-<li>[ ] <strong>L2:</strong> Formulate Term Frequency-Inverse Document Frequency (TF-IDF) and explain why smooth IDF prevents zero division.</li>
-<li>[ ] <strong>L3:</strong> Explain the tokenization hierarchy (Word, Character, Subword) and state the advantages of Subword BPE.</li>
-<li>[ ] <strong>L4:</strong> Describe the Continuous Bag of Words (CBOW) and Skip-Gram Word2Vec architectures.</li>
-<li>[ ] <strong>L5:</strong> Explain the full Softmax computational bottleneck and how Negative Sampling converts it into binary logistic regressions.</li>
-<li>[ ] <strong>L6:</strong> Derive the exact parameter gradients for Skip-Gram with Negative Sampling.</li>
-<li>[ ] <strong>L7:</strong> Explain why negative samples are drawn from the unigram distribution raised to the <span class="arithmatex">\(0.75\)</span> power.</li>
-<li>[ ] <strong>L8:</strong> Derive GloVe's log-bilinear least squares objective from co-occurrence probability ratios.</li>
-<li>[ ] <strong>L9:</strong> Explain Levy &amp; Goldberg's proof that SGNS implicitly factorizes the Shifted Pointwise Mutual Information (SPPMI) matrix.</li>
-<li>[ ] <strong>L10:</strong> Implement a complete BPE tokenizer from scratch in Python and a Skip-Gram Negative Sampling Word2Vec model in pure NumPy.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Contrast discrete sparse representations (One-Hot, BoW) with dense continuous embeddings.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Formulate Term Frequency-Inverse Document Frequency (TF-IDF) and explain why smooth IDF prevents zero division.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Explain the tokenization hierarchy (Word, Character, Subword) and state the advantages of Subword BPE.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Describe the Continuous Bag of Words (CBOW) and Skip-Gram Word2Vec architectures.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Explain the full Softmax computational bottleneck and how Negative Sampling converts it into binary logistic regressions.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Derive the exact parameter gradients for Skip-Gram with Negative Sampling.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Explain why negative samples are drawn from the unigram distribution raised to the <span class="arithmatex">\(0.75\)</span> power.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Derive GloVe's log-bilinear least squares objective from co-occurrence probability ratios.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Explain Levy &amp; Goldberg's proof that SGNS implicitly factorizes the Shifted Pointwise Mutual Information (SPPMI) matrix.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Implement a complete BPE tokenizer from scratch in Python and a Skip-Gram Negative Sampling Word2Vec model in pure NumPy.</li>
 </ul>
 
 

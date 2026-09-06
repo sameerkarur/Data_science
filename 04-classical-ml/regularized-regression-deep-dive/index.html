@@ -4331,9 +4331,11 @@
 <div class="arithmatex">\[
 \mathcal{L}_{\text{Ridge}}(\mathbf{w}) = \frac{1}{2n} \|\mathbf{y} - X\mathbf{w}\|_2^2 + \frac{\lambda}{2} \|\mathbf{w}\|_2^2
 \]</div>
-<p>where <span class="arithmatex">\(\lambda \ge 0\)</span> is the regularization hyperparameter:
-- <span class="arithmatex">\(\lambda = 0 \implies\)</span> Ordinary Least Squares.
-- <span class="arithmatex">\(\lambda \to \infty \implies \mathbf{w}^* \to \mathbf{0}\)</span>.</p>
+<p>where <span class="arithmatex">\(\lambda \ge 0\)</span> is the regularization hyperparameter:</p>
+<ul>
+<li><span class="arithmatex">\(\lambda = 0 \implies\)</span> Ordinary Least Squares.</li>
+<li><span class="arithmatex">\(\lambda \to \infty \implies \mathbf{w}^* \to \mathbf{0}\)</span>.</li>
+</ul>
 <p><em>(Note: The intercept <span class="arithmatex">\(w_0\)</span> / bias <span class="arithmatex">\(b\)</span> is never regularized; we assume features <span class="arithmatex">\(X\)</span> and target <span class="arithmatex">\(\mathbf{y}\)</span> are centered, or the bias is unpenalized).</em></p>
 <h3 id="32-mathematical-derivation-of-the-closed-form-solution">3.2 Mathematical Derivation of the Closed-Form Solution<a class="headerlink" href="#32-mathematical-derivation-of-the-closed-form-solution" title="Permanent link">&para;</a></h3>
 <p>Expanding the objective function in matrix notation:</p>
@@ -4374,15 +4376,19 @@ X^T X + \lambda I_p = V \Lambda V^T + \lambda V I_p V^T = V (\Lambda + \lambda I
 \det(X^T X + \lambda I_p) = \prod_{j=1}^p (\sigma_j^2 + \lambda) \ge \lambda^p &gt; 0
 \]</div>
 <p>The matrix is <strong>guaranteed to be non-singular and invertible</strong>, even when <span class="arithmatex">\(p &gt; n\)</span> or when columns of <span class="arithmatex">\(X\)</span> are perfectly collinear!</p>
-<p>Furthermore, consider the matrix <strong>condition number</strong> <span class="arithmatex">\(\kappa(A) = \frac{\mu_{\max}}{\mu_{\min}}\)</span>:
-- For OLS: <span class="arithmatex">\(\kappa(X^T X) = \frac{\sigma_1^2}{\sigma_p^2} \to \infty\)</span> as <span class="arithmatex">\(\sigma_p \to 0\)</span>.
-- For Ridge: <span class="arithmatex">\(\kappa(X^T X + \lambda I) = \frac{\sigma_1^2 + \lambda}{\sigma_p^2 + \lambda} &lt; \frac{\sigma_1^2}{\sigma_p^2}\)</span>.</p>
+<p>Furthermore, consider the matrix <strong>condition number</strong> <span class="arithmatex">\(\kappa(A) = \frac{\mu_{\max}}{\mu_{\min}}\)</span>:</p>
+<ul>
+<li>For OLS: <span class="arithmatex">\(\kappa(X^T X) = \frac{\sigma_1^2}{\sigma_p^2} \to \infty\)</span> as <span class="arithmatex">\(\sigma_p \to 0\)</span>.</li>
+<li>For Ridge: <span class="arithmatex">\(\kappa(X^T X + \lambda I) = \frac{\sigma_1^2 + \lambda}{\sigma_p^2 + \lambda} &lt; \frac{\sigma_1^2}{\sigma_p^2}\)</span>.</li>
+</ul>
 <p>Ridge directly bounds numerical error propagation during matrix inversion.</p>
 <h3 id="34-svd-perspective-on-weight-shrinkage">3.4 SVD Perspective on Weight Shrinkage<a class="headerlink" href="#34-svd-perspective-on-weight-shrinkage" title="Permanent link">&para;</a></h3>
-<p>Using the Singular Value Decomposition (SVD) of the design matrix <span class="arithmatex">\(X = U \Sigma V^T\)</span>:
-- <span class="arithmatex">\(U \in \mathbb{R}^{n \times p}\)</span> has orthonormal columns (<span class="arithmatex">\(U^T U = I_p\)</span>).
-- <span class="arithmatex">\(\Sigma = \text{diag}(\sigma_1, \dots, \sigma_p)\)</span> contains singular values.
-- <span class="arithmatex">\(V \in \mathbb{R}^{p \times p}\)</span> is an orthogonal matrix of right singular vectors (<span class="arithmatex">\(V^T V = V V^T = I_p\)</span>).</p>
+<p>Using the Singular Value Decomposition (SVD) of the design matrix <span class="arithmatex">\(X = U \Sigma V^T\)</span>:</p>
+<ul>
+<li><span class="arithmatex">\(U \in \mathbb{R}^{n \times p}\)</span> has orthonormal columns (<span class="arithmatex">\(U^T U = I_p\)</span>).</li>
+<li><span class="arithmatex">\(\Sigma = \text{diag}(\sigma_1, \dots, \sigma_p)\)</span> contains singular values.</li>
+<li><span class="arithmatex">\(V \in \mathbb{R}^{p \times p}\)</span> is an orthogonal matrix of right singular vectors (<span class="arithmatex">\(V^T V = V V^T = I_p\)</span>).</li>
+</ul>
 <p>Substituting <span class="arithmatex">\(X = U \Sigma V^T\)</span> into the Ridge formula:</p>
 <div class="arithmatex">\[
 \begin{aligned}
@@ -4474,9 +4480,11 @@ w_j^* = \mathcal{S}(\rho_j, \alpha) = \text{sign}(\rho_j) \max(0, |\rho_j| - \al
     C -- No --&gt; E["w_j = sign(ρ_j)(|ρ_j| - α) (Shrunk)"]</code></pre>
 <p>Whenever the correlation between feature <span class="arithmatex">\(j\)</span> and the remaining residual is less than <span class="arithmatex">\(\alpha\)</span>, the weight is set to <strong>identically zero</strong>. Lasso performs <strong>automatic feature selection</strong>.</p>
 <h3 id="44-geometric-intuition-diamond-l_1-vs-circle-l_2">4.4 Geometric Intuition: Diamond (<span class="arithmatex">\(L_1\)</span>) vs. Circle (<span class="arithmatex">\(L_2\)</span>)<a class="headerlink" href="#44-geometric-intuition-diamond-l_1-vs-circle-l_2" title="Permanent link">&para;</a></h3>
-<p>Consider the constrained formulations:
-- <strong>Ridge</strong>: <span class="arithmatex">\(\min_{\mathbf{w}} \|\mathbf{y} - X\mathbf{w}\|_2^2\)</span> subject to <span class="arithmatex">\(w_1^2 + w_2^2 \le t^2\)</span> (a Euclidean circle/sphere).
-- <strong>Lasso</strong>: <span class="arithmatex">\(\min_{\mathbf{w}} \|\mathbf{y} - X\mathbf{w}\|_2^2\)</span> subject to <span class="arithmatex">\(|w_1| + |w_2| \le t\)</span> (a diamond/polytope).</p>
+<p>Consider the constrained formulations:</p>
+<ul>
+<li><strong>Ridge</strong>: <span class="arithmatex">\(\min_{\mathbf{w}} \|\mathbf{y} - X\mathbf{w}\|_2^2\)</span> subject to <span class="arithmatex">\(w_1^2 + w_2^2 \le t^2\)</span> (a Euclidean circle/sphere).</li>
+<li><strong>Lasso</strong>: <span class="arithmatex">\(\min_{\mathbf{w}} \|\mathbf{y} - X\mathbf{w}\|_2^2\)</span> subject to <span class="arithmatex">\(|w_1| + |w_2| \le t\)</span> (a diamond/polytope).</li>
+</ul>
 <pre class="mermaid"><code>flowchart TD
     subgraph "L2 Ball (Ridge)"
         C["Smooth circular boundary: w₁² + w₂² ≤ t²"]
@@ -4495,17 +4503,21 @@ w_j^* = \mathcal{S}(\rho_j, \alpha) = \text{sign}(\rho_j) \max(0, |\rho_j| - \al
 <hr />
 <h2 id="5-elastic-net-l_1-l_2-regularization">5. Elastic Net (<span class="arithmatex">\(L_1 + L_2\)</span> Regularization)<a class="headerlink" href="#5-elastic-net-l_1-l_2-regularization" title="Permanent link">&para;</a></h2>
 <h3 id="51-limitations-of-lasso">5.1 Limitations of Lasso<a class="headerlink" href="#51-limitations-of-lasso" title="Permanent link">&para;</a></h3>
-<p>While Lasso is powerful for sparse selection, it exhibits two structural flaws in real-world tabular data:
-1. <strong><span class="arithmatex">\(p &gt; n\)</span> Dimensionality Cap</strong>: If <span class="arithmatex">\(p &gt; n\)</span>, Lasso can select at most <span class="arithmatex">\(n\)</span> non-zero features before saturating, arbitrarily discarding remaining signals.
-2. <strong>Collinear Instability</strong>: If a group of features are highly correlated (e.g., Pearson <span class="arithmatex">\(r &gt; 0.95\)</span>), Lasso arbitrarily selects one feature from the cluster and sets all others to zero, causing massive variance across cross-validation splits.</p>
+<p>While Lasso is powerful for sparse selection, it exhibits two structural flaws in real-world tabular data:</p>
+<ol>
+<li><strong><span class="arithmatex">\(p &gt; n\)</span> Dimensionality Cap</strong>: If <span class="arithmatex">\(p &gt; n\)</span>, Lasso can select at most <span class="arithmatex">\(n\)</span> non-zero features before saturating, arbitrarily discarding remaining signals.</li>
+<li><strong>Collinear Instability</strong>: If a group of features are highly correlated (e.g., Pearson <span class="arithmatex">\(r &gt; 0.95\)</span>), Lasso arbitrarily selects one feature from the cluster and sets all others to zero, causing massive variance across cross-validation splits.</li>
+</ol>
 <h3 id="52-objective-function-grouping-effect">5.2 Objective Function &amp; Grouping Effect<a class="headerlink" href="#52-objective-function-grouping-effect" title="Permanent link">&para;</a></h3>
 <p>Elastic Net combines both penalties to retain Lasso's sparsity while inheriting Ridge's grouping stability:</p>
 <div class="arithmatex">\[
 \mathcal{L}_{\text{ElasticNet}}(\mathbf{w}) = \frac{1}{2n} \|\mathbf{y} - X\mathbf{w}\|_2^2 + \alpha \rho \|\mathbf{w}\|_1 + \frac{\alpha(1-\rho)}{2} \|\mathbf{w}\|_2^2
 \]</div>
-<p>where <span class="arithmatex">\(\alpha\)</span> controls overall penalty strength and <span class="arithmatex">\(\rho \in [0, 1]\)</span> is the mixing ratio (<code>l1_ratio</code> in scikit-learn):
-- <span class="arithmatex">\(\rho = 1 \implies\)</span> Pure Lasso.
-- <span class="arithmatex">\(\rho = 0 \implies\)</span> Pure Ridge.</p>
+<p>where <span class="arithmatex">\(\alpha\)</span> controls overall penalty strength and <span class="arithmatex">\(\rho \in [0, 1]\)</span> is the mixing ratio (<code>l1_ratio</code> in scikit-learn):</p>
+<ul>
+<li><span class="arithmatex">\(\rho = 1 \implies\)</span> Pure Lasso.</li>
+<li><span class="arithmatex">\(\rho = 0 \implies\)</span> Pure Ridge.</li>
+</ul>
 <h3 id="53-mathematical-proof-of-the-grouping-effect">5.3 Mathematical Proof of the Grouping Effect<a class="headerlink" href="#53-mathematical-proof-of-the-grouping-effect" title="Permanent link">&para;</a></h3>
 <p>Let features <span class="arithmatex">\(j\)</span> and <span class="arithmatex">\(k\)</span> be standardized (<span class="arithmatex">\(\|\mathbf{x}_j\|_2^2 = \|\mathbf{x}_k\|_2^2 = n\)</span>). Suppose they are highly correlated with sample correlation <span class="arithmatex">\(\rho_{jk} = \frac{1}{n} \mathbf{x}_j^T \mathbf{x}_k\)</span>.</p>
 <p>Assume <span class="arithmatex">\(\hat{w}_j \hat{w}_k &gt; 0\)</span> (both estimated coefficients share the same sign). Zou &amp; Hastie (2005) proved that the difference between their estimated weights satisfies:</p>
@@ -4682,10 +4694,12 @@ w_j^* = \mathcal{S}(\rho_j, \alpha) = \text{sign}(\rho_j) \max(0, |\rho_j| - \al
 <h3 id="83-debugging-convergence-warnings-in-coordinate-descent">8.3 Debugging Convergence Warnings in Coordinate Descent<a class="headerlink" href="#83-debugging-convergence-warnings-in-coordinate-descent" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Duality gap: 142.3, tolerance: 0.12
 </span></code></pre></div>
-<p><strong>Root Causes &amp; Diagnosis:</strong>
-1. <strong>Unscaled Features</strong>: If features have widely differing variances, the Lipschitz constant varies across coordinates, slowing coordinate descent.
-2. <strong>Extremely Small <span class="arithmatex">\(\alpha\)</span></strong>: As <span class="arithmatex">\(\alpha \to 0\)</span>, the problem approaches ill-conditioned OLS where coordinate descent exhibits slow sublinear convergence.
-3. <strong>Severe Multicollinearity</strong>: When features are near-duplicates, coordinate descent zig-zags between them.</p>
+<p><strong>Root Causes &amp; Diagnosis:</strong></p>
+<ol>
+<li><strong>Unscaled Features</strong>: If features have widely differing variances, the Lipschitz constant varies across coordinates, slowing coordinate descent.</li>
+<li><strong>Extremely Small <span class="arithmatex">\(\alpha\)</span></strong>: As <span class="arithmatex">\(\alpha \to 0\)</span>, the problem approaches ill-conditioned OLS where coordinate descent exhibits slow sublinear convergence.</li>
+<li><strong>Severe Multicollinearity</strong>: When features are near-duplicates, coordinate descent zig-zags between them.</li>
+</ol>
 <p><strong>Fix</strong>:
 Increase <code>max_iter</code>, scale all features via <code>StandardScaler</code>, or use <code>ElasticNet</code> / <code>Ridge</code> instead of pure <code>Lasso</code>.</p>
 <hr />
@@ -4731,15 +4745,19 @@ $<span class="arithmatex">\(p(\mathbf{w} | X, \mathbf{y}) \propto p(\mathbf{y} |
 Taking the negative log-posterior:
 $<span class="arithmatex">\(-\ln p(\mathbf{w} | X, \mathbf{y}) = \frac{1}{2\sigma^2} \|\mathbf{y} - X\mathbf{w}\|_2^2 - \ln p(\mathbf{w}) + \text{const}\)</span>$</p>
 <ol>
-<li><strong>Ridge Regression <span class="arithmatex">\(\iff\)</span> Independent Gaussian Prior</strong>:
+<li>
+<p><strong>Ridge Regression <span class="arithmatex">\(\iff\)</span> Independent Gaussian Prior</strong>:
    If we place a zero-mean isotropic Gaussian prior on weights <span class="arithmatex">\(w_j \sim \mathcal{N}(0, \tau^2)\)</span>:
    $<span class="arithmatex">\(p(\mathbf{w}) = \prod_{j=1}^p \frac{1}{\sqrt{2\pi\tau^2}} \exp\left(-\frac{w_j^2}{2\tau^2}\right) \implies -\ln p(\mathbf{w}) = \frac{1}{2\tau^2} \|\mathbf{w}\|_2^2 + \text{const}\)</span>$
-   Setting <span class="arithmatex">\(\lambda = \frac{\sigma^2}{\tau^2}\)</span> exactly recovers the Ridge objective.</li>
-<li><strong>Lasso Regression <span class="arithmatex">\(\iff\)</span> Independent Laplace (Double Exponential) Prior</strong>:
+   Setting <span class="arithmatex">\(\lambda = \frac{\sigma^2}{\tau^2}\)</span> exactly recovers the Ridge objective.</p>
+</li>
+<li>
+<p><strong>Lasso Regression <span class="arithmatex">\(\iff\)</span> Independent Laplace (Double Exponential) Prior</strong>:
    If we place a zero-mean Laplace prior on weights <span class="arithmatex">\(p(w_j) = \frac{1}{2b} \exp\left(-\frac{|w_j|}{b}\right)\)</span>:
    $<span class="arithmatex">\(-\ln p(\mathbf{w}) = \frac{1}{b} \|\mathbf{w}\|_1 + \text{const}\)</span>$
    Setting <span class="arithmatex">\(\alpha = \frac{\sigma^2}{b}\)</span> yields the Lasso objective.
-   The Laplace prior has a sharp cusp at zero, reflecting the prior belief that most parameters are exactly zero.</li>
+   The Laplace prior has a sharp cusp at zero, reflecting the prior belief that most parameters are exactly zero.</p>
+</li>
 </ol>
 <hr />
 <h3 id="q4-why-does-lasso-struggle-when-two-features-are-highly-collinear-and-how-does-elastic-net-resolve-this-via-the-grouping-effect">Q4: Why does Lasso struggle when two features are highly collinear, and how does Elastic Net resolve this via the Grouping Effect?<a class="headerlink" href="#q4-why-does-lasso-struggle-when-two-features-are-highly-collinear-and-how-does-elastic-net-resolve-this-via-the-grouping-effect" title="Permanent link">&para;</a></h3>
@@ -4760,31 +4778,35 @@ OLS always uses exactly <span class="arithmatex">\(p\)</span> degrees of freedom
 $<span class="arithmatex">\(H_{\text{Ridge}} = X (X^T X + \lambda I)^{-1} X^T\)</span>$
 Using the cyclic property of the trace <span class="arithmatex">\(\text{tr}(AB) = \text{tr}(BA)\)</span> and SVD <span class="arithmatex">\(X = U \Sigma V^T\)</span>:
 $<span class="arithmatex">\(\text{df}(\lambda) = \text{tr}\left( X^T X (X^T X + \lambda I)^{-1} \right) = \text{tr}\left( V \Sigma^2 (\Sigma^2 + \lambda I)^{-1} V^T \right) = \sum_{j=1}^p \frac{\sigma_j^2}{\sigma_j^2 + \lambda}\)</span>$
-Notice that:
-- As <span class="arithmatex">\(\lambda \to 0\)</span>: <span class="arithmatex">\(\frac{\sigma_j^2}{\sigma_j^2} = 1 \implies \text{df} \to p\)</span>.
-- As <span class="arithmatex">\(\lambda \to \infty\)</span>: <span class="arithmatex">\(\frac{\sigma_j^2}{\sigma_j^2 + \lambda} \to 0 \implies \text{df} \to 0\)</span>.
-The effective degrees of freedom decreases monotonically as <span class="arithmatex">\(\lambda\)</span> increases, providing a continuous measure of model complexity.</p>
+Notice that:</p>
+<ul>
+<li>As <span class="arithmatex">\(\lambda \to 0\)</span>: <span class="arithmatex">\(\frac{\sigma_j^2}{\sigma_j^2} = 1 \implies \text{df} \to p\)</span>.</li>
+<li>As <span class="arithmatex">\(\lambda \to \infty\)</span>: <span class="arithmatex">\(\frac{\sigma_j^2}{\sigma_j^2 + \lambda} \to 0 \implies \text{df} \to 0\)</span>.
+The effective degrees of freedom decreases monotonically as <span class="arithmatex">\(\lambda\)</span> increases, providing a continuous measure of model complexity.</li>
+</ul>
 <hr />
 <h3 id="q6-can-coordinate-descent-be-used-for-ridge-regression-why-is-it-rarely-used-compared-to-closed-form-or-conjugate-gradient">Q6: Can coordinate descent be used for Ridge regression? Why is it rarely used compared to closed-form or conjugate gradient?<a class="headerlink" href="#q6-can-coordinate-descent-be-used-for-ridge-regression-why-is-it-rarely-used-compared-to-closed-form-or-conjugate-gradient" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
 Yes, coordinate descent can be derived for Ridge regression. Isolating coordinate <span class="arithmatex">\(w_j\)</span> in the Ridge objective:
 $<span class="arithmatex">\(\frac{\partial}{\partial w_j} \left[ \frac{1}{2n} \sum_{i=1}^n (r_i^{(j)} - X_{ij} w_j)^2 + \frac{\lambda}{2} w_j^2 \right] = 0 \implies w_j = \frac{\rho_j}{\frac{1}{n}\sum_i X_{ij}^2 + \lambda}\)</span>$
-However, coordinate descent is rarely preferred for Ridge for two reasons:
-1. <strong>Differentiability</strong>: Ridge is smooth and quadratic everywhere. Its gradient <span class="arithmatex">\(\nabla \mathcal{L} = X^T(X\mathbf{w} - \mathbf{y}) + \lambda \mathbf{w}\)</span> is Lipschitz continuous. Accelerated first-order methods (Conjugate Gradient, L-BFGS) update all coordinates simultaneously and converge in <span class="arithmatex">\(O(p)\)</span> iterations without coordinate-wise looping.
-2. <strong>Matrix Factorization</strong>: When <span class="arithmatex">\(n \ge p\)</span> and <span class="arithmatex">\(p\)</span> is moderate (<span class="arithmatex">\(p \le 10,000\)</span>), computing the Cholesky decomposition of <span class="arithmatex">\((X^T X + \lambda I)\)</span> takes <span class="arithmatex">\(O(p^3)\)</span> flops once, after which solutions for multiple regularization parameters or cross-validation folds can be computed via rapid triangular back-substitution in <span class="arithmatex">\(O(p^2)\)</span> time.</p>
+However, coordinate descent is rarely preferred for Ridge for two reasons:</p>
+<ol>
+<li><strong>Differentiability</strong>: Ridge is smooth and quadratic everywhere. Its gradient <span class="arithmatex">\(\nabla \mathcal{L} = X^T(X\mathbf{w} - \mathbf{y}) + \lambda \mathbf{w}\)</span> is Lipschitz continuous. Accelerated first-order methods (Conjugate Gradient, L-BFGS) update all coordinates simultaneously and converge in <span class="arithmatex">\(O(p)\)</span> iterations without coordinate-wise looping.</li>
+<li><strong>Matrix Factorization</strong>: When <span class="arithmatex">\(n \ge p\)</span> and <span class="arithmatex">\(p\)</span> is moderate (<span class="arithmatex">\(p \le 10,000\)</span>), computing the Cholesky decomposition of <span class="arithmatex">\((X^T X + \lambda I)\)</span> takes <span class="arithmatex">\(O(p^3)\)</span> flops once, after which solutions for multiple regularization parameters or cross-validation folds can be computed via rapid triangular back-substitution in <span class="arithmatex">\(O(p^2)\)</span> time.</li>
+</ol>
 <hr />
 <h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> You can write the objective functions for Ridge (<span class="arithmatex">\(L_2\)</span>), Lasso (<span class="arithmatex">\(L_1\)</span>), and Elastic Net (<span class="arithmatex">\(L_1 + L_2\)</span>).</li>
-<li>[ ] <strong>L2:</strong> You can explain Runge's phenomenon and why high-degree polynomial regression requires shrinkage.</li>
-<li>[ ] <strong>L3:</strong> You can derive the closed-form Ridge solution <span class="arithmatex">\(\mathbf{w}^* = (X^T X + \lambda I)^{-1} X^T \mathbf{y}\)</span> using matrix calculus.</li>
-<li>[ ] <strong>L4:</strong> You can prove why <span class="arithmatex">\((X^T X + \lambda I)\)</span> is strictly positive definite and invertible for <span class="arithmatex">\(\lambda &gt; 0\)</span>.</li>
-<li>[ ] <strong>L5:</strong> You can explain how SVD decomposes Ridge into principal shrinkage factors <span class="arithmatex">\(\frac{\sigma_j^2}{\sigma_j^2 + \lambda}\)</span>.</li>
-<li>[ ] <strong>L6:</strong> You can define a subgradient and compute the subdifferential of <span class="arithmatex">\(f(w) = |w|\)</span>.</li>
-<li>[ ] <strong>L7:</strong> You can derive the Soft-Thresholding operator <span class="arithmatex">\(S(\rho, \alpha)\)</span> using subgradient calculus on partial residuals.</li>
-<li>[ ] <strong>L8:</strong> You can explain the geometric diamond vs. circle intuition and the Bayesian Gaussian vs. Laplace prior equivalence.</li>
-<li>[ ] <strong>L9:</strong> You can explain the grouping effect of Elastic Net and state its mathematical bound under collinearity.</li>
-<li>[ ] <strong>L10:</strong> You can implement vectorized coordinate descent for Elastic Net from scratch in NumPy and debug convergence warnings.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can write the objective functions for Ridge (<span class="arithmatex">\(L_2\)</span>), Lasso (<span class="arithmatex">\(L_1\)</span>), and Elastic Net (<span class="arithmatex">\(L_1 + L_2\)</span>).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can explain Runge's phenomenon and why high-degree polynomial regression requires shrinkage.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can derive the closed-form Ridge solution <span class="arithmatex">\(\mathbf{w}^* = (X^T X + \lambda I)^{-1} X^T \mathbf{y}\)</span> using matrix calculus.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can prove why <span class="arithmatex">\((X^T X + \lambda I)\)</span> is strictly positive definite and invertible for <span class="arithmatex">\(\lambda &gt; 0\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can explain how SVD decomposes Ridge into principal shrinkage factors <span class="arithmatex">\(\frac{\sigma_j^2}{\sigma_j^2 + \lambda}\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can define a subgradient and compute the subdifferential of <span class="arithmatex">\(f(w) = |w|\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can derive the Soft-Thresholding operator <span class="arithmatex">\(S(\rho, \alpha)\)</span> using subgradient calculus on partial residuals.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can explain the geometric diamond vs. circle intuition and the Bayesian Gaussian vs. Laplace prior equivalence.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can explain the grouping effect of Elastic Net and state its mathematical bound under collinearity.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can implement vectorized coordinate descent for Elastic Net from scratch in NumPy and debug convergence warnings.</li>
 </ul>
 
 

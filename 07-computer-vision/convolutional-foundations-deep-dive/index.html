@@ -4418,13 +4418,17 @@
 <div class="arithmatex">\[
 196,608 \times 1,024 \approx 2.01 \times 10^8 \text{ parameters}
 \]</div>
-<p>This naive dense approach suffers from three fundamental flaws:
-1. <strong>Parameter Explosion &amp; Overfitting</strong>: Billions of weights for modest images, causing extreme sample inefficiency.
-2. <strong>Loss of Spatial Topology</strong>: Flattening an image <span class="arithmatex">\(\mathbf{x} \in \mathbb{R}^{H \times W \times C} \to \mathbb{R}^{H \cdot W \cdot C}\)</span> destroys spatial adjacency. A pixel at <span class="arithmatex">\((i, j)\)</span> is treated as equally distant from its immediate neighbor <span class="arithmatex">\((i, j+1)\)</span> as from a corner pixel <span class="arithmatex">\((0, 0)\)</span>.
-3. <strong>Lack of Translation Equivariance</strong>: If an object shifts by 5 pixels, an MLP must re-learn its detector weights for the new coordinate location from scratch.</p>
-<p><strong>Convolutional Neural Networks (CNNs)</strong> solve all three problems by introducing two inductive biases rooted in the physics of the visual world:
-- <strong>Spatial Locality</strong>: Neurons only receive connections from a small local spatial patch (receptive field), reflecting the statistical property that nearby pixels are strongly correlated.
-- <strong>Weight Sharing (Stationarity)</strong>: The exact same kernel (feature detector) is swept across every spatial position, enforcing <strong>translation equivariance</strong> and slashing parameter counts by orders of magnitude.</p>
+<p>This naive dense approach suffers from three fundamental flaws:</p>
+<ol>
+<li><strong>Parameter Explosion &amp; Overfitting</strong>: Billions of weights for modest images, causing extreme sample inefficiency.</li>
+<li><strong>Loss of Spatial Topology</strong>: Flattening an image <span class="arithmatex">\(\mathbf{x} \in \mathbb{R}^{H \times W \times C} \to \mathbb{R}^{H \cdot W \cdot C}\)</span> destroys spatial adjacency. A pixel at <span class="arithmatex">\((i, j)\)</span> is treated as equally distant from its immediate neighbor <span class="arithmatex">\((i, j+1)\)</span> as from a corner pixel <span class="arithmatex">\((0, 0)\)</span>.</li>
+<li><strong>Lack of Translation Equivariance</strong>: If an object shifts by 5 pixels, an MLP must re-learn its detector weights for the new coordinate location from scratch.</li>
+</ol>
+<p><strong>Convolutional Neural Networks (CNNs)</strong> solve all three problems by introducing two inductive biases rooted in the physics of the visual world:</p>
+<ul>
+<li><strong>Spatial Locality</strong>: Neurons only receive connections from a small local spatial patch (receptive field), reflecting the statistical property that nearby pixels are strongly correlated.</li>
+<li><strong>Weight Sharing (Stationarity)</strong>: The exact same kernel (feature detector) is swept across every spatial position, enforcing <strong>translation equivariance</strong> and slashing parameter counts by orders of magnitude.</li>
+</ul>
 <pre class="mermaid"><code>flowchart TD
     subgraph Fully Connected Failure
         IMG1["Image: (H, W, C)"] --&gt; FLAT["Flatten: Vector (H·W·C)"]
@@ -4439,24 +4443,32 @@
     end</code></pre>
 <hr />
 <h2 id="2-image-representation-pixel-tensors-and-color-spaces">2. Image Representation: Pixel Tensors and Color Spaces<a class="headerlink" href="#2-image-representation-pixel-tensors-and-color-spaces" title="Permanent link">&para;</a></h2>
-<p>Digital images are discrete 3-order tensors <span class="arithmatex">\(\mathbf{I} \in \mathbb{R}^{C \times H \times W}\)</span> (in PyTorch standard <code>CHW</code> format) or <span class="arithmatex">\(\mathbb{R}^{H \times W \times C}\)</span> (in TensorFlow standard <code>HWC</code> format):
-- <span class="arithmatex">\(H\)</span>: Height (vertical spatial resolution, rows <span class="arithmatex">\(i \in \{0, \dots, H-1\}\)</span>).
-- <span class="arithmatex">\(W\)</span>: Width (horizontal spatial resolution, columns <span class="arithmatex">\(j \in \{0, \dots, W-1\}\)</span>).
-- <span class="arithmatex">\(C\)</span>: Number of channels (<span class="arithmatex">\(C=1\)</span> for Grayscale, <span class="arithmatex">\(C=3\)</span> for RGB, <span class="arithmatex">\(C \ge 4\)</span> for multispectral satellite/medical imagery).</p>
+<p>Digital images are discrete 3-order tensors <span class="arithmatex">\(\mathbf{I} \in \mathbb{R}^{C \times H \times W}\)</span> (in PyTorch standard <code>CHW</code> format) or <span class="arithmatex">\(\mathbb{R}^{H \times W \times C}\)</span> (in TensorFlow standard <code>HWC</code> format):</p>
+<ul>
+<li><span class="arithmatex">\(H\)</span>: Height (vertical spatial resolution, rows <span class="arithmatex">\(i \in \{0, \dots, H-1\}\)</span>).</li>
+<li><span class="arithmatex">\(W\)</span>: Width (horizontal spatial resolution, columns <span class="arithmatex">\(j \in \{0, \dots, W-1\}\)</span>).</li>
+<li><span class="arithmatex">\(C\)</span>: Number of channels (<span class="arithmatex">\(C=1\)</span> for Grayscale, <span class="arithmatex">\(C=3\)</span> for RGB, <span class="arithmatex">\(C \ge 4\)</span> for multispectral satellite/medical imagery).</li>
+</ul>
 <h3 id="21-dynamic-range-and-normalization">2.1 Dynamic Range and Normalization<a class="headerlink" href="#21-dynamic-range-and-normalization" title="Permanent link">&para;</a></h3>
 <p>Raw image bytes are stored as unsigned 8-bit integers <span class="arithmatex">\(\text{uint8} \in [0, 255]\)</span>. In deep learning, pixels are converted to floating-point tensors and normalized:</p>
 <div class="arithmatex">\[
 x_{\text{norm}} = \frac{x - \mu}{\sigma} \quad \text{where } x \in [0.0, 1.0]
 \]</div>
-<p>For ImageNet pretrained models:
-- <span class="arithmatex">\(\boldsymbol{\mu} = [0.485, 0.456, 0.406]\)</span>
-- <span class="arithmatex">\(\boldsymbol{\sigma} = [0.229, 0.224, 0.225]\)</span></p>
+<p>For ImageNet pretrained models:</p>
+<ul>
+<li><span class="arithmatex">\(\boldsymbol{\mu} = [0.485, 0.456, 0.406]\)</span></li>
+<li><span class="arithmatex">\(\boldsymbol{\sigma} = [0.229, 0.224, 0.225]\)</span></li>
+</ul>
 <h3 id="22-color-spaces">2.2 Color Spaces<a class="headerlink" href="#22-color-spaces" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>RGB (Additive Color Space)</strong>: Orthogonal primary color intensities. Channels are highly correlated (luminance and chrominance are conflated).</li>
-<li><strong>Grayscale (Luminance Conversion via ITU-R BT.601)</strong>:
-   $<span class="arithmatex">\(Y = 0.299 R + 0.587 G + 0.114 B\)</span>$</li>
-<li><strong>HSV (Hue, Saturation, Value)</strong>: Decouples chromatic content (Hue: <span class="arithmatex">\(0^\circ - 360^\circ\)</span>), color purity (Saturation: <span class="arithmatex">\([0, 1]\)</span>), and brightness (Value: <span class="arithmatex">\([0, 1]\)</span>), ideal for color-based object segmentation robust to lighting shifts.</li>
+<li>
+<p><strong>Grayscale (Luminance Conversion via ITU-R BT.601)</strong>:
+   $<span class="arithmatex">\(Y = 0.299 R + 0.587 G + 0.114 B\)</span>$</p>
+</li>
+<li>
+<p><strong>HSV (Hue, Saturation, Value)</strong>: Decouples chromatic content (Hue: <span class="arithmatex">\(0^\circ - 360^\circ\)</span>), color purity (Saturation: <span class="arithmatex">\([0, 1]\)</span>), and brightness (Value: <span class="arithmatex">\([0, 1]\)</span>), ideal for color-based object segmentation robust to lighting shifts.</p>
+</li>
 </ol>
 <hr />
 <h2 id="3-the-2d-convolution-operation-discrete-mathematics">3. The 2D Convolution Operation: Discrete Mathematics<a class="headerlink" href="#3-the-2d-convolution-operation-discrete-mathematics" title="Permanent link">&para;</a></h2>
@@ -4465,11 +4477,17 @@ x_{\text{norm}} = \frac{x - \mu}{\sigma} \quad \text{where } x \in [0.0, 1.0]
 <div class="arithmatex">\[
 (f * g)(t) = \int_{-\infty}^{\infty} f(\tau) g(t - \tau) d\tau
 \]</div>
-<p>For discrete 2D spatial images <span class="arithmatex">\(I\)</span> and kernel <span class="arithmatex">\(K \in \mathbb{R}^{k_h \times k_w}\)</span>:
-- <strong>True 2D Convolution (with Kernel Flip)</strong>:
-  $<span class="arithmatex">\((I * K)(i, j) = \sum_{m=-M}^M \sum_{n=-N}^N I(i - m, j - n) K(m, n)\)</span>$
-- <strong>2D Cross-Correlation (Without Flip)</strong>:
+<p>For discrete 2D spatial images <span class="arithmatex">\(I\)</span> and kernel <span class="arithmatex">\(K \in \mathbb{R}^{k_h \times k_w}\)</span>:</p>
+<ul>
+<li>
+<p><strong>True 2D Convolution (with Kernel Flip)</strong>:
+  $<span class="arithmatex">\((I * K)(i, j) = \sum_{m=-M}^M \sum_{n=-N}^N I(i - m, j - n) K(m, n)\)</span>$</p>
+</li>
+<li>
+<p><strong>2D Cross-Correlation (Without Flip)</strong>:
   $<span class="arithmatex">\((I \star K)(i, j) = \sum_{m=-M}^M \sum_{n=-N}^N I(i + m, j + n) K(m, n)\)</span>$</p>
+</li>
+</ul>
 <p><strong>The Deep Learning Convention</strong>:<br />
 Virtually all deep learning libraries (PyTorch <code>nn.Conv2d</code>, TensorFlow <code>tf.keras.layers.Conv2D</code>) compute <strong>cross-correlation</strong> but call it <strong>convolution</strong>. Because kernel weights <span class="arithmatex">\(K\)</span> are learned via backpropagation, flipping the filter prior to training is mathematically superfluous: the optimizer simply learns the reflected filter directly.</p>
 <h3 id="32-multi-channel-2d-convolution">3.2 Multi-Channel 2D Convolution<a class="headerlink" href="#32-multi-channel-2d-convolution" title="Permanent link">&para;</a></h3>
@@ -4526,12 +4544,14 @@ K_{\text{Laplacian}} = \begin{bmatrix} 0 &amp; 1 &amp; 0 \\ 1 &amp; -4 &amp; 1 \
 <hr />
 <h2 id="5-padding-stride-and-output-dimension-formula">5. Padding, Stride, and Output Dimension Formula<a class="headerlink" href="#5-padding-stride-and-output-dimension-formula" title="Permanent link">&para;</a></h2>
 <h3 id="51-output-dimension-formula">5.1 Output Dimension Formula<a class="headerlink" href="#51-output-dimension-formula" title="Permanent link">&para;</a></h3>
-<p>Given:
-- Input spatial dimension: <span class="arithmatex">\(W_{\text{in}}\)</span>
-- Kernel spatial size: <span class="arithmatex">\(K\)</span>
-- Zero-padding: <span class="arithmatex">\(P\)</span> (number of zero pixels added to each border)
-- Stride: <span class="arithmatex">\(S\)</span> (step size of kernel sweep)
-- Dilation: <span class="arithmatex">\(d\)</span> (spacing between kernel elements, default <span class="arithmatex">\(d=1\)</span>)</p>
+<p>Given:</p>
+<ul>
+<li>Input spatial dimension: <span class="arithmatex">\(W_{\text{in}}\)</span></li>
+<li>Kernel spatial size: <span class="arithmatex">\(K\)</span></li>
+<li>Zero-padding: <span class="arithmatex">\(P\)</span> (number of zero pixels added to each border)</li>
+<li>Stride: <span class="arithmatex">\(S\)</span> (step size of kernel sweep)</li>
+<li>Dilation: <span class="arithmatex">\(d\)</span> (spacing between kernel elements, default <span class="arithmatex">\(d=1\)</span>)</li>
+</ul>
 <p>The output spatial dimension <span class="arithmatex">\(W_{\text{out}}\)</span> is:</p>
 <div class="arithmatex">\[
 W_{\text{out}} = \left\lfloor \frac{W_{\text{in}} - d(K - 1) - 1 + 2P}{S} \right\rfloor + 1
@@ -4543,16 +4563,22 @@ W_{\text{out}} = \left\lfloor \frac{W_{\text{in}} - K + 2P}{S} \right\rfloor + 1
 <h3 id="52-padding-types">5.2 Padding Types<a class="headerlink" href="#52-padding-types" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Valid Padding (<span class="arithmatex">\(P = 0\)</span>)</strong>: No padding. The filter stays strictly within image boundaries. Spatial dimensions shrink by <span class="arithmatex">\(K - 1\)</span> at each layer.</li>
-<li><strong>Same Padding</strong>: Chooses padding <span class="arithmatex">\(P\)</span> such that <span class="arithmatex">\(W_{\text{out}} = \lceil W_{\text{in}} / S \rceil\)</span>. For stride <span class="arithmatex">\(S=1\)</span> and odd kernel size <span class="arithmatex">\(K\)</span>:
+<li>
+<p><strong>Same Padding</strong>: Chooses padding <span class="arithmatex">\(P\)</span> such that <span class="arithmatex">\(W_{\text{out}} = \lceil W_{\text{in}} / S \rceil\)</span>. For stride <span class="arithmatex">\(S=1\)</span> and odd kernel size <span class="arithmatex">\(K\)</span>:
    $<span class="arithmatex">\(P = \frac{K - 1}{2}\)</span>$
-   For a <span class="arithmatex">\(3 \times 3\)</span> kernel, <span class="arithmatex">\(P = 1\)</span>. For a <span class="arithmatex">\(5 \times 5\)</span> kernel, <span class="arithmatex">\(P = 2\)</span>.</li>
-<li><strong>Full Padding (<span class="arithmatex">\(P = K - 1\)</span>)</strong>: The kernel visits every position where it overlaps with at least 1 pixel of the input, producing output dimension <span class="arithmatex">\(W_{\text{in}} + K - 1\)</span>.</li>
+   For a <span class="arithmatex">\(3 \times 3\)</span> kernel, <span class="arithmatex">\(P = 1\)</span>. For a <span class="arithmatex">\(5 \times 5\)</span> kernel, <span class="arithmatex">\(P = 2\)</span>.</p>
+</li>
+<li>
+<p><strong>Full Padding (<span class="arithmatex">\(P = K - 1\)</span>)</strong>: The kernel visits every position where it overlaps with at least 1 pixel of the input, producing output dimension <span class="arithmatex">\(W_{\text{in}} + K - 1\)</span>.</p>
+</li>
 </ol>
 <hr />
 <h2 id="6-pooling-operations-downsampling-invariance">6. Pooling Operations: Downsampling &amp; Invariance<a class="headerlink" href="#6-pooling-operations-downsampling-invariance" title="Permanent link">&para;</a></h2>
-<p>Pooling downsamples feature maps, providing two key benefits:
-1. <strong>Computational &amp; Memory Reduction</strong>: Halving spatial dimensions reduces memory and FLOPs of subsequent layers by <span class="arithmatex">\(4\times\)</span>.
-2. <strong>Translation Invariance</strong>: While convolutions are translation <em>equivariant</em>, pooling introduces local translation <em>invariance</em> (<span class="arithmatex">\(f(T_{\mathbf{v}} X) \approx f(X)\)</span>).</p>
+<p>Pooling downsamples feature maps, providing two key benefits:</p>
+<ol>
+<li><strong>Computational &amp; Memory Reduction</strong>: Halving spatial dimensions reduces memory and FLOPs of subsequent layers by <span class="arithmatex">\(4\times\)</span>.</li>
+<li><strong>Translation Invariance</strong>: While convolutions are translation <em>equivariant</em>, pooling introduces local translation <em>invariance</em> (<span class="arithmatex">\(f(T_{\mathbf{v}} X) \approx f(X)\)</span>).</li>
+</ol>
 <pre class="mermaid"><code>flowchart TD
     subgraph "2x2 Max Pooling (Stride 2)"
         P1["[ 1  3 ]\n[ 2  9 ]"] --&gt;|max| M1["9"]
@@ -4562,15 +4588,21 @@ W_{\text{out}} = \left\lfloor \frac{W_{\text{in}} - K + 2P}{S} \right\rfloor + 1
     end</code></pre>
 <h3 id="61-max-pooling-vs-average-pooling">6.1 Max Pooling vs. Average Pooling<a class="headerlink" href="#61-max-pooling-vs-average-pooling" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Max Pooling</strong>: Selects the maximum value in local window <span class="arithmatex">\(\Omega(i, j)\)</span>:
+<li>
+<p><strong>Max Pooling</strong>: Selects the maximum value in local window <span class="arithmatex">\(\Omega(i, j)\)</span>:
   $<span class="arithmatex">\(Y(i, j) = \max_{(m, n) \in \Omega(i, j)} X(m, n)\)</span>$
-  Preserves sharp, high-frequency structural signals (edges, corners, textures).</li>
-<li><strong>Average Pooling</strong>: Computes the arithmetic mean:
+  Preserves sharp, high-frequency structural signals (edges, corners, textures).</p>
+</li>
+<li>
+<p><strong>Average Pooling</strong>: Computes the arithmetic mean:
   $<span class="arithmatex">\(Y(i, j) = \frac{1}{|\Omega|} \sum_{(m, n) \in \Omega(i, j)} X(m, n)\)</span>$
-  Acts as a low-pass spatial smoothing filter.</li>
-<li><strong>Global Average Pooling (GAP, Lin et al., 2013)</strong>: Collapses each entire <span class="arithmatex">\((H \times W)\)</span> channel into a single scalar:
+  Acts as a low-pass spatial smoothing filter.</p>
+</li>
+<li>
+<p><strong>Global Average Pooling (GAP, Lin et al., 2013)</strong>: Collapses each entire <span class="arithmatex">\((H \times W)\)</span> channel into a single scalar:
   $<span class="arithmatex">\(Y(c) = \frac{1}{H \cdot W} \sum_{i=1}^H \sum_{j=1}^W X(c, i, j)\)</span>$
-  Replaces fragile, parameter-heavy dense classification heads with a parameter-free vector representation.</li>
+  Replaces fragile, parameter-heavy dense classification heads with a parameter-free vector representation.</p>
+</li>
 </ul>
 <hr />
 <h2 id="7-receptive-field-calculus">7. Receptive Field Calculus<a class="headerlink" href="#7-receptive-field-calculus" title="Permanent link">&para;</a></h2>
@@ -4581,29 +4613,41 @@ W_{\text{out}} = \left\lfloor \frac{W_{\text{in}} - K + 2P}{S} \right\rfloor + 1
     L2 --&gt; L3["Conv 3x3, stride 2 (RF = 7, jump = 2)"]
     L3 --&gt; L4["Conv 3x3, stride 1 (RF = 11, jump = 2)"]</code></pre>
 <h3 id="71-analytical-recurrence-relations">7.1 Analytical Recurrence Relations<a class="headerlink" href="#71-analytical-recurrence-relations" title="Permanent link">&para;</a></h3>
-<p>Let:
-- <span class="arithmatex">\(k_l\)</span>: Kernel size at layer <span class="arithmatex">\(l\)</span>.
-- <span class="arithmatex">\(s_l\)</span>: Stride at layer <span class="arithmatex">\(l\)</span>.
-- <span class="arithmatex">\(p_l\)</span>: Padding at layer <span class="arithmatex">\(l\)</span>.
-- <span class="arithmatex">\(j_l\)</span>: The <strong>jump</strong> (feature stride) at layer <span class="arithmatex">\(l\)</span>, defined as the distance in input pixels between two adjacent features in layer <span class="arithmatex">\(l\)</span>.
-- <span class="arithmatex">\(RF_l\)</span>: The receptive field diameter at layer <span class="arithmatex">\(l\)</span>.</p>
+<p>Let:</p>
+<ul>
+<li><span class="arithmatex">\(k_l\)</span>: Kernel size at layer <span class="arithmatex">\(l\)</span>.</li>
+<li><span class="arithmatex">\(s_l\)</span>: Stride at layer <span class="arithmatex">\(l\)</span>.</li>
+<li><span class="arithmatex">\(p_l\)</span>: Padding at layer <span class="arithmatex">\(l\)</span>.</li>
+<li><span class="arithmatex">\(j_l\)</span>: The <strong>jump</strong> (feature stride) at layer <span class="arithmatex">\(l\)</span>, defined as the distance in input pixels between two adjacent features in layer <span class="arithmatex">\(l\)</span>.</li>
+<li><span class="arithmatex">\(RF_l\)</span>: The receptive field diameter at layer <span class="arithmatex">\(l\)</span>.</li>
+</ul>
 <p><strong>Base Case (Input layer <span class="arithmatex">\(l=0\)</span>):</strong>
 $<span class="arithmatex">\(RF_0 = 1, \qquad j_0 = 1\)</span>$</p>
-<p><strong>Inductive Step for Layer <span class="arithmatex">\(l \ge 1\)</span>:</strong>
-1. <strong>Jump Update</strong>:
-   $<span class="arithmatex">\(j_l = j_{l-1} \cdot s_l\)</span>$
-2. <strong>Receptive Field Update</strong>:
+<p><strong>Inductive Step for Layer <span class="arithmatex">\(l \ge 1\)</span>:</strong></p>
+<ol>
+<li>
+<p><strong>Jump Update</strong>:
+   $<span class="arithmatex">\(j_l = j_{l-1} \cdot s_l\)</span>$</p>
+</li>
+<li>
+<p><strong>Receptive Field Update</strong>:
    $<span class="arithmatex">\(RF_l = RF_{l-1} + (k_l - 1) \cdot j_{l-1}\)</span>$</p>
+</li>
+</ol>
 <h3 id="72-factorization-of-large-convolutions-vgg-insight">7.2 Factorization of Large Convolutions (VGG Insight)<a class="headerlink" href="#72-factorization-of-large-convolutions-vgg-insight" title="Permanent link">&para;</a></h3>
-<p>Consider replacing a single <span class="arithmatex">\(7 \times 7\)</span> convolution (<span class="arithmatex">\(s=1\)</span>) with a cascade of three <span class="arithmatex">\(3 \times 3\)</span> convolutions (<span class="arithmatex">\(s=1\)</span>):
-- Layer 1 (<span class="arithmatex">\(3 \times 3\)</span>): <span class="arithmatex">\(RF_1 = 1 + (3 - 1) \times 1 = 3\)</span>.
-- Layer 2 (<span class="arithmatex">\(3 \times 3\)</span>): <span class="arithmatex">\(RF_2 = 3 + (3 - 1) \times 1 = 5\)</span>.
-- Layer 3 (<span class="arithmatex">\(3 \times 3\)</span>): <span class="arithmatex">\(RF_3 = 5 + (3 - 1) \times 1 = 7\)</span>.</p>
+<p>Consider replacing a single <span class="arithmatex">\(7 \times 7\)</span> convolution (<span class="arithmatex">\(s=1\)</span>) with a cascade of three <span class="arithmatex">\(3 \times 3\)</span> convolutions (<span class="arithmatex">\(s=1\)</span>):</p>
+<ul>
+<li>Layer 1 (<span class="arithmatex">\(3 \times 3\)</span>): <span class="arithmatex">\(RF_1 = 1 + (3 - 1) \times 1 = 3\)</span>.</li>
+<li>Layer 2 (<span class="arithmatex">\(3 \times 3\)</span>): <span class="arithmatex">\(RF_2 = 3 + (3 - 1) \times 1 = 5\)</span>.</li>
+<li>Layer 3 (<span class="arithmatex">\(3 \times 3\)</span>): <span class="arithmatex">\(RF_3 = 5 + (3 - 1) \times 1 = 7\)</span>.</li>
+</ul>
 <p>Both achieve the exact same <span class="arithmatex">\(7 \times 7\)</span> receptive field!<br />
-<strong>Parameter Comparison (<span class="arithmatex">\(C\)</span> channels):</strong>
-- Single <span class="arithmatex">\(7 \times 7\)</span>: <span class="arithmatex">\(C \times (7 \times 7 \times C) = 49 C^2\)</span> weights.
-- Three <span class="arithmatex">\(3 \times 3\)</span>: <span class="arithmatex">\(3 \times (C \times 3 \times 3 \times C) = 27 C^2\)</span> weights — <strong>a 45% parameter reduction!</strong><br />
-Furthermore, the stacked <span class="arithmatex">\(3 \times 3\)</span> layers incorporate 3 non-linear activation functions instead of 1, drastically increasing representation capacity.</p>
+<strong>Parameter Comparison (<span class="arithmatex">\(C\)</span> channels):</strong></p>
+<ul>
+<li>Single <span class="arithmatex">\(7 \times 7\)</span>: <span class="arithmatex">\(C \times (7 \times 7 \times C) = 49 C^2\)</span> weights.</li>
+<li>Three <span class="arithmatex">\(3 \times 3\)</span>: <span class="arithmatex">\(3 \times (C \times 3 \times 3 \times C) = 27 C^2\)</span> weights — <strong>a 45% parameter reduction!</strong><br />
+Furthermore, the stacked <span class="arithmatex">\(3 \times 3\)</span> layers incorporate 3 non-linear activation functions instead of 1, drastically increasing representation capacity.</li>
+</ul>
 <hr />
 <h2 id="8-analytical-backward-pass-of-2d-convolution">8. Analytical Backward Pass of 2D Convolution<a class="headerlink" href="#8-analytical-backward-pass-of-2d-convolution" title="Permanent link">&para;</a></h2>
 <p>Let <span class="arithmatex">\(\mathcal{L}\)</span> be the scalar loss. Assume we receive the upstream gradient tensor <span class="arithmatex">\(\frac{\partial \mathcal{L}}{\partial Y} \in \mathbb{R}^{C_{\text{out}} \times H_{\text{out}} \times W_{\text{out}}}\)</span>.<br />
@@ -4644,17 +4688,27 @@ We need to derive <span class="arithmatex">\(\frac{\partial \mathcal{L}}{\partia
     WROW &amp; XCOL --&gt;|BLAS GEMM MatMul| YMAT["Y_mat = W_row @ X_col: (C_out, H_out · W_out)"]
     YMAT --&gt;|Reshape| YOUT["Output Y: (C_out, H_out, W_out)"]</code></pre>
 <ol>
-<li><strong><code>im2col</code> Transformation</strong>: Every <span class="arithmatex">\(C_{\text{in}} \times k \times k\)</span> receptive field patch in <span class="arithmatex">\(X\)</span> is unrolled into a column vector of length <span class="arithmatex">\(C_{\text{in}} \cdot k \cdot k\)</span>.<br />
-   Gathering all <span class="arithmatex">\(H_{\text{out}} \cdot W_{\text{out}}\)</span> patches produces a matrix <span class="arithmatex">\(X_{\text{col}} \in \mathbb{R}^{(C_{\text{in}} \cdot k \cdot k) \times (H_{\text{out}} \cdot W_{\text{out}})}\)</span>.</li>
-<li><strong>Weight Matrix Reshape</strong>: The filter tensor is reshaped into <span class="arithmatex">\(W_{\text{row}} \in \mathbb{R}^{C_{\text{out}} \times (C_{\text{in}} \cdot k \cdot k)}\)</span>.</li>
-<li><strong>GEMM Evaluation</strong>:
-   $<span class="arithmatex">\(Y_{\text{mat}} = W_{\text{row}} \cdot X_{\text{col}} \in \mathbb{R}^{C_{\text{out}} \times (H_{\text{out}} \cdot W_{\text{out}})}\)</span>$</li>
-<li><strong>Reshape</strong>: <span class="arithmatex">\(Y_{\text{mat}}\)</span> is reshaped to <span class="arithmatex">\((C_{\text{out}}, H_{\text{out}}, W_{\text{out}})\)</span>.</li>
+<li>
+<p><strong><code>im2col</code> Transformation</strong>: Every <span class="arithmatex">\(C_{\text{in}} \times k \times k\)</span> receptive field patch in <span class="arithmatex">\(X\)</span> is unrolled into a column vector of length <span class="arithmatex">\(C_{\text{in}} \cdot k \cdot k\)</span>.<br />
+   Gathering all <span class="arithmatex">\(H_{\text{out}} \cdot W_{\text{out}}\)</span> patches produces a matrix <span class="arithmatex">\(X_{\text{col}} \in \mathbb{R}^{(C_{\text{in}} \cdot k \cdot k) \times (H_{\text{out}} \cdot W_{\text{out}})}\)</span>.</p>
+</li>
+<li>
+<p><strong>Weight Matrix Reshape</strong>: The filter tensor is reshaped into <span class="arithmatex">\(W_{\text{row}} \in \mathbb{R}^{C_{\text{out}} \times (C_{\text{in}} \cdot k \cdot k)}\)</span>.</p>
+</li>
+<li>
+<p><strong>GEMM Evaluation</strong>:
+   $<span class="arithmatex">\(Y_{\text{mat}} = W_{\text{row}} \cdot X_{\text{col}} \in \mathbb{R}^{C_{\text{out}} \times (H_{\text{out}} \cdot W_{\text{out}})}\)</span>$</p>
+</li>
+<li>
+<p><strong>Reshape</strong>: <span class="arithmatex">\(Y_{\text{mat}}\)</span> is reshaped to <span class="arithmatex">\((C_{\text{out}}, H_{\text{out}}, W_{\text{out}})\)</span>.</p>
+</li>
 </ol>
-<p>In the backward pass:
-- <span class="arithmatex">\(dW_{\text{row}} = dY_{\text{mat}} \cdot X_{\text{col}}^T\)</span>
-- <span class="arithmatex">\(dX_{\text{col}} = W_{\text{row}}^T \cdot dY_{\text{mat}}\)</span>
-- <strong><code>col2im</code></strong>: Accumulates the columns of <span class="arithmatex">\(dX_{\text{col}}\)</span> back into overlapping spatial pixel buffers in <span class="arithmatex">\(dX\)</span>.</p>
+<p>In the backward pass:</p>
+<ul>
+<li><span class="arithmatex">\(dW_{\text{row}} = dY_{\text{mat}} \cdot X_{\text{col}}^T\)</span></li>
+<li><span class="arithmatex">\(dX_{\text{col}} = W_{\text{row}}^T \cdot dY_{\text{mat}}\)</span></li>
+<li><strong><code>col2im</code></strong>: Accumulates the columns of <span class="arithmatex">\(dX_{\text{col}}\)</span> back into overlapping spatial pixel buffers in <span class="arithmatex">\(dX\)</span>.</li>
+</ul>
 <hr />
 <h2 id="10-implementation-1-vectorized-2d-conv-maxpool-from-scratch-numpy">10. Implementation 1 — Vectorized 2D Conv &amp; MaxPool from Scratch (NumPy)<a class="headerlink" href="#10-implementation-1-vectorized-2d-conv-maxpool-from-scratch-numpy" title="Permanent link">&para;</a></h2>
 <p>The following complete, production-grade script implements <code>im2col</code>, <code>col2im</code>, <code>ScratchConv2d</code>, and <code>ScratchMaxPool2d</code> from first principles in pure NumPy, verified with analytical gradient checks.</p>
@@ -4936,11 +4990,13 @@ The ratio of memory consumed by <span class="arithmatex">\(X_{\text{col}}\)</spa
 <p><strong>Model Answer:</strong><br />
 Introduced by Lin et al. in <em>Network in Network</em> (2013), Global Average Pooling collapses each channel feature map <span class="arithmatex">\(H \times W\)</span> into its spatial average:</p>
 <div class="arithmatex">\[y_c = \frac{1}{H \cdot W} \sum_{i=1}^H \sum_{j=1}^W X_{c, i, j}\]</div>
-<p><strong>Advantages over Dense Flattening:</strong>
-1. <strong>Dramatic Parameter Reduction</strong>: In VGG-16, flattening a <span class="arithmatex">\(512 \times 7 \times 7\)</span> feature map into a 4096-neuron dense layer required <span class="arithmatex">\(512 \times 7 \times 7 \times 4096 \approx 102.7\)</span> million parameters (<span class="arithmatex">\(&gt;70\%\)</span> of the entire network's parameters). With GAP, the <span class="arithmatex">\(512\)</span> channels map directly to a <span class="arithmatex">\(512 \times K\)</span> classification matrix, slashing parameters to a few thousand.
-2. <strong>Elimination of Overfitting</strong>: The vast majority of overfitting in classical CNNs occurred in dense heads. GAP has zero learnable parameters, acting as a structural regularizer.
-3. <strong>Input Resolution Flexibility</strong>: A flattened layer expects an exact fixed dimension (<span class="arithmatex">\(512 \cdot 7 \cdot 7\)</span>). If test image resolution changes, the dense layer crashes. GAP produces a vector of length <span class="arithmatex">\(C\)</span> regardless of spatial size <span class="arithmatex">\((H, W)\)</span>, allowing native multi-scale evaluation.
-4. <strong>Interpretability</strong>: GAP establishes direct correspondence between feature map channels and category confidence scores, enabling Class Activation Mapping (CAM).</p>
+<p><strong>Advantages over Dense Flattening:</strong></p>
+<ol>
+<li><strong>Dramatic Parameter Reduction</strong>: In VGG-16, flattening a <span class="arithmatex">\(512 \times 7 \times 7\)</span> feature map into a 4096-neuron dense layer required <span class="arithmatex">\(512 \times 7 \times 7 \times 4096 \approx 102.7\)</span> million parameters (<span class="arithmatex">\(&gt;70\%\)</span> of the entire network's parameters). With GAP, the <span class="arithmatex">\(512\)</span> channels map directly to a <span class="arithmatex">\(512 \times K\)</span> classification matrix, slashing parameters to a few thousand.</li>
+<li><strong>Elimination of Overfitting</strong>: The vast majority of overfitting in classical CNNs occurred in dense heads. GAP has zero learnable parameters, acting as a structural regularizer.</li>
+<li><strong>Input Resolution Flexibility</strong>: A flattened layer expects an exact fixed dimension (<span class="arithmatex">\(512 \cdot 7 \cdot 7\)</span>). If test image resolution changes, the dense layer crashes. GAP produces a vector of length <span class="arithmatex">\(C\)</span> regardless of spatial size <span class="arithmatex">\((H, W)\)</span>, allowing native multi-scale evaluation.</li>
+<li><strong>Interpretability</strong>: GAP establishes direct correspondence between feature map channels and category confidence scores, enabling Class Activation Mapping (CAM).</li>
+</ol>
 <hr />
 <h3 id="q4-prove-that-2d-convolution-with-stride-1-and-circular-padding-is-a-circulant-matrix-multiplication-and-explain-why-convolution-in-spatial-domain-corresponds-to-point-wise-multiplication-in-fourier-domain">Q4: Prove that 2D convolution with stride 1 and circular padding is a circulant matrix multiplication, and explain why convolution in spatial domain corresponds to point-wise multiplication in Fourier domain.<a class="headerlink" href="#q4-prove-that-2d-convolution-with-stride-1-and-circular-padding-is-a-circulant-matrix-multiplication-and-explain-why-convolution-in-spatial-domain-corresponds-to-point-wise-multiplication-in-fourier-domain" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
@@ -4961,17 +5017,17 @@ A dilated convolution inserts <span class="arithmatex">\((d - 1)\)</span> spaces
 <strong>Dilated convolution</strong> exponentially expands the receptive field <strong>without downsampling spatial resolution and without increasing parameter count or FLOPs</strong>. A <span class="arithmatex">\(3 \times 3\)</span> kernel with dilation <span class="arithmatex">\(d=2\)</span> covers a <span class="arithmatex">\(5 \times 5\)</span> footprint using only 9 weights, preserving full-resolution feature maps while aggregating wide contextual information.</p>
 <hr />
 <h2 id="14-mastery-ladder">14. Mastery Ladder<a class="headerlink" href="#14-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Represent images as 3D tensors (<span class="arithmatex">\(C, H, W\)</span>) and convert between RGB, Grayscale, and normalized float tensors.</li>
-<li>[ ] <strong>L2:</strong> Formulate discrete 2D cross-correlation and distinguish it from functional mathematical convolution.</li>
-<li>[ ] <strong>L3:</strong> Explain translation equivariance and prove why weight sharing guarantees it across feature maps.</li>
-<li>[ ] <strong>L4:</strong> Write Sobel and Laplacian kernels and explain their relationship to 1st and 2nd spatial derivatives.</li>
-<li>[ ] <strong>L5:</strong> Apply the output spatial dimension formula <span class="arithmatex">\(W_{\text{out}} = \lfloor \frac{W_{\text{in}} - K + 2P}{S} \rfloor + 1\)</span> under valid and same padding.</li>
-<li>[ ] <strong>L6:</strong> Compare Max Pooling, Average Pooling, and Global Average Pooling (GAP) in terms of parameter overhead and invariance.</li>
-<li>[ ] <strong>L7:</strong> Derive the receptive field recurrence <span class="arithmatex">\(RF_l = RF_{l-1} + (k_l - 1) \cdot j_{l-1}\)</span> and jump update <span class="arithmatex">\(j_l = j_{l-1} \cdot s_l\)</span>.</li>
-<li>[ ] <strong>L8:</strong> Prove why factorizing one <span class="arithmatex">\(7 \times 7\)</span> convolution into three <span class="arithmatex">\(3 \times 3\)</span> convolutions reduces parameters by 45%.</li>
-<li>[ ] <strong>L9:</strong> Formulate the forward and backward passes of 2D convolution as GEMM matrix multiplication via <code>im2col</code> and <code>col2im</code>.</li>
-<li>[ ] <strong>L10:</strong> Implement a fully functional Conv2d and MaxPool2d layer from scratch in pure NumPy with gradient verification.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Represent images as 3D tensors (<span class="arithmatex">\(C, H, W\)</span>) and convert between RGB, Grayscale, and normalized float tensors.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Formulate discrete 2D cross-correlation and distinguish it from functional mathematical convolution.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Explain translation equivariance and prove why weight sharing guarantees it across feature maps.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Write Sobel and Laplacian kernels and explain their relationship to 1st and 2nd spatial derivatives.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Apply the output spatial dimension formula <span class="arithmatex">\(W_{\text{out}} = \lfloor \frac{W_{\text{in}} - K + 2P}{S} \rfloor + 1\)</span> under valid and same padding.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Compare Max Pooling, Average Pooling, and Global Average Pooling (GAP) in terms of parameter overhead and invariance.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Derive the receptive field recurrence <span class="arithmatex">\(RF_l = RF_{l-1} + (k_l - 1) \cdot j_{l-1}\)</span> and jump update <span class="arithmatex">\(j_l = j_{l-1} \cdot s_l\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Prove why factorizing one <span class="arithmatex">\(7 \times 7\)</span> convolution into three <span class="arithmatex">\(3 \times 3\)</span> convolutions reduces parameters by 45%.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Formulate the forward and backward passes of 2D convolution as GEMM matrix multiplication via <code>im2col</code> and <code>col2im</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Implement a fully functional Conv2d and MaxPool2d layer from scratch in pure NumPy with gradient verification.</li>
 </ul>
 
 

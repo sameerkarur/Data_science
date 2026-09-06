@@ -4208,10 +4208,12 @@
 <h3 id="feature-representation-defines-model-inductive-bias">Feature Representation Defines Model Inductive Bias<a class="headerlink" href="#feature-representation-defines-model-inductive-bias" title="Permanent link">&para;</a></h3>
 <p>Consider predicting an outcome that varies continuously with the hour of the day (<span class="arithmatex">\(t \in \{0, 1, \dots, 23\}\)</span>).
 At 23:59 (11:59 PM), the temperature or traffic condition is nearly identical to 00:01 (12:01 AM).</p>
-<p>If represented as a raw integer <span class="arithmatex">\(t \in [0, 23]\)</span>:
-- The mathematical distance between 23:00 and 00:00 is <span class="arithmatex">\(|23 - 0| = 23\)</span> (the maximum possible distance in the feature space!).
-- A linear regressor or neural network must learn an abrupt, discontinuous cliff at midnight.
-- A decision tree must create artificial, brittle split thresholds at both ends (<span class="arithmatex">\(t \le 1\)</span> and <span class="arithmatex">\(t \ge 22\)</span>).</p>
+<p>If represented as a raw integer <span class="arithmatex">\(t \in [0, 23]\)</span>:</p>
+<ul>
+<li>The mathematical distance between 23:00 and 00:00 is <span class="arithmatex">\(|23 - 0| = 23\)</span> (the maximum possible distance in the feature space!).</li>
+<li>A linear regressor or neural network must learn an abrupt, discontinuous cliff at midnight.</li>
+<li>A decision tree must create artificial, brittle split thresholds at both ends (<span class="arithmatex">\(t \le 1\)</span> and <span class="arithmatex">\(t \ge 22\)</span>).</li>
+</ul>
 <p>By projecting <span class="arithmatex">\(t\)</span> onto the 2D unit circle via trigonometric transforms:</p>
 <div class="arithmatex">\[
 x_{\sin} = \sin\left(\frac{2\pi t}{24}\right), \qquad x_{\cos} = \cos\left(\frac{2\pi t}{24}\right)
@@ -4259,9 +4261,11 @@ y^{(\lambda)} = \begin{cases}
 \end{cases}
 \]</div>
 <h3 id="32-binning-discretization">3.2 Binning &amp; Discretization<a class="headerlink" href="#32-binning-discretization" title="Permanent link">&para;</a></h3>
-<p>Discretization converts continuous variables into discrete intervals (bins):
-1. <strong>Uniform Binning (Equal Width)</strong>: Divides range <span class="arithmatex">\([x_{\min}, x_{\max}]\)</span> into <span class="arithmatex">\(K\)</span> intervals of equal size <span class="arithmatex">\(\frac{x_{\max} - x_{\min}}{K}\)</span>. Sensitive to outliers (outliers leave middle bins empty).
-2. <strong>Quantile Binning (Equal Frequency)</strong>: Divides data using sample percentiles such that every bin contains exactly <span class="arithmatex">\(N / K\)</span> samples. Robust against outliers and normalizes feature distribution.</p>
+<p>Discretization converts continuous variables into discrete intervals (bins):</p>
+<ol>
+<li><strong>Uniform Binning (Equal Width)</strong>: Divides range <span class="arithmatex">\([x_{\min}, x_{\max}]\)</span> into <span class="arithmatex">\(K\)</span> intervals of equal size <span class="arithmatex">\(\frac{x_{\max} - x_{\min}}{K}\)</span>. Sensitive to outliers (outliers leave middle bins empty).</li>
+<li><strong>Quantile Binning (Equal Frequency)</strong>: Divides data using sample percentiles such that every bin contains exactly <span class="arithmatex">\(N / K\)</span> samples. Robust against outliers and normalizes feature distribution.</li>
+</ol>
 <h3 id="33-polynomial-non-linear-interaction-features">3.3 Polynomial &amp; Non-Linear Interaction Features<a class="headerlink" href="#33-polynomial-non-linear-interaction-features" title="Permanent link">&para;</a></h3>
 <p>For feature vector <span class="arithmatex">\(\mathbf{x} = [x_1, x_2]^T\)</span>, degree-2 polynomial expansion generates:</p>
 <div class="arithmatex">\[
@@ -4317,13 +4321,19 @@ $<span class="arithmatex">\(\sin\left(\frac{2\pi \cdot 10}{24}\right) = \sin\lef
 \text{TF-IDF}(t, d, \mathcal{D}) = \text{TF}(t, d) \times \text{IDF}(t, \mathcal{D})
 \]</div>
 <ol>
-<li><strong>Term Frequency <span class="arithmatex">\(\text{TF}(t, d)\)</span></strong>: Relative frequency of token <span class="arithmatex">\(t\)</span> in document <span class="arithmatex">\(d\)</span>:
-   $<span class="arithmatex">\(\text{TF}(t, d) = \frac{f_{t, d}}{\sum_{t' \in d} f_{t', d}}\)</span>$</li>
-<li><strong>Smooth Inverse Document Frequency <span class="arithmatex">\(\text{IDF}(t, \mathcal{D})\)</span></strong>:
+<li>
+<p><strong>Term Frequency <span class="arithmatex">\(\text{TF}(t, d)\)</span></strong>: Relative frequency of token <span class="arithmatex">\(t\)</span> in document <span class="arithmatex">\(d\)</span>:
+   $<span class="arithmatex">\(\text{TF}(t, d) = \frac{f_{t, d}}{\sum_{t' \in d} f_{t', d}}\)</span>$</p>
+</li>
+<li>
+<p><strong>Smooth Inverse Document Frequency <span class="arithmatex">\(\text{IDF}(t, \mathcal{D})\)</span></strong>:
    $<span class="arithmatex">\(\text{IDF}(t, \mathcal{D}) = \ln\left( \frac{1 + N}{1 + \text{DF}(t)} \right) + 1\)</span>$
-   where <span class="arithmatex">\(\text{DF}(t)\)</span> is the number of documents in corpus <span class="arithmatex">\(\mathcal{D}\)</span> containing term <span class="arithmatex">\(t\)</span>. Words appearing in every document (e.g., "the", "is") yield <span class="arithmatex">\(\text{IDF} \approx 1\)</span>, while rare diagnostic keywords yield large IDF multipliers.</li>
-<li><strong>L2 Normalization</strong>: To eliminate document length bias, each document vector <span class="arithmatex">\(\mathbf{v}_d\)</span> is projected onto the unit sphere:
-   $<span class="arithmatex">\(\mathbf{v}_d \leftarrow \frac{\mathbf{v}_d}{\|\mathbf{v}_d\|_2}\)</span>$</li>
+   where <span class="arithmatex">\(\text{DF}(t)\)</span> is the number of documents in corpus <span class="arithmatex">\(\mathcal{D}\)</span> containing term <span class="arithmatex">\(t\)</span>. Words appearing in every document (e.g., "the", "is") yield <span class="arithmatex">\(\text{IDF} \approx 1\)</span>, while rare diagnostic keywords yield large IDF multipliers.</p>
+</li>
+<li>
+<p><strong>L2 Normalization</strong>: To eliminate document length bias, each document vector <span class="arithmatex">\(\mathbf{v}_d\)</span> is projected onto the unit sphere:
+   $<span class="arithmatex">\(\mathbf{v}_d \leftarrow \frac{\mathbf{v}_d}{\|\mathbf{v}_d\|_2}\)</span>$</p>
+</li>
 </ol>
 <pre class="mermaid"><code>flowchart LR
     DOC["Raw Text Document"] --&gt; TOK["Tokenization &amp; Stopword Removal"]
@@ -4352,11 +4362,13 @@ I(X; Y) = H(Y) - H(Y \mid X) = \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}}
 <li>Unlike Pearson correlation <span class="arithmatex">\(\rho\)</span>, which detects only linear relationships (<span class="arithmatex">\(\rho = 0\)</span> for <span class="arithmatex">\(Y = X^2\)</span> on <span class="arithmatex">\([-1, 1]\)</span>), Mutual Information detects <strong>arbitrary non-linear, non-monotonic dependencies</strong>.</li>
 </ul>
 <h3 id="62-wrapper-methods-recursive-feature-elimination-rfe">6.2 Wrapper Methods: Recursive Feature Elimination (RFE)<a class="headerlink" href="#62-wrapper-methods-recursive-feature-elimination-rfe" title="Permanent link">&para;</a></h3>
-<p>Wrapper methods treat model training as an evaluation sub-routine:
-1. Train model on the full set of <span class="arithmatex">\(d\)</span> features.
-2. Rank features by importance (e.g., absolute weight <span class="arithmatex">\(|w_j|\)</span> in linear models or feature importances in trees).
-3. Prune the least important <span class="arithmatex">\(k\)</span> features.
-4. Retrain model on remaining features and repeat until desired feature count is achieved.</p>
+<p>Wrapper methods treat model training as an evaluation sub-routine:</p>
+<ol>
+<li>Train model on the full set of <span class="arithmatex">\(d\)</span> features.</li>
+<li>Rank features by importance (e.g., absolute weight <span class="arithmatex">\(|w_j|\)</span> in linear models or feature importances in trees).</li>
+<li>Prune the least important <span class="arithmatex">\(k\)</span> features.</li>
+<li>Retrain model on remaining features and repeat until desired feature count is achieved.</li>
+</ol>
 <p><em>Trade-Off:</em> Highly accurate because it accounts for feature interactions, but computationally expensive (<span class="arithmatex">\(\mathcal{O}(d)\)</span> full model training iterations).</p>
 <h3 id="63-embedded-methods-l1-regularization-lasso">6.3 Embedded Methods: L1 Regularization (Lasso)<a class="headerlink" href="#63-embedded-methods-l1-regularization-lasso" title="Permanent link">&para;</a></h3>
 <p>As derived in <a href="../../02-mathematics/linear-algebra-deep-dive/#41-vector-l_p-norms">Linear Algebra</a> and <a href="../../02-mathematics/probability-statistics-deep-dive/#11-staff-level-technical-interview-questions">Probability &amp; Statistics</a>, optimizing under an <span class="arithmatex">\(L_1\)</span> penalty:</p>
@@ -4403,11 +4415,13 @@ I(X; Y) = H(Y) - H(Y \mid X) = \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}}
     end</code></pre>
 <hr />
 <h2 id="7-python-implementation-cyclical-encoders-point-in-time-windows-and-mutual-information">7. Python Implementation: Cyclical Encoders, Point-in-Time Windows and Mutual Information<a class="headerlink" href="#7-python-implementation-cyclical-encoders-point-in-time-windows-and-mutual-information" title="Permanent link">&para;</a></h2>
-<p>Below is a complete, runnable script featuring:
-1. A from-scratch <strong>Cyclical Sine/Cosine Temporal Transformer</strong>.
-2. A from-scratch <strong>Discrete Mutual Information Estimator</strong>.
-3. A <strong>Point-in-Time Leak-Free Aggregator</strong> for temporal event logs.
-4. A comparison between <strong>MDI Gini Importance vs. Permutation Feature Importance</strong> demonstrating cardinality bias.</p>
+<p>Below is a complete, runnable script featuring:</p>
+<ol>
+<li>A from-scratch <strong>Cyclical Sine/Cosine Temporal Transformer</strong>.</li>
+<li>A from-scratch <strong>Discrete Mutual Information Estimator</strong>.</li>
+<li>A <strong>Point-in-Time Leak-Free Aggregator</strong> for temporal event logs.</li>
+<li>A comparison between <strong>MDI Gini Importance vs. Permutation Feature Importance</strong> demonstrating cardinality bias.</li>
+</ol>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="sd">"""</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="sd">feature_engineering_selection_deep_dive.py</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="sd">Production implementations of cyclical transforms, point-in-time windowing,</span>
@@ -4630,10 +4644,12 @@ Periodic temporal features (hour of day, day of week, day of year) possess a con
 <p>To preserve topological continuity, we map periodic scalar <span class="arithmatex">\(t \in [0, T)\)</span> onto the 2D unit circle:
 $<span class="arithmatex">\(x_{\sin} = \sin\left(\frac{2\pi t}{T}\right), \qquad x_{\cos} = \cos\left(\frac{2\pi t}{T}\right)\)</span>$
 <strong>Why a single function is insufficient:</strong>
-Both <span class="arithmatex">\(\sin(\theta)\)</span> and <span class="arithmatex">\(\cos(\theta)\)</span> are non-monotonic on <span class="arithmatex">\([0, 2\pi)\)</span>. Specifically:
-- <span class="arithmatex">\(\sin(\pi - \theta) = \sin(\theta)\)</span>. For hour <span class="arithmatex">\(T=24\)</span>, <span class="arithmatex">\(\sin\left(\frac{2\pi \cdot 2}{24}\right) = \sin\left(\frac{\pi}{6}\right) = 0.5\)</span>, and <span class="arithmatex">\(\sin\left(\frac{2\pi \cdot 10}{24}\right) = \sin\left(\frac{5\pi}{6}\right) = 0.5\)</span>. A model relying solely on sine cannot distinguish 2:00 AM from 10:00 AM!
-- <span class="arithmatex">\(\cos(-\theta) = \cos(\theta)\)</span>. A model relying solely on cosine cannot distinguish morning from evening.
-Together, the pair <span class="arithmatex">\((\sin, \cos)\)</span> forms a unique bijection to the unit circle: <span class="arithmatex">\(\sin^2\theta + \cos^2\theta = 1\)</span>. The Euclidean distance between any two points <span class="arithmatex">\(t_1, t_2\)</span> is strictly proportional to their shortest circular arc distance along the period.</p>
+Both <span class="arithmatex">\(\sin(\theta)\)</span> and <span class="arithmatex">\(\cos(\theta)\)</span> are non-monotonic on <span class="arithmatex">\([0, 2\pi)\)</span>. Specifically:</p>
+<ul>
+<li><span class="arithmatex">\(\sin(\pi - \theta) = \sin(\theta)\)</span>. For hour <span class="arithmatex">\(T=24\)</span>, <span class="arithmatex">\(\sin\left(\frac{2\pi \cdot 2}{24}\right) = \sin\left(\frac{\pi}{6}\right) = 0.5\)</span>, and <span class="arithmatex">\(\sin\left(\frac{2\pi \cdot 10}{24}\right) = \sin\left(\frac{5\pi}{6}\right) = 0.5\)</span>. A model relying solely on sine cannot distinguish 2:00 AM from 10:00 AM!</li>
+<li><span class="arithmatex">\(\cos(-\theta) = \cos(\theta)\)</span>. A model relying solely on cosine cannot distinguish morning from evening.
+Together, the pair <span class="arithmatex">\((\sin, \cos)\)</span> forms a unique bijection to the unit circle: <span class="arithmatex">\(\sin^2\theta + \cos^2\theta = 1\)</span>. The Euclidean distance between any two points <span class="arithmatex">\(t_1, t_2\)</span> is strictly proportional to their shortest circular arc distance along the period.</li>
+</ul>
 <hr />
 <h3 id="q2-derive-the-mutual-information-metric-between-feature-x-and-target-y-why-can-mutual-information-capture-dependencies-that-pearson-and-spearman-correlation-miss">Q2: Derive the Mutual Information metric between feature <span class="arithmatex">\(X\)</span> and target <span class="arithmatex">\(Y\)</span>. Why can Mutual Information capture dependencies that Pearson and Spearman correlation miss?<a class="headerlink" href="#q2-derive-the-mutual-information-metric-between-feature-x-and-target-y-why-can-mutual-information-capture-dependencies-that-pearson-and-spearman-correlation-miss" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4642,43 +4658,63 @@ $<span class="arithmatex">\(I(X; Y) = H(X) - H(X \mid Y) = H(Y) - H(Y \mid X) = 
 Expanding in terms of joint and marginal probability distributions:
 $<span class="arithmatex">\(I(X; Y) = \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x, y) \log \left( \frac{p(x, y)}{p(x) p(y)} \right) = D_{\text{KL}}(p(x, y) \parallel p(x)p(y))\)</span>$
 <span class="arithmatex">\(I(X; Y)\)</span> is the Kullback-Leibler divergence between the true joint distribution <span class="arithmatex">\(p(x, y)\)</span> and the factored independent distribution <span class="arithmatex">\(p(x)p(y)\)</span>.</p>
-<p><strong>Comparison with Correlation:</strong>
-- <strong>Pearson Correlation (<span class="arithmatex">\(\rho\)</span>):</strong> Measures exclusively linear co-variation: <span class="arithmatex">\(\rho = \frac{\text{Cov}(X, Y)}{\sigma_X \sigma_Y}\)</span>. If <span class="arithmatex">\(X \sim \mathcal{U}(-1, 1)\)</span> and <span class="arithmatex">\(Y = X^2\)</span>, <span class="arithmatex">\(Y\)</span> is completely deterministically determined by <span class="arithmatex">\(X\)</span>, yet <span class="arithmatex">\(\text{Cov}(X, Y) = \mathbb{E}[X^3] - \mathbb{E}[X]\mathbb{E}[X^2] = 0 - 0 = 0\)</span>. Pearson correlation is exactly <span class="arithmatex">\(0\)</span>!
-- <strong>Spearman Correlation (<span class="arithmatex">\(r_s\)</span>):</strong> Evaluates monotonic rank relationships; also fails on parabolic or circular dependencies.
-- <strong>Mutual Information:</strong> Since <span class="arithmatex">\(p(x, y) \ne p(x)p(y)\)</span> for <span class="arithmatex">\(Y = X^2\)</span>, <span class="arithmatex">\(I(X; X^2) = H(X^2) &gt; 0\)</span>. Mutual Information makes no parametric or functional assumptions, capturing arbitrary non-linear, non-monotonic, and multi-modal statistical dependencies.</p>
+<p><strong>Comparison with Correlation:</strong></p>
+<ul>
+<li><strong>Pearson Correlation (<span class="arithmatex">\(\rho\)</span>):</strong> Measures exclusively linear co-variation: <span class="arithmatex">\(\rho = \frac{\text{Cov}(X, Y)}{\sigma_X \sigma_Y}\)</span>. If <span class="arithmatex">\(X \sim \mathcal{U}(-1, 1)\)</span> and <span class="arithmatex">\(Y = X^2\)</span>, <span class="arithmatex">\(Y\)</span> is completely deterministically determined by <span class="arithmatex">\(X\)</span>, yet <span class="arithmatex">\(\text{Cov}(X, Y) = \mathbb{E}[X^3] - \mathbb{E}[X]\mathbb{E}[X^2] = 0 - 0 = 0\)</span>. Pearson correlation is exactly <span class="arithmatex">\(0\)</span>!</li>
+<li><strong>Spearman Correlation (<span class="arithmatex">\(r_s\)</span>):</strong> Evaluates monotonic rank relationships; also fails on parabolic or circular dependencies.</li>
+<li><strong>Mutual Information:</strong> Since <span class="arithmatex">\(p(x, y) \ne p(x)p(y)\)</span> for <span class="arithmatex">\(Y = X^2\)</span>, <span class="arithmatex">\(I(X; X^2) = H(X^2) &gt; 0\)</span>. Mutual Information makes no parametric or functional assumptions, capturing arbitrary non-linear, non-monotonic, and multi-modal statistical dependencies.</li>
+</ul>
 <hr />
 <h3 id="q3-what-is-lookahead-bias-in-time-series-feature-engineering-and-how-do-point-in-time-feature-stores-prevent-it">Q3: What is lookahead bias in time-series feature engineering, and how do point-in-time feature stores prevent it?<a class="headerlink" href="#q3-what-is-lookahead-bias-in-time-series-feature-engineering-and-how-do-point-in-time-feature-stores-prevent-it" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
 <strong>Lookahead Bias (Temporal Data Leakage):</strong> Occurs when a feature computed for training example at time <span class="arithmatex">\(t\)</span> incorporates information from events that occurred at timestamp <span class="arithmatex">\(\tau \ge t\)</span>.
 Example: Computing a customer's <code>average_monthly_spend</code> by executing a SQL <code>GROUP BY user_id</code> across the entire database history. When predicting whether a customer will churn on March 1st, the feature contains their spending in April, May, and June! The model achieves near-zero training error, but collapses when deployed live because future data does not exist at inference time.</p>
 <p><strong>Point-in-Time Resolution in Feature Stores (e.g., Feast, Hopsworks):</strong>
-Production feature stores enforce <strong>Point-in-Time Joins</strong> (also called "AS OF" joins):
-1. The training dataset consists of entity IDs with explicit observation timestamps: <span class="arithmatex">\((\text{user\_id}, t_{\text{obs}})\)</span>.
-2. For each record, the feature store joins historical feature values by querying the feature log strictly as it existed at <span class="arithmatex">\(t_{\text{obs}}\)</span>:
-   $<span class="arithmatex">\(\text{Feature Value} = \max_{\tau &lt; t_{\text{obs}}} f(\text{user\_id}, \tau)\)</span>$
-3. Ensures that historical training feature vectors exactly match the state of the production key-value store when an inference request arrives at timestamp <span class="arithmatex">\(t_{\text{obs}}\)</span>.</p>
+Production feature stores enforce <strong>Point-in-Time Joins</strong> (also called "AS OF" joins):</p>
+<ol>
+<li>The training dataset consists of entity IDs with explicit observation timestamps: <span class="arithmatex">\((\text{user\_id}, t_{\text{obs}})\)</span>.</li>
+<li>
+<p>For each record, the feature store joins historical feature values by querying the feature log strictly as it existed at <span class="arithmatex">\(t_{\text{obs}}\)</span>:
+   $<span class="arithmatex">\(\text{Feature Value} = \max_{\tau &lt; t_{\text{obs}}} f(\text{user\_id}, \tau)\)</span>$</p>
+</li>
+<li>
+<p>Ensures that historical training feature vectors exactly match the state of the production key-value store when an inference request arrives at timestamp <span class="arithmatex">\(t_{\text{obs}}\)</span>.</p>
+</li>
+</ol>
 <hr />
 <h3 id="q4-contrast-mean-decrease-in-impurity-mdi-gini-importance-permutation-feature-importance-and-shap-values-why-does-mdi-bias-toward-high-cardinality-features">Q4: Contrast Mean Decrease in Impurity (MDI / Gini Importance), Permutation Feature Importance, and SHAP values. Why does MDI bias toward high-cardinality features?<a class="headerlink" href="#q4-contrast-mean-decrease-in-impurity-mdi-gini-importance-permutation-feature-importance-and-shap-values-why-does-mdi-bias-toward-high-cardinality-features" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>Mean Decrease in Impurity (MDI):</strong>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li>
+<p><strong>Mean Decrease in Impurity (MDI):</strong>
   Accumulates the total Gini impurity (or MSE) reduction brought by all splits on feature <span class="arithmatex">\(j\)</span> across all trees in an ensemble.
-  <em>The Cardinality Pathology:</em> Decision tree split algorithms evaluate all possible split points. A random noise feature with high cardinality (e.g., a random integer ID <span class="arithmatex">\(\in [1, 1000]\)</span>) offers thousands of opportunities to accidentally find a split that separates training samples by chance. The tree splits on the noise feature near the leaves, achieving massive training impurity reduction, causing MDI to rank random noise as the most important feature!
-- <strong>Permutation Feature Importance:</strong>
+  <em>The Cardinality Pathology:</em> Decision tree split algorithms evaluate all possible split points. A random noise feature with high cardinality (e.g., a random integer ID <span class="arithmatex">\(\in [1, 1000]\)</span>) offers thousands of opportunities to accidentally find a split that separates training samples by chance. The tree splits on the noise feature near the leaves, achieving massive training impurity reduction, causing MDI to rank random noise as the most important feature!</p>
+</li>
+<li>
+<p><strong>Permutation Feature Importance:</strong>
   Evaluates the trained model on a validation holdout set, shuffles column <span class="arithmatex">\(j\)</span> to destroy its relationship with target <span class="arithmatex">\(y\)</span>, and records the metric drop: <span class="arithmatex">\(\Delta = \text{Score}_{\text{base}} - \text{Score}_{\text{shuffled}}\)</span>.
-  Because evaluation occurs on unseen validation data, splitting on random noise does not generalize; shuffling noise causes zero drop in validation score. Immune to cardinality bias!
-- <strong>SHAP (Shapley Additive Explanations):</strong>
+  Because evaluation occurs on unseen validation data, splitting on random noise does not generalize; shuffling noise causes zero drop in validation score. Immune to cardinality bias!</p>
+</li>
+<li>
+<p><strong>SHAP (Shapley Additive Explanations):</strong>
   Derived from cooperative game theory. Measures the marginal contribution of feature <span class="arithmatex">\(j\)</span> across all possible subsets (coalitions) of remaining features:
   $<span class="arithmatex">\(\phi_j = \sum_{S \subseteq F \setminus \{j\}} \frac{|S|!(|F| - |S| - 1)!}{|F|!} \Big( f(S \cup \{j\}) - f(S) \Big)\)</span>$
   Provides local, sample-level explanations with strict mathematical guarantees of <strong>Efficiency</strong>, <strong>Symmetry</strong>, and <strong>Additivity</strong>.</p>
+</li>
+</ul>
 <hr />
 <h3 id="q5-derive-the-box-cox-and-yeo-johnson-transformations-when-must-yeo-johnson-be-chosen-over-box-cox">Q5: Derive the Box-Cox and Yeo-Johnson transformations. When must Yeo-Johnson be chosen over Box-Cox?<a class="headerlink" href="#q5-derive-the-box-cox-and-yeo-johnson-transformations-when-must-yeo-johnson-be-chosen-over-box-cox" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>Box-Cox Transformation:</strong>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li>
+<p><strong>Box-Cox Transformation:</strong>
   Designed to normalize positive continuous variables:
   $<span class="arithmatex">\(y^{(\lambda)} = \begin{cases} \frac{y^\lambda - 1}{\lambda} &amp; \text{if } \lambda \ne 0 \\ \ln y &amp; \text{if } \lambda = 0 \end{cases}\)</span>$
   As <span class="arithmatex">\(\lambda \to 0\)</span>, by L'Hôpital's rule: <span class="arithmatex">\(\lim_{\lambda \to 0} \frac{d/d\lambda(y^\lambda - 1)}{d/d\lambda(\lambda)} = \lim_{\lambda \to 0} \frac{y^\lambda \ln y}{1} = \ln y\)</span>.
-  <strong>Limitation:</strong> Strictly undefined for <span class="arithmatex">\(y \le 0\)</span> because <span class="arithmatex">\(\ln y\)</span> and fractional powers of negative numbers are non-real.
-- <strong>Yeo-Johnson Transformation:</strong>
+  <strong>Limitation:</strong> Strictly undefined for <span class="arithmatex">\(y \le 0\)</span> because <span class="arithmatex">\(\ln y\)</span> and fractional powers of negative numbers are non-real.</p>
+</li>
+<li>
+<p><strong>Yeo-Johnson Transformation:</strong>
   Extends Box-Cox to all real numbers (<span class="arithmatex">\(y \in \mathbb{R}\)</span>) while ensuring strict continuity and monotonicity across zero:
   $<span class="arithmatex">\(\psi(\lambda, y) = \begin{cases}
   \frac{(y + 1)^\lambda - 1}{\lambda} &amp; \text{if } \lambda \ne 0, \; y \ge 0 \\
@@ -4687,50 +4723,62 @@ Production feature stores enforce <strong>Point-in-Time Joins</strong> (also cal
   -\ln(-y + 1) &amp; \text{if } \lambda = 2, \; y &lt; 0
   \end{cases}\)</span>$
   <strong>Decision Rule:</strong> Yeo-Johnson must strictly be selected whenever features contain zero values (e.g., revenue, rainfall) or negative values (e.g., profit/loss, temperature, financial returns).</p>
+</li>
+</ul>
 <hr />
 <h3 id="q6-compare-filter-wrapper-and-embedded-feature-selection-paradigms">Q6: Compare Filter, Wrapper, and Embedded feature selection paradigms.<a class="headerlink" href="#q6-compare-filter-wrapper-and-embedded-feature-selection-paradigms" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-1. <strong>Filter Methods (e.g., Mutual Information, ANOVA, Chi-Square):</strong>
-   - <em>Complexity:</em> <span class="arithmatex">\(\mathcal{O}(d \cdot N)\)</span>. Fast, univariate screening.
-   - <em>Model Dependency:</em> Completely model-agnostic; evaluates intrinsic statistical correlation.
-   - <em>Risk:</em> Ignores complex multi-feature interactions; redundant features that correlate with the target are all selected together.
-2. <strong>Wrapper Methods (e.g., Recursive Feature Elimination - RFE):</strong>
-   - <em>Complexity:</em> <span class="arithmatex">\(\mathcal{O}(d \cdot \text{Model\_Train\_Time})\)</span>. Very slow; trains <span class="arithmatex">\(d\)</span> model instances.
-   - <em>Model Dependency:</em> Strongly coupled to chosen model; optimizes performance for that specific model architecture.
-   - <em>Risk:</em> High risk of overfitting to the validation split if sample size is small; computationally prohibitive for deep networks or massive datasets.
-3. <strong>Embedded Methods (e.g., L1 Lasso, Tree-based Permutation / SHAP):</strong>
-   - <em>Complexity:</em> <span class="arithmatex">\(\mathcal{O}(\text{Model\_Train\_Time})\)</span>. Selection happens concurrently with parameter optimization.
-   - <em>Model Dependency:</em> Bound to the model's loss formulation.
-   - <em>Advantage:</em> Directly penalizes complexity in the loss function, natively accounting for interactions while maintaining computational efficiency.</p>
+<p><strong>Model Answer:</strong></p>
+<ol>
+<li><strong>Filter Methods (e.g., Mutual Information, ANOVA, Chi-Square):</strong></li>
+<li><em>Complexity:</em> <span class="arithmatex">\(\mathcal{O}(d \cdot N)\)</span>. Fast, univariate screening.</li>
+<li><em>Model Dependency:</em> Completely model-agnostic; evaluates intrinsic statistical correlation.</li>
+<li><em>Risk:</em> Ignores complex multi-feature interactions; redundant features that correlate with the target are all selected together.</li>
+<li><strong>Wrapper Methods (e.g., Recursive Feature Elimination - RFE):</strong></li>
+<li><em>Complexity:</em> <span class="arithmatex">\(\mathcal{O}(d \cdot \text{Model\_Train\_Time})\)</span>. Very slow; trains <span class="arithmatex">\(d\)</span> model instances.</li>
+<li><em>Model Dependency:</em> Strongly coupled to chosen model; optimizes performance for that specific model architecture.</li>
+<li><em>Risk:</em> High risk of overfitting to the validation split if sample size is small; computationally prohibitive for deep networks or massive datasets.</li>
+<li><strong>Embedded Methods (e.g., L1 Lasso, Tree-based Permutation / SHAP):</strong></li>
+<li><em>Complexity:</em> <span class="arithmatex">\(\mathcal{O}(\text{Model\_Train\_Time})\)</span>. Selection happens concurrently with parameter optimization.</li>
+<li><em>Model Dependency:</em> Bound to the model's loss formulation.</li>
+<li><em>Advantage:</em> Directly penalizes complexity in the loss function, natively accounting for interactions while maintaining computational efficiency.</li>
+</ol>
 <hr />
 <h3 id="q7-what-is-the-variance-inflation-factor-vif-how-do-you-calculate-it-and-what-threshold-indicates-severe-multicollinearity">Q7: What is the Variance Inflation Factor (VIF), how do you calculate it, and what threshold indicates severe multicollinearity?<a class="headerlink" href="#q7-what-is-the-variance-inflation-factor-vif-how-do-you-calculate-it-and-what-threshold-indicates-severe-multicollinearity" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
 The <strong>Variance Inflation Factor (VIF)</strong> measures how much the variance of an estimated regression coefficient <span class="arithmatex">\(\hat{\beta}_j\)</span> is inflated due to linear multicollinearity with other features in the design matrix.</p>
 <p><strong>Calculation:</strong>
-For each feature <span class="arithmatex">\(X_j\)</span>:
-1. Fit an Ordinary Least Squares regression treating <span class="arithmatex">\(X_j\)</span> as the dependent variable and all other features <span class="arithmatex">\(X_{-j}\)</span> as predictors:
-   $<span class="arithmatex">\(X_j = \alpha_0 + \sum_{k \ne j} \alpha_k X_k + \epsilon\)</span>$
-2. Compute the coefficient of determination <span class="arithmatex">\(R_j^2\)</span> from this regression.
-3. Calculate VIF:
-   $<span class="arithmatex">\(\text{VIF}_j = \frac{1}{1 - R_j^2}\)</span>$</p>
-<p><strong>Interpretation:</strong>
-- If <span class="arithmatex">\(X_j\)</span> is completely orthogonal to all other features, <span class="arithmatex">\(R_j^2 = 0 \implies \text{VIF}_j = 1\)</span> (no variance inflation).
-- If <span class="arithmatex">\(X_j\)</span> is strongly collinear (<span class="arithmatex">\(R_j^2 = 0.90\)</span>), <span class="arithmatex">\(\text{VIF}_j = \frac{1}{1 - 0.90} = 10\)</span>. The variance of <span class="arithmatex">\(\hat{\beta}_j\)</span> is inflated by a factor of 10.
-- <strong>Rule of Thumb:</strong> <span class="arithmatex">\(\text{VIF} &gt; 5\)</span> indicates moderate collinearity; <span class="arithmatex">\(\text{VIF} &gt; 10\)</span> indicates severe multicollinearity that destabilizes parameter estimates, requiring feature elimination or regularization.</p>
+For each feature <span class="arithmatex">\(X_j\)</span>:</p>
+<ol>
+<li>
+<p>Fit an Ordinary Least Squares regression treating <span class="arithmatex">\(X_j\)</span> as the dependent variable and all other features <span class="arithmatex">\(X_{-j}\)</span> as predictors:
+   $<span class="arithmatex">\(X_j = \alpha_0 + \sum_{k \ne j} \alpha_k X_k + \epsilon\)</span>$</p>
+</li>
+<li>
+<p>Compute the coefficient of determination <span class="arithmatex">\(R_j^2\)</span> from this regression.</p>
+</li>
+<li>Calculate VIF:
+   $<span class="arithmatex">\(\text{VIF}_j = \frac{1}{1 - R_j^2}\)</span>$</li>
+</ol>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li>If <span class="arithmatex">\(X_j\)</span> is completely orthogonal to all other features, <span class="arithmatex">\(R_j^2 = 0 \implies \text{VIF}_j = 1\)</span> (no variance inflation).</li>
+<li>If <span class="arithmatex">\(X_j\)</span> is strongly collinear (<span class="arithmatex">\(R_j^2 = 0.90\)</span>), <span class="arithmatex">\(\text{VIF}_j = \frac{1}{1 - 0.90} = 10\)</span>. The variance of <span class="arithmatex">\(\hat{\beta}_j\)</span> is inflated by a factor of 10.</li>
+<li><strong>Rule of Thumb:</strong> <span class="arithmatex">\(\text{VIF} &gt; 5\)</span> indicates moderate collinearity; <span class="arithmatex">\(\text{VIF} &gt; 10\)</span> indicates severe multicollinearity that destabilizes parameter estimates, requiring feature elimination or regularization.</li>
+</ul>
 <hr />
 <h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
 <p>Complete this checklist to verify your depth in feature engineering and selection:</p>
-<ul>
-<li>[ ] <strong>L1:</strong> You can explain how cyclical encoding via <span class="arithmatex">\((\sin, \cos)\)</span> preserves continuous topological distance on periodic features.</li>
-<li>[ ] <strong>L2:</strong> You can state why both sine and cosine are required to form a unique bijection to the 2D unit circle.</li>
-<li>[ ] <strong>L3:</strong> You can state the Box-Cox and Yeo-Johnson formulas and explain why Yeo-Johnson is required for zero/negative values.</li>
-<li>[ ] <strong>L4:</strong> You can explain lookahead bias in time-series features and formulate point-in-time window filtering.</li>
-<li>[ ] <strong>L5:</strong> You can calculate TF-IDF with smooth IDF and explain why L2 document normalization is required.</li>
-<li>[ ] <strong>L6:</strong> You can derive Mutual Information <span class="arithmatex">\(I(X; Y)\)</span> from Shannon entropy and explain why it captures non-linear relationships.</li>
-<li>[ ] <strong>L7:</strong> You can compare Filter, Wrapper, and Embedded feature selection paradigms in terms of time complexity and interaction modeling.</li>
-<li>[ ] <strong>L8:</strong> You can explain why Random Forest MDI Gini importance is severely biased toward high-cardinality features.</li>
-<li>[ ] <strong>L9:</strong> You can implement Permutation Feature Importance from scratch and interpret validation metric drops.</li>
-<li>[ ] <strong>L10:</strong> You can define the Variance Inflation Factor (VIF), explain how it is derived from auxiliary regressions, and diagnose multicollinearity.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can explain how cyclical encoding via <span class="arithmatex">\((\sin, \cos)\)</span> preserves continuous topological distance on periodic features.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can state why both sine and cosine are required to form a unique bijection to the 2D unit circle.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can state the Box-Cox and Yeo-Johnson formulas and explain why Yeo-Johnson is required for zero/negative values.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can explain lookahead bias in time-series features and formulate point-in-time window filtering.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can calculate TF-IDF with smooth IDF and explain why L2 document normalization is required.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can derive Mutual Information <span class="arithmatex">\(I(X; Y)\)</span> from Shannon entropy and explain why it captures non-linear relationships.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can compare Filter, Wrapper, and Embedded feature selection paradigms in terms of time complexity and interaction modeling.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can explain why Random Forest MDI Gini importance is severely biased toward high-cardinality features.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can implement Permutation Feature Importance from scratch and interpret validation metric drops.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can define the Variance Inflation Factor (VIF), explain how it is derived from auxiliary regressions, and diagnose multicollinearity.</li>
 </ul>
 
 

@@ -4307,12 +4307,14 @@
     DriftEngine --&gt; Alert
     DriftEngine --&gt; RetrainPipeline
     RetrainPipeline --&gt; DeploymentStrategy</code></pre>
-<p>Operating production AI systems requires:
-1. <strong>Mathematical Drift Detection</strong>: Distinguishing between temporary sampling noise and true statistical divergence in tabular distributions, predicted labels, and high-dimensional vector embeddings.
-2. <strong>Unified Observability</strong>: Correlating low-level infrastructure telemetry (GPU VRAM saturation, CUDA kernel execution times) with high-level statistical health (model confidence degradation, calibration error).
-3. <strong>Automated Retraining Triggers</strong>: Safely closing the feedback loop between inference drift signals, data re-annotation, model re-training, and automated evaluation gates.
-4. <strong>Resilient Deployment Topologies</strong>: Mitigating blast radius through shadow deployments, canary rollouts, and mathematically powered A/B testing.
-5. <strong>GPU Cost &amp; Infrastructure Optimization</strong>: Leveraging Multi-Instance GPU (MIG) slicing, spot orchestration, and dynamic auto-scaling to avoid runaway cloud bills.</p>
+<p>Operating production AI systems requires:</p>
+<ol>
+<li><strong>Mathematical Drift Detection</strong>: Distinguishing between temporary sampling noise and true statistical divergence in tabular distributions, predicted labels, and high-dimensional vector embeddings.</li>
+<li><strong>Unified Observability</strong>: Correlating low-level infrastructure telemetry (GPU VRAM saturation, CUDA kernel execution times) with high-level statistical health (model confidence degradation, calibration error).</li>
+<li><strong>Automated Retraining Triggers</strong>: Safely closing the feedback loop between inference drift signals, data re-annotation, model re-training, and automated evaluation gates.</li>
+<li><strong>Resilient Deployment Topologies</strong>: Mitigating blast radius through shadow deployments, canary rollouts, and mathematically powered A/B testing.</li>
+<li><strong>GPU Cost &amp; Infrastructure Optimization</strong>: Leveraging Multi-Instance GPU (MIG) slicing, spot orchestration, and dynamic auto-scaling to avoid runaway cloud bills.</li>
+</ol>
 <hr />
 <h2 id="2-the-taxonomy-of-model-degradation">2. The Taxonomy of Model Degradation<a class="headerlink" href="#2-the-taxonomy-of-model-degradation" title="Permanent link">&para;</a></h2>
 <p>Model degradation stems from shifts in the joint probability distribution <span class="arithmatex">\(P(\mathbf{x}, y)\)</span> of input features <span class="arithmatex">\(\mathbf{x} \in \mathcal{X}\)</span> and target ground truth <span class="arithmatex">\(y \in \mathcal{Y}\)</span>. By Bayes' rule, the joint distribution factors in two ways:</p>
@@ -4407,10 +4409,12 @@
 <p>Using a Radial Basis Function (RBF) Gaussian kernel <span class="arithmatex">\(k(\mathbf{x}, \mathbf{y}) = \exp\left(-\frac{\|\mathbf{x} - \mathbf{y}\|^2}{2\sigma^2}\right)\)</span>, <span class="arithmatex">\(\text{MMD}(P, Q) = 0 \iff P = Q\)</span>.</p>
 <hr />
 <h2 id="4-production-drift-detection-implementation">4. Production Drift Detection Implementation<a class="headerlink" href="#4-production-drift-detection-implementation" title="Permanent link">&para;</a></h2>
-<p>Below is a complete, runnable Python module implementing:
-1. Population Stability Index (PSI) with epsilon smoothing (preventing division-by-zero or <span class="arithmatex">\(\ln(0)\)</span> errors).
-2. Kolmogorov-Smirnov 2-sample hypothesis testing with automated <span class="arithmatex">\(p\)</span>-value alerting.
-3. Multi-feature automated batch evaluation engine.</p>
+<p>Below is a complete, runnable Python module implementing:</p>
+<ol>
+<li>Population Stability Index (PSI) with epsilon smoothing (preventing division-by-zero or <span class="arithmatex">\(\ln(0)\)</span> errors).</li>
+<li>Kolmogorov-Smirnov 2-sample hypothesis testing with automated <span class="arithmatex">\(p\)</span>-value alerting.</li>
+<li>Multi-feature automated batch evaluation engine.</li>
+</ol>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
@@ -4539,18 +4543,20 @@
         OTel --&gt;|OTLP gRPC| Jaeger
     end</code></pre>
 <h3 id="51-prometheus-model-metrics-suite">5.1 Prometheus Model Metrics Suite<a class="headerlink" href="#51-prometheus-model-metrics-suite" title="Permanent link">&para;</a></h3>
-<p>A production AI service must expose the following metric categories:
-1. <strong>Serving Performance (RED Method)</strong>:
-   - <em>Rate</em>: <code>model_prediction_requests_total{model="churn", version="v2"}</code>
-   - <em>Errors</em>: <code>model_prediction_exceptions_total{type="ValidationException"}</code>
-   - <em>Duration</em>: <code>model_inference_latency_seconds_bucket{le="0.01", le="0.05", le="0.1"}</code> (P50, P95, P99 histograms)
-2. <strong>Model Behavior &amp; Confidence</strong>:
-   - <code>model_prediction_output_distribution{bin="0.8-1.0"}</code>
-   - <code>model_prediction_confidence_histogram</code>
-3. <strong>Hardware Saturation (DCGM)</strong>:
-   - <code>DCGM_FI_DEV_GPU_UTIL</code>: Compute core saturation percentage.
-   - <code>DCGM_FI_DEV_FB_USED</code>: Physical VRAM allocated (in megabytes).
-   - <code>DCGM_FI_DEV_MEM_COPY_UTIL</code>: PCIe/NVLink memory bandwidth saturation.</p>
+<p>A production AI service must expose the following metric categories:</p>
+<ol>
+<li><strong>Serving Performance (RED Method)</strong>:</li>
+<li><em>Rate</em>: <code>model_prediction_requests_total{model="churn", version="v2"}</code></li>
+<li><em>Errors</em>: <code>model_prediction_exceptions_total{type="ValidationException"}</code></li>
+<li><em>Duration</em>: <code>model_inference_latency_seconds_bucket{le="0.01", le="0.05", le="0.1"}</code> (P50, P95, P99 histograms)</li>
+<li><strong>Model Behavior &amp; Confidence</strong>:</li>
+<li><code>model_prediction_output_distribution{bin="0.8-1.0"}</code></li>
+<li><code>model_prediction_confidence_histogram</code></li>
+<li><strong>Hardware Saturation (DCGM)</strong>:</li>
+<li><code>DCGM_FI_DEV_GPU_UTIL</code>: Compute core saturation percentage.</li>
+<li><code>DCGM_FI_DEV_FB_USED</code>: Physical VRAM allocated (in megabytes).</li>
+<li><code>DCGM_FI_DEV_MEM_COPY_UTIL</code>: PCIe/NVLink memory bandwidth saturation.</li>
+</ol>
 <h3 id="52-opentelemetry-distributed-tracing">5.2 OpenTelemetry Distributed Tracing<a class="headerlink" href="#52-opentelemetry-distributed-tracing" title="Permanent link">&para;</a></h3>
 <p>In modern agentic or multi-stage systems (e.g. Gateway <span class="arithmatex">\(\to\)</span> Feature Store <span class="arithmatex">\(\to\)</span> Reranker <span class="arithmatex">\(\to\)</span> LLM), request latency spikes must be isolated to individual distributed spans:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">opentelemetry</span><span class="w"> </span><span class="kn">import</span> <span class="n">trace</span>
@@ -4618,10 +4624,12 @@
 <h4 id="sample-size-determination">Sample Size Determination<a class="headerlink" href="#sample-size-determination" title="Permanent link">&para;</a></h4>
 <p>To detect a minimum detectable effect (MDE) <span class="arithmatex">\(\delta\)</span> with statistical significance <span class="arithmatex">\(\alpha\)</span> (Type I error rate, typically <span class="arithmatex">\(0.05\)</span>) and statistical power <span class="arithmatex">\(1 - \beta\)</span> (where <span class="arithmatex">\(\beta\)</span> is Type II error rate, typically <span class="arithmatex">\(0.20 \implies 80\%\)</span> power), the required sample size per variant is:</p>
 <div class="arithmatex">\[N = \frac{2 \left( Z_{\alpha/2} + Z_{\beta} \right)^2 \sigma^2}{\delta^2}\]</div>
-<p>Where:
-- <span class="arithmatex">\(Z_{\alpha/2}\)</span> is the standard normal critical value (<span class="arithmatex">\(1.96\)</span> for <span class="arithmatex">\(\alpha = 0.05\)</span>).
-- <span class="arithmatex">\(Z_{\beta}\)</span> is the power critical value (<span class="arithmatex">\(0.84\)</span> for <span class="arithmatex">\(80\%\)</span> power).
-- <span class="arithmatex">\(\sigma^2\)</span> is the pooled variance: <span class="arithmatex">\(\sigma^2 \approx \bar{p}(1 - \bar{p})\)</span> for binary conversion rates.</p>
+<p>Where:</p>
+<ul>
+<li><span class="arithmatex">\(Z_{\alpha/2}\)</span> is the standard normal critical value (<span class="arithmatex">\(1.96\)</span> for <span class="arithmatex">\(\alpha = 0.05\)</span>).</li>
+<li><span class="arithmatex">\(Z_{\beta}\)</span> is the power critical value (<span class="arithmatex">\(0.84\)</span> for <span class="arithmatex">\(80\%\)</span> power).</li>
+<li><span class="arithmatex">\(\sigma^2\)</span> is the pooled variance: <span class="arithmatex">\(\sigma^2 \approx \bar{p}(1 - \bar{p})\)</span> for binary conversion rates.</li>
+</ul>
 <p>If an A/B test is terminated before collecting <span class="arithmatex">\(N\)</span> samples per variant, the test suffers from <strong>peeking bias</strong>, drastically inflating false-positive discovery rates.</p>
 <hr />
 <h2 id="7-gpu-cost-optimization-mig-slicing-spot-instances">7. GPU Cost Optimization: MIG Slicing &amp; Spot Instances<a class="headerlink" href="#7-gpu-cost-optimization-mig-slicing-spot-instances" title="Permanent link">&para;</a></h2>
@@ -4638,10 +4646,12 @@
         Instance4["Instance 4: 3g.40gb (Pod D: Mistral-7B Inference)"]
     end</code></pre>
 <h3 id="71-multi-instance-gpu-mig-slicing">7.1 Multi-Instance GPU (MIG) Slicing<a class="headerlink" href="#71-multi-instance-gpu-mig-slicing" title="Permanent link">&para;</a></h3>
-<p>On NVIDIA Ampere and Hopper architectures (A100, H100), <strong>Multi-Instance GPU (MIG)</strong> hardware-partitions a single physical GPU into up to <strong>7 independent GPU instances</strong>:
-- Each instance possesses physically isolated High-Bandwidth Memory (HBM), memory crossbar paths, and Streaming Multiprocessors (SMs).
-- Unlike software multi-tenancy (which suffers from "noisy neighbor" cache thrashing), MIG provides strict hardware Quality of Service (QoS): a memory fault or OOM crash in one slice cannot crash adjacent slices.
-- <em>Cost Impact</em>: Allows running seven distinct production microservices on a single <span class="arithmatex">\(80\text{ GB}\)</span> GPU, reducing physical GPU instance provisioning costs by up to <span class="arithmatex">\(85\%\)</span>.</p>
+<p>On NVIDIA Ampere and Hopper architectures (A100, H100), <strong>Multi-Instance GPU (MIG)</strong> hardware-partitions a single physical GPU into up to <strong>7 independent GPU instances</strong>:</p>
+<ul>
+<li>Each instance possesses physically isolated High-Bandwidth Memory (HBM), memory crossbar paths, and Streaming Multiprocessors (SMs).</li>
+<li>Unlike software multi-tenancy (which suffers from "noisy neighbor" cache thrashing), MIG provides strict hardware Quality of Service (QoS): a memory fault or OOM crash in one slice cannot crash adjacent slices.</li>
+<li><em>Cost Impact</em>: Allows running seven distinct production microservices on a single <span class="arithmatex">\(80\text{ GB}\)</span> GPU, reducing physical GPU instance provisioning costs by up to <span class="arithmatex">\(85\%\)</span>.</li>
+</ul>
 <h3 id="72-spot-instance-orchestration-for-retraining">7.2 Spot Instance Orchestration for Retraining<a class="headerlink" href="#72-spot-instance-orchestration-for-retraining" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Spot / Preemptible VMs</strong>: Cloud providers (AWS, Azure, GCP) offer excess GPU capacity at an <span class="arithmatex">\(60 - 80\%\)</span> discount, with the caveat that instances can be terminated with a 30-to-120-second warning.</li>
@@ -4682,64 +4692,74 @@
 <hr />
 <h2 id="9-staff-level-technical-interview-questions">9. Staff-Level Technical Interview Questions<a class="headerlink" href="#9-staff-level-technical-interview-questions" title="Permanent link">&para;</a></h2>
 <h3 id="q1-detail-the-mathematical-and-operational-differences-between-the-kolmogorov-smirnov-k-s-test-and-the-population-stability-index-psi-for-drift-detection-under-what-conditions-would-you-choose-one-over-the-other">Q1: Detail the mathematical and operational differences between the Kolmogorov-Smirnov (K-S) test and the Population Stability Index (PSI) for drift detection. Under what conditions would you choose one over the other?<a class="headerlink" href="#q1-detail-the-mathematical-and-operational-differences-between-the-kolmogorov-smirnov-k-s-test-and-the-population-stability-index-psi-for-drift-detection-under-what-conditions-would-you-choose-one-over-the-other" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Kolmogorov-Smirnov (K-S) Test</strong>:
-  - <em>Mathematical Nature</em>: Non-parametric continuous two-sample hypothesis test computing the supremum distance between empirical cumulative distribution functions: <span class="arithmatex">\(D = \sup_x |F_1(x) - F_2(x)|\)</span>.
-  - <em>Advantages</em>: Binning-free (avoids arbitrary quantization artifacts); yields formal <span class="arithmatex">\(p\)</span>-values based on the Kolmogorov distribution, providing statistical guarantees under the null hypothesis.
-  - <em>Weaknesses</em>: Highly sensitive to sample size <span class="arithmatex">\(N\)</span>; when evaluating large enterprise datasets (<span class="arithmatex">\(N &gt; 100,000\)</span>), trivially small, practically irrelevant variations produce <span class="arithmatex">\(p &lt; 10^{-15}\)</span>, causing severe false-alarm fatigue.
-- <strong>Population Stability Index (PSI)</strong>:
-  - <em>Mathematical Nature</em>: Binned discrete divergence metric derived from symmetric Kullback-Leibler divergence: <span class="arithmatex">\(\sum (A_i - E_i) \ln(A_i / E_i)\)</span>.
-  - <em>Advantages</em>: Robust against massive sample sizes; provides universally accepted operational thresholds (<span class="arithmatex">\(&lt;0.1\)</span> stable, <span class="arithmatex">\(&gt;0.2\)</span> severe drift); directly reflects bin-level magnitude shifts.
-  - <em>Weaknesses</em>: Requires careful binning and smoothing to avoid zero-count infinities; sensitive to binning strategies (quantile vs equal-width).
-- <em>Staff Recommendation</em>: Use K-S tests for low-to-medium volume, continuous features where formal statistical significance is required. Use PSI for high-volume tabular streaming features and score distributions where operational thresholds must dictate automated retraining.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Kolmogorov-Smirnov (K-S) Test</strong>:</li>
+<li><em>Mathematical Nature</em>: Non-parametric continuous two-sample hypothesis test computing the supremum distance between empirical cumulative distribution functions: <span class="arithmatex">\(D = \sup_x |F_1(x) - F_2(x)|\)</span>.</li>
+<li><em>Advantages</em>: Binning-free (avoids arbitrary quantization artifacts); yields formal <span class="arithmatex">\(p\)</span>-values based on the Kolmogorov distribution, providing statistical guarantees under the null hypothesis.</li>
+<li><em>Weaknesses</em>: Highly sensitive to sample size <span class="arithmatex">\(N\)</span>; when evaluating large enterprise datasets (<span class="arithmatex">\(N &gt; 100,000\)</span>), trivially small, practically irrelevant variations produce <span class="arithmatex">\(p &lt; 10^{-15}\)</span>, causing severe false-alarm fatigue.</li>
+<li><strong>Population Stability Index (PSI)</strong>:</li>
+<li><em>Mathematical Nature</em>: Binned discrete divergence metric derived from symmetric Kullback-Leibler divergence: <span class="arithmatex">\(\sum (A_i - E_i) \ln(A_i / E_i)\)</span>.</li>
+<li><em>Advantages</em>: Robust against massive sample sizes; provides universally accepted operational thresholds (<span class="arithmatex">\(&lt;0.1\)</span> stable, <span class="arithmatex">\(&gt;0.2\)</span> severe drift); directly reflects bin-level magnitude shifts.</li>
+<li><em>Weaknesses</em>: Requires careful binning and smoothing to avoid zero-count infinities; sensitive to binning strategies (quantile vs equal-width).</li>
+<li><em>Staff Recommendation</em>: Use K-S tests for low-to-medium volume, continuous features where formal statistical significance is required. Use PSI for high-volume tabular streaming features and score distributions where operational thresholds must dictate automated retraining.</li>
+</ul>
 <hr />
 <h3 id="q2-how-does-maximum-mean-discrepancy-mmd-detect-covariate-shift-in-high-dimensional-embedding-spaces-and-why-do-univariate-tests-fail">Q2: How does Maximum Mean Discrepancy (MMD) detect covariate shift in high-dimensional embedding spaces, and why do univariate tests fail?<a class="headerlink" href="#q2-how-does-maximum-mean-discrepancy-mmd-detect-covariate-shift-in-high-dimensional-embedding-spaces-and-why-do-univariate-tests-fail" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Failure of Univariate Tests</strong>: In an embedding space <span class="arithmatex">\(\mathbb{R}^d\)</span> (<span class="arithmatex">\(d = 768\)</span>), running 768 individual K-S or PSI tests assumes individual dimensions are mutually independent. This introduces two fatal flaws:
-  1. <em>Multiple Testing Problem</em>: Testing 768 hypotheses inflates family-wise error rates (<span class="arithmatex">\(\alpha_{\text{total}} = 1 - (1 - \alpha)^d \approx 1.0\)</span>), generating continuous false alarms unless heavily penalized by Bonferroni corrections.
-  2. <em>Loss of Cross-Correlation</em>: Semantic concepts in deep representations are encoded across complex, non-linear manifolds. Two embedding distributions can have identical marginal 1D distributions along every coordinate axis while possessing entirely disjoint joint representations.
-- <strong>MMD Mechanics</strong>: MMD maps the full joint distribution into a Reproducing Kernel Hilbert Space (RKHS) <span class="arithmatex">\(\mathcal{H}\)</span> via feature map <span class="arithmatex">\(\phi(\mathbf{x})\)</span>. By using a characteristic kernel (such as the Gaussian RBF kernel <span class="arithmatex">\(k(\mathbf{x}, \mathbf{y}) = \exp(-\gamma \|\mathbf{x} - \mathbf{y}\|^2)\)</span>), the distance between mean embeddings <span class="arithmatex">\(\|\mu_P - \mu_Q\|_{\mathcal{H}}\)</span> is zero if and only if <span class="arithmatex">\(P = Q\)</span>. Thus, MMD captures all higher-order statistical moments and multi-dimensional correlations in a single scalar distance metric.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Failure of Univariate Tests</strong>: In an embedding space <span class="arithmatex">\(\mathbb{R}^d\)</span> (<span class="arithmatex">\(d = 768\)</span>), running 768 individual K-S or PSI tests assumes individual dimensions are mutually independent. This introduces two fatal flaws:</li>
+<li><em>Multiple Testing Problem</em>: Testing 768 hypotheses inflates family-wise error rates (<span class="arithmatex">\(\alpha_{\text{total}} = 1 - (1 - \alpha)^d \approx 1.0\)</span>), generating continuous false alarms unless heavily penalized by Bonferroni corrections.</li>
+<li><em>Loss of Cross-Correlation</em>: Semantic concepts in deep representations are encoded across complex, non-linear manifolds. Two embedding distributions can have identical marginal 1D distributions along every coordinate axis while possessing entirely disjoint joint representations.</li>
+<li><strong>MMD Mechanics</strong>: MMD maps the full joint distribution into a Reproducing Kernel Hilbert Space (RKHS) <span class="arithmatex">\(\mathcal{H}\)</span> via feature map <span class="arithmatex">\(\phi(\mathbf{x})\)</span>. By using a characteristic kernel (such as the Gaussian RBF kernel <span class="arithmatex">\(k(\mathbf{x}, \mathbf{y}) = \exp(-\gamma \|\mathbf{x} - \mathbf{y}\|^2)\)</span>), the distance between mean embeddings <span class="arithmatex">\(\|\mu_P - \mu_Q\|_{\mathcal{H}}\)</span> is zero if and only if <span class="arithmatex">\(P = Q\)</span>. Thus, MMD captures all higher-order statistical moments and multi-dimensional correlations in a single scalar distance metric.</li>
+</ul>
 <hr />
 <h3 id="q3-explain-the-concept-of-peeking-bias-in-online-ab-testing-of-machine-learning-models-how-does-it-corrupt-statistical-validity">Q3: Explain the concept of "peeking bias" in online A/B testing of machine learning models. How does it corrupt statistical validity?<a class="headerlink" href="#q3-explain-the-concept-of-peeking-bias-in-online-ab-testing-of-machine-learning-models-how-does-it-corrupt-statistical-validity" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>The Mechanism</strong>: Classical Neyman-Pearson hypothesis testing requires calculating the fixed sample size <span class="arithmatex">\(N\)</span> upfront based on desired statistical power (<span class="arithmatex">\(1 - \beta\)</span>) and significance level (<span class="arithmatex">\(\alpha\)</span>), collecting all <span class="arithmatex">\(N\)</span> observations, and conducting the test statistic evaluation exactly once.
-- <strong>Peeking Bias</strong>: When engineers or product teams continuously monitor A/B test dashboards daily and stop the experiment as soon as <span class="arithmatex">\(p &lt; 0.05\)</span> appears, they violate the sampling distribution assumptions.
-- <strong>Statistical Consequence</strong>: Under the null hypothesis <span class="arithmatex">\(H_0\)</span>, the <span class="arithmatex">\(p\)</span>-value fluctuates as a random walk over time. Repeatedly checking whether the random walk has crossed the significance threshold is equivalent to performing multiple dependent hypothesis tests. If an experiment is checked 10 times during its collection phase, the true Type I error rate (false positive rate) escalates from the nominal <span class="arithmatex">\(\alpha = 0.05\)</span> to over <span class="arithmatex">\(0.20-0.30\)</span>.
-- <em>Remediation</em>: Enforce strict sample size commitments before testing, or transition to <strong>Sequential Probability Ratio Testing (SPRT)</strong> or <strong>Bayesian Multi-Armed Bandits</strong>, which allow continuous stopping without alpha inflation.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>The Mechanism</strong>: Classical Neyman-Pearson hypothesis testing requires calculating the fixed sample size <span class="arithmatex">\(N\)</span> upfront based on desired statistical power (<span class="arithmatex">\(1 - \beta\)</span>) and significance level (<span class="arithmatex">\(\alpha\)</span>), collecting all <span class="arithmatex">\(N\)</span> observations, and conducting the test statistic evaluation exactly once.</li>
+<li><strong>Peeking Bias</strong>: When engineers or product teams continuously monitor A/B test dashboards daily and stop the experiment as soon as <span class="arithmatex">\(p &lt; 0.05\)</span> appears, they violate the sampling distribution assumptions.</li>
+<li><strong>Statistical Consequence</strong>: Under the null hypothesis <span class="arithmatex">\(H_0\)</span>, the <span class="arithmatex">\(p\)</span>-value fluctuates as a random walk over time. Repeatedly checking whether the random walk has crossed the significance threshold is equivalent to performing multiple dependent hypothesis tests. If an experiment is checked 10 times during its collection phase, the true Type I error rate (false positive rate) escalates from the nominal <span class="arithmatex">\(\alpha = 0.05\)</span> to over <span class="arithmatex">\(0.20-0.30\)</span>.</li>
+<li><em>Remediation</em>: Enforce strict sample size commitments before testing, or transition to <strong>Sequential Probability Ratio Testing (SPRT)</strong> or <strong>Bayesian Multi-Armed Bandits</strong>, which allow continuous stopping without alpha inflation.</li>
+</ul>
 <hr />
 <h3 id="q4-formulate-an-automated-event-driven-model-retraining-architecture-what-guardrails-prevent-a-corrupted-retraining-pipeline-from-pushing-a-broken-model-to-production">Q4: Formulate an automated, event-driven model retraining architecture. What guardrails prevent a corrupted retraining pipeline from pushing a broken model to production?<a class="headerlink" href="#q4-formulate-an-automated-event-driven-model-retraining-architecture-what-guardrails-prevent-a-corrupted-retraining-pipeline-from-pushing-a-broken-model-to-production" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-1. <strong>Trigger Phase</strong>: The production drift detector logs consecutive drift anomalies (<span class="arithmatex">\(\text{PSI} &gt; 0.20\)</span> across key features over a 24-hour window) and emits an event to a Kafka topic or Cloud Pub/Sub.
-2. <strong>Orchestration Phase</strong>: Apache Airflow or Kubeflow Pipelines consumes the event, spins up an isolated Kubernetes GPU training pod, pulls fresh ground-truth data from the offline feature store, and initiates warm-start fine-tuning.
-3. <strong>Automated Quality Guardrails (Pre-Promotion Gates)</strong>:
-   - <em>Data Contract Gate</em>: Asserts zero missing values, verifies label balance, and rejects batches where volume drops below statistical thresholds.
-   - <em>Baseline Superiority Gate</em>: The retrained Challenger must outperform the existing Champion model on a held-out, golden validation benchmark across primary business metrics (e.g. <span class="arithmatex">\(\Delta \text{ROC-AUC} \ge +0.015\)</span>).
-   - <em>Behavioral CheckList Gate</em>: Passes <span class="arithmatex">\(100\%\)</span> of critical Minimum Functionality Tests (MFT) and Directional Expectation Tests (DIR) to prevent regression on mission-critical edge cases.
-   - <em>Latency &amp; Memory Gate</em>: The candidate model container is deployed to a staging environment; load tests verify that P99 latency remains within the SLA (<span class="arithmatex">\(&lt;50\text{ ms}\)</span>) under <span class="arithmatex">\(2\times\)</span> production load.
-4. <strong>Promotion Phase</strong>: Only upon passing all four gates is the model artifact tagged <code>@challenger</code> in the MLflow Model Registry and promoted to a Canary deployment.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ol>
+<li><strong>Trigger Phase</strong>: The production drift detector logs consecutive drift anomalies (<span class="arithmatex">\(\text{PSI} &gt; 0.20\)</span> across key features over a 24-hour window) and emits an event to a Kafka topic or Cloud Pub/Sub.</li>
+<li><strong>Orchestration Phase</strong>: Apache Airflow or Kubeflow Pipelines consumes the event, spins up an isolated Kubernetes GPU training pod, pulls fresh ground-truth data from the offline feature store, and initiates warm-start fine-tuning.</li>
+<li><strong>Automated Quality Guardrails (Pre-Promotion Gates)</strong>:</li>
+<li><em>Data Contract Gate</em>: Asserts zero missing values, verifies label balance, and rejects batches where volume drops below statistical thresholds.</li>
+<li><em>Baseline Superiority Gate</em>: The retrained Challenger must outperform the existing Champion model on a held-out, golden validation benchmark across primary business metrics (e.g. <span class="arithmatex">\(\Delta \text{ROC-AUC} \ge +0.015\)</span>).</li>
+<li><em>Behavioral CheckList Gate</em>: Passes <span class="arithmatex">\(100\%\)</span> of critical Minimum Functionality Tests (MFT) and Directional Expectation Tests (DIR) to prevent regression on mission-critical edge cases.</li>
+<li><em>Latency &amp; Memory Gate</em>: The candidate model container is deployed to a staging environment; load tests verify that P99 latency remains within the SLA (<span class="arithmatex">\(&lt;50\text{ ms}\)</span>) under <span class="arithmatex">\(2\times\)</span> production load.</li>
+<li><strong>Promotion Phase</strong>: Only upon passing all four gates is the model artifact tagged <code>@challenger</code> in the MLflow Model Registry and promoted to a Canary deployment.</li>
+</ol>
 <hr />
 <h3 id="q5-how-does-multi-instance-gpu-mig-differ-from-time-slicing-gpu-virtualization-in-kubernetes">Q5: How does Multi-Instance GPU (MIG) differ from time-slicing GPU virtualization in Kubernetes?<a class="headerlink" href="#q5-how-does-multi-instance-gpu-mig-differ-from-time-slicing-gpu-virtualization-in-kubernetes" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Time-Slicing (Software Virtualization)</strong>:
-  - Multiple pods share the same physical GPU by time-multiplexing access to the execution engine.
-  - <em>Failure Modes</em>: No memory isolation; if one pod allocates excess VRAM, all pods on the GPU crash with CUDA OOM errors. Memory cache thrashing occurs as CUDA contexts are swapped in and out, introducing severe latency jitter.
-- <strong>Multi-Instance GPU (MIG)</strong>:
-  - Silicon-level hardware partitioning available on NVIDIA Ampere/Hopper GPUs.
-  - Divides the physical GPU into distinct hardware instances (e.g. up to 7 instances on an A100), each with dedicated Streaming Multiprocessors (SMs), dedicated memory controllers, and isolated physical SRAM/HBM blocks.
-  - <em>Guarantees</em>: Complete fault isolation (an OOM crash in Instance 1 has zero impact on Instance 2); deterministic memory bandwidth and latency QoS; independent CUDA execution streams running simultaneously without context switching.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Time-Slicing (Software Virtualization)</strong>:</li>
+<li>Multiple pods share the same physical GPU by time-multiplexing access to the execution engine.</li>
+<li><em>Failure Modes</em>: No memory isolation; if one pod allocates excess VRAM, all pods on the GPU crash with CUDA OOM errors. Memory cache thrashing occurs as CUDA contexts are swapped in and out, introducing severe latency jitter.</li>
+<li><strong>Multi-Instance GPU (MIG)</strong>:</li>
+<li>Silicon-level hardware partitioning available on NVIDIA Ampere/Hopper GPUs.</li>
+<li>Divides the physical GPU into distinct hardware instances (e.g. up to 7 instances on an A100), each with dedicated Streaming Multiprocessors (SMs), dedicated memory controllers, and isolated physical SRAM/HBM blocks.</li>
+<li><em>Guarantees</em>: Complete fault isolation (an OOM crash in Instance 1 has zero impact on Instance 2); deterministic memory bandwidth and latency QoS; independent CUDA execution streams running simultaneously without context switching.</li>
+</ul>
 <hr />
 <h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Differentiate mathematically between Covariate Shift, Concept Drift, and Prior Probability Shift.</li>
-<li>[ ] <strong>L2:</strong> Formulate the two-sample Kolmogorov-Smirnov test and calculate the supremum distance <span class="arithmatex">\(D\)</span>.</li>
-<li>[ ] <strong>L3:</strong> Implement Population Stability Index (PSI) from scratch and explain the operational meaning of <span class="arithmatex">\(\text{PSI} &lt; 0.1\)</span> vs <span class="arithmatex">\(\text{PSI} &gt; 0.2\)</span>.</li>
-<li>[ ] <strong>L4:</strong> Apply Laplace-style epsilon smoothing to eliminate zero-bin division errors in empirical divergence metrics.</li>
-<li>[ ] <strong>L5:</strong> Explain why univariate drift tests fail on high-dimensional text/image embeddings and formulate Maximum Mean Discrepancy (MMD).</li>
-<li>[ ] <strong>L6:</strong> Instrument a Python inference service with Prometheus histograms and OpenTelemetry distributed tracing spans.</li>
-<li>[ ] <strong>L7:</strong> Compare Shadow, Canary, and A/B deployment topologies in terms of operational complexity and blast radius.</li>
-<li>[ ] <strong>L8:</strong> Derive the minimum sample size equation required to power an A/B test without peeking bias.</li>
-<li>[ ] <strong>L9:</strong> Partition an NVIDIA A100 GPU using Multi-Instance GPU (MIG) to eliminate noisy-neighbor interference across inference pods.</li>
-<li>[ ] <strong>L10:</strong> Construct an end-to-end automated drift detection and retraining loop featuring automated pre-promotion validation guardrails.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Differentiate mathematically between Covariate Shift, Concept Drift, and Prior Probability Shift.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Formulate the two-sample Kolmogorov-Smirnov test and calculate the supremum distance <span class="arithmatex">\(D\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Implement Population Stability Index (PSI) from scratch and explain the operational meaning of <span class="arithmatex">\(\text{PSI} &lt; 0.1\)</span> vs <span class="arithmatex">\(\text{PSI} &gt; 0.2\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Apply Laplace-style epsilon smoothing to eliminate zero-bin division errors in empirical divergence metrics.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Explain why univariate drift tests fail on high-dimensional text/image embeddings and formulate Maximum Mean Discrepancy (MMD).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Instrument a Python inference service with Prometheus histograms and OpenTelemetry distributed tracing spans.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Compare Shadow, Canary, and A/B deployment topologies in terms of operational complexity and blast radius.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Derive the minimum sample size equation required to power an A/B test without peeking bias.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Partition an NVIDIA A100 GPU using Multi-Instance GPU (MIG) to eliminate noisy-neighbor interference across inference pods.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Construct an end-to-end automated drift detection and retraining loop featuring automated pre-promotion validation guardrails.</li>
 </ul>
 
 

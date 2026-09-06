@@ -4185,17 +4185,21 @@
     Tier1["Tier 1: Systems-Grade Python Engine\n(CLI Financial Ledger &amp; Expense Tracker)\n- Atomic SQLite Transactions, File Locks, Custom Exceptions"] --&gt; Tier2["Tier 2: Analytical Data Intelligence\n(Polars E-Commerce Cohort Engine)\n- Vectorized RFM Scoring, Retention Matrices, Arrow Memory"]
     Tier2 --&gt; Tier3["Tier 3: Production Classical ML Pipeline\n(Real Estate &amp; Credit Default Risk)\n- Leak-free ColumnTransformer, LightGBM/XGBoost, SHAP"]
     Tier3 --&gt; Tier4["Tier 4: Deep Learning Computer Vision\n(Autonomous Defect Localization)\n- ResNet Transfer Learning, Mixed Precision, Grad-CAM Heatmaps"]</code></pre>
-<p>Each tier delivers:
-1. <strong>Architectural Specification</strong>: System design, data schemas, and state transitions.
-2. <strong>Production-Grade Implementation</strong>: Modular, type-annotated, runnable code.
-3. <strong>Automated Verification</strong>: Pytest test cases verifying correctness and numerical invariants.
-4. <strong>Engineering Trade-offs &amp; Failure Modes</strong>: Analysis of memory bottlenecks, data leakage, and training instabilities.</p>
+<p>Each tier delivers:</p>
+<ol>
+<li><strong>Architectural Specification</strong>: System design, data schemas, and state transitions.</li>
+<li><strong>Production-Grade Implementation</strong>: Modular, type-annotated, runnable code.</li>
+<li><strong>Automated Verification</strong>: Pytest test cases verifying correctness and numerical invariants.</li>
+<li><strong>Engineering Trade-offs &amp; Failure Modes</strong>: Analysis of memory bottlenecks, data leakage, and training instabilities.</li>
+</ol>
 <hr />
 <h2 id="2-tier-1-python-cli-financial-ledger-transaction-engine">2. Tier 1 (Python): CLI Financial Ledger &amp; Transaction Engine<a class="headerlink" href="#2-tier-1-python-cli-financial-ledger-transaction-engine" title="Permanent link">&para;</a></h2>
 <h3 id="21-project-scope-requirements">2.1 Project Scope &amp; Requirements<a class="headerlink" href="#21-project-scope-requirements" title="Permanent link">&para;</a></h3>
-<p>Covers: <strong>Calculator</strong>, <strong>CLI application</strong>, <strong>File processor</strong>, and <strong>Expense tracker</strong>.
-- <strong>Core Objective</strong>: Implement a robust, thread-safe command-line financial ledger supporting multi-currency transaction logging, atomic SQLite transactions, CSV/JSON stream ingestion, and categorical budget tracking.
-- <strong>Architectural Principles</strong>: Separation of concerns (CLI interface <span class="arithmatex">\(\to\)</span> Controller <span class="arithmatex">\(\to\)</span> Repository), custom domain exceptions, atomic file locking to prevent race conditions during concurrent file imports, and strict type hints.</p>
+<p>Covers: <strong>Calculator</strong>, <strong>CLI application</strong>, <strong>File processor</strong>, and <strong>Expense tracker</strong>.</p>
+<ul>
+<li><strong>Core Objective</strong>: Implement a robust, thread-safe command-line financial ledger supporting multi-currency transaction logging, atomic SQLite transactions, CSV/JSON stream ingestion, and categorical budget tracking.</li>
+<li><strong>Architectural Principles</strong>: Separation of concerns (CLI interface <span class="arithmatex">\(\to\)</span> Controller <span class="arithmatex">\(\to\)</span> Repository), custom domain exceptions, atomic file locking to prevent race conditions during concurrent file imports, and strict type hints.</li>
+</ul>
 <h3 id="22-system-architecture">2.2 System Architecture<a class="headerlink" href="#22-system-architecture" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart LR
     CLI["CLI Command (argparse)"] --&gt; Controller["Ledger Controller"]
@@ -4325,9 +4329,11 @@
 <hr />
 <h2 id="3-tier-2-data-high-performance-e-commerce-cohort-rfm-intelligence">3. Tier 2 (Data): High-Performance E-Commerce Cohort &amp; RFM Intelligence<a class="headerlink" href="#3-tier-2-data-high-performance-e-commerce-cohort-rfm-intelligence" title="Permanent link">&para;</a></h2>
 <h3 id="31-project-scope-requirements">3.1 Project Scope &amp; Requirements<a class="headerlink" href="#31-project-scope-requirements" title="Permanent link">&para;</a></h3>
-<p>Covers: <strong>Data analysis</strong>, <strong>Sales dashboard</strong>, and <strong>Customer analytics</strong>.
-- <strong>Core Objective</strong>: Build an in-memory customer analytics engine capable of ingesting millions of clickstream and order rows, computing vectorized <strong>Recency, Frequency, Monetary (RFM)</strong> scores, and generating monthly cohort retention heatmaps using <strong>Polars</strong> (Apache Arrow zero-copy memory model).
-- <strong>Scale</strong>: Multi-million row datasets processed in sub-second execution windows without pandas-style memory duplication.</p>
+<p>Covers: <strong>Data analysis</strong>, <strong>Sales dashboard</strong>, and <strong>Customer analytics</strong>.</p>
+<ul>
+<li><strong>Core Objective</strong>: Build an in-memory customer analytics engine capable of ingesting millions of clickstream and order rows, computing vectorized <strong>Recency, Frequency, Monetary (RFM)</strong> scores, and generating monthly cohort retention heatmaps using <strong>Polars</strong> (Apache Arrow zero-copy memory model).</li>
+<li><strong>Scale</strong>: Multi-million row datasets processed in sub-second execution windows without pandas-style memory duplication.</li>
+</ul>
 <h3 id="32-system-architecture-mathematics">3.2 System Architecture &amp; Mathematics<a class="headerlink" href="#32-system-architecture-mathematics" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart TD
     RawCSV["Raw Transactions (Orders &amp; Timestamps)"] --&gt; PolarsLazy["Polars LazyFrame Ingestion (Parquet / CSV)"]
@@ -4341,10 +4347,12 @@
     RFMEngine --&gt; CustomerSegments["Customer Segmentation (Champions, At-Risk, Hibernating)"]
     CohortEngine --&gt; RetentionHeatmap["Triangular Cohort Retention Heatmap (%)"]</code></pre>
 <h4 id="rfm-scoring-mathematics">RFM Scoring Mathematics<a class="headerlink" href="#rfm-scoring-mathematics" title="Permanent link">&para;</a></h4>
-<p>For each customer <span class="arithmatex">\(c \in \mathcal{C}\)</span> observed up to snapshot date <span class="arithmatex">\(T_{\text{ref}}\)</span>:
-- <strong>Recency (<span class="arithmatex">\(R_c\)</span>)</strong>: <span class="arithmatex">\(R_c = T_{\text{ref}} - \max_{t} (t_c)\)</span> (days since last purchase).
-- <strong>Frequency (<span class="arithmatex">\(F_c\)</span>)</strong>: Total count of unique completed transactions <span class="arithmatex">\(F_c = |\{ \text{order\_id}_c \}|\)</span>.
-- <strong>Monetary (<span class="arithmatex">\(M_c\)</span>)</strong>: Total historical net spend <span class="arithmatex">\(M_c = \sum \text{amount}_c\)</span>.</p>
+<p>For each customer <span class="arithmatex">\(c \in \mathcal{C}\)</span> observed up to snapshot date <span class="arithmatex">\(T_{\text{ref}}\)</span>:</p>
+<ul>
+<li><strong>Recency (<span class="arithmatex">\(R_c\)</span>)</strong>: <span class="arithmatex">\(R_c = T_{\text{ref}} - \max_{t} (t_c)\)</span> (days since last purchase).</li>
+<li><strong>Frequency (<span class="arithmatex">\(F_c\)</span>)</strong>: Total count of unique completed transactions <span class="arithmatex">\(F_c = |\{ \text{order\_id}_c \}|\)</span>.</li>
+<li><strong>Monetary (<span class="arithmatex">\(M_c\)</span>)</strong>: Total historical net spend <span class="arithmatex">\(M_c = \sum \text{amount}_c\)</span>.</li>
+</ul>
 <p>Customers are binned into quintiles (<span class="arithmatex">\(1-5\)</span>):</p>
 <div class="arithmatex">\[\text{Score}_R = \text{qcut}(R, 5, [5, 4, 3, 2, 1]), \quad \text{Score}_F = \text{qcut}(F, 5, [1, 2, 3, 4, 5]), \quad \text{Score}_M = \text{qcut}(M, 5, [1, 2, 3, 4, 5])\]</div>
 <h3 id="33-polars-analytical-implementation">3.3 Polars Analytical Implementation<a class="headerlink" href="#33-polars-analytical-implementation" title="Permanent link">&para;</a></h3>
@@ -4428,9 +4436,11 @@
 <hr />
 <h2 id="4-tier-3-classical-ml-production-real-estate-credit-default-risk-system">4. Tier 3 (Classical ML): Production Real Estate &amp; Credit Default Risk System<a class="headerlink" href="#4-tier-3-classical-ml-production-real-estate-credit-default-risk-system" title="Permanent link">&para;</a></h2>
 <h3 id="41-project-scope-requirements">4.1 Project Scope &amp; Requirements<a class="headerlink" href="#41-project-scope-requirements" title="Permanent link">&para;</a></h3>
-<p>Covers: <strong>House price prediction</strong>, <strong>Customer churn</strong>, <strong>Fraud detection</strong>, and <strong>Recommendation system</strong>.
-- <strong>Core Objective</strong>: Implement an enterprise credit risk underwriting and valuation pipeline featuring leak-free preprocessing transformers, gradient-boosted tree ensembles (LightGBM/XGBoost), Class Imbalance Handling via SMOTE, and post-hoc model interpretability via <strong>SHAP (SHapley Additive exPlanations)</strong>.
-- <strong>Constraints</strong>: Strict prevention of data leakage across cross-validation folds, calibrated probabilities, and full explainability compliance for adverse regulatory actions.</p>
+<p>Covers: <strong>House price prediction</strong>, <strong>Customer churn</strong>, <strong>Fraud detection</strong>, and <strong>Recommendation system</strong>.</p>
+<ul>
+<li><strong>Core Objective</strong>: Implement an enterprise credit risk underwriting and valuation pipeline featuring leak-free preprocessing transformers, gradient-boosted tree ensembles (LightGBM/XGBoost), Class Imbalance Handling via SMOTE, and post-hoc model interpretability via <strong>SHAP (SHapley Additive exPlanations)</strong>.</li>
+<li><strong>Constraints</strong>: Strict prevention of data leakage across cross-validation folds, calibrated probabilities, and full explainability compliance for adverse regulatory actions.</li>
+</ul>
 <h3 id="42-system-architecture-mathematics">4.2 System Architecture &amp; Mathematics<a class="headerlink" href="#42-system-architecture-mathematics" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart TD
     RawData["Raw Credit &amp; Real Estate Attributes"] --&gt; Split["Stratified Train/Test Split"]
@@ -4546,9 +4556,11 @@
 <hr />
 <h2 id="5-tier-4-deep-learning-autonomous-vision-perception-defect-localization">5. Tier 4 (Deep Learning): Autonomous Vision Perception &amp; Defect Localization<a class="headerlink" href="#5-tier-4-deep-learning-autonomous-vision-perception-defect-localization" title="Permanent link">&para;</a></h2>
 <h3 id="51-project-scope-requirements">5.1 Project Scope &amp; Requirements<a class="headerlink" href="#51-project-scope-requirements" title="Permanent link">&para;</a></h3>
-<p>Covers: <strong>Image classifier</strong>, <strong>Object detector</strong>, and <strong>Sentiment classifier</strong>.
-- <strong>Core Objective</strong>: Build an industrial visual quality-control inspection system that classifies manufacturing defects and localizes the physical flaw regions using <strong>Grad-CAM (Gradient-weighted Class Activation Mapping)</strong> without requiring expensive pixel-level segmentation annotations.
-- <strong>Engineering Requirements</strong>: PyTorch mixed-precision training (<code>torch.cuda.amp</code>), transfer learning via pretrained ResNet-50 backbones, learning rate warmup with cosine decay, and automated Grad-CAM heatmap extraction.</p>
+<p>Covers: <strong>Image classifier</strong>, <strong>Object detector</strong>, and <strong>Sentiment classifier</strong>.</p>
+<ul>
+<li><strong>Core Objective</strong>: Build an industrial visual quality-control inspection system that classifies manufacturing defects and localizes the physical flaw regions using <strong>Grad-CAM (Gradient-weighted Class Activation Mapping)</strong> without requiring expensive pixel-level segmentation annotations.</li>
+<li><strong>Engineering Requirements</strong>: PyTorch mixed-precision training (<code>torch.cuda.amp</code>), transfer learning via pretrained ResNet-50 backbones, learning rate warmup with cosine decay, and automated Grad-CAM heatmap extraction.</li>
+</ul>
 <h3 id="52-system-architecture-mathematics">5.2 System Architecture &amp; Mathematics<a class="headerlink" href="#52-system-architecture-mathematics" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart LR
     InputImg["Industrial Surface Image [3, 224, 224]"] --&gt; ResNetBackbone["ResNet-50 Backbone (Pretrained ImageNet)"]
@@ -4666,73 +4678,84 @@
 <hr />
 <h2 id="7-staff-level-technical-interview-questions">7. Staff-Level Technical Interview Questions<a class="headerlink" href="#7-staff-level-technical-interview-questions" title="Permanent link">&para;</a></h2>
 <h3 id="q1-in-tier-3-credit-scoring-pipelines-explain-why-treeshap-is-mathematically-superior-to-heuristic-feature-importance-metrics-eg-gini-impurity-decrease-or-split-gain-in-lightgbm">Q1: In Tier 3 credit scoring pipelines, explain why TreeSHAP is mathematically superior to heuristic feature importance metrics (e.g. Gini impurity decrease or split gain in LightGBM).<a class="headerlink" href="#q1-in-tier-3-credit-scoring-pipelines-explain-why-treeshap-is-mathematically-superior-to-heuristic-feature-importance-metrics-eg-gini-impurity-decrease-or-split-gain-in-lightgbm" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Flaws of Split-Gain / Impurity Decrease</strong>:
-  1. <em>Inconsistency</em>: Increasing the true predictive impact of a feature in a tree model can paradoxically <strong>lower</strong> its calculated Gini importance score if the feature is split earlier in the tree, leaving lower sample counts for subsequent splits.
-  2. <em>Bias towards High-Cardinality Features</em>: Continuous or high-cardinality categorical features present many more potential split points, artificially inflating their Gini gain relative to critical low-cardinality binary features (e.g. <code>prior_bankruptcy_flag</code>).
-  3. <em>Global Only</em>: Split gain provides a single global number, offering zero local explanation for <em>why</em> an individual applicant was denied.
-- <strong>TreeSHAP Superiority</strong>:
-  - <em>Axiomatic Guarantees</em>: Rooted in cooperative game theory, Shapley values are the <strong>unique</strong> attribution method satisfying four fundamental axioms: <strong>Efficiency</strong> (<span class="arithmatex">\(\sum \phi_i = f(x) - \mathbb{E}[f(x)]\)</span>), <strong>Symmetry</strong> (identical contributors receive identical credit), <strong>Dummy</strong> (features with zero marginal impact receive zero credit), and <strong>Additivity</strong>.
-  - <em>Local Explanations</em>: TreeSHAP calculates exact, additive feature attributions for individual inference instances, providing legally mandated justification for adverse regulatory credit notices.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Flaws of Split-Gain / Impurity Decrease</strong>:</li>
+<li><em>Inconsistency</em>: Increasing the true predictive impact of a feature in a tree model can paradoxically <strong>lower</strong> its calculated Gini importance score if the feature is split earlier in the tree, leaving lower sample counts for subsequent splits.</li>
+<li><em>Bias towards High-Cardinality Features</em>: Continuous or high-cardinality categorical features present many more potential split points, artificially inflating their Gini gain relative to critical low-cardinality binary features (e.g. <code>prior_bankruptcy_flag</code>).</li>
+<li><em>Global Only</em>: Split gain provides a single global number, offering zero local explanation for <em>why</em> an individual applicant was denied.</li>
+<li><strong>TreeSHAP Superiority</strong>:</li>
+<li><em>Axiomatic Guarantees</em>: Rooted in cooperative game theory, Shapley values are the <strong>unique</strong> attribution method satisfying four fundamental axioms: <strong>Efficiency</strong> (<span class="arithmatex">\(\sum \phi_i = f(x) - \mathbb{E}[f(x)]\)</span>), <strong>Symmetry</strong> (identical contributors receive identical credit), <strong>Dummy</strong> (features with zero marginal impact receive zero credit), and <strong>Additivity</strong>.</li>
+<li><em>Local Explanations</em>: TreeSHAP calculates exact, additive feature attributions for individual inference instances, providing legally mandated justification for adverse regulatory credit notices.</li>
+</ul>
 <hr />
 <h3 id="q2-detail-the-differences-between-the-polars-and-pandas-memory-models-why-does-polars-achieve-10x-50x-higher-throughput-on-cohort-analytics">Q2: Detail the differences between the Polars and Pandas memory models. Why does Polars achieve 10x-50x higher throughput on cohort analytics?<a class="headerlink" href="#q2-detail-the-differences-between-the-polars-and-pandas-memory-models-why-does-polars-achieve-10x-50x-higher-throughput-on-cohort-analytics" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-1. <strong>Memory Representation (Apache Arrow)</strong>:
-   - <em>Pandas</em>: Historically built on NumPy, using fragmented object pointers for strings and ragged arrays. Null values are represented via floating-point <code>NaN</code>, causing unwanted type coercions.
-   - <em>Polars</em>: Built on the Apache Arrow columnar memory standard. Arrays are contiguous, aligned memory buffers with dedicated null validity bitmasks. String columns use dictionary or string-view encoding, enabling zero-copy slicing.
-2. <strong>Execution Engine (Parallelism &amp; SIMD)</strong>:
-   - <em>Pandas</em>: Single-threaded, bound by the Python Global Interpreter Lock (GIL). Column operations execute on one CPU core.
-   - <em>Polars</em>: Written in Rust using the Rayon work-stealing parallelism library. Dataframe operations are parallelized across all CPU cores and vectorized using CPU SIMD (Single Instruction, Multiple Data) instructions.
-3. <strong>Query Optimization (Lazy Evaluation)</strong>:
-   - <em>Polars Lazy API (<code>lazy()</code>)</em>: Compiles transformations into an abstract syntax tree (AST) and runs a query optimizer before execution. It applies <strong>predicate pushdown</strong> (filtering rows before loading from disk) and <strong>projection pushdown</strong> (reading only necessary columns), slashing physical I/O and RAM usage by orders of magnitude.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ol>
+<li><strong>Memory Representation (Apache Arrow)</strong>:</li>
+<li><em>Pandas</em>: Historically built on NumPy, using fragmented object pointers for strings and ragged arrays. Null values are represented via floating-point <code>NaN</code>, causing unwanted type coercions.</li>
+<li><em>Polars</em>: Built on the Apache Arrow columnar memory standard. Arrays are contiguous, aligned memory buffers with dedicated null validity bitmasks. String columns use dictionary or string-view encoding, enabling zero-copy slicing.</li>
+<li><strong>Execution Engine (Parallelism &amp; SIMD)</strong>:</li>
+<li><em>Pandas</em>: Single-threaded, bound by the Python Global Interpreter Lock (GIL). Column operations execute on one CPU core.</li>
+<li><em>Polars</em>: Written in Rust using the Rayon work-stealing parallelism library. Dataframe operations are parallelized across all CPU cores and vectorized using CPU SIMD (Single Instruction, Multiple Data) instructions.</li>
+<li><strong>Query Optimization (Lazy Evaluation)</strong>:</li>
+<li><em>Polars Lazy API (<code>lazy()</code>)</em>: Compiles transformations into an abstract syntax tree (AST) and runs a query optimizer before execution. It applies <strong>predicate pushdown</strong> (filtering rows before loading from disk) and <strong>projection pushdown</strong> (reading only necessary columns), slashing physical I/O and RAM usage by orders of magnitude.</li>
+</ol>
 <hr />
 <h3 id="q3-explain-why-applying-smote-to-the-validation-or-test-dataset-invalidates-real-world-performance-benchmarks">Q3: Explain why applying SMOTE to the validation or test dataset invalidates real-world performance benchmarks.<a class="headerlink" href="#q3-explain-why-applying-smote-to-the-validation-or-test-dataset-invalidates-real-world-performance-benchmarks" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Data Distribution Corruption</strong>:
-  - SMOTE generates synthetic minority instances by interpolating between <span class="arithmatex">\(k\)</span>-nearest neighbors in feature space:</p>
-<div class="language-text highlight"><pre><span></span><code>$$x_{\text{new}} = x_i + \lambda (x_{zi} - x_i), \quad \lambda \sim U(0, 1)$$
-</code></pre></div>
+<p><strong>Model Answer:</strong>  </p>
 <ul>
-<li>The ground-truth production data distribution is imbalanced (e.g. <span class="arithmatex">\(1\%\)</span> fraud rate). Evaluating a model on an artificially balanced test set (<span class="arithmatex">\(50\%\)</span> synthetic fraud) measures performance on a synthetic distribution that will never exist in production.</li>
+<li><strong>Data Distribution Corruption</strong>:</li>
+<li>
+<p>SMOTE generates synthetic minority instances by interpolating between <span class="arithmatex">\(k\)</span>-nearest neighbors in feature space:</p>
+<div class="arithmatex">\[x_{\text{new}} = x_i + \lambda (x_{zi} - x_i), \quad \lambda \sim U(0, 1)\]</div>
+</li>
+<li>
+<p>The ground-truth production data distribution is imbalanced (e.g. <span class="arithmatex">\(1\%\)</span> fraud rate). Evaluating a model on an artificially balanced test set (<span class="arithmatex">\(50\%\)</span> synthetic fraud) measures performance on a synthetic distribution that will never exist in production.</p>
+</li>
 <li><strong>Over-Optimistic Metrics</strong>:</li>
 <li>Synthetic test instances lie in the convex hulls of existing training points. The model easily classifies these synthetic points correctly, artificially inflating Precision, Recall, and ROC-AUC.</li>
 <li><strong>Proper Methodology</strong>: Oversampling (SMOTE) or undersampling must be applied <strong>exclusively to training folds</strong>. Test and validation sets must retain the raw, untouched empirical class distribution to reflect production reality.</li>
 </ul>
 <hr />
 <h3 id="q4-how-does-grad-cam-produce-visual-heatmaps-without-requiring-pixel-level-semantic-segmentation-labels-during-training">Q4: How does Grad-CAM produce visual heatmaps without requiring pixel-level semantic segmentation labels during training?<a class="headerlink" href="#q4-how-does-grad-cam-produce-visual-heatmaps-without-requiring-pixel-level-semantic-segmentation-labels-during-training" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Convolutional Feature Spatial Geometry</strong>:
-  - In a deep CNN (e.g. ResNet-50), the final convolutional layer (<code>layer4</code>) retains spatial dimensions (e.g. <span class="arithmatex">\(7 \times 7\)</span> grid for a <span class="arithmatex">\(224 \times 224\)</span> input) while encoding high-level semantic abstractions across 2,048 channels.
-- <strong>Gradient Backpropagation as Importance Weights</strong>:
-  - Rather than treating activations equally, Grad-CAM computes the gradient of the target class score <span class="arithmatex">\(y^c\)</span> with respect to each feature activation map <span class="arithmatex">\(A^k\)</span>: <span class="arithmatex">\(\frac{\partial y^c}{\partial A^k}\)</span>.
-  - Global average pooling these gradients yields scalar weights <span class="arithmatex">\(\alpha_k^c\)</span> capturing the exact contribution of each channel to decision <span class="arithmatex">\(c\)</span>.
-- <strong>Rectified Linear Combination</strong>:
-  - Weighting the activation maps by <span class="arithmatex">\(\alpha_k^c\)</span> and summing them yields a coarse 2D map.
-  - Applying <span class="arithmatex">\(\text{ReLU}\)</span> eliminates negative activations (features corresponding to other competing classes), isolating the spatial pixels that positively triggered the classification. Bilinear interpolation upsamples the coarse map back to image resolution.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Convolutional Feature Spatial Geometry</strong>:</li>
+<li>In a deep CNN (e.g. ResNet-50), the final convolutional layer (<code>layer4</code>) retains spatial dimensions (e.g. <span class="arithmatex">\(7 \times 7\)</span> grid for a <span class="arithmatex">\(224 \times 224\)</span> input) while encoding high-level semantic abstractions across 2,048 channels.</li>
+<li><strong>Gradient Backpropagation as Importance Weights</strong>:</li>
+<li>Rather than treating activations equally, Grad-CAM computes the gradient of the target class score <span class="arithmatex">\(y^c\)</span> with respect to each feature activation map <span class="arithmatex">\(A^k\)</span>: <span class="arithmatex">\(\frac{\partial y^c}{\partial A^k}\)</span>.</li>
+<li>Global average pooling these gradients yields scalar weights <span class="arithmatex">\(\alpha_k^c\)</span> capturing the exact contribution of each channel to decision <span class="arithmatex">\(c\)</span>.</li>
+<li><strong>Rectified Linear Combination</strong>:</li>
+<li>Weighting the activation maps by <span class="arithmatex">\(\alpha_k^c\)</span> and summing them yields a coarse 2D map.</li>
+<li>Applying <span class="arithmatex">\(\text{ReLU}\)</span> eliminates negative activations (features corresponding to other competing classes), isolating the spatial pixels that positively triggered the classification. Bilinear interpolation upsamples the coarse map back to image resolution.</li>
+</ul>
 <hr />
 <h3 id="q5-how-do-you-design-an-atomic-sqlite-transaction-architecture-to-prevent-database-locks-and-race-conditions-under-concurrent-write-traffic">Q5: How do you design an atomic SQLite transaction architecture to prevent database locks and race conditions under concurrent write traffic?<a class="headerlink" href="#q5-how-do-you-design-an-atomic-sqlite-transaction-architecture-to-prevent-database-locks-and-race-conditions-under-concurrent-write-traffic" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-1. <strong>Enable Write-Ahead Logging (WAL)</strong>:
-   - Default SQLite locks the entire database file during writes, blocking concurrent readers (<code>SQLITE_BUSY</code>).
-   - Enabling WAL (<code>PRAGMA journal_mode=WAL;</code>) decouples readers from writers: writers append changes to a separate <code>-wal</code> log file while readers query the unchanged main database file concurrently.
-2. <strong>Busy Timeout &amp; Immediate Transactions</strong>:
-   - Configure <code>sqlite3.connect(timeout=10.0)</code> to allow threads to wait up to 10 seconds for locks to clear instead of throwing immediate exceptions.
-   - Begin write transactions with <code>BEGIN IMMEDIATE</code> to acquire the write lock upfront, preventing deadlocks where two transactions simultaneously promote from shared read locks to reserved write locks.
-3. <strong>Single-Writer Connection Pooling</strong>:
-   - In highly concurrent microservices, route all write transactions through a dedicated, serialized write queue managed by a single background worker thread, while allowing multiple reader threads to query replicas concurrently.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ol>
+<li><strong>Enable Write-Ahead Logging (WAL)</strong>:</li>
+<li>Default SQLite locks the entire database file during writes, blocking concurrent readers (<code>SQLITE_BUSY</code>).</li>
+<li>Enabling WAL (<code>PRAGMA journal_mode=WAL;</code>) decouples readers from writers: writers append changes to a separate <code>-wal</code> log file while readers query the unchanged main database file concurrently.</li>
+<li><strong>Busy Timeout &amp; Immediate Transactions</strong>:</li>
+<li>Configure <code>sqlite3.connect(timeout=10.0)</code> to allow threads to wait up to 10 seconds for locks to clear instead of throwing immediate exceptions.</li>
+<li>Begin write transactions with <code>BEGIN IMMEDIATE</code> to acquire the write lock upfront, preventing deadlocks where two transactions simultaneously promote from shared read locks to reserved write locks.</li>
+<li><strong>Single-Writer Connection Pooling</strong>:</li>
+<li>In highly concurrent microservices, route all write transactions through a dedicated, serialized write queue managed by a single background worker thread, while allowing multiple reader threads to query replicas concurrently.</li>
+</ol>
 <hr />
 <h2 id="8-mastery-ladder">8. Mastery Ladder<a class="headerlink" href="#8-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Implement thread-safe SQLite transactions with Write-Ahead Logging (WAL) and custom domain exceptions.</li>
-<li>[ ] <strong>L2:</strong> Parse and stream malformed CSV/JSON financial transaction logs with deterministic schema validation.</li>
-<li>[ ] <strong>L3:</strong> Explain the Apache Arrow memory layout and how Polars eliminates Pandas memory duplication overhead.</li>
-<li>[ ] <strong>L4:</strong> Construct a monthly cohort retention matrix and compute vectorized RFM quintile segments in Polars.</li>
-<li>[ ] <strong>L5:</strong> Build a leak-free Scikit-Learn preprocessing pipeline using <code>ColumnTransformer</code> and <code>RobustScaler</code>.</li>
-<li>[ ] <strong>L6:</strong> Explain why SMOTE must be restricted strictly to training folds and integrate it via <code>imblearn.pipeline</code>.</li>
-<li>[ ] <strong>L7:</strong> Apply Platt Scaling and Isotonic Regression to calibrate binary classifier risk probabilities.</li>
-<li>[ ] <strong>L8:</strong> Calculate TreeSHAP local explanations for adverse action compliance in automated underwriting models.</li>
-<li>[ ] <strong>L9:</strong> Implement PyTorch mixed-precision training (<code>torch.cuda.amp</code>) with dynamic gradient scaling.</li>
-<li>[ ] <strong>L10:</strong> Author a ResNet Grad-CAM inspection engine extracting visual defect localization heatmaps using forward/backward hooks.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Implement thread-safe SQLite transactions with Write-Ahead Logging (WAL) and custom domain exceptions.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Parse and stream malformed CSV/JSON financial transaction logs with deterministic schema validation.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Explain the Apache Arrow memory layout and how Polars eliminates Pandas memory duplication overhead.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Construct a monthly cohort retention matrix and compute vectorized RFM quintile segments in Polars.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Build a leak-free Scikit-Learn preprocessing pipeline using <code>ColumnTransformer</code> and <code>RobustScaler</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Explain why SMOTE must be restricted strictly to training folds and integrate it via <code>imblearn.pipeline</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Apply Platt Scaling and Isotonic Regression to calibrate binary classifier risk probabilities.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Calculate TreeSHAP local explanations for adverse action compliance in automated underwriting models.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Implement PyTorch mixed-precision training (<code>torch.cuda.amp</code>) with dynamic gradient scaling.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Author a ResNet Grad-CAM inspection engine extracting visual defect localization heatmaps using forward/backward hooks.</li>
 </ul>
 
 

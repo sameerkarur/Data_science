@@ -4116,11 +4116,13 @@
         Constrained --&gt; ToolExec["Tool / Function Calling Engine\n(Sandboxed API Execution &amp; Validation)"]
         ToolExec --&gt; CleanOutput["Validated Pydantic Object / Production State"]
     end</code></pre>
-<p>Application engineering bridges this gap through four pillars:
-1. <strong>Dense Vector Embeddings &amp; Metric Geometry</strong>: Encoding semantic similarity into geometric distance.
-2. <strong>Cognitive Prompt Frameworks</strong>: Orchestrating multi-step reasoning through Chain-of-Thought (CoT), Tree of Thoughts (ToT), and ReAct.
-3. <strong>Constrained Decoding &amp; Structured Outputs</strong>: Masking vocabulary logits at generation time using Context-Free Grammars (CFG) to guarantee 100% syntactically valid JSON.
-4. <strong>Function Calling &amp; Tool Orchestration</strong>: Exposing external APIs and Python environments to the model as executable primitives.</p>
+<p>Application engineering bridges this gap through four pillars:</p>
+<ol>
+<li><strong>Dense Vector Embeddings &amp; Metric Geometry</strong>: Encoding semantic similarity into geometric distance.</li>
+<li><strong>Cognitive Prompt Frameworks</strong>: Orchestrating multi-step reasoning through Chain-of-Thought (CoT), Tree of Thoughts (ToT), and ReAct.</li>
+<li><strong>Constrained Decoding &amp; Structured Outputs</strong>: Masking vocabulary logits at generation time using Context-Free Grammars (CFG) to guarantee 100% syntactically valid JSON.</li>
+<li><strong>Function Calling &amp; Tool Orchestration</strong>: Exposing external APIs and Python environments to the model as executable primitives.</li>
+</ol>
 <hr />
 <h2 id="2-dense-semantic-embeddings-metric-space-geometry">2. Dense Semantic Embeddings &amp; Metric Space Geometry<a class="headerlink" href="#2-dense-semantic-embeddings-metric-space-geometry" title="Permanent link">&para;</a></h2>
 <p>An embedding function is a parameterized non-linear mapping from variable-length token sequences to a fixed-dimensional continuous metric space:</p>
@@ -4134,14 +4136,20 @@
     Metrics --&gt; Cosine["Cosine Similarity\ncos(u, v) = ⟨u, v⟩ / (||u||_2 · ||v||_2)\nInvariant to vector norm, bounds [-1, 1]"]
     Metrics --&gt; L2["Euclidean Distance (L2 Norm)\n||u - v||_2 = √(∑ (u_i - v_i)²)\nMeasures geometric coordinate distance"]</code></pre>
 <h4 id="theorem-monotonic-equivalence-of-normalized-cosine-similarity-and-euclidean-distance">Theorem: Monotonic Equivalence of Normalized Cosine Similarity and Euclidean Distance<a class="headerlink" href="#theorem-monotonic-equivalence-of-normalized-cosine-similarity-and-euclidean-distance" title="Permanent link">&para;</a></h4>
-<p>When embedding vectors are <span class="arithmatex">\(L_2\)</span>-normalized to lie on the unit hypersphere <span class="arithmatex">\(\mathbb{S}^{d-1}\)</span> (such that <span class="arithmatex">\(\|\mathbf{u}\|_2 = \|\mathbf{v}\|_2 = 1\)</span>):
-1. The dot product equals the cosine similarity:
-   $<span class="arithmatex">\(\langle \mathbf{u}, \mathbf{v} \rangle = \frac{\langle \mathbf{u}, \mathbf{v} \rangle}{(1)(1)} = \cos(\mathbf{u}, \mathbf{v})\)</span>$
-2. The squared Euclidean distance is a strictly decreasing monotonic linear transformation of cosine similarity:</p>
-<p><strong>Proof:</strong>
-$$
-|\mathbf{u} - \mathbf{v}|_2^2 = \langle \mathbf{u} - \mathbf{v}, \, \mathbf{u} - \mathbf{v} \rangle = |\mathbf{u}|_2^2 + |\mathbf{v}|_2^2 - 2 \langle \mathbf{u}, \mathbf{v} \rangle
-$$</p>
+<p>When embedding vectors are <span class="arithmatex">\(L_2\)</span>-normalized to lie on the unit hypersphere <span class="arithmatex">\(\mathbb{S}^{d-1}\)</span> (such that <span class="arithmatex">\(\|\mathbf{u}\|_2 = \|\mathbf{v}\|_2 = 1\)</span>):</p>
+<ol>
+<li>
+<p>The dot product equals the cosine similarity:
+   $<span class="arithmatex">\(\langle \mathbf{u}, \mathbf{v} \rangle = \frac{\langle \mathbf{u}, \mathbf{v} \rangle}{(1)(1)} = \cos(\mathbf{u}, \mathbf{v})\)</span>$</p>
+</li>
+<li>
+<p>The squared Euclidean distance is a strictly decreasing monotonic linear transformation of cosine similarity:</p>
+</li>
+</ol>
+<p><strong>Proof:</strong></p>
+<div class="arithmatex">\[
+\|\mathbf{u} - \mathbf{v}\|_2^2 = \langle \mathbf{u} - \mathbf{v}, \, \mathbf{u} - \mathbf{v} \rangle = \|\mathbf{u}\|_2^2 + \|\mathbf{v}\|_2^2 - 2 \langle \mathbf{u}, \mathbf{v} \rangle
+\]</div>
 <p>Since <span class="arithmatex">\(\|\mathbf{u}\|_2 = \|\mathbf{v}\|_2 = 1\)</span>:</p>
 <div class="arithmatex">\[
 \|\mathbf{u} - \mathbf{v}\|_2^2 = 1 + 1 - 2 \cos(\mathbf{u}, \mathbf{v}) = 2 - 2 \cos(\mathbf{u}, \mathbf{v}) \quad \blacksquare
@@ -4208,15 +4216,17 @@ $$</p>
 </table>
 <hr />
 <h3 id="23-the-mteb-evaluation-framework">2.3 The MTEB Evaluation Framework<a class="headerlink" href="#23-the-mteb-evaluation-framework" title="Permanent link">&para;</a></h3>
-<p>The <strong>Massive Text Embedding Benchmark (MTEB, Muennighoff et al. 2022)</strong> standardizes embedding evaluation across 8 distinct tasks:
-1. <strong>Retrieval</strong>: Information retrieval NDCG@10 (MS MARCO, BEIR).
-2. <strong>Reranking</strong>: Ranking candidate documents given a query.
-3. <strong>Clustering</strong>: Grouping documents by topic (k-means V-measure).
-4. <strong>Classification</strong>: Linear probe accuracy on frozen embeddings.
-5. <strong>Pair Classification</strong>: Predicting duplicate sentences (binary F1).
-6. <strong>Semantic Textual Similarity (STS)</strong>: Pearson/Spearman correlation against human similarity ratings.
-7. <strong>Summarization</strong>: Alignment between source and summary.
-8. <strong>Bitext Mining</strong>: Identifying translation pairs across languages.</p>
+<p>The <strong>Massive Text Embedding Benchmark (MTEB, Muennighoff et al. 2022)</strong> standardizes embedding evaluation across 8 distinct tasks:</p>
+<ol>
+<li><strong>Retrieval</strong>: Information retrieval NDCG@10 (MS MARCO, BEIR).</li>
+<li><strong>Reranking</strong>: Ranking candidate documents given a query.</li>
+<li><strong>Clustering</strong>: Grouping documents by topic (k-means V-measure).</li>
+<li><strong>Classification</strong>: Linear probe accuracy on frozen embeddings.</li>
+<li><strong>Pair Classification</strong>: Predicting duplicate sentences (binary F1).</li>
+<li><strong>Semantic Textual Similarity (STS)</strong>: Pearson/Spearman correlation against human similarity ratings.</li>
+<li><strong>Summarization</strong>: Alignment between source and summary.</li>
+<li><strong>Bitext Mining</strong>: Identifying translation pairs across languages.</li>
+</ol>
 <hr />
 <h2 id="3-advanced-prompt-engineering-cognitive-frameworks">3. Advanced Prompt Engineering &amp; Cognitive Frameworks<a class="headerlink" href="#3-advanced-prompt-engineering-cognitive-frameworks" title="Permanent link">&para;</a></h2>
 <p>Prompt engineering is not mere heuristic phrasing; it represents the configuration of the autoregressive prior to guide the model's computation graph through optimal intermediate latent states.</p>
@@ -4255,10 +4265,12 @@ When generating a reasoning chain of <span class="arithmatex">\(K\)</span> token
     T3 --&gt; T32["Thought Step 2C-2"]
 
     T12 --&gt; Sol["Optimal Solution Found!"]</code></pre>
-<p>ToT defines:
-1. <strong>Thought Generator</strong>: Proposes <span class="arithmatex">\(k\)</span> candidate next reasoning steps: <span class="arithmatex">\(p_\theta^{\text{gen}}(s_{t+1} \mid s_t)\)</span>.
-2. <strong>State Evaluator</strong>: Evaluates the promise of intermediate state <span class="arithmatex">\(s_t\)</span> (e.g. <em>sure / likely / impossible</em> or numerical heuristic score <span class="arithmatex">\(V(s) \in [0, 1]\)</span>).
-3. <strong>Search Algorithm</strong>: Breadth-First Search (BFS) or Depth-First Search (DFS) with backtracking when a sub-branch leads to contradiction.</p>
+<p>ToT defines:</p>
+<ol>
+<li><strong>Thought Generator</strong>: Proposes <span class="arithmatex">\(k\)</span> candidate next reasoning steps: <span class="arithmatex">\(p_\theta^{\text{gen}}(s_{t+1} \mid s_t)\)</span>.</li>
+<li><strong>State Evaluator</strong>: Evaluates the promise of intermediate state <span class="arithmatex">\(s_t\)</span> (e.g. <em>sure / likely / impossible</em> or numerical heuristic score <span class="arithmatex">\(V(s) \in [0, 1]\)</span>).</li>
+<li><strong>Search Algorithm</strong>: Breadth-First Search (BFS) or Depth-First Search (DFS) with backtracking when a sub-branch leads to contradiction.</li>
+</ol>
 <hr />
 <h3 id="33-the-react-paradigm-synergizing-reasoning-acting">3.3 The ReAct Paradigm: Synergizing Reasoning &amp; Acting<a class="headerlink" href="#33-the-react-paradigm-synergizing-reasoning-acting" title="Permanent link">&para;</a></h3>
 <p><a href="https://arxiv.org/abs/2210.03629">Yao et al. (2022)</a> combined internal reasoning with external environment actions:</p>
@@ -4276,11 +4288,13 @@ When generating a reasoning chain of <span class="arithmatex">\(K\)</span> token
 <h2 id="4-structured-outputs-constrained-decoding">4. Structured Outputs &amp; Constrained Decoding<a class="headerlink" href="#4-structured-outputs-constrained-decoding" title="Permanent link">&para;</a></h2>
 <p>In enterprise applications, an LLM must emit structured payloads (e.g. valid JSON obeying a strict Pydantic schema) to drive downstream APIs, database inserts, and workflow triggers.</p>
 <h3 id="41-the-failure-mode-of-prompt-only-json">4.1 The Failure Mode of Prompt-Only JSON<a class="headerlink" href="#41-the-failure-mode-of-prompt-only-json" title="Permanent link">&para;</a></h3>
-<p>Instructing a model with <em>"Respond only in valid JSON matching this schema..."</em> fails systematically at production scale:
-- Outputting preamble or markdown backticks (<code>```json</code>).
-- Missing closing brackets (<code>}</code>) when truncated by <code>max_tokens</code>.
-- Hallucinating unexpected keys or emitting trailing commas (<code>{"a": 1,}</code>).
-- Casting integers as strings (<code>"count": "5"</code> instead of <code>"count": 5</code>).</p>
+<p>Instructing a model with <em>"Respond only in valid JSON matching this schema..."</em> fails systematically at production scale:</p>
+<ul>
+<li>Outputting preamble or markdown backticks (<code>```json</code>).</li>
+<li>Missing closing brackets (<code>}</code>) when truncated by <code>max_tokens</code>.</li>
+<li>Hallucinating unexpected keys or emitting trailing commas (<code>{"a": 1,}</code>).</li>
+<li>Casting integers as strings (<code>"count": "5"</code> instead of <code>"count": 5</code>).</li>
+</ul>
 <hr />
 <h3 id="42-grammar-constrained-decoding-mechanics">4.2 Grammar-Constrained Decoding Mechanics<a class="headerlink" href="#42-grammar-constrained-decoding-mechanics" title="Permanent link">&para;</a></h3>
 <p>Rather than fine-tuning or retrying, modern inference engines (vLLM, Outlines, Guidance, llama.cpp) enforce structure at the <strong>decoding algorithm layer</strong> via vocabulary logit masking.</p>
@@ -4322,10 +4336,12 @@ P(x_t = v \mid x_{&lt;t}) = \frac{\exp(\tilde{z}_v)}{\sum_{u \in \mathcal{V}} \e
     LLMSecond --&gt; FinalAns["'The weather in Seattle is currently sunny and 62°F.'"]</code></pre>
 <hr />
 <h2 id="5-complete-runnable-python-implementation">5. Complete Runnable Python Implementation<a class="headerlink" href="#5-complete-runnable-python-implementation" title="Permanent link">&para;</a></h2>
-<p>Below is a complete, production-grade implementation featuring:
-- <strong>Bi-Encoder Dense Retrieval &amp; Cosine Similarity</strong>.
-- <strong>Pydantic v2 Schema Generation &amp; Structured Extraction</strong>.
-- <strong>A Complete Function Calling Engine with Automatic Dispatch and Error Recovery</strong>.</p>
+<p>Below is a complete, production-grade implementation featuring:</p>
+<ul>
+<li><strong>Bi-Encoder Dense Retrieval &amp; Cosine Similarity</strong>.</li>
+<li><strong>Pydantic v2 Schema Generation &amp; Structured Extraction</strong>.</li>
+<li><strong>A Complete Function Calling Engine with Automatic Dispatch and Error Recovery</strong>.</li>
+</ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
@@ -4572,24 +4588,32 @@ Therefore, maximizing <span class="arithmatex">\(\cos(\mathbf{u}, \mathbf{v})\)<
 <hr />
 <h3 id="q2-how-does-grammar-constrained-decoding-such-as-in-outlines-or-vllm-guarantee-100-syntactically-valid-json-without-fine-tuning-the-underlying-model">Q2: How does Grammar-Constrained Decoding (such as in Outlines or vLLM) guarantee 100% syntactically valid JSON without fine-tuning the underlying model?<a class="headerlink" href="#q2-how-does-grammar-constrained-decoding-such-as-in-outlines-or-vllm-guarantee-100-syntactically-valid-json-without-fine-tuning-the-underlying-model" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
-Grammar-constrained decoding intervenes at the logit level during autoregressive decoding.<br />
-1. <strong>Compilation</strong>: The target JSON Schema or Pydantic model is compiled into a Deterministic Finite Automaton (DFA) or Context-Free Grammar (CFG) Pushdown Automaton.
-2. <strong>State Tracking</strong>: As tokens are generated, the engine tracks the current automaton state <span class="arithmatex">\(S_t\)</span>.
-3. <strong>Logit Masking</strong>: For the current state <span class="arithmatex">\(S_t\)</span>, the grammar identifies the subset of valid subsequent Unicode characters, which is mapped to the set of valid vocabulary token IDs <span class="arithmatex">\(\mathcal{V}_{\text{valid}} \subseteq \mathcal{V}\)</span>.
-4. <strong>Logit Update</strong>: All invalid tokens <span class="arithmatex">\(v \notin \mathcal{V}_{\text{valid}}\)</span> have their pre-softmax logits overwritten with <span class="arithmatex">\(-\infty\)</span>:
-   $<span class="arithmatex">\(\tilde{z}_v = \begin{cases} z_v &amp; \text{if } v \in \mathcal{V}_{\text{valid}} \\ -\infty &amp; \text{otherwise} \end{cases}\)</span>$
-5. <strong>Sampling</strong>: Softmax computes zero probability for all invalid tokens.<br />
+Grammar-constrained decoding intervenes at the logit level during autoregressive decoding.  </p>
+<ol>
+<li><strong>Compilation</strong>: The target JSON Schema or Pydantic model is compiled into a Deterministic Finite Automaton (DFA) or Context-Free Grammar (CFG) Pushdown Automaton.</li>
+<li><strong>State Tracking</strong>: As tokens are generated, the engine tracks the current automaton state <span class="arithmatex">\(S_t\)</span>.</li>
+<li><strong>Logit Masking</strong>: For the current state <span class="arithmatex">\(S_t\)</span>, the grammar identifies the subset of valid subsequent Unicode characters, which is mapped to the set of valid vocabulary token IDs <span class="arithmatex">\(\mathcal{V}_{\text{valid}} \subseteq \mathcal{V}\)</span>.</li>
+<li>
+<p><strong>Logit Update</strong>: All invalid tokens <span class="arithmatex">\(v \notin \mathcal{V}_{\text{valid}}\)</span> have their pre-softmax logits overwritten with <span class="arithmatex">\(-\infty\)</span>:
+   $<span class="arithmatex">\(\tilde{z}_v = \begin{cases} z_v &amp; \text{if } v \in \mathcal{V}_{\text{valid}} \\ -\infty &amp; \text{otherwise} \end{cases}\)</span>$</p>
+</li>
+<li>
+<p><strong>Sampling</strong>: Softmax computes zero probability for all invalid tokens.<br />
 Because the model can only sample from tokens that satisfy the grammar at every decoding step, syntax errors (missing braces, unquoted keys, bad types) are mathematically impossible.</p>
+</li>
+</ol>
 <hr />
 <h3 id="q3-contrast-bi-encoders-and-cross-encoders-in-production-information-retrieval-why-not-use-cross-encoders-for-initial-document-retrieval">Q3: Contrast Bi-Encoders and Cross-Encoders in production information retrieval. Why not use Cross-Encoders for initial document retrieval?<a class="headerlink" href="#q3-contrast-bi-encoders-and-cross-encoders-in-production-information-retrieval-why-not-use-cross-encoders-for-initial-document-retrieval" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Bi-Encoders</strong>: Encode query <span class="arithmatex">\(\mathbf{q}\)</span> and document <span class="arithmatex">\(\mathbf{d}\)</span> independently into single dense vectors <span class="arithmatex">\(\mathbf{u} = E_q(\mathbf{q}), \mathbf{v} = E_d(\mathbf{d})\)</span>. The similarity is computed via dot product <span class="arithmatex">\(\mathbf{u}^T \mathbf{v}\)</span>.
-  - <em>Complexity</em>: Documents are encoded offline once and indexed into approximate nearest neighbor (ANN) graphs (HNSW). Retrieval over <span class="arithmatex">\(10\text{ million documents}\)</span> costs <span class="arithmatex">\(\mathcal{O}(\log M)\)</span> distance checks (<span class="arithmatex">\(&lt; 5\text{ ms}\)</span>).
-  - <em>Limitation</em>: No token-level interaction between query and document tokens; fine syntactic dependencies are compressed into a single vector.
-- <strong>Cross-Encoders</strong>: Concatenate query and document into a single sequence <span class="arithmatex">\([q, \text{SEP}, d]\)</span> and pass it through all-to-all attention layers.
-  - <em>Advantage</em>: Full cross-attention computes pairwise token interactions across all <span class="arithmatex">\(L\)</span> layers, capturing subtle semantic nuances and negation.
-  - <em>Complexity</em>: For <span class="arithmatex">\(M\)</span> documents, running a Cross-Encoder requires <span class="arithmatex">\(M\)</span> full forward passes: <span class="arithmatex">\(\mathcal{O}(M \cdot (L_q + L_d)^2 \cdot d)\)</span>. For <span class="arithmatex">\(M = 1,000,000\)</span>, this requires millions of GPU seconds per query, which is computationally infeasible for initial retrieval.
-- <em>Production standard</em>: Bi-encoder retrieves top 100 candidates <span class="arithmatex">\(\to\)</span> Cross-encoder reranks top 100 to yield final top 5.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Bi-Encoders</strong>: Encode query <span class="arithmatex">\(\mathbf{q}\)</span> and document <span class="arithmatex">\(\mathbf{d}\)</span> independently into single dense vectors <span class="arithmatex">\(\mathbf{u} = E_q(\mathbf{q}), \mathbf{v} = E_d(\mathbf{d})\)</span>. The similarity is computed via dot product <span class="arithmatex">\(\mathbf{u}^T \mathbf{v}\)</span>.</li>
+<li><em>Complexity</em>: Documents are encoded offline once and indexed into approximate nearest neighbor (ANN) graphs (HNSW). Retrieval over <span class="arithmatex">\(10\text{ million documents}\)</span> costs <span class="arithmatex">\(\mathcal{O}(\log M)\)</span> distance checks (<span class="arithmatex">\(&lt; 5\text{ ms}\)</span>).</li>
+<li><em>Limitation</em>: No token-level interaction between query and document tokens; fine syntactic dependencies are compressed into a single vector.</li>
+<li><strong>Cross-Encoders</strong>: Concatenate query and document into a single sequence <span class="arithmatex">\([q, \text{SEP}, d]\)</span> and pass it through all-to-all attention layers.</li>
+<li><em>Advantage</em>: Full cross-attention computes pairwise token interactions across all <span class="arithmatex">\(L\)</span> layers, capturing subtle semantic nuances and negation.</li>
+<li><em>Complexity</em>: For <span class="arithmatex">\(M\)</span> documents, running a Cross-Encoder requires <span class="arithmatex">\(M\)</span> full forward passes: <span class="arithmatex">\(\mathcal{O}(M \cdot (L_q + L_d)^2 \cdot d)\)</span>. For <span class="arithmatex">\(M = 1,000,000\)</span>, this requires millions of GPU seconds per query, which is computationally infeasible for initial retrieval.</li>
+<li><em>Production standard</em>: Bi-encoder retrieves top 100 candidates <span class="arithmatex">\(\to\)</span> Cross-encoder reranks top 100 to yield final top 5.</li>
+</ul>
 <hr />
 <h3 id="q4-explain-the-theoretical-reason-why-chain-of-thought-cot-prompting-unlocks-reasoning-capabilities-that-direct-zero-shot-prompting-cannot-achieve">Q4: Explain the theoretical reason why Chain-of-Thought (CoT) prompting unlocks reasoning capabilities that direct zero-shot prompting cannot achieve.<a class="headerlink" href="#q4-explain-the-theoretical-reason-why-chain-of-thought-cot-prompting-unlocks-reasoning-capabilities-that-direct-zero-shot-prompting-cannot-achieve" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
@@ -4598,23 +4622,25 @@ When an LLM is asked to output a direct answer (<span class="arithmatex">\(P(\te
 When CoT is used, generating <span class="arithmatex">\(K\)</span> reasoning tokens allocates <span class="arithmatex">\(2 K N_{\text{params}}\)</span> additional operations. Because attention allows subsequent tokens to access intermediate activations of prior tokens, the model can iteratively compute intermediate results, store them in the autoregressive context, and build upon them sequentially. This transforms the static constant-depth circuit into a dynamically unfolded iterative computing graph.</p>
 <hr />
 <h3 id="q5-how-does-the-react-framework-prevent-error-compounding-compared-to-pure-planning-or-pure-action-agents">Q5: How does the ReAct framework prevent error compounding compared to pure planning or pure action agents?<a class="headerlink" href="#q5-how-does-the-react-framework-prevent-error-compounding-compared-to-pure-planning-or-pure-action-agents" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Pure Action Agents (No Thoughts)</strong>: Execute API calls directly based on prompts without intermediate reflection. When an API returns unexpected data, error codes, or empty responses, the agent has no internal mechanism to evaluate failure, causing it to blindly repeat the invalid action or generate hallucinations.
-- <strong>Pure Reasoning Agents (CoT without Actions)</strong>: Reason internally without consulting external ground truth. When the model encounters facts missing from its pretraining weights or outdated numerical figures, it hallucinates plausible-sounding premises and builds a flawed reasoning chain upon them.
-- <strong>ReAct Synergy</strong>: Interleaves <code>Thought</code> <span class="arithmatex">\(\to\)</span> <code>Action</code> <span class="arithmatex">\(\to\)</span> <code>Observation</code>. The <code>Thought</code> step formulates a hypothesis and decides which API to call. The <code>Observation</code> step brings objective empirical reality back into the context. If the observation contradicts the expectation, the subsequent <code>Thought</code> detects the anomaly and adjusts the plan dynamically, halting error compounding before emitting the final answer.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Pure Action Agents (No Thoughts)</strong>: Execute API calls directly based on prompts without intermediate reflection. When an API returns unexpected data, error codes, or empty responses, the agent has no internal mechanism to evaluate failure, causing it to blindly repeat the invalid action or generate hallucinations.</li>
+<li><strong>Pure Reasoning Agents (CoT without Actions)</strong>: Reason internally without consulting external ground truth. When the model encounters facts missing from its pretraining weights or outdated numerical figures, it hallucinates plausible-sounding premises and builds a flawed reasoning chain upon them.</li>
+<li><strong>ReAct Synergy</strong>: Interleaves <code>Thought</code> <span class="arithmatex">\(\to\)</span> <code>Action</code> <span class="arithmatex">\(\to\)</span> <code>Observation</code>. The <code>Thought</code> step formulates a hypothesis and decides which API to call. The <code>Observation</code> step brings objective empirical reality back into the context. If the observation contradicts the expectation, the subsequent <code>Thought</code> detects the anomaly and adjusts the plan dynamically, halting error compounding before emitting the final answer.</li>
+</ul>
 <hr />
 <h2 id="8-mastery-ladder">8. Mastery Ladder<a class="headerlink" href="#8-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Compute the cosine similarity and Euclidean distance between two vectors in Python.</li>
-<li>[ ] <strong>L2:</strong> Prove mathematically why ranking under cosine similarity equals ranking under Euclidean distance for <span class="arithmatex">\(L_2\)</span>-normalized vectors.</li>
-<li>[ ] <strong>L3:</strong> Explain the architectural difference between Bi-Encoders and Cross-Encoders and their respective computational complexities.</li>
-<li>[ ] <strong>L4:</strong> List the 8 task categories evaluated in the Massive Text Embedding Benchmark (MTEB).</li>
-<li>[ ] <strong>L5:</strong> Explain why Chain-of-Thought provides additional computational FLOPs per reasoning step.</li>
-<li>[ ] <strong>L6:</strong> Compare the state space search mechanics of Tree of Thoughts (ToT) with linear Chain-of-Thought.</li>
-<li>[ ] <strong>L7:</strong> Diagram the Thought-Action-Observation loop in the ReAct framework.</li>
-<li>[ ] <strong>L8:</strong> Formulate the logit masking equation <span class="arithmatex">\(\tilde{z}_v\)</span> used in Context-Free Grammar constrained decoding.</li>
-<li>[ ] <strong>L9:</strong> Build a JSON schema parameter specification for a tool and implement an automated execution dispatcher in Python.</li>
-<li>[ ] <strong>L10:</strong> Write a complete Pydantic structured extraction pipeline with validation, error trapping, and automatic repair.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Compute the cosine similarity and Euclidean distance between two vectors in Python.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Prove mathematically why ranking under cosine similarity equals ranking under Euclidean distance for <span class="arithmatex">\(L_2\)</span>-normalized vectors.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Explain the architectural difference between Bi-Encoders and Cross-Encoders and their respective computational complexities.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> List the 8 task categories evaluated in the Massive Text Embedding Benchmark (MTEB).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Explain why Chain-of-Thought provides additional computational FLOPs per reasoning step.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Compare the state space search mechanics of Tree of Thoughts (ToT) with linear Chain-of-Thought.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Diagram the Thought-Action-Observation loop in the ReAct framework.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Formulate the logit masking equation <span class="arithmatex">\(\tilde{z}_v\)</span> used in Context-Free Grammar constrained decoding.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Build a JSON schema parameter specification for a tool and implement an automated execution dispatcher in Python.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Write a complete Pydantic structured extraction pipeline with validation, error trapping, and automatic repair.</li>
 </ul>
 
 

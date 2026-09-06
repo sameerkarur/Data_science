@@ -4170,9 +4170,11 @@
 </div>
 <hr />
 <h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
-<p>Machine learning models have two distinct tiers of parameters:
-1. <strong>Model Parameters (<span class="arithmatex">\(\mathbf{w}, b\)</span>)</strong>: Learned automatically during training by minimizing the loss function on the training dataset via gradient descent or closed-form equations.
-2. <strong>Hyperparameters (<span class="arithmatex">\(\boldsymbol{\theta}\)</span>)</strong>: Structural knobs chosen <em>before</em> training begins (learning rate <span class="arithmatex">\(\eta\)</span>, regularization weight <span class="arithmatex">\(\lambda\)</span>, tree depth <span class="arithmatex">\(d\)</span>, kernel width <span class="arithmatex">\(\gamma\)</span>, network layers).</p>
+<p>Machine learning models have two distinct tiers of parameters:</p>
+<ol>
+<li><strong>Model Parameters (<span class="arithmatex">\(\mathbf{w}, b\)</span>)</strong>: Learned automatically during training by minimizing the loss function on the training dataset via gradient descent or closed-form equations.</li>
+<li><strong>Hyperparameters (<span class="arithmatex">\(\boldsymbol{\theta}\)</span>)</strong>: Structural knobs chosen <em>before</em> training begins (learning rate <span class="arithmatex">\(\eta\)</span>, regularization weight <span class="arithmatex">\(\lambda\)</span>, tree depth <span class="arithmatex">\(d\)</span>, kernel width <span class="arithmatex">\(\gamma\)</span>, network layers).</li>
+</ol>
 <p>Hyperparameter optimization (HPO) treats the entire training and cross-validation pipeline as a noisy, expensive <strong>black-box function</strong>:</p>
 <div class="arithmatex">\[
 \boldsymbol{\theta}^* = \arg\max_{\boldsymbol{\theta} \in \Theta} f(\boldsymbol{\theta})
@@ -4261,9 +4263,11 @@ f(\boldsymbol{\theta}) \sim \mathcal{GP}\left( m(\boldsymbol{\theta}), \, k(\bol
 <div class="arithmatex">\[
 f(\boldsymbol{\theta}) \mid \mathcal{D}_{1:t} \sim \mathcal{N}\left( \mu(\boldsymbol{\theta}), \, \sigma^2(\boldsymbol{\theta}) \right)
 \]</div>
-<p>where:
-- <span class="arithmatex">\(\mu(\boldsymbol{\theta}) = \mathbf{k}^T (K + \sigma_{\text{noise}}^2 I)^{-1} \mathbf{y}\)</span> (the expected performance).
-- <span class="arithmatex">\(\sigma^2(\boldsymbol{\theta}) = k(\boldsymbol{\theta}, \boldsymbol{\theta}) - \mathbf{k}^T (K + \sigma_{\text{noise}}^2 I)^{-1} \mathbf{k}\)</span> (the epistemic model uncertainty).</p>
+<p>where:</p>
+<ul>
+<li><span class="arithmatex">\(\mu(\boldsymbol{\theta}) = \mathbf{k}^T (K + \sigma_{\text{noise}}^2 I)^{-1} \mathbf{y}\)</span> (the expected performance).</li>
+<li><span class="arithmatex">\(\sigma^2(\boldsymbol{\theta}) = k(\boldsymbol{\theta}, \boldsymbol{\theta}) - \mathbf{k}^T (K + \sigma_{\text{noise}}^2 I)^{-1} \mathbf{k}\)</span> (the epistemic model uncertainty).</li>
+</ul>
 <hr />
 <h2 id="4-acquisition-functions-formal-derivation-of-expected-improvement-ei">4. Acquisition Functions: Formal Derivation of Expected Improvement (EI)<a class="headerlink" href="#4-acquisition-functions-formal-derivation-of-expected-improvement-ei" title="Permanent link">&para;</a></h2>
 <p>The acquisition function <span class="arithmatex">\(\alpha(\boldsymbol{\theta})\)</span> quantifies the expected utility of evaluating point <span class="arithmatex">\(\boldsymbol{\theta}\)</span>.</p>
@@ -4300,11 +4304,17 @@ Z = \frac{\mu - y^+ - \xi}{\sigma}
 &amp;= (\mu - y^+ - \xi) \int_{-Z}^{\infty} \phi(z) dz + \sigma \int_{-Z}^{\infty} z \phi(z) dz
 \end{aligned}
 \]</div>
-<p>Evaluating both integrals:
-1. By symmetry of the standard normal density <span class="arithmatex">\(\phi(z)\)</span>:
-   $<span class="arithmatex">\(\int_{-Z}^{\infty} \phi(z) dz = \int_{-\infty}^{Z} \phi(z) dz = \Phi(Z)\)</span>$
-2. Because <span class="arithmatex">\(\phi'(z) = -z \phi(z)\)</span>, the second integrand is an exact derivative:
+<p>Evaluating both integrals:</p>
+<ol>
+<li>
+<p>By symmetry of the standard normal density <span class="arithmatex">\(\phi(z)\)</span>:
+   $<span class="arithmatex">\(\int_{-Z}^{\infty} \phi(z) dz = \int_{-\infty}^{Z} \phi(z) dz = \Phi(Z)\)</span>$</p>
+</li>
+<li>
+<p>Because <span class="arithmatex">\(\phi'(z) = -z \phi(z)\)</span>, the second integrand is an exact derivative:
    $<span class="arithmatex">\(\int_{-Z}^{\infty} z \phi(z) dz = \left[ -\phi(z) \right]_{-Z}^{\infty} = 0 - (-\phi(-Z)) = \phi(Z)\)</span>$</p>
+</li>
+</ol>
 <p>Combining both terms gives the celebrated <strong>analytic Expected Improvement formula</strong>:</p>
 <div class="arithmatex">\[
 \text{EI}(\boldsymbol{\theta}) = (\mu(\boldsymbol{\theta}) - y^+ - \xi) \Phi(Z) + \sigma(\boldsymbol{\theta}) \phi(Z)
@@ -4352,9 +4362,11 @@ p(\boldsymbol{\theta} \mid y) = \begin{cases} \ell(\boldsymbol{\theta}) &amp; \t
 <li>Repeat until only the single best configuration reaches the maximum budget.</li>
 </ol>
 <h3 id="62-hyperband-resolving-the-explore-exploit-trade-off">6.2 Hyperband: Resolving the Explore-Exploit Trade-off<a class="headerlink" href="#62-hyperband-resolving-the-explore-exploit-trade-off" title="Permanent link">&para;</a></h3>
-<p>Successive Halving requires picking initial trial count <span class="arithmatex">\(N\)</span> and minimum budget <span class="arithmatex">\(R\)</span>:
-- If <span class="arithmatex">\(R\)</span> is too small: Good configurations that learn slowly are discarded prematurely.
-- If <span class="arithmatex">\(R\)</span> is too large: We cannot afford to explore many configurations <span class="arithmatex">\(N\)</span>.</p>
+<p>Successive Halving requires picking initial trial count <span class="arithmatex">\(N\)</span> and minimum budget <span class="arithmatex">\(R\)</span>:</p>
+<ul>
+<li>If <span class="arithmatex">\(R\)</span> is too small: Good configurations that learn slowly are discarded prematurely.</li>
+<li>If <span class="arithmatex">\(R\)</span> is too large: We cannot afford to explore many configurations <span class="arithmatex">\(N\)</span>.</li>
+</ul>
 <p>Li et al. (2018) developed <strong>Hyperband</strong>, which runs an outer loop over different trade-offs of <span class="arithmatex">\(N\)</span> vs. <span class="arithmatex">\(R\)</span>, pairing pure random exploration with aggressive early stopping.
 In Optuna, this is implemented natively via the <code>HyperbandPruner</code> and <code>MedianPruner</code>.</p>
 <pre class="mermaid"><code>flowchart TD
@@ -4517,10 +4529,12 @@ In Optuna, this is implemented natively via the <code>HyperbandPruner</code> and
 <h2 id="9-common-errors-production-debugging">9. Common Errors &amp; Production Debugging<a class="headerlink" href="#9-common-errors-production-debugging" title="Permanent link">&para;</a></h2>
 <h3 id="91-searching-exponential-knobs-on-a-linear-scale">9.1 Searching Exponential Knobs on a Linear Scale<a class="headerlink" href="#91-searching-exponential-knobs-on-a-linear-scale" title="Permanent link">&para;</a></h3>
 <p>Parameters like learning rate <span class="arithmatex">\(\eta \in [10^{-4}, 10^{-1}]\)</span> or regularization <span class="arithmatex">\(\lambda \in [10^{-3}, 10^2]\)</span> span several orders of magnitude.
-If sampled uniformly on a linear scale <span class="arithmatex">\([0.0001, 0.1]\)</span>:
-- <span class="arithmatex">\(90\%\)</span> of all random trials fall in <span class="arithmatex">\([0.01, 0.1]\)</span>.
-- Only <span class="arithmatex">\(1\%\)</span> of trials test the critical small regime <span class="arithmatex">\([0.0001, 0.001]\)</span>!
-<strong>Fix</strong>: Always configure <code>log=True</code> (in Optuna) or sample via <code>scipy.stats.loguniform</code>.</p>
+If sampled uniformly on a linear scale <span class="arithmatex">\([0.0001, 0.1]\)</span>:</p>
+<ul>
+<li><span class="arithmatex">\(90\%\)</span> of all random trials fall in <span class="arithmatex">\([0.01, 0.1]\)</span>.</li>
+<li>Only <span class="arithmatex">\(1\%\)</span> of trials test the critical small regime <span class="arithmatex">\([0.0001, 0.001]\)</span>!
+<strong>Fix</strong>: Always configure <code>log=True</code> (in Optuna) or sample via <code>scipy.stats.loguniform</code>.</li>
+</ul>
 <h3 id="92-tuning-hyperparameters-on-the-final-test-set-data-snooping">9.2 Tuning Hyperparameters on the Final Test Set (Data Snooping)<a class="headerlink" href="#92-tuning-hyperparameters-on-the-final-test-set-data-snooping" title="Permanent link">&para;</a></h3>
 <p>If you tune hyperparameters by maximizing score on the test set, information leaks from the test set into the hyperparameter selection. The model will overfit the test set, creating a dangerously biased estimate of production performance.
 <strong>Fix</strong>: Always employ a 3-way split (Train / Validation / Test) or use <strong>Nested Cross-Validation</strong> (inner CV loop selects hyperparameters; outer CV loop assesses unbiased generalization error).</p>
@@ -4552,12 +4566,14 @@ $<span class="arithmatex">\(\text{EI}(\boldsymbol{\theta}) = \int_{y^+ + \xi}^{\
 Substitute the standard normal variable <span class="arithmatex">\(z = \frac{y - \mu}{\sigma} \implies y = \mu + \sigma z, \; dy = \sigma dz\)</span>.
 The lower integration limit becomes <span class="arithmatex">\(z_{\min} = \frac{y^+ + \xi - \mu}{\sigma} = -Z\)</span>, where <span class="arithmatex">\(Z = \frac{\mu - y^+ - \xi}{\sigma}\)</span>.
 The integral decomposes into two terms:
-$<span class="arithmatex">\(\text{EI}(\boldsymbol{\theta}) = \int_{-Z}^{\infty} (\mu - y^+ - \xi) \phi(z) dz + \sigma \int_{-Z}^{\infty} z \phi(z) dz\)</span>$
-1. For the first term, by standard normal symmetry <span class="arithmatex">\(\int_{-Z}^\infty \phi(z) dz = \int_{-\infty}^Z \phi(z) dz = \Phi(Z)\)</span>.
-2. For the second term, using <span class="arithmatex">\(\frac{d}{dz} \phi(z) = -z \phi(z)\)</span>:
+$<span class="arithmatex">\(\text{EI}(\boldsymbol{\theta}) = \int_{-Z}^{\infty} (\mu - y^+ - \xi) \phi(z) dz + \sigma \int_{-Z}^{\infty} z \phi(z) dz\)</span>$</p>
+<ol>
+<li>For the first term, by standard normal symmetry <span class="arithmatex">\(\int_{-Z}^\infty \phi(z) dz = \int_{-\infty}^Z \phi(z) dz = \Phi(Z)\)</span>.</li>
+<li>For the second term, using <span class="arithmatex">\(\frac{d}{dz} \phi(z) = -z \phi(z)\)</span>:
    $<span class="arithmatex">\(\int_{-Z}^{\infty} z \phi(z) dz = [-\phi(z)]_{-Z}^{\infty} = -\lim_{z \to \infty} \phi(z) - (-\phi(-Z)) = 0 + \phi(Z) = \phi(Z)\)</span>$
 Combining both terms yields the closed-form analytic solution:
-$<span class="arithmatex">\(\text{EI}(\boldsymbol{\theta}) = (\mu(\boldsymbol{\theta}) - y^+ - \xi) \Phi(Z) + \sigma(\boldsymbol{\theta}) \phi(Z)\)</span>$</p>
+$<span class="arithmatex">\(\text{EI}(\boldsymbol{\theta}) = (\mu(\boldsymbol{\theta}) - y^+ - \xi) \Phi(Z) + \sigma(\boldsymbol{\theta}) \phi(Z)\)</span>$</li>
+</ol>
 <hr />
 <h3 id="q3-how-does-the-tree-structured-parzen-estimator-tpe-algorithm-work-and-why-is-maximizing-ei-equivalent-to-maximizing-fracellboldsymbolthetagboldsymboltheta">Q3: How does the Tree-structured Parzen Estimator (TPE) algorithm work, and why is maximizing EI equivalent to maximizing <span class="arithmatex">\(\frac{\ell(\boldsymbol{\theta})}{g(\boldsymbol{\theta})}\)</span>?<a class="headerlink" href="#q3-how-does-the-tree-structured-parzen-estimator-tpe-algorithm-work-and-why-is-maximizing-ei-equivalent-to-maximizing-fracellboldsymbolthetagboldsymboltheta" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4576,44 +4592,83 @@ Notice that <span class="arithmatex">\(\text{EI}(\boldsymbol{\theta})\)</span> i
 The denominator <span class="arithmatex">\(\gamma + (1 - \gamma) \frac{g(\boldsymbol{\theta})}{\ell(\boldsymbol{\theta})}\)</span> is minimized precisely when the ratio <span class="arithmatex">\(\frac{g(\boldsymbol{\theta})}{\ell(\boldsymbol{\theta})}\)</span> is minimized, which is equivalent to <strong>maximizing the likelihood ratio <span class="arithmatex">\(\frac{\ell(\boldsymbol{\theta})}{g(\boldsymbol{\theta})}\)</span></strong>.</p>
 <hr />
 <h3 id="q4-contrast-gaussian-process-bayesian-optimization-with-tree-structured-parzen-estimators">Q4: Contrast Gaussian Process Bayesian Optimization with Tree-structured Parzen Estimators.<a class="headerlink" href="#q4-contrast-gaussian-process-bayesian-optimization-with-tree-structured-parzen-estimators" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-| Dimension | Gaussian Process BO | Tree-Structured Parzen Estimator (TPE) |
-|---|---|---|
-| <strong>Underlying Approach</strong> | Discriminative: Models <span class="arithmatex">\(p(y \mid \boldsymbol{\theta})\)</span> directly | Generative: Models <span class="arithmatex">\(p(\boldsymbol{\theta} \mid y)\)</span> via KDEs |
-| <strong>Computational Complexity</strong> | <span class="arithmatex">\(\mathcal{O}(t^3)\)</span> matrix inversion (fails when <span class="arithmatex">\(t &gt; 500\)</span>) | <span class="arithmatex">\(\mathcal{O}(t \log t)\)</span> KDE evaluation (scales to 10,000+ trials) |
-| <strong>Search Space Flexibility</strong> | Continuous Euclidean vectors only | Natively handles mixed continuous, integer, and categorical |
-| <strong>Conditional Spaces</strong> | Very difficult to model tree-structured dependencies | Natively models conditional branches (<code>if model == 'rf'</code>) |
-| <strong>Sample Efficiency (<span class="arithmatex">\(t &lt; 50\)</span>)</strong> | Extremely high; optimal for tiny sample budgets | Moderate; requires initial random seeds to fit KDEs |
-| <strong>Primary Frameworks</strong> | BoTorch, GPyOpt, Scikit-Optimize | Optuna, Hyperopt |</p>
+<p><strong>Model Answer:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Gaussian Process BO</th>
+<th>Tree-Structured Parzen Estimator (TPE)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Underlying Approach</strong></td>
+<td>Discriminative: Models <span class="arithmatex">\(p(y \mid \boldsymbol{\theta})\)</span> directly</td>
+<td>Generative: Models <span class="arithmatex">\(p(\boldsymbol{\theta} \mid y)\)</span> via KDEs</td>
+</tr>
+<tr>
+<td><strong>Computational Complexity</strong></td>
+<td><span class="arithmatex">\(\mathcal{O}(t^3)\)</span> matrix inversion (fails when <span class="arithmatex">\(t &gt; 500\)</span>)</td>
+<td><span class="arithmatex">\(\mathcal{O}(t \log t)\)</span> KDE evaluation (scales to 10,000+ trials)</td>
+</tr>
+<tr>
+<td><strong>Search Space Flexibility</strong></td>
+<td>Continuous Euclidean vectors only</td>
+<td>Natively handles mixed continuous, integer, and categorical</td>
+</tr>
+<tr>
+<td><strong>Conditional Spaces</strong></td>
+<td>Very difficult to model tree-structured dependencies</td>
+<td>Natively models conditional branches (<code>if model == 'rf'</code>)</td>
+</tr>
+<tr>
+<td><strong>Sample Efficiency (<span class="arithmatex">\(t &lt; 50\)</span>)</strong></td>
+<td>Extremely high; optimal for tiny sample budgets</td>
+<td>Moderate; requires initial random seeds to fit KDEs</td>
+</tr>
+<tr>
+<td><strong>Primary Frameworks</strong></td>
+<td>BoTorch, GPyOpt, Scikit-Optimize</td>
+<td>Optuna, Hyperopt</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h3 id="q5-explain-the-mechanics-of-successive-halving-sha-and-hyperband">Q5: Explain the mechanics of Successive Halving (SHA) and Hyperband.<a class="headerlink" href="#q5-explain-the-mechanics-of-successive-halving-sha-and-hyperband" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>Successive Halving (SHA):</strong>
-  Given a total budget and <span class="arithmatex">\(N\)</span> hyperparameter candidates:
-  1. Allocate a minimum resource <span class="arithmatex">\(r\)</span> (e.g., 1 training epoch) to all <span class="arithmatex">\(N\)</span> configurations.
-  2. Rank all <span class="arithmatex">\(N\)</span> configurations by validation score.
-  3. Discard the bottom <span class="arithmatex">\(1 - 1/\eta\)</span> fraction (typically <span class="arithmatex">\(\eta = 3\)</span>, pruning bottom 67%).
-  4. Increase the resource allocation for survivors by factor <span class="arithmatex">\(\eta\)</span> (e.g., 3 epochs).
-  5. Repeat until the final winning configuration reaches the maximum budget <span class="arithmatex">\(R\)</span>.
-  <em>Flaw:</em> If the initial minimum budget <span class="arithmatex">\(r\)</span> is too small, configurations that start slowly but have high asymptotic performance are discarded.
-- <strong>Hyperband:</strong>
-  Wraps SHA in an outer loop over different values of <span class="arithmatex">\(N\)</span> and <span class="arithmatex">\(r\)</span>. It systematically tests various balances of the exploration-exploitation spectrum:
-  - Bracket 0: Classic SHA with many configurations evaluated on tiny initial budgets (aggressive exploration).
-  - Bracket <span class="arithmatex">\(s\)</span>: Fewer configurations evaluated on larger initial budgets (safer exploitation).
-  By hedging across multiple brackets, Hyperband guarantees that slow-converging models are not discarded while still pruning obvious failures rapidly.</p>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li><strong>Successive Halving (SHA):</strong>
+  Given a total budget and <span class="arithmatex">\(N\)</span> hyperparameter candidates:</li>
+<li>Allocate a minimum resource <span class="arithmatex">\(r\)</span> (e.g., 1 training epoch) to all <span class="arithmatex">\(N\)</span> configurations.</li>
+<li>Rank all <span class="arithmatex">\(N\)</span> configurations by validation score.</li>
+<li>Discard the bottom <span class="arithmatex">\(1 - 1/\eta\)</span> fraction (typically <span class="arithmatex">\(\eta = 3\)</span>, pruning bottom 67%).</li>
+<li>Increase the resource allocation for survivors by factor <span class="arithmatex">\(\eta\)</span> (e.g., 3 epochs).</li>
+<li>
+<p>Repeat until the final winning configuration reaches the maximum budget <span class="arithmatex">\(R\)</span>.
+  <em>Flaw:</em> If the initial minimum budget <span class="arithmatex">\(r\)</span> is too small, configurations that start slowly but have high asymptotic performance are discarded.</p>
+</li>
+<li>
+<p><strong>Hyperband:</strong>
+  Wraps SHA in an outer loop over different values of <span class="arithmatex">\(N\)</span> and <span class="arithmatex">\(r\)</span>. It systematically tests various balances of the exploration-exploitation spectrum:</p>
+</li>
+<li>Bracket 0: Classic SHA with many configurations evaluated on tiny initial budgets (aggressive exploration).</li>
+<li>Bracket <span class="arithmatex">\(s\)</span>: Fewer configurations evaluated on larger initial budgets (safer exploitation).
+  By hedging across multiple brackets, Hyperband guarantees that slow-converging models are not discarded while still pruning obvious failures rapidly.</li>
+</ul>
 <hr />
 <h2 id="11-mastery-ladder">11. Mastery Ladder<a class="headerlink" href="#11-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> You can state the black-box HPO problem <span class="arithmatex">\(\boldsymbol{\theta}^* = \arg\max_{\boldsymbol{\theta}} f(\boldsymbol{\theta})\)</span>.</li>
-<li>[ ] <strong>L2:</strong> You can explain the exponential explosion of Grid Search <span class="arithmatex">\(k^d\)</span> vs. Random Search.</li>
-<li>[ ] <strong>L3:</strong> You can prove Bergstra-Bengio's sample complexity theorem <span class="arithmatex">\(n \ge \frac{\ln \delta}{\ln(1 - q)}\)</span>.</li>
-<li>[ ] <strong>L4:</strong> You can explain how Gaussian Processes model uncertainty via <span class="arithmatex">\(\mu(\boldsymbol{\theta})\)</span> and <span class="arithmatex">\(\sigma^2(\boldsymbol{\theta})\)</span>.</li>
-<li>[ ] <strong>L5:</strong> You can state the UCB acquisition function and explain the role of <span class="arithmatex">\(\kappa\)</span>.</li>
-<li>[ ] <strong>L6:</strong> You can mathematically derive the Expected Improvement (EI) formula step-by-step.</li>
-<li>[ ] <strong>L7:</strong> You can explain how TPE inverts Bayes' rule and prove why maximizing EI is equivalent to maximizing <span class="arithmatex">\(\frac{\ell(\boldsymbol{\theta})}{g(\boldsymbol{\theta})}\)</span>.</li>
-<li>[ ] <strong>L8:</strong> You can explain Successive Halving and Hyperband multi-fidelity budgeting.</li>
-<li>[ ] <strong>L9:</strong> You can explain why log-scale sampling is mandatory for learning rate and regularization parameters.</li>
-<li>[ ] <strong>L10:</strong> You can implement a Gaussian Process Expected Improvement optimizer from scratch in NumPy and configure production Optuna studies.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can state the black-box HPO problem <span class="arithmatex">\(\boldsymbol{\theta}^* = \arg\max_{\boldsymbol{\theta}} f(\boldsymbol{\theta})\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can explain the exponential explosion of Grid Search <span class="arithmatex">\(k^d\)</span> vs. Random Search.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can prove Bergstra-Bengio's sample complexity theorem <span class="arithmatex">\(n \ge \frac{\ln \delta}{\ln(1 - q)}\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can explain how Gaussian Processes model uncertainty via <span class="arithmatex">\(\mu(\boldsymbol{\theta})\)</span> and <span class="arithmatex">\(\sigma^2(\boldsymbol{\theta})\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can state the UCB acquisition function and explain the role of <span class="arithmatex">\(\kappa\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can mathematically derive the Expected Improvement (EI) formula step-by-step.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can explain how TPE inverts Bayes' rule and prove why maximizing EI is equivalent to maximizing <span class="arithmatex">\(\frac{\ell(\boldsymbol{\theta})}{g(\boldsymbol{\theta})}\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can explain Successive Halving and Hyperband multi-fidelity budgeting.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can explain why log-scale sampling is mandatory for learning rate and regularization parameters.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can implement a Gaussian Process Expected Improvement optimizer from scratch in NumPy and configure production Optuna studies.</li>
 </ul>
 
 

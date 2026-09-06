@@ -4506,8 +4506,10 @@
     StreamBuffer --&gt; UserClient</code></pre>
 <h3 id="33-core-serving-mechanics-tensor-parallelism-radix-cache-pagedattention">3.3 Core Serving Mechanics: Tensor Parallelism, Radix Cache &amp; PagedAttention<a class="headerlink" href="#33-core-serving-mechanics-tensor-parallelism-radix-cache-pagedattention" title="Permanent link">&para;</a></h3>
 <h4 id="tensor-parallelism-megatron-lm-style">Tensor Parallelism (Megatron-LM Style)<a class="headerlink" href="#tensor-parallelism-megatron-lm-style" title="Permanent link">&para;</a></h4>
-<p>A 70B parameter model requires <span class="arithmatex">\(140\text{ GB}\)</span> of VRAM at FP16, exceeding a single <span class="arithmatex">\(80\text{ GB}\)</span> H100. Tensor Parallelism splits parameter weight matrices across 8 GPUs connected via NVLink (<span class="arithmatex">\(900\text{ GB/s}\)</span> bidirectional bandwidth):
-- <strong>Attention Multi-Head Projections</strong>: The Query, Key, and Value projection weight matrices <span class="arithmatex">\(\mathbf{W}_Q, \mathbf{W}_K, \mathbf{W}_V\)</span> are column-partitioned:</p>
+<p>A 70B parameter model requires <span class="arithmatex">\(140\text{ GB}\)</span> of VRAM at FP16, exceeding a single <span class="arithmatex">\(80\text{ GB}\)</span> H100. Tensor Parallelism splits parameter weight matrices across 8 GPUs connected via NVLink (<span class="arithmatex">\(900\text{ GB/s}\)</span> bidirectional bandwidth):</p>
+<ul>
+<li><strong>Attention Multi-Head Projections</strong>: The Query, Key, and Value projection weight matrices <span class="arithmatex">\(\mathbf{W}_Q, \mathbf{W}_K, \mathbf{W}_V\)</span> are column-partitioned:</li>
+</ul>
 <div class="arithmatex">\[\mathbf{W}_Q = [\mathbf{W}_{Q, 1} \mid \mathbf{W}_{Q, 2} \mid \dots \mid \mathbf{W}_{Q, 8}]\]</div>
 <ul>
 <li><strong>Output Projection</strong>: <span class="arithmatex">\(\mathbf{W}_O\)</span> is row-partitioned, requiring a single collective <strong>All-Reduce</strong> operation per attention block:</li>
@@ -4515,9 +4517,11 @@
 <div class="arithmatex">\[\mathbf{Y} = \sum_{r=1}^8 \mathbf{Z}_r \mathbf{W}_{O, r}\]</div>
 <p>Because NVLink latency is sub-microsecond, all-reduce communication adds negligible overhead.</p>
 <h4 id="radix-tree-prefix-caching">Radix Tree Prefix Caching<a class="headerlink" href="#radix-tree-prefix-caching" title="Permanent link">&para;</a></h4>
-<p>In conversational systems, the system prompt and conversation history remain identical across consecutive turns. Standard engines re-evaluate the full prompt prefix each turn, consuming redundant GPU compute.
-- A <strong>Radix Tree</strong> indexes KV cache blocks by token prefix hash.
-- Subsequent turns re-use existing KV cache pages in GPU memory with zero compute overhead, reducing TTFT from <span class="arithmatex">\(300\text{ ms}\)</span> to <span class="arithmatex">\(&lt;15\text{ ms}\)</span>.</p>
+<p>In conversational systems, the system prompt and conversation history remain identical across consecutive turns. Standard engines re-evaluate the full prompt prefix each turn, consuming redundant GPU compute.</p>
+<ul>
+<li>A <strong>Radix Tree</strong> indexes KV cache blocks by token prefix hash.</li>
+<li>Subsequent turns re-use existing KV cache pages in GPU memory with zero compute overhead, reducing TTFT from <span class="arithmatex">\(300\text{ ms}\)</span> to <span class="arithmatex">\(&lt;15\text{ ms}\)</span>.</li>
+</ul>
 <pre class="mermaid"><code>flowchart LR
     Root["Root: System Prompt ('You are an enterprise AI...')"] --&gt; Branch1["Session 1: 'Explain quantum computing'"]
     Root --&gt; Branch2["Session 2: 'Write a Python script'"]
@@ -4656,70 +4660,84 @@
 <hr />
 <h2 id="6-staff-level-technical-interview-questions">6. Staff-Level Technical Interview Questions<a class="headerlink" href="#6-staff-level-technical-interview-questions" title="Permanent link">&para;</a></h2>
 <h3 id="q1-in-the-netflix-recommendation-architecture-explain-why-the-two-tower-bi-encoder-is-optimal-for-retrieval-but-unsuitable-for-final-heavy-ranking">Q1: In the Netflix recommendation architecture, explain why the Two-Tower bi-encoder is optimal for retrieval, but unsuitable for final heavy ranking.<a class="headerlink" href="#q1-in-the-netflix-recommendation-architecture-explain-why-the-two-tower-bi-encoder-is-optimal-for-retrieval-but-unsuitable-for-final-heavy-ranking" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Bi-Encoder Separation</strong>: The Two-Tower architecture strictly decouples the computation of the user vector <span class="arithmatex">\(\mathbf{u} = f(\mathbf{x}_{\text{user}})\)</span> from the item vector <span class="arithmatex">\(\mathbf{v} = g(\mathbf{x}_{\text{item}})\)</span>. Because the scoring function is a simple dot product <span class="arithmatex">\(s = \mathbf{u}^T \mathbf{v}\)</span>, all item vectors can be computed offline, normalized, and indexed into an Approximate Nearest Neighbor (ANN) index (e.g. ScaNN/HNSW). At query time, the system performs a single user forward pass and executes a sub-linear graph search (<span class="arithmatex">\(\mathcal{O}(\log N)\)</span>), retrieving 500 candidates from 10 million in <span class="arithmatex">\(&lt;15\text{ ms}\)</span>.
-- <strong>Unsuitability for Ranking</strong>: By decoupling the user and item networks until the final dot product, the bi-encoder <strong>cannot model early, fine-grained cross-feature interactions</strong>. For example, it cannot compute non-linear interactions between <code>user_device == "mobile"</code> and <code>item_video_resolution == "4K"</code>, or <code>user_current_hour == "02:00"</code> and <code>item_genre == "horror"</code>.
-- <strong>Heavy Ranker Role</strong>: The heavy ranker (DLRM/CatBoost) concatenates all user, item, and contextual features into a unified feature vector, passing them through explicit dot-product interaction layers and deep MLPs. This models all higher-order feature interactions, achieving superior ranking precision over the filtered candidate set where candidate volume is low enough (<span class="arithmatex">\(N = 500\)</span>) to satisfy latency budgets.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Bi-Encoder Separation</strong>: The Two-Tower architecture strictly decouples the computation of the user vector <span class="arithmatex">\(\mathbf{u} = f(\mathbf{x}_{\text{user}})\)</span> from the item vector <span class="arithmatex">\(\mathbf{v} = g(\mathbf{x}_{\text{item}})\)</span>. Because the scoring function is a simple dot product <span class="arithmatex">\(s = \mathbf{u}^T \mathbf{v}\)</span>, all item vectors can be computed offline, normalized, and indexed into an Approximate Nearest Neighbor (ANN) index (e.g. ScaNN/HNSW). At query time, the system performs a single user forward pass and executes a sub-linear graph search (<span class="arithmatex">\(\mathcal{O}(\log N)\)</span>), retrieving 500 candidates from 10 million in <span class="arithmatex">\(&lt;15\text{ ms}\)</span>.</li>
+<li><strong>Unsuitability for Ranking</strong>: By decoupling the user and item networks until the final dot product, the bi-encoder <strong>cannot model early, fine-grained cross-feature interactions</strong>. For example, it cannot compute non-linear interactions between <code>user_device == "mobile"</code> and <code>item_video_resolution == "4K"</code>, or <code>user_current_hour == "02:00"</code> and <code>item_genre == "horror"</code>.</li>
+<li><strong>Heavy Ranker Role</strong>: The heavy ranker (DLRM/CatBoost) concatenates all user, item, and contextual features into a unified feature vector, passing them through explicit dot-product interaction layers and deep MLPs. This models all higher-order feature interactions, achieving superior ranking precision over the filtered candidate set where candidate volume is low enough (<span class="arithmatex">\(N = 500\)</span>) to satisfy latency budgets.</li>
+</ul>
 <hr />
 <h3 id="q2-in-an-enterprise-rag-system-how-does-reciprocal-rank-fusion-rrf-resolve-the-fundamental-trade-off-between-dense-semantic-search-and-sparse-lexical-search">Q2: In an Enterprise RAG system, how does Reciprocal Rank Fusion (RRF) resolve the fundamental trade-off between dense semantic search and sparse lexical search?<a class="headerlink" href="#q2-in-an-enterprise-rag-system-how-does-reciprocal-rank-fusion-rrf-resolve-the-fundamental-trade-off-between-dense-semantic-search-and-sparse-lexical-search" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>The Divergence</strong>:
-  - <em>Dense Semantic Search (HNSW / Bi-Encoder)</em>: Excels at mapping conceptual queries to semantically related passages (e.g. <code>"annual compensation guidelines"</code> matches <code>"salary and bonus policy"</code>). However, it frequently fails on exact, low-frequency tokens, numbers, part IDs, and corporate acronyms (e.g. searching for SKU <code>"TX-9021"</code> may return vectors for <code>"TX-9020"</code> due to high cosine similarity in latent space).
-  - <em>Sparse Lexical Search (BM25 / Inverted Index)</em>: Uses exact term frequency and inverse document frequency. It finds exact acronyms and part numbers effortlessly, but fails entirely on synonyms or conceptual paraphrasing.
-- <strong>RRF Integration</strong>:
-  - Traditional score fusion attempts to linearly combine cosine similarity and BM25 scores: <span class="arithmatex">\(S = \alpha S_{\text{dense}} + (1 - \alpha) S_{\text{BM25}}\)</span>. This fails because the score distributions have vastly different scales, bounds, and variances, requiring fragile manual calibration across diverse query types.
-  - <strong>Reciprocal Rank Fusion</strong> operates purely on <strong>ordinal ranks</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code>$$\text{RRF}(d) = \frac{1}{60 + r_{\text{dense}}(d)} + \frac{1}{60 + r_{\text{BM25}}(d)}$$
-
-Because it ignores raw scores and relies solely on relative rank order, it is scale-invariant, inherently robust to score distribution shifts, and consistently prioritizes passages that perform well across both retrieval modalities.
-</code></pre></div>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>The Divergence</strong>:</li>
+<li><em>Dense Semantic Search (HNSW / Bi-Encoder)</em>: Excels at mapping conceptual queries to semantically related passages (e.g. <code>"annual compensation guidelines"</code> matches <code>"salary and bonus policy"</code>). However, it frequently fails on exact, low-frequency tokens, numbers, part IDs, and corporate acronyms (e.g. searching for SKU <code>"TX-9021"</code> may return vectors for <code>"TX-9020"</code> due to high cosine similarity in latent space).</li>
+<li><em>Sparse Lexical Search (BM25 / Inverted Index)</em>: Uses exact term frequency and inverse document frequency. It finds exact acronyms and part numbers effortlessly, but fails entirely on synonyms or conceptual paraphrasing.</li>
+<li><strong>RRF Integration</strong>:</li>
+<li>Traditional score fusion attempts to linearly combine cosine similarity and BM25 scores: <span class="arithmatex">\(S = \alpha S_{\text{dense}} + (1 - \alpha) S_{\text{BM25}}\)</span>. This fails because the score distributions have vastly different scales, bounds, and variances, requiring fragile manual calibration across diverse query types.</li>
+<li>
+<p><strong>Reciprocal Rank Fusion</strong> operates purely on <strong>ordinal ranks</strong>:</p>
+<div class="arithmatex">\[\text{RRF}(d) = \frac{1}{60 + r_{\text{dense}}(d)} + \frac{1}{60 + r_{\text{BM25}}(d)}\]</div>
+<p>Because it ignores raw scores and relies solely on relative rank order, it is scale-invariant, inherently robust to score distribution shifts, and consistently prioritizes passages that perform well across both retrieval modalities.</p>
+</li>
+</ul>
 <hr />
 <h3 id="q3-how-does-radix-tree-prefix-caching-function-in-high-throughput-llm-serving-engines-and-how-does-it-affect-load-balancer-routing-decisions">Q3: How does Radix Tree Prefix Caching function in high-throughput LLM serving engines, and how does it affect load balancer routing decisions?<a class="headerlink" href="#q3-how-does-radix-tree-prefix-caching-function-in-high-throughput-llm-serving-engines-and-how-does-it-affect-load-balancer-routing-decisions" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Radix Tree Mechanics</strong>:
-  - In conversational LLM applications, prompts share extensive common prefixes (system instructions, multi-shot demonstrations, prior conversational history).
-  - A Radix Tree (trie) data structure maintains pointers to physical KV cache memory blocks indexed by tokens. When a prompt arrives, the engine traverses the Radix tree. If the first 500 tokens match an existing branch, the engine skips the compute-heavy prefill phase for those tokens, directly binding the pre-computed KV cache blocks in GPU VRAM.
-- <strong>Impact on Load Balancing (Cache-Aware Routing)</strong>:
-  - Standard round-robin or least-connections load balancers route requests blindly. If Session 1 Turn 1 runs on Worker A, and Turn 2 is sent to Worker B, Worker B experiences a complete cache miss, forcing expensive prefill re-computation.
-  - A <strong>Cache-Aware Load Balancer</strong> hashes the prompt prefix or user session ID, maintaining a distributed index of worker cache states. It consistently routes requests with identical prefixes to the specific GPU worker node hosting the warm KV cache, maximizing prefix cache hit rates (<span class="arithmatex">\(&gt;80\%\)</span>) and slashing Time to First Token (TTFT) by up to <span class="arithmatex">\(90\%\)</span>.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Radix Tree Mechanics</strong>:</li>
+<li>In conversational LLM applications, prompts share extensive common prefixes (system instructions, multi-shot demonstrations, prior conversational history).</li>
+<li>A Radix Tree (trie) data structure maintains pointers to physical KV cache memory blocks indexed by tokens. When a prompt arrives, the engine traverses the Radix tree. If the first 500 tokens match an existing branch, the engine skips the compute-heavy prefill phase for those tokens, directly binding the pre-computed KV cache blocks in GPU VRAM.</li>
+<li><strong>Impact on Load Balancing (Cache-Aware Routing)</strong>:</li>
+<li>Standard round-robin or least-connections load balancers route requests blindly. If Session 1 Turn 1 runs on Worker A, and Turn 2 is sent to Worker B, Worker B experiences a complete cache miss, forcing expensive prefill re-computation.</li>
+<li>A <strong>Cache-Aware Load Balancer</strong> hashes the prompt prefix or user session ID, maintaining a distributed index of worker cache states. It consistently routes requests with identical prefixes to the specific GPU worker node hosting the warm KV cache, maximizing prefix cache hit rates (<span class="arithmatex">\(&gt;80\%\)</span>) and slashing Time to First Token (TTFT) by up to <span class="arithmatex">\(90\%\)</span>.</li>
+</ul>
 <hr />
 <h3 id="q4-explain-the-difference-between-tensor-parallelism-and-pipeline-parallelism-why-is-tensor-parallelism-preferred-within-a-single-8-gpu-node-while-pipeline-parallelism-is-used-across-nodes">Q4: Explain the difference between Tensor Parallelism and Pipeline Parallelism. Why is Tensor Parallelism preferred within a single 8-GPU node, while Pipeline Parallelism is used across nodes?<a class="headerlink" href="#q4-explain-the-difference-between-tensor-parallelism-and-pipeline-parallelism-why-is-tensor-parallelism-preferred-within-a-single-8-gpu-node-while-pipeline-parallelism-is-used-across-nodes" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Tensor Parallelism (Intra-Node)</strong>:
-  - Splits individual weight matrices (GEMMs) within each layer across multiple GPUs.
-  - <em>Communication</em>: Requires two collective <strong>All-Reduce</strong> operations per transformer layer (one after multi-head attention, one after the feed-forward network).
-  - <em>Network Demand</em>: All-Reduce operations are bandwidth-intensive and executed at every single layer. High-Bandwidth Interconnects (NVIDIA NVLink at <span class="arithmatex">\(900\text{ GB/s}\)</span> and NVSwitch) are mandatory. Running Tensor Parallelism across standard Ethernet or slow PCIe bridges degrades performance catastrophically due to communication serialization.
-- <strong>Pipeline Parallelism (Inter-Node)</strong>:
-  - Partitions the model layer-by-layer across different nodes (e.g. Layers 1-20 on Node 1, Layers 21-40 on Node 2).
-  - <em>Communication</em>: Only the boundary activation tensors must be transmitted between nodes at the interface between layer chunks.
-  - <em>Network Demand</em>: Transmits much less data per step, making it well-suited for inter-node communication over standard InfiniBand or 400 Gbps RoCE networks.
-  - <em>Trade-off</em>: Introduces pipeline bubbles (idle GPU time while waiting for micro-batches to propagate through the pipeline stages).</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Tensor Parallelism (Intra-Node)</strong>:</li>
+<li>Splits individual weight matrices (GEMMs) within each layer across multiple GPUs.</li>
+<li><em>Communication</em>: Requires two collective <strong>All-Reduce</strong> operations per transformer layer (one after multi-head attention, one after the feed-forward network).</li>
+<li><em>Network Demand</em>: All-Reduce operations are bandwidth-intensive and executed at every single layer. High-Bandwidth Interconnects (NVIDIA NVLink at <span class="arithmatex">\(900\text{ GB/s}\)</span> and NVSwitch) are mandatory. Running Tensor Parallelism across standard Ethernet or slow PCIe bridges degrades performance catastrophically due to communication serialization.</li>
+<li><strong>Pipeline Parallelism (Inter-Node)</strong>:</li>
+<li>Partitions the model layer-by-layer across different nodes (e.g. Layers 1-20 on Node 1, Layers 21-40 on Node 2).</li>
+<li><em>Communication</em>: Only the boundary activation tensors must be transmitted between nodes at the interface between layer chunks.</li>
+<li><em>Network Demand</em>: Transmits much less data per step, making it well-suited for inter-node communication over standard InfiniBand or 400 Gbps RoCE networks.</li>
+<li><em>Trade-off</em>: Introduces pipeline bubbles (idle GPU time while waiting for micro-batches to propagate through the pipeline stages).</li>
+</ul>
 <hr />
 <h3 id="q5-how-do-you-design-an-automated-low-latency-hallucination-detection-guardrail-for-an-enterprise-rag-system-without-adding-hundreds-of-milliseconds-of-latency">Q5: How do you design an automated, low-latency Hallucination Detection Guardrail for an Enterprise RAG system without adding hundreds of milliseconds of latency?<a class="headerlink" href="#q5-how-do-you-design-an-automated-low-latency-hallucination-detection-guardrail-for-an-enterprise-rag-system-without-adding-hundreds-of-milliseconds-of-latency" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-1. <strong>The Challenge</strong>: Using a second large LLM to audit the generated response for factual consistency adds <span class="arithmatex">\(500 - 1500\text{ ms}\)</span> of latency, violating end-to-end SLAs.
-2. <strong>Two-Tier Guardrail Architecture</strong>:
-   - <strong>Tier 1: Synchronous Lightweight NLI Classifier (Low Latency)</strong>:
-     - Deploy a small, distilled Natural Language Inference (NLI) model (e.g. DeBERTa-v3-small, <span class="arithmatex">\(~40\text{M}\)</span> parameters) running on a local GPU slice.
-     - Frame verification as an entailment task: Premise = Retrieved Passages; Hypothesis = Generated Claim Sentences.
-     - The NLI model evaluates the probability of Entailment vs. Contradiction in parallel across sentences in <span class="arithmatex">\(&lt;35\text{ ms}\)</span>. If Contradiction probability exceeds <span class="arithmatex">\(0.15\)</span>, trigger immediate stream termination with a fallback apology.
-   - <strong>Tier 2: Asynchronous Deep Audit (Zero User Latency)</strong>:
-     - Send the complete query, retrieved passages, and generated answer to an asynchronous Kafka topic.
-     - A background evaluation worker utilizes an LLM judge (e.g. GPT-4 / Llama-3-70B) to score Faithfulness and Context Precision using the RAGAS framework.
-     - If hallucination is detected post-hoc, flag the document chunk, log the event to Grafana, and invalidate the corrupted retrieval cache.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ol>
+<li><strong>The Challenge</strong>: Using a second large LLM to audit the generated response for factual consistency adds <span class="arithmatex">\(500 - 1500\text{ ms}\)</span> of latency, violating end-to-end SLAs.</li>
+<li><strong>Two-Tier Guardrail Architecture</strong>:</li>
+<li><strong>Tier 1: Synchronous Lightweight NLI Classifier (Low Latency)</strong>:<ul>
+<li>Deploy a small, distilled Natural Language Inference (NLI) model (e.g. DeBERTa-v3-small, <span class="arithmatex">\(~40\text{M}\)</span> parameters) running on a local GPU slice.</li>
+<li>Frame verification as an entailment task: Premise = Retrieved Passages; Hypothesis = Generated Claim Sentences.</li>
+<li>The NLI model evaluates the probability of Entailment vs. Contradiction in parallel across sentences in <span class="arithmatex">\(&lt;35\text{ ms}\)</span>. If Contradiction probability exceeds <span class="arithmatex">\(0.15\)</span>, trigger immediate stream termination with a fallback apology.</li>
+</ul>
+</li>
+<li><strong>Tier 2: Asynchronous Deep Audit (Zero User Latency)</strong>:<ul>
+<li>Send the complete query, retrieved passages, and generated answer to an asynchronous Kafka topic.</li>
+<li>A background evaluation worker utilizes an LLM judge (e.g. GPT-4 / Llama-3-70B) to score Faithfulness and Context Precision using the RAGAS framework.</li>
+<li>If hallucination is detected post-hoc, flag the document chunk, log the event to Grafana, and invalidate the corrupted retrieval cache.</li>
+</ul>
+</li>
+</ol>
 <hr />
 <h2 id="7-mastery-ladder">7. Mastery Ladder<a class="headerlink" href="#7-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Articulate the end-to-end Two-Tower candidate retrieval and DLRM ranking architecture for recommendation systems.</li>
-<li>[ ] <strong>L2:</strong> Formulate Reciprocal Rank Fusion (RRF) and explain why rank fusion outperforms raw score combination.</li>
-<li>[ ] <strong>L3:</strong> Contrast Cross-Encoder and Bi-Encoder architectures in terms of attention mechanics, accuracy, and computational complexity.</li>
-<li>[ ] <strong>L4:</strong> Size the GPU VRAM and node cluster requirements for a 70B parameter LLM serving 10,000 concurrent streaming requests.</li>
-<li>[ ] <strong>L5:</strong> Explain the mathematical mechanics of Megatron-LM Tensor Parallelism and the role of NVLink All-Reduce operations.</li>
-<li>[ ] <strong>L6:</strong> Describe how Radix Tree Prefix Caching operates and how to implement Cache-Aware load balancing at the API gateway.</li>
-<li>[ ] <strong>L7:</strong> Formulate an enterprise multi-tenant RAG architecture with strict data plane isolation and JWT authorization.</li>
-<li>[ ] <strong>L8:</strong> Design a multi-tier hallucination detection guardrail balancing synchronous NLI classification with asynchronous LLM auditing.</li>
-<li>[ ] <strong>L9:</strong> Mitigate recommendation filter bubbles and feedback loops using Inverse Propensity Scoring (IPS) and contextual exploration bandits.</li>
-<li>[ ] <strong>L10:</strong> Author complete architectural blueprints, capacity calculations, and OpenAPI contracts for web-scale AI systems under strict sub-50ms latency SLAs.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Articulate the end-to-end Two-Tower candidate retrieval and DLRM ranking architecture for recommendation systems.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Formulate Reciprocal Rank Fusion (RRF) and explain why rank fusion outperforms raw score combination.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Contrast Cross-Encoder and Bi-Encoder architectures in terms of attention mechanics, accuracy, and computational complexity.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Size the GPU VRAM and node cluster requirements for a 70B parameter LLM serving 10,000 concurrent streaming requests.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Explain the mathematical mechanics of Megatron-LM Tensor Parallelism and the role of NVLink All-Reduce operations.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Describe how Radix Tree Prefix Caching operates and how to implement Cache-Aware load balancing at the API gateway.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Formulate an enterprise multi-tenant RAG architecture with strict data plane isolation and JWT authorization.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Design a multi-tier hallucination detection guardrail balancing synchronous NLI classification with asynchronous LLM auditing.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Mitigate recommendation filter bubbles and feedback loops using Inverse Propensity Scoring (IPS) and contextual exploration bandits.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Author complete architectural blueprints, capacity calculations, and OpenAPI contracts for web-scale AI systems under strict sub-50ms latency SLAs.</li>
 </ul>
 
 

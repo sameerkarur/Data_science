@@ -4270,13 +4270,17 @@
 </div>
 <hr />
 <h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
-<p>Training deep neural networks requires navigating highly non-convex loss surfaces in spaces with millions to billions of dimensions. In this high-dimensional regime, the primary obstacles to convergence are not local minima, but:
-1. <strong>Ill-conditioned Ravines</strong>: Valleys where curvature is orders of magnitude steeper in some directions than others (condition number <span class="arithmatex">\(\kappa = \frac{\lambda_{\max}(H)}{\lambda_{\min}(H)} \gg 1\)</span>), causing vanilla gradient descent to oscillate violently across walls while making negligible progress along the base.
-2. <strong>Saddle Points &amp; Flat Plateaus</strong>: Critical points where <span class="arithmatex">\(\nabla \mathcal{L} = \mathbf{0}\)</span>, but the Hessian has both positive and negative eigenvalues. Escaping saddle points requires momentum or second-moment curvature compensation.
-3. <strong>Stochastic Gradient Variance</strong>: Mini-batch sampling introduces noisy gradient estimates that destabilize parameter trajectories.</p>
-<p>Modern deep learning optimizers solve these geometric challenges through two orthogonal mechanisms:
-- <strong>First-Moment Tracking (Momentum)</strong>: Accumulating velocity vectors to accelerate along consistent gradient directions and cancel out high-frequency oscillations.
-- <strong>Second-Moment Adaptation (RMSProp / Adam)</strong>: Scaling coordinate-wise step sizes inversely proportional to the historical root-mean-square gradient magnitude, equalizing update velocities across stiff and sloppy directions.</p>
+<p>Training deep neural networks requires navigating highly non-convex loss surfaces in spaces with millions to billions of dimensions. In this high-dimensional regime, the primary obstacles to convergence are not local minima, but:</p>
+<ol>
+<li><strong>Ill-conditioned Ravines</strong>: Valleys where curvature is orders of magnitude steeper in some directions than others (condition number <span class="arithmatex">\(\kappa = \frac{\lambda_{\max}(H)}{\lambda_{\min}(H)} \gg 1\)</span>), causing vanilla gradient descent to oscillate violently across walls while making negligible progress along the base.</li>
+<li><strong>Saddle Points &amp; Flat Plateaus</strong>: Critical points where <span class="arithmatex">\(\nabla \mathcal{L} = \mathbf{0}\)</span>, but the Hessian has both positive and negative eigenvalues. Escaping saddle points requires momentum or second-moment curvature compensation.</li>
+<li><strong>Stochastic Gradient Variance</strong>: Mini-batch sampling introduces noisy gradient estimates that destabilize parameter trajectories.</li>
+</ol>
+<p>Modern deep learning optimizers solve these geometric challenges through two orthogonal mechanisms:</p>
+<ul>
+<li><strong>First-Moment Tracking (Momentum)</strong>: Accumulating velocity vectors to accelerate along consistent gradient directions and cancel out high-frequency oscillations.</li>
+<li><strong>Second-Moment Adaptation (RMSProp / Adam)</strong>: Scaling coordinate-wise step sizes inversely proportional to the historical root-mean-square gradient magnitude, equalizing update velocities across stiff and sloppy directions.</li>
+</ul>
 <pre class="mermaid"><code>flowchart TD
     subgraph Optimizer Evolutionary Tree
         SGD["Vanilla SGD: θ = θ - η g"] --&gt; MOM["Polyak Momentum: v = βv + ηg"]
@@ -4306,10 +4310,12 @@
 \kappa = \frac{|\lambda_{\max}(H)|}{|\lambda_{\min}(H)|}
 \]</div>
 <p>In a quadratic bowl <span class="arithmatex">\(\mathcal{L}(x, y) = \frac{1}{2}(x^2 + 100 y^2)\)</span>, <span class="arithmatex">\(\kappa = 100\)</span>.<br />
-For vanilla gradient descent <span class="arithmatex">\(x_{t+1} = x_t - \eta \nabla \mathcal{L}\)</span>:
-- To prevent divergence along the stiff <span class="arithmatex">\(y\)</span>-direction, the step size must satisfy <span class="arithmatex">\(\eta &lt; \frac{2}{\lambda_{\max}} = \frac{2}{100} = 0.02\)</span>.
-- But along the flat <span class="arithmatex">\(x\)</span>-direction, convergence proceeds at rate <span class="arithmatex">\((1 - \eta \lambda_{\min}) = (1 - 0.02 \times 1) = 0.98\)</span>.
-- It takes hundreds of iterations to traverse the ravine!</p>
+For vanilla gradient descent <span class="arithmatex">\(x_{t+1} = x_t - \eta \nabla \mathcal{L}\)</span>:</p>
+<ul>
+<li>To prevent divergence along the stiff <span class="arithmatex">\(y\)</span>-direction, the step size must satisfy <span class="arithmatex">\(\eta &lt; \frac{2}{\lambda_{\max}} = \frac{2}{100} = 0.02\)</span>.</li>
+<li>But along the flat <span class="arithmatex">\(x\)</span>-direction, convergence proceeds at rate <span class="arithmatex">\((1 - \eta \lambda_{\min}) = (1 - 0.02 \times 1) = 0.98\)</span>.</li>
+<li>It takes hundreds of iterations to traverse the ravine!</li>
+</ul>
 <hr />
 <h2 id="3-stochastic-gradient-descent-with-classical-momentum">3. Stochastic Gradient Descent with Classical Momentum<a class="headerlink" href="#3-stochastic-gradient-descent-with-classical-momentum" title="Permanent link">&para;</a></h2>
 <h3 id="31-physical-analogy-the-heavy-ball-with-friction">3.1 Physical Analogy: The Heavy Ball with Friction<a class="headerlink" href="#31-physical-analogy-the-heavy-ball-with-friction" title="Permanent link">&para;</a></h3>
@@ -4324,11 +4330,13 @@ m \frac{d^2 \boldsymbol{\theta}}{dt^2} + \gamma \frac{d\boldsymbol{\theta}}{dt} 
 <div class="arithmatex">\[
 \boldsymbol{\theta}_t = \boldsymbol{\theta}_{t-1} - \mathbf{v}_t
 \]</div>
-<p>where:
-- <span class="arithmatex">\(\mathbf{g}_t = \nabla \mathcal{L}(\boldsymbol{\theta}_{t-1})\)</span> is the current gradient.
-- <span class="arithmatex">\(\mathbf{v}_t\)</span> is the velocity vector.
-- <span class="arithmatex">\(\beta \in [0, 1)\)</span> is the momentum decay factor (typically <span class="arithmatex">\(\beta = 0.9\)</span>).
-- <span class="arithmatex">\(\eta &gt; 0\)</span> is the learning rate.</p>
+<p>where:</p>
+<ul>
+<li><span class="arithmatex">\(\mathbf{g}_t = \nabla \mathcal{L}(\boldsymbol{\theta}_{t-1})\)</span> is the current gradient.</li>
+<li><span class="arithmatex">\(\mathbf{v}_t\)</span> is the velocity vector.</li>
+<li><span class="arithmatex">\(\beta \in [0, 1)\)</span> is the momentum decay factor (typically <span class="arithmatex">\(\beta = 0.9\)</span>).</li>
+<li><span class="arithmatex">\(\eta &gt; 0\)</span> is the learning rate.</li>
+</ul>
 <h3 id="32-effective-step-size-in-consistent-directions">3.2 Effective Step Size in Consistent Directions<a class="headerlink" href="#32-effective-step-size-in-consistent-directions" title="Permanent link">&para;</a></h3>
 <p>Expanding <span class="arithmatex">\(\mathbf{v}_t\)</span> recursively as a geometric series:</p>
 <div class="arithmatex">\[
@@ -4358,10 +4366,12 @@ Conversely, in oscillating directions where <span class="arithmatex">\(\mathbf{g
     LA --&gt;|Lookahead Gradient: -η ∇L| P1["Next Position θ_t"]
     P0 -. "Direct Classical Momentum" .-&gt; P1</code></pre>
 <p><strong>Theoretical Convergence Advantage:</strong><br />
-For convex functions with <span class="arithmatex">\(L\)</span>-Lipschitz gradients:
-- Standard Gradient Descent: convergence rate <span class="arithmatex">\(\mathcal{O}(1/t)\)</span>.
-- Classical Polyak Momentum: <span class="arithmatex">\(\mathcal{O}(1/t)\)</span>.
-- Nesterov Accelerated Gradient: <span class="arithmatex">\(\mathcal{O}(1/t^2)\)</span> — matching the optimal theoretical lower bound for first-order black-box optimization.</p>
+For convex functions with <span class="arithmatex">\(L\)</span>-Lipschitz gradients:</p>
+<ul>
+<li>Standard Gradient Descent: convergence rate <span class="arithmatex">\(\mathcal{O}(1/t)\)</span>.</li>
+<li>Classical Polyak Momentum: <span class="arithmatex">\(\mathcal{O}(1/t)\)</span>.</li>
+<li>Nesterov Accelerated Gradient: <span class="arithmatex">\(\mathcal{O}(1/t^2)\)</span> — matching the optimal theoretical lower bound for first-order black-box optimization.</li>
+</ul>
 <hr />
 <h2 id="5-adaptive-learning-rate-methods">5. Adaptive Learning Rate Methods<a class="headerlink" href="#5-adaptive-learning-rate-methods" title="Permanent link">&para;</a></h2>
 <h3 id="51-adagrad-duchi-hazan-singer-2011">5.1 AdaGrad (Duchi, Hazan, Singer, 2011)<a class="headerlink" href="#51-adagrad-duchi-hazan-singer-2011" title="Permanent link">&para;</a></h3>
@@ -4384,25 +4394,39 @@ Because each component of <span class="arithmatex">\(\mathbf{s}_t\)</span> is a 
 \boldsymbol{\theta}_t = \boldsymbol{\theta}_{t-1} - \frac{\eta}{\sqrt{\mathbf{v}_t} + \epsilon} \odot \mathbf{g}_t
 \]</div>
 <p>where <span class="arithmatex">\(\beta_2 \in [0.9, 0.999]\)</span> (typically <span class="arithmatex">\(\beta_2 = 0.99\)</span>).<br />
-Because <span class="arithmatex">\(\mathbf{v}_t\)</span> tracks a localized temporal average of squared gradients:
-- Directions with consistently large gradients have large <span class="arithmatex">\(\sqrt{\mathbf{v}_{t, i}}\)</span>, scaling down their effective step size.
-- Directions with tiny gradients have small <span class="arithmatex">\(\sqrt{\mathbf{v}_{t, i}}\)</span>, scaling up their effective step size.
-- The condition number is effectively equalized without the premature decay of AdaGrad.</p>
+Because <span class="arithmatex">\(\mathbf{v}_t\)</span> tracks a localized temporal average of squared gradients:</p>
+<ul>
+<li>Directions with consistently large gradients have large <span class="arithmatex">\(\sqrt{\mathbf{v}_{t, i}}\)</span>, scaling down their effective step size.</li>
+<li>Directions with tiny gradients have small <span class="arithmatex">\(\sqrt{\mathbf{v}_{t, i}}\)</span>, scaling up their effective step size.</li>
+<li>The condition number is effectively equalized without the premature decay of AdaGrad.</li>
+</ul>
 <hr />
 <h2 id="6-adam-adaptive-moment-estimation-kingma-ba-2015">6. Adam: Adaptive Moment Estimation (Kingma &amp; Ba, 2015)<a class="headerlink" href="#6-adam-adaptive-moment-estimation-kingma-ba-2015" title="Permanent link">&para;</a></h2>
 <p>Adam combines the benefits of <strong>Momentum</strong> (first moment of gradients) and <strong>RMSProp</strong> (uncentered second moment of gradients), enhanced with analytical <strong>bias correction</strong> to compensate for zero initialization.</p>
 <h3 id="61-algorithmic-formulation">6.1 Algorithmic Formulation<a class="headerlink" href="#61-algorithmic-formulation" title="Permanent link">&para;</a></h3>
-<p>At iteration step <span class="arithmatex">\(t \ge 1\)</span>:
-1. <strong>Compute Mini-batch Gradient</strong>:
-   $<span class="arithmatex">\(\mathbf{g}_t = \nabla_{\boldsymbol{\theta}} \mathcal{L}_t(\boldsymbol{\theta}_{t-1})\)</span>$
-2. <strong>Update Biased First Moment (Velocity)</strong>:
-   $<span class="arithmatex">\(\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1 - \beta_1) \mathbf{g}_t\)</span>$
-3. <strong>Update Biased Second Raw Moment (Squared Gradient EMA)</strong>:
-   $<span class="arithmatex">\(\mathbf{v}_t = \beta_2 \mathbf{v}_{t-1} + (1 - \beta_2) \mathbf{g}_t^2\)</span>$
-4. <strong>Compute Bias-Corrected Moments</strong>:
-   $<span class="arithmatex">\(\widehat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1 - \beta_1^t}, \qquad \widehat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1 - \beta_2^t}\)</span>$
-5. <strong>Update Parameters</strong>:
+<p>At iteration step <span class="arithmatex">\(t \ge 1\)</span>:</p>
+<ol>
+<li>
+<p><strong>Compute Mini-batch Gradient</strong>:
+   $<span class="arithmatex">\(\mathbf{g}_t = \nabla_{\boldsymbol{\theta}} \mathcal{L}_t(\boldsymbol{\theta}_{t-1})\)</span>$</p>
+</li>
+<li>
+<p><strong>Update Biased First Moment (Velocity)</strong>:
+   $<span class="arithmatex">\(\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1 - \beta_1) \mathbf{g}_t\)</span>$</p>
+</li>
+<li>
+<p><strong>Update Biased Second Raw Moment (Squared Gradient EMA)</strong>:
+   $<span class="arithmatex">\(\mathbf{v}_t = \beta_2 \mathbf{v}_{t-1} + (1 - \beta_2) \mathbf{g}_t^2\)</span>$</p>
+</li>
+<li>
+<p><strong>Compute Bias-Corrected Moments</strong>:
+   $<span class="arithmatex">\(\widehat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1 - \beta_1^t}, \qquad \widehat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1 - \beta_2^t}\)</span>$</p>
+</li>
+<li>
+<p><strong>Update Parameters</strong>:
    $<span class="arithmatex">\(\boldsymbol{\theta}_t = \boldsymbol{\theta}_{t-1} - \frac{\eta}{\sqrt{\widehat{\mathbf{v}}_t} + \epsilon} \odot \widehat{\mathbf{m}}_t\)</span>$</p>
+</li>
+</ol>
 <p>Standard default hyperparameters: <span class="arithmatex">\(\eta = 0.001\)</span>, <span class="arithmatex">\(\beta_1 = 0.9\)</span>, <span class="arithmatex">\(\beta_2 = 0.999\)</span>, <span class="arithmatex">\(\epsilon = 10^{-8}\)</span>.</p>
 <h3 id="62-mathematical-proof-of-bias-correction">6.2 Mathematical Proof of Bias Correction<a class="headerlink" href="#62-mathematical-proof-of-bias-correction" title="Permanent link">&para;</a></h3>
 <p>Because <span class="arithmatex">\(\mathbf{m}_0 = \mathbf{0}\)</span> and <span class="arithmatex">\(\mathbf{v}_0 = \mathbf{0}\)</span>, the moving averages are heavily biased toward zero during the initial iterations.</p>
@@ -4452,10 +4476,12 @@ As <span class="arithmatex">\(t \to \infty\)</span>, <span class="arithmatex">\(
 <div class="arithmatex">\[
 \boldsymbol{\theta}_t = \boldsymbol{\theta}_{t-1} - \frac{\eta}{\sqrt{\widehat{\mathbf{v}}_t} + \epsilon} \widehat{\mathbf{m}}_t \approx \boldsymbol{\theta}_{t-1} - \frac{\eta \lambda}{\sqrt{\widehat{\mathbf{v}}_t} + \epsilon} \boldsymbol{\theta}_{t-1} - \frac{\eta}{\sqrt{\widehat{\mathbf{v}}_t} + \epsilon} \widehat{\mathbf{g}}_t
 \]</div>
-<p><strong>The Catastrophic Breakdown:</strong>
-1. Parameters with <strong>large gradients</strong> have large <span class="arithmatex">\(\widehat{\mathbf{v}}_t\)</span>, causing the regularizing penalty <span class="arithmatex">\(\frac{\eta \lambda}{\sqrt{\widehat{\mathbf{v}}_t}}\)</span> to be <strong>diminished</strong>.
-2. Parameters with <strong>small gradients</strong> have tiny <span class="arithmatex">\(\widehat{\mathbf{v}}_t\)</span>, causing their regularization penalty to be <strong>heavily magnified</strong>.
-3. <span class="arithmatex">\(L_2\)</span> regularization in Adam regularizes weights with small gradients much more intensely than weights with large gradients—the exact opposite of intended shrinkage!</p>
+<p><strong>The Catastrophic Breakdown:</strong></p>
+<ol>
+<li>Parameters with <strong>large gradients</strong> have large <span class="arithmatex">\(\widehat{\mathbf{v}}_t\)</span>, causing the regularizing penalty <span class="arithmatex">\(\frac{\eta \lambda}{\sqrt{\widehat{\mathbf{v}}_t}}\)</span> to be <strong>diminished</strong>.</li>
+<li>Parameters with <strong>small gradients</strong> have tiny <span class="arithmatex">\(\widehat{\mathbf{v}}_t\)</span>, causing their regularization penalty to be <strong>heavily magnified</strong>.</li>
+<li><span class="arithmatex">\(L_2\)</span> regularization in Adam regularizes weights with small gradients much more intensely than weights with large gradients—the exact opposite of intended shrinkage!</li>
+</ol>
 <h3 id="72-the-adamw-algorithm">7.2 The AdamW Algorithm<a class="headerlink" href="#72-the-adamw-algorithm" title="Permanent link">&para;</a></h3>
 <p>Ilya Loshchilov and Frank Hutter resolved this in 2019 by <strong>decoupling</strong> weight decay from the gradient update:</p>
 <div class="arithmatex">\[
@@ -4475,14 +4501,20 @@ As <span class="arithmatex">\(t \to \infty\)</span>, <span class="arithmatex">\(
     B --&gt; C["Final Minimum lr: η_min"]</code></pre>
 <h3 id="81-common-schedules">8.1 Common Schedules<a class="headerlink" href="#81-common-schedules" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Step Decay</strong>:
-   $<span class="arithmatex">\(\eta_t = \eta_0 \cdot \gamma^{\lfloor t / S \rfloor}, \quad \gamma \in [0.1, 0.5]\)</span>$</li>
-<li><strong>Cosine Annealing (Loshchilov &amp; Hutter, 2016)</strong>:
-   $<span class="arithmatex">\(\eta_t = \eta_{\min} + \frac{1}{2}(\eta_{\max} - \eta_{\min}) \left( 1 + \cos\left( \frac{t}{T_{\max}} \pi \right) \right)\)</span>$</li>
-<li><strong>Linear Warmup</strong>:
+<li>
+<p><strong>Step Decay</strong>:
+   $<span class="arithmatex">\(\eta_t = \eta_0 \cdot \gamma^{\lfloor t / S \rfloor}, \quad \gamma \in [0.1, 0.5]\)</span>$</p>
+</li>
+<li>
+<p><strong>Cosine Annealing (Loshchilov &amp; Hutter, 2016)</strong>:
+   $<span class="arithmatex">\(\eta_t = \eta_{\min} + \frac{1}{2}(\eta_{\max} - \eta_{\min}) \left( 1 + \cos\left( \frac{t}{T_{\max}} \pi \right) \right)\)</span>$</p>
+</li>
+<li>
+<p><strong>Linear Warmup</strong>:
    For the first <span class="arithmatex">\(T_{\text{warmup}}\)</span> steps (typically <span class="arithmatex">\(1\%\)</span> to <span class="arithmatex">\(5\%\)</span> of total iterations):
    $<span class="arithmatex">\(\eta_t = \eta_{\max} \cdot \frac{t}{T_{\text{warmup}}}\)</span>$
-   <strong>Why Warmup is Essential</strong>: In early training iterations, gradient moments <span class="arithmatex">\(\mathbf{m}_t\)</span> and <span class="arithmatex">\(\mathbf{v}_t\)</span> have high stochastic variance, and initial weights are far from any basin. A large initial learning rate induces catastrophic gradient explosions that destroy pretrained representations or diverge.</li>
+   <strong>Why Warmup is Essential</strong>: In early training iterations, gradient moments <span class="arithmatex">\(\mathbf{m}_t\)</span> and <span class="arithmatex">\(\mathbf{v}_t\)</span> have high stochastic variance, and initial weights are far from any basin. A large initial learning rate induces catastrophic gradient explosions that destroy pretrained representations or diverge.</p>
+</li>
 </ol>
 <hr />
 <h2 id="9-implementation-1-modular-optimizer-suite-from-scratch-pure-numpy">9. Implementation 1 — Modular Optimizer Suite from Scratch (Pure NumPy)<a class="headerlink" href="#9-implementation-1-modular-optimizer-suite-from-scratch-pure-numpy" title="Permanent link">&para;</a></h2>
@@ -4794,10 +4826,12 @@ Under standard Adam, this composite gradient is tracked by the second moment acc
 <p><strong>Model Answer:</strong><br />
 Let the first-moment EMA be initialized at <span class="arithmatex">\(\mathbf{m}_0 = \mathbf{0}\)</span>:</p>
 <div class="arithmatex">\[\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1 - \beta_1) \mathbf{g}_t\]</div>
-<p>Unrolling the recurrence from <span class="arithmatex">\(t=1\)</span>:
-- <span class="arithmatex">\(\mathbf{m}_1 = (1 - \beta_1) \mathbf{g}_1\)</span>
-- <span class="arithmatex">\(\mathbf{m}_2 = \beta_1 (1 - \beta_1) \mathbf{g}_1 + (1 - \beta_1) \mathbf{g}_2\)</span>
-- By induction: <span class="arithmatex">\(\mathbf{m}_t = (1 - \beta_1) \sum_{i=1}^t \beta_1^{t-i} \mathbf{g}_i\)</span></p>
+<p>Unrolling the recurrence from <span class="arithmatex">\(t=1\)</span>:</p>
+<ul>
+<li><span class="arithmatex">\(\mathbf{m}_1 = (1 - \beta_1) \mathbf{g}_1\)</span></li>
+<li><span class="arithmatex">\(\mathbf{m}_2 = \beta_1 (1 - \beta_1) \mathbf{g}_1 + (1 - \beta_1) \mathbf{g}_2\)</span></li>
+<li>By induction: <span class="arithmatex">\(\mathbf{m}_t = (1 - \beta_1) \sum_{i=1}^t \beta_1^{t-i} \mathbf{g}_i\)</span></li>
+</ul>
 <p>Taking the mathematical expectation:</p>
 <div class="arithmatex">\[\mathbb{E}[\mathbf{m}_t] = \mathbb{E}\left[ (1 - \beta_1) \sum_{i=1}^t \beta_1^{t-i} \mathbf{g}_i \right]\]</div>
 <p>Under the standard assumption that the expectation of the gradient is stationary over the recent window (<span class="arithmatex">\(\mathbb{E}[\mathbf{g}_i] \approx \mathbb{E}[\mathbf{g}_t]\)</span>):</p>
@@ -4820,9 +4854,11 @@ In Nesterov Accelerated Gradient:</p>
 <h3 id="q4-explain-the-difference-in-generalization-behavior-between-sgd-with-momentum-and-adamadamw-when-training-deep-convolutional-networks">Q4: Explain the difference in generalization behavior between SGD with Momentum and Adam/AdamW when training deep convolutional networks.<a class="headerlink" href="#q4-explain-the-difference-in-generalization-behavior-between-sgd-with-momentum-and-adamadamw-when-training-deep-convolutional-networks" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
 Empirically, while Adam/AdamW converges significantly faster than SGD during early training epochs, <strong>SGD with Momentum frequently achieves superior test set generalization and lower final error on vision tasks (e.g., ImageNet classification)</strong>.<br />
-<strong>Mechanisms:</strong>
-1. <strong>Geometry of Minima</strong>: Adaptive optimizers scale step sizes by <span class="arithmatex">\(\frac{1}{\sqrt{\mathbf{v}_t}}\)</span>, which equalizes curvature across all directions. This allows Adam to navigate narrow, high-curvature ravines and settle into sharp local minima. SGD, constrained by a uniform coordinate step size, cannot stabilize in sharp minima and is forced by stochastic noise to settle in wide, flat minima. Flat minima possess low spectral norm <span class="arithmatex">\(\lambda_{\max}(H)\)</span>, making them robust to test-set distribution shifts.
-2. <strong>Spurious Correlation Sensitivity</strong>: In the presence of rare, uninformative noise features with small gradients, Adam scales their effective step size up by dividing by tiny <span class="arithmatex">\(\sqrt{v_i}\)</span>, over-indexing on non-generalizing spurious correlations. SGD naturally suppresses updates on features with small gradients.</p>
+<strong>Mechanisms:</strong></p>
+<ol>
+<li><strong>Geometry of Minima</strong>: Adaptive optimizers scale step sizes by <span class="arithmatex">\(\frac{1}{\sqrt{\mathbf{v}_t}}\)</span>, which equalizes curvature across all directions. This allows Adam to navigate narrow, high-curvature ravines and settle into sharp local minima. SGD, constrained by a uniform coordinate step size, cannot stabilize in sharp minima and is forced by stochastic noise to settle in wide, flat minima. Flat minima possess low spectral norm <span class="arithmatex">\(\lambda_{\max}(H)\)</span>, making them robust to test-set distribution shifts.</li>
+<li><strong>Spurious Correlation Sensitivity</strong>: In the presence of rare, uninformative noise features with small gradients, Adam scales their effective step size up by dividing by tiny <span class="arithmatex">\(\sqrt{v_i}\)</span>, over-indexing on non-generalizing spurious correlations. SGD naturally suppresses updates on features with small gradients.</li>
+</ol>
 <hr />
 <h3 id="q5-how-does-the-condition-number-kappah-fraclambda_maxlambda_min-dictate-the-maximum-stable-learning-rate-for-first-order-gradient-descent">Q5: How does the condition number <span class="arithmatex">\(\kappa(H) = \frac{\lambda_{\max}}{\lambda_{\min}}\)</span> dictate the maximum stable learning rate for first-order gradient descent?<a class="headerlink" href="#q5-how-does-the-condition-number-kappah-fraclambda_maxlambda_min-dictate-the-maximum-stable-learning-rate-for-first-order-gradient-descent" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
@@ -4841,17 +4877,17 @@ Consider a quadratic objective <span class="arithmatex">\(\mathcal{L}(\boldsymbo
 <p>As the condition number <span class="arithmatex">\(\kappa \to \infty\)</span>, the contraction factor approaches <span class="arithmatex">\(1 - 0 = 1\)</span>, causing the convergence rate along sloppy directions to grind to a halt.</p>
 <hr />
 <h2 id="13-mastery-ladder">13. Mastery Ladder<a class="headerlink" href="#13-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Define the condition number of the Hessian and describe how ill-conditioned ravines cause oscillations in vanilla gradient descent.</li>
-<li>[ ] <strong>L2:</strong> Write the equations for SGD with Polyak Momentum and explain the heavy ball with friction physical analogy.</li>
-<li>[ ] <strong>L3:</strong> Explain Nesterov Accelerated Gradient (NAG) and how lookahead gradient evaluation acts as an anticipatory brake.</li>
-<li>[ ] <strong>L4:</strong> Describe the AdaGrad accumulator <span class="arithmatex">\(G_t\)</span> and explain why its monotonically non-decreasing nature causes premature training stagnation.</li>
-<li>[ ] <strong>L5:</strong> Write the RMSProp moving average update and show how it equalizes step sizes across disparate curvature axes.</li>
-<li>[ ] <strong>L6:</strong> State the complete Adam algorithm and write out both moment updates with bias correction.</li>
-<li>[ ] <strong>L7:</strong> Prove mathematically that dividing by <span class="arithmatex">\((1 - \beta_1^t)\)</span> and <span class="arithmatex">\((1 - \beta_2^t)\)</span> renders Adam's moment estimators unbiased.</li>
-<li>[ ] <strong>L8:</strong> Prove why standard <span class="arithmatex">\(L_2\)</span> regularization fails in adaptive optimizers and derive the AdamW decoupled weight decay update.</li>
-<li>[ ] <strong>L9:</strong> Explain why linear learning rate warmup is necessary during the initial phase of training deep architectures.</li>
-<li>[ ] <strong>L10:</strong> Implement a modular optimizer suite from scratch in NumPy (SGD, RMSProp, Adam, AdamW) and benchmark on non-convex surfaces.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Define the condition number of the Hessian and describe how ill-conditioned ravines cause oscillations in vanilla gradient descent.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Write the equations for SGD with Polyak Momentum and explain the heavy ball with friction physical analogy.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Explain Nesterov Accelerated Gradient (NAG) and how lookahead gradient evaluation acts as an anticipatory brake.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Describe the AdaGrad accumulator <span class="arithmatex">\(G_t\)</span> and explain why its monotonically non-decreasing nature causes premature training stagnation.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Write the RMSProp moving average update and show how it equalizes step sizes across disparate curvature axes.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> State the complete Adam algorithm and write out both moment updates with bias correction.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Prove mathematically that dividing by <span class="arithmatex">\((1 - \beta_1^t)\)</span> and <span class="arithmatex">\((1 - \beta_2^t)\)</span> renders Adam's moment estimators unbiased.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Prove why standard <span class="arithmatex">\(L_2\)</span> regularization fails in adaptive optimizers and derive the AdamW decoupled weight decay update.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Explain why linear learning rate warmup is necessary during the initial phase of training deep architectures.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Implement a modular optimizer suite from scratch in NumPy (SGD, RMSProp, Adam, AdamW) and benchmark on non-convex surfaces.</li>
 </ul>
 
 

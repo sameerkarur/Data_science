@@ -4472,16 +4472,22 @@ P(A \mid B) = \frac{P(B \mid A) P(A)}{P(B)} = \frac{P(B \mid A) P(A)}{\sum_{k=1}
   $<span class="arithmatex">\(\mathbb{E}[aX + bY + c] = a \mathbb{E}[X] + b \mathbb{E}[Y] + c\)</span>$</li>
 </ul>
 <h4 id="variance-second-central-moment-spread">Variance (Second Central Moment / Spread):<a class="headerlink" href="#variance-second-central-moment-spread" title="Permanent link">&para;</a></h4>
-<p>$<span class="arithmatex">\(\text{Var}(X) = \sigma^2 = \mathbb{E}\left[(X - \mathbb{E}[X])^2\right] = \mathbb{E}[X^2] - (\mathbb{E}[X])^2\)</span>$
-- Scaling property: <span class="arithmatex">\(\text{Var}(aX + b) = a^2 \text{Var}(X)\)</span>.</p>
+<div class="arithmatex">\[\text{Var}(X) = \sigma^2 = \mathbb{E}\left[(X - \mathbb{E}[X])^2\right] = \mathbb{E}[X^2] - (\mathbb{E}[X])^2\]</div>
+<ul>
+<li>Scaling property: <span class="arithmatex">\(\text{Var}(aX + b) = a^2 \text{Var}(X)\)</span>.</li>
+</ul>
 <h4 id="covariance-and-correlation-matrix">Covariance and Correlation Matrix:<a class="headerlink" href="#covariance-and-correlation-matrix" title="Permanent link">&para;</a></h4>
 <p>For random vector <span class="arithmatex">\(\mathbf{X} = [X_1, \dots, X_d]^T \in \mathbb{R}^d\)</span> with mean <span class="arithmatex">\(\boldsymbol{\mu} = \mathbb{E}[\mathbf{X}]\)</span>:</p>
 <div class="arithmatex">\[\Sigma = \text{Cov}(\mathbf{X}) = \mathbb{E}\left[ (\mathbf{X} - \boldsymbol{\mu})(\mathbf{X} - \boldsymbol{\mu})^T \right] \in \mathbb{R}^{d \times d}\]</div>
 <div class="arithmatex">\[\Sigma_{ij} = \text{Cov}(X_i, X_j) = \mathbb{E}[(X_i - \mu_i)(X_j - \mu_j)]\]</div>
 <ul>
-<li><strong>Pearson Correlation Coefficient</strong>:
-  $<span class="arithmatex">\(\rho(X_i, X_j) = \frac{\text{Cov}(X_i, X_j)}{\sigma_{X_i} \sigma_{X_j}} \in [-1, 1]\)</span>$</li>
-<li>The covariance matrix <span class="arithmatex">\(\Sigma\)</span> is always <strong>symmetric</strong> and <strong>positive semi-definite</strong> (<span class="arithmatex">\(\Sigma \succeq 0\)</span>), connecting directly to the <a href="../linear-algebra-deep-dive/#62-spectral-theorem-for-real-symmetric-matrices">Spectral Theorem in Linear Algebra</a>.</li>
+<li>
+<p><strong>Pearson Correlation Coefficient</strong>:
+  $<span class="arithmatex">\(\rho(X_i, X_j) = \frac{\text{Cov}(X_i, X_j)}{\sigma_{X_i} \sigma_{X_j}} \in [-1, 1]\)</span>$</p>
+</li>
+<li>
+<p>The covariance matrix <span class="arithmatex">\(\Sigma\)</span> is always <strong>symmetric</strong> and <strong>positive semi-definite</strong> (<span class="arithmatex">\(\Sigma \succeq 0\)</span>), connecting directly to the <a href="../linear-algebra-deep-dive/#62-spectral-theorem-for-real-symmetric-matrices">Spectral Theorem in Linear Algebra</a>.</p>
+</li>
 </ul>
 <hr />
 <h2 id="5-core-probability-distributions-in-machine-learning">5. Core Probability Distributions in Machine Learning<a class="headerlink" href="#5-core-probability-distributions-in-machine-learning" title="Permanent link">&para;</a></h2>
@@ -4579,10 +4585,14 @@ P(A \mid B) = \frac{P(B \mid A) P(A)}{P(B)} = \frac{P(B \mid A) P(A)}{\sum_{k=1}
 <h3 id="61-the-law-of-large-numbers-lln">6.1 The Law of Large Numbers (LLN)<a class="headerlink" href="#61-the-law-of-large-numbers-lln" title="Permanent link">&para;</a></h3>
 <p>Let <span class="arithmatex">\(X_1, X_2, \dots, X_n\)</span> be independent and identically distributed (i.i.d.) random variables with finite mean <span class="arithmatex">\(\mu = \mathbb{E}[X_i]\)</span> and variance <span class="arithmatex">\(\sigma^2\)</span>. The sample average is <span class="arithmatex">\(\bar{X}_n = \frac{1}{n} \sum_{i=1}^n X_i\)</span>.</p>
 <ul>
-<li><strong>Weak Law (WLLN)</strong>: Sample mean converges in probability to the true mean:
-  $<span class="arithmatex">\(\lim_{n \to \infty} P(|\bar{X}_n - \mu| \ge \epsilon) = 0 \quad \forall \epsilon &gt; 0\)</span>$</li>
-<li><strong>Strong Law (SLLN)</strong>: Sample mean converges almost surely to the true mean:
-  $<span class="arithmatex">\(P\left(\lim_{n \to \infty} \bar{X}_n = \mu\right) = 1\)</span>$</li>
+<li>
+<p><strong>Weak Law (WLLN)</strong>: Sample mean converges in probability to the true mean:
+  $<span class="arithmatex">\(\lim_{n \to \infty} P(|\bar{X}_n - \mu| \ge \epsilon) = 0 \quad \forall \epsilon &gt; 0\)</span>$</p>
+</li>
+<li>
+<p><strong>Strong Law (SLLN)</strong>: Sample mean converges almost surely to the true mean:
+  $<span class="arithmatex">\(P\left(\lim_{n \to \infty} \bar{X}_n = \mu\right) = 1\)</span>$</p>
+</li>
 </ul>
 <p>This justifies <strong>Monte Carlo integration</strong>: we approximate intractable expectations by empirical sample averages:</p>
 <div class="arithmatex">\[
@@ -4692,9 +4702,11 @@ P(\theta \mid k) \propto \theta^{(\alpha + k) - 1} (1 - \theta)^{(\beta + n - k)
 <div class="arithmatex">\[
 \hat{\theta}_{\text{MAP}} = \frac{\alpha_{\text{post}} - 1}{\alpha_{\text{post}} + \beta_{\text{post}} - 2} = \frac{k + \alpha - 1}{n + \alpha + \beta - 2}
 \]</div>
-<p>Compare this to the MLE estimate <span class="arithmatex">\(\hat{\theta}_{\text{MLE}} = \frac{k}{n}\)</span>:
-- As <span class="arithmatex">\(n \to \infty\)</span>, the data dominates the prior: <span class="arithmatex">\(\lim_{n \to \infty} \hat{\theta}_{\text{MAP}} = \frac{k}{n} = \hat{\theta}_{\text{MLE}}\)</span>.
-- When data is sparse (<span class="arithmatex">\(n=1, k=1\)</span>), MLE predicts <span class="arithmatex">\(1.0\)</span> (catastrophic overconfidence), whereas MAP with a neutral prior (<span class="arithmatex">\(\alpha=2, \beta=2\)</span>) predicts <span class="arithmatex">\(\frac{1 + 1}{1 + 2} = \frac{2}{3}\)</span> (Laplace smoothing).</p>
+<p>Compare this to the MLE estimate <span class="arithmatex">\(\hat{\theta}_{\text{MLE}} = \frac{k}{n}\)</span>:</p>
+<ul>
+<li>As <span class="arithmatex">\(n \to \infty\)</span>, the data dominates the prior: <span class="arithmatex">\(\lim_{n \to \infty} \hat{\theta}_{\text{MAP}} = \frac{k}{n} = \hat{\theta}_{\text{MLE}}\)</span>.</li>
+<li>When data is sparse (<span class="arithmatex">\(n=1, k=1\)</span>), MLE predicts <span class="arithmatex">\(1.0\)</span> (catastrophic overconfidence), whereas MAP with a neutral prior (<span class="arithmatex">\(\alpha=2, \beta=2\)</span>) predicts <span class="arithmatex">\(\frac{1 + 1}{1 + 2} = \frac{2}{3}\)</span> (Laplace smoothing).</li>
+</ul>
 <hr />
 <h2 id="8-hypothesis-testing-confidence-intervals-and-decision-theory">8. Hypothesis Testing, Confidence Intervals and Decision Theory<a class="headerlink" href="#8-hypothesis-testing-confidence-intervals-and-decision-theory" title="Permanent link">&para;</a></h2>
 <h3 id="81-the-decision-matrix-type-i-and-type-ii-errors">8.1 The Decision Matrix: Type I and Type II Errors<a class="headerlink" href="#81-the-decision-matrix-type-i-and-type-ii-errors" title="Permanent link">&para;</a></h3>
@@ -4741,11 +4753,13 @@ t = \frac{\bar{X}_1 - \bar{X}_2}{\sqrt{\frac{s_1^2}{N_1} + \frac{s_2^2}{N_2}}}
 \]</div>
 <hr />
 <h2 id="9-python-implementation-from-scratch-statistical-simulation">9. Python Implementation: From Scratch &amp; Statistical Simulation<a class="headerlink" href="#9-python-implementation-from-scratch-statistical-simulation" title="Permanent link">&para;</a></h2>
-<p>Below is a runnable suite implementing:
-1. From-scratch <strong>MLE for Gaussian Distribution</strong> with Bessel's bias demonstration.
-2. <strong>Beta-Binomial Bayesian Updating</strong>.
-3. <strong>Monte Carlo Central Limit Theorem</strong> demonstrating convergence of heavily skewed data.
-4. <strong>Two-Sample Hypothesis Testing</strong> (Welch's t-test and Bootstrap Confidence Intervals).</p>
+<p>Below is a runnable suite implementing:</p>
+<ol>
+<li>From-scratch <strong>MLE for Gaussian Distribution</strong> with Bessel's bias demonstration.</li>
+<li><strong>Beta-Binomial Bayesian Updating</strong>.</li>
+<li><strong>Monte Carlo Central Limit Theorem</strong> demonstrating convergence of heavily skewed data.</li>
+<li><strong>Two-Sample Hypothesis Testing</strong> (Welch's t-test and Bootstrap Confidence Intervals).</li>
+</ol>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="sd">"""</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="sd">probability_statistics_deep_dive.py</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="sd">Production-grade implementations of probability distributions, MLE,</span>
@@ -4977,11 +4991,13 @@ t = \frac{\bar{X}_1 - \bar{X}_2}{\sqrt{\frac{s_1^2}{N_1} + \frac{s_2^2}{N_2}}}
 <h3 id="q1-derive-the-maximum-likelihood-estimator-for-the-parameters-mu-and-sigma2-of-a-1d-gaussian-distribution-prove-that-the-mle-for-sigma2-is-biased-and-derive-bessels-correction">Q1: Derive the Maximum Likelihood Estimator for the parameters <span class="arithmatex">\(\mu\)</span> and <span class="arithmatex">\(\sigma^2\)</span> of a 1D Gaussian distribution. Prove that the MLE for <span class="arithmatex">\(\sigma^2\)</span> is biased, and derive Bessel's correction.<a class="headerlink" href="#q1-derive-the-maximum-likelihood-estimator-for-the-parameters-mu-and-sigma2-of-a-1d-gaussian-distribution-prove-that-the-mle-for-sigma2-is-biased-and-derive-bessels-correction" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
 Given an i.i.d. sample <span class="arithmatex">\(x_1, \dots, x_N \sim \mathcal{N}(\mu, \sigma^2)\)</span>, the log-likelihood is:
-$<span class="arithmatex">\(\ell(\mu, \sigma^2) = -\frac{N}{2} \ln(2\pi) - \frac{N}{2} \ln(\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^N (x_i - \mu)^2\)</span>$
-1. <strong>Deriving <span class="arithmatex">\(\hat{\mu}_{\text{MLE}}\)</span>:</strong>
+$<span class="arithmatex">\(\ell(\mu, \sigma^2) = -\frac{N}{2} \ln(2\pi) - \frac{N}{2} \ln(\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^N (x_i - \mu)^2\)</span>$</p>
+<ol>
+<li>
+<p><strong>Deriving <span class="arithmatex">\(\hat{\mu}_{\text{MLE}}\)</span>:</strong>
    $<span class="arithmatex">\(\frac{\partial \ell}{\partial \mu} = \frac{1}{\sigma^2} \sum_{i=1}^N (x_i - \mu) = 0 \implies \hat{\mu}_{\text{MLE}} = \frac{1}{N} \sum_{i=1}^N x_i = \bar{x}\)</span>$
    <span class="arithmatex">\(\mathbb{E}[\hat{\mu}_{\text{MLE}}] = \frac{1}{N} \sum \mathbb{E}[X_i] = \mu\)</span> (unbiased).</p>
-<ol>
+</li>
 <li>
 <p><strong>Deriving <span class="arithmatex">\(\hat{\sigma}^2_{\text{MLE}}\)</span>:</strong>
    Let <span class="arithmatex">\(s = \sigma^2\)</span>:
@@ -5023,18 +5039,24 @@ As sample size <span class="arithmatex">\(n \to \infty\)</span>, the constants <
 Let <span class="arithmatex">\(X_1, X_2, \dots\)</span> be a sequence of independent and identically distributed (i.i.d.) random variables with finite expectation <span class="arithmatex">\(\mathbb{E}[X_i] = \mu &lt; \infty\)</span> and finite variance <span class="arithmatex">\(\text{Var}(X_i) = \sigma^2 &lt; \infty\)</span> (<span class="arithmatex">\(\sigma^2 &gt; 0\)</span>).
 Then the standardized sample mean converges in distribution to a standard normal random variable as <span class="arithmatex">\(n \to \infty\)</span>:
 $<span class="arithmatex">\(\frac{\bar{X}_n - \mu}{\sigma / \sqrt{n}} \xrightarrow{d} \mathcal{N}(0, 1)\)</span>$</p>
-<p><strong>Minimal Conditions:</strong>
-1. <strong>Finite Variance:</strong> <span class="arithmatex">\(\sigma^2 &lt; \infty\)</span>.
-2. <strong>Independence:</strong> Weak dependence is permitted under mixing conditions, but strong correlations invalidate the standard rate.</p>
-<p><strong>Breakdown Cases:</strong>
-- <strong>Heavy-Tailed Distributions (Infinite Variance):</strong> The <strong>Cauchy distribution</strong> (<span class="arithmatex">\(f(x) = \frac{1}{\pi(1+x^2)}\)</span>) or Pareto distributions with shape <span class="arithmatex">\(\alpha \le 2\)</span> have undefined or infinite variance. The average of <span class="arithmatex">\(n\)</span> Cauchy variables is <em>identically Cauchy</em>, never converging to a Gaussian!
-- <strong>Non-identically distributed variables with dominating outliers:</strong> Unless the Lindeberg or Lyapunov conditions are satisfied, a few extreme variables can prevent convergence.</p>
+<p><strong>Minimal Conditions:</strong></p>
+<ol>
+<li><strong>Finite Variance:</strong> <span class="arithmatex">\(\sigma^2 &lt; \infty\)</span>.</li>
+<li><strong>Independence:</strong> Weak dependence is permitted under mixing conditions, but strong correlations invalidate the standard rate.</li>
+</ol>
+<p><strong>Breakdown Cases:</strong></p>
+<ul>
+<li><strong>Heavy-Tailed Distributions (Infinite Variance):</strong> The <strong>Cauchy distribution</strong> (<span class="arithmatex">\(f(x) = \frac{1}{\pi(1+x^2)}\)</span>) or Pareto distributions with shape <span class="arithmatex">\(\alpha \le 2\)</span> have undefined or infinite variance. The average of <span class="arithmatex">\(n\)</span> Cauchy variables is <em>identically Cauchy</em>, never converging to a Gaussian!</li>
+<li><strong>Non-identically distributed variables with dominating outliers:</strong> Unless the Lindeberg or Lyapunov conditions are satisfied, a few extreme variables can prevent convergence.</li>
+</ul>
 <hr />
 <h3 id="q4-distinguish-between-type-i-alpha-and-type-ii-beta-errors-what-is-statistical-power-1-beta-and-how-do-you-calculate-the-minimum-sample-size-for-an-ab-test">Q4: Distinguish between Type I (<span class="arithmatex">\(\alpha\)</span>) and Type II (<span class="arithmatex">\(\beta\)</span>) errors. What is statistical power (<span class="arithmatex">\(1-\beta\)</span>), and how do you calculate the minimum sample size for an A/B test?<a class="headerlink" href="#q4-distinguish-between-type-i-alpha-and-type-ii-beta-errors-what-is-statistical-power-1-beta-and-how-do-you-calculate-the-minimum-sample-size-for-an-ab-test" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>Type I Error (<span class="arithmatex">\(\alpha\)</span>):</strong> Rejecting the null hypothesis <span class="arithmatex">\(H_0\)</span> when <span class="arithmatex">\(H_0\)</span> is actually true (False Positive). We set <span class="arithmatex">\(\alpha\)</span> (typically <span class="arithmatex">\(0.05\)</span>).
-- <strong>Type II Error (<span class="arithmatex">\(\beta\)</span>):</strong> Failing to reject <span class="arithmatex">\(H_0\)</span> when <span class="arithmatex">\(H_0\)</span> is actually false (False Negative).
-- <strong>Statistical Power (<span class="arithmatex">\(1 - \beta\)</span>):</strong> The probability of correctly detecting a real effect of a given magnitude (typically <span class="arithmatex">\(0.80\)</span>).</p>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li><strong>Type I Error (<span class="arithmatex">\(\alpha\)</span>):</strong> Rejecting the null hypothesis <span class="arithmatex">\(H_0\)</span> when <span class="arithmatex">\(H_0\)</span> is actually true (False Positive). We set <span class="arithmatex">\(\alpha\)</span> (typically <span class="arithmatex">\(0.05\)</span>).</li>
+<li><strong>Type II Error (<span class="arithmatex">\(\beta\)</span>):</strong> Failing to reject <span class="arithmatex">\(H_0\)</span> when <span class="arithmatex">\(H_0\)</span> is actually false (False Negative).</li>
+<li><strong>Statistical Power (<span class="arithmatex">\(1 - \beta\)</span>):</strong> The probability of correctly detecting a real effect of a given magnitude (typically <span class="arithmatex">\(0.80\)</span>).</li>
+</ul>
 <p><strong>Sample Size Formula:</strong>
 For testing a difference between two proportions <span class="arithmatex">\(p_1\)</span> and <span class="arithmatex">\(p_2\)</span> with pooled variance <span class="arithmatex">\(\bar{p} = \frac{p_1 + p_2}{2}\)</span> and Minimum Detectable Effect <span class="arithmatex">\(\delta = |p_1 - p_2|\)</span>:
 $<span class="arithmatex">\(N = \frac{2 \left( Z_{1 - \alpha/2} + Z_{1 - \beta} \right)^2 \bar{p}(1 - \bar{p})}{\delta^2}\)</span>$
@@ -5047,18 +5069,24 @@ When testing a single hypothesis at <span class="arithmatex">\(\alpha = 0.05\)</
 When testing <span class="arithmatex">\(M\)</span> independent true null hypotheses simultaneously, the <strong>Family-Wise Error Rate (FWER)</strong> is:
 $<span class="arithmatex">\(\text{FWER} = P(\ge 1 \text{ false positive}) = 1 - (1 - \alpha)^M\)</span>$
 For <span class="arithmatex">\(M = 20\)</span>: <span class="arithmatex">\(\text{FWER} = 1 - (0.95)^{20} \approx 0.6415\)</span> (<span class="arithmatex">\(64.2\%\)</span> false alarm probability!).</p>
-<p><strong>Remedies:</strong>
-1. <strong>Bonferroni Correction (Controls FWER):</strong>
+<p><strong>Remedies:</strong></p>
+<ol>
+<li>
+<p><strong>Bonferroni Correction (Controls FWER):</strong>
    Enforce individual test significance threshold <span class="arithmatex">\(\alpha' = \frac{\alpha}{M}\)</span>.
    By Boole's inequality:
    $<span class="arithmatex">\(P\left( \bigcup_{i=1}^M (p_i \le \alpha') \right) \le \sum_{i=1}^M P(p_i \le \alpha') = M \cdot \frac{\alpha}{M} = \alpha\)</span>$
-   Guarantees FWER <span class="arithmatex">\(\le \alpha\)</span>, but is highly conservative, suppressing statistical power.
-2. <strong>Benjamini-Hochberg Procedure (Controls False Discovery Rate - FDR):</strong>
+   Guarantees FWER <span class="arithmatex">\(\le \alpha\)</span>, but is highly conservative, suppressing statistical power.</p>
+</li>
+<li>
+<p><strong>Benjamini-Hochberg Procedure (Controls False Discovery Rate - FDR):</strong>
    Controls <span class="arithmatex">\(\text{FDR} = \mathbb{E}\left[\frac{\text{False Discoveries}}{\text{Total Discoveries}}\right]\)</span>.
    Sort all <span class="arithmatex">\(M\)</span> p-values: <span class="arithmatex">\(p_{(1)} \le p_{(2)} \le \dots \le p_{(M)}\)</span>.
    Find largest index <span class="arithmatex">\(k\)</span> such that:
    $<span class="arithmatex">\(p_{(k)} \le \frac{k}{M} Q\)</span>$
    Reject all null hypotheses for <span class="arithmatex">\(i \le k\)</span>. Provides vastly higher power while strictly bounding the expected fraction of false discoveries.</p>
+</li>
+</ol>
 <hr />
 <h3 id="q6-explain-the-mathematical-connection-between-maximum-a-posteriori-map-estimation-and-l2l1-regularization">Q6: Explain the mathematical connection between Maximum A Posteriori (MAP) estimation and L2/L1 regularization.<a class="headerlink" href="#q6-explain-the-mathematical-connection-between-maximum-a-posteriori-map-estimation-and-l2l1-regularization" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -5086,29 +5114,35 @@ $<span class="arithmatex">\(\log P(\mathbf{y} \mid X, \mathbf{w}) = -\frac{1}{2\
 </ol>
 <hr />
 <h3 id="q7-what-is-the-difference-between-a-frequentist-95-confidence-interval-and-a-bayesian-95-credible-interval">Q7: What is the difference between a Frequentist 95% Confidence Interval and a Bayesian 95% Credible Interval?<a class="headerlink" href="#q7-what-is-the-difference-between-a-frequentist-95-confidence-interval-and-a-bayesian-95-credible-interval" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>Frequentist 95% Confidence Interval:</strong>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li>
+<p><strong>Frequentist 95% Confidence Interval:</strong>
   The true parameter <span class="arithmatex">\(\theta^*\)</span> is a fixed, non-random physical constant. The computed interval <span class="arithmatex">\([L(D), U(D)]\)</span> is a random variable that varies from sample to sample.
-  <strong>Meaning:</strong> If the data collection experiment is replicated an infinite number of times under identical conditions, 95% of the resulting confidence intervals will encompass <span class="arithmatex">\(\theta^*\)</span>. For any <em>specific, observed</em> interval (e.g., <span class="arithmatex">\([3.2, 5.8]\)</span>), the statement <em>"there is a 95% probability that <span class="arithmatex">\(\theta^*\)</span> lies between 3.2 and 5.8"</em> is mathematically invalid—it either does (<span class="arithmatex">\(100\%\)</span>) or does not (<span class="arithmatex">\(0\%\)</span>).
-- <strong>Bayesian 95% Credible Interval:</strong>
+  <strong>Meaning:</strong> If the data collection experiment is replicated an infinite number of times under identical conditions, 95% of the resulting confidence intervals will encompass <span class="arithmatex">\(\theta^*\)</span>. For any <em>specific, observed</em> interval (e.g., <span class="arithmatex">\([3.2, 5.8]\)</span>), the statement <em>"there is a 95% probability that <span class="arithmatex">\(\theta^*\)</span> lies between 3.2 and 5.8"</em> is mathematically invalid—it either does (<span class="arithmatex">\(100\%\)</span>) or does not (<span class="arithmatex">\(0\%\)</span>).</p>
+</li>
+<li>
+<p><strong>Bayesian 95% Credible Interval:</strong>
   The collected data <span class="arithmatex">\(D\)</span> is fixed and observed. The parameter <span class="arithmatex">\(\theta\)</span> is a random variable modeled by the posterior distribution <span class="arithmatex">\(P(\theta \mid D)\)</span>.
   <strong>Meaning:</strong> Integrating the posterior density:
   $<span class="arithmatex">\(\int_L^U P(\theta \mid D) d\theta = 0.95\)</span>$
   Given our prior assumptions and the observed data, there is <strong>genuinely a 95% subjective probability</strong> that the true parameter lies within <span class="arithmatex">\([L, U]\)</span>.</p>
+</li>
+</ul>
 <hr />
 <h2 id="12-mastery-ladder">12. Mastery Ladder<a class="headerlink" href="#12-mastery-ladder" title="Permanent link">&para;</a></h2>
 <p>Complete this checklist to verify your depth in probability and statistics for ML:</p>
-<ul>
-<li>[ ] <strong>L1:</strong> You can calculate joint, marginal, and conditional probabilities and apply Bayes' theorem to solve diagnostic test problems.</li>
-<li>[ ] <strong>L2:</strong> You can write out the PMF/PDF, expectation, and variance for Bernoulli, Binomial, Poisson, Gaussian, and Uniform distributions.</li>
-<li>[ ] <strong>L3:</strong> You can state the difference between probability mass (discrete) and probability density (continuous) and explain why <span class="arithmatex">\(f(x) &gt; 1\)</span> is valid.</li>
-<li>[ ] <strong>L4:</strong> You can prove the linearity of expectation and state when <span class="arithmatex">\(\text{Var}(X + Y) = \text{Var}(X) + \text{Var}(Y)\)</span>.</li>
-<li>[ ] <strong>L5:</strong> You can state the Law of Large Numbers and explain how it validates Monte Carlo simulations.</li>
-<li>[ ] <strong>L6:</strong> You can formulate the Central Limit Theorem and calculate standard errors (<span class="arithmatex">\(\sigma / \sqrt{n}\)</span>) for sample means.</li>
-<li>[ ] <strong>L7:</strong> You can derive the Maximum Likelihood Estimator for a 1D Gaussian distribution and prove why the variance MLE is biased by <span class="arithmatex">\(\frac{N-1}{N}\)</span>.</li>
-<li>[ ] <strong>L8:</strong> You can derive the exact conjugate Bayesian posterior for a Beta-Binomial model and calculate the MAP parameter estimate.</li>
-<li>[ ] <strong>L9:</strong> You can distinguish Type I (<span class="arithmatex">\(\alpha\)</span>) and Type II (<span class="arithmatex">\(\beta\)</span>) errors, compute statistical power, and estimate required sample sizes for A/B tests.</li>
-<li>[ ] <strong>L10:</strong> You can explain how placing Gaussian and Laplace priors on model parameters mathematically produces Ridge (L2) and Lasso (L1) regularization under MAP estimation.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can calculate joint, marginal, and conditional probabilities and apply Bayes' theorem to solve diagnostic test problems.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can write out the PMF/PDF, expectation, and variance for Bernoulli, Binomial, Poisson, Gaussian, and Uniform distributions.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can state the difference between probability mass (discrete) and probability density (continuous) and explain why <span class="arithmatex">\(f(x) &gt; 1\)</span> is valid.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can prove the linearity of expectation and state when <span class="arithmatex">\(\text{Var}(X + Y) = \text{Var}(X) + \text{Var}(Y)\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can state the Law of Large Numbers and explain how it validates Monte Carlo simulations.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can formulate the Central Limit Theorem and calculate standard errors (<span class="arithmatex">\(\sigma / \sqrt{n}\)</span>) for sample means.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can derive the Maximum Likelihood Estimator for a 1D Gaussian distribution and prove why the variance MLE is biased by <span class="arithmatex">\(\frac{N-1}{N}\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can derive the exact conjugate Bayesian posterior for a Beta-Binomial model and calculate the MAP parameter estimate.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can distinguish Type I (<span class="arithmatex">\(\alpha\)</span>) and Type II (<span class="arithmatex">\(\beta\)</span>) errors, compute statistical power, and estimate required sample sizes for A/B tests.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can explain how placing Gaussian and Laplace priors on model parameters mathematically produces Ridge (L2) and Lasso (L1) regularization under MAP estimation.</li>
 </ul>
 
 

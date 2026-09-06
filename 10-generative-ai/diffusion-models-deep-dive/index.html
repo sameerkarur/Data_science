@@ -4226,10 +4226,12 @@
 </div>
 <hr />
 <h2 id="1-the-big-picture-non-equilibrium-thermodynamics-to-generative-ai">1. The Big Picture: Non-Equilibrium Thermodynamics to Generative AI<a class="headerlink" href="#1-the-big-picture-non-equilibrium-thermodynamics-to-generative-ai" title="Permanent link">&para;</a></h2>
-<p>Generative modeling seeks to sample high-dimensional data <span class="arithmatex">\(\mathbf{x} \sim p_{\text{data}}(\mathbf{x})\)</span> (e.g. photorealistic images, audio waveforms, molecular structures). Prior paradigms exhibited structural limitations:
-- <strong>Generative Adversarial Networks (GANs)</strong>: Train a minimax game between Generator and Discriminator. Prone to <strong>mode collapse</strong>, training instability, and lack of density coverage.
-- <strong>Variational Autoencoders (VAEs)</strong>: Optimize a variational lower bound (ELBO) over a single latent step. Prone to blurry samples due to injected prior assumptions and uncalibrated pixel MSE loss.
-- <strong>Autoregressive Models</strong>: Generate pixels sequentially (<span class="arithmatex">\(\mathcal{O}(H \times W)\)</span> steps), which is computationally prohibitive for high-resolution images.</p>
+<p>Generative modeling seeks to sample high-dimensional data <span class="arithmatex">\(\mathbf{x} \sim p_{\text{data}}(\mathbf{x})\)</span> (e.g. photorealistic images, audio waveforms, molecular structures). Prior paradigms exhibited structural limitations:</p>
+<ul>
+<li><strong>Generative Adversarial Networks (GANs)</strong>: Train a minimax game between Generator and Discriminator. Prone to <strong>mode collapse</strong>, training instability, and lack of density coverage.</li>
+<li><strong>Variational Autoencoders (VAEs)</strong>: Optimize a variational lower bound (ELBO) over a single latent step. Prone to blurry samples due to injected prior assumptions and uncalibrated pixel MSE loss.</li>
+<li><strong>Autoregressive Models</strong>: Generate pixels sequentially (<span class="arithmatex">\(\mathcal{O}(H \times W)\)</span> steps), which is computationally prohibitive for high-resolution images.</li>
+</ul>
 <p><strong>Diffusion Probabilistic Models</strong> (<a href="https://arxiv.org/abs/1503.03585">Sohl-Dickstein et al., 2015</a>; <a href="https://arxiv.org/abs/2006.11239">Ho et al., DDPM, 2020</a>) frame generation as the <strong>reversal of a physical diffusion process</strong>. </p>
 <pre class="mermaid"><code>flowchart LR
     X0["Clean Image x_0\n(Complex Multimodal Distribution)"] --&gt;|"Forward Diffusion q(x_t | x_{t-1})\n(Gradual Gaussian Noise Injection)"| Xt["Noisy Intermediate x_t"]
@@ -4351,10 +4353,14 @@ q(\mathbf{x}_{t-1} \mid \mathbf{x}_t, \mathbf{x}_0) = q(\mathbf{x}_t \mid \mathb
     end</code></pre>
 <h3 id="key-architectural-elements">Key Architectural Elements<a class="headerlink" href="#key-architectural-elements" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Sinusoidal Timestep Embeddings</strong>: Analogous to Transformer position embeddings, scalar timestep <span class="arithmatex">\(t \in [1, 1000]\)</span> is mapped to a continuous vector via geometric frequencies:
+<li>
+<p><strong>Sinusoidal Timestep Embeddings</strong>: Analogous to Transformer position embeddings, scalar timestep <span class="arithmatex">\(t \in [1, 1000]\)</span> is mapped to a continuous vector via geometric frequencies:
    $<span class="arithmatex">\(\text{emb}_{(2i)} = \sin\left(\frac{t}{10000^{2i/d}}\right), \quad \text{emb}_{(2i+1)} = \cos\left(\frac{t}{10000^{2i/d}}\right)\)</span>$
-   Passed through a 2-layer MLP and injected into every residual block via feature-wise affine modulation (AdaGN).</li>
-<li><strong>Skip Connections</strong>: Direct high-resolution tensor pathways between encoder and decoder preserve fine spatial details.</li>
+   Passed through a 2-layer MLP and injected into every residual block via feature-wise affine modulation (AdaGN).</p>
+</li>
+<li>
+<p><strong>Skip Connections</strong>: Direct high-resolution tensor pathways between encoder and decoder preserve fine spatial details.</p>
+</li>
 <li><strong>Cross-Attention Conditioning</strong>: Spatial latent features query prompt token representations produced by a frozen text encoder (CLIP ViT-L/14 or T5-XXL).</li>
 </ol>
 <hr />
@@ -4387,9 +4393,11 @@ q(\mathbf{x}_{t-1} \mid \mathbf{x}_t, \mathbf{x}_0) = q(\mathbf{x}_t \mid \mathb
     Drop -- No --&gt; RealCond["Condition = c (Conditional)"]
     NullCond &amp; RealCond --&gt; UNet["Train Single U-Net ε_θ(z_t, t, c)"]</code></pre>
 <h3 id="mathematical-formulation">Mathematical Formulation<a class="headerlink" href="#mathematical-formulation" title="Permanent link">&para;</a></h3>
-<p>During inference, evaluate the network twice at each timestep:
-1. Conditional prediction: <span class="arithmatex">\(\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, c)\)</span>
-2. Unconditional prediction: <span class="arithmatex">\(\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \emptyset)\)</span></p>
+<p>During inference, evaluate the network twice at each timestep:</p>
+<ol>
+<li>Conditional prediction: <span class="arithmatex">\(\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, c)\)</span></li>
+<li>Unconditional prediction: <span class="arithmatex">\(\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \emptyset)\)</span></li>
+</ol>
 <p>The guided noise prediction <span class="arithmatex">\(\tilde{\boldsymbol{\epsilon}}_\theta\)</span> extrapolates away from the unconditional baseline in the direction of the prompt:</p>
 <div class="arithmatex">\[
 \tilde{\boldsymbol{\epsilon}}_\theta(\mathbf{x}_t, t, c) = \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \emptyset) + s \cdot \left( \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, c) - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \emptyset) \right)
@@ -4407,19 +4415,25 @@ q(\mathbf{x}_{t-1} \mid \mathbf{x}_t, \mathbf{x}_0) = q(\mathbf{x}_t \mid \mathb
     Schedulers --&gt; DDIM["DDIM (Song et al. 2020)\nDeterministic Non-Markovian ODE\n20 - 50 steps\nExact trajectory inversion"]
     Schedulers --&gt; DPMSolver["DPMSolver / UniPC (2022-2023)\nHigh-Order Analytical ODE Solver\n15 - 20 steps\nState-of-the-Art Fast Inference"]</code></pre>
 <ul>
-<li><strong>DDPM</strong>: Samples with random Gaussian noise injection at every step:
-  $<span class="arithmatex">\(\mathbf{x}_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( \mathbf{x}_t - \frac{\beta_t}{\sqrt{1 - \bar{\alpha}_t}} \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t) \right) + \sigma_t \mathbf{z}, \quad \mathbf{z} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})\)</span>$</li>
-<li><strong>DDIM (Denoising Diffusion Implicit Models)</strong>: Formulates reverse diffusion as an ordinary differential equation (ODE) with zero variance (<span class="arithmatex">\(\sigma_t = 0\)</span>):
+<li>
+<p><strong>DDPM</strong>: Samples with random Gaussian noise injection at every step:
+  $<span class="arithmatex">\(\mathbf{x}_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( \mathbf{x}_t - \frac{\beta_t}{\sqrt{1 - \bar{\alpha}_t}} \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t) \right) + \sigma_t \mathbf{z}, \quad \mathbf{z} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})\)</span>$</p>
+</li>
+<li>
+<p><strong>DDIM (Denoising Diffusion Implicit Models)</strong>: Formulates reverse diffusion as an ordinary differential equation (ODE) with zero variance (<span class="arithmatex">\(\sigma_t = 0\)</span>):
   $<span class="arithmatex">\(\mathbf{x}_{t-1} = \sqrt{\bar{\alpha}_{t-1}} \left( \frac{\mathbf{x}_t - \sqrt{1 - \bar{\alpha}_t}\boldsymbol{\epsilon}_\theta}{\sqrt{\bar{\alpha}_t}} \right) + \sqrt{1 - \bar{\alpha}_{t-1}} \boldsymbol{\epsilon}_\theta\)</span>$
-  Enables deterministic generation in <span class="arithmatex">\(20-50\)</span> steps and exact image inversion (encoding images back into noise for editing).</li>
+  Enables deterministic generation in <span class="arithmatex">\(20-50\)</span> steps and exact image inversion (encoding images back into noise for editing).</p>
+</li>
 </ul>
 <hr />
 <h2 id="9-complete-pytorch-implementation-from-scratch">9. Complete PyTorch Implementation from Scratch<a class="headerlink" href="#9-complete-pytorch-implementation-from-scratch" title="Permanent link">&para;</a></h2>
-<p>Below is a self-contained implementation of a 1D Diffusion Model featuring:
-- <strong>Linear Beta Variance Schedule &amp; Closed-Form Forward Noising</strong>.
-- <strong>Sinusoidal Timestep Embedding</strong>.
-- <strong>1D Residual Denoising MLP Network</strong>.
-- <strong>Complete Reverse DDPM Sampling Loop</strong>.</p>
+<p>Below is a self-contained implementation of a 1D Diffusion Model featuring:</p>
+<ul>
+<li><strong>Linear Beta Variance Schedule &amp; Closed-Form Forward Noising</strong>.</li>
+<li><strong>Sinusoidal Timestep Embedding</strong>.</li>
+<li><strong>1D Residual Denoising MLP Network</strong>.</li>
+<li><strong>Complete Reverse DDPM Sampling Loop</strong>.</li>
+</ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
@@ -4623,10 +4637,12 @@ By induction across all <span class="arithmatex">\(t\)</span> steps, let <span c
 $<span class="arithmatex">\(\mathbf{x}_t = \sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1 - \bar{\alpha}_t}\boldsymbol{\epsilon}, \quad \boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})\)</span>$</p>
 <hr />
 <h3 id="q2-why-did-ddpm-parameterize-the-network-to-predict-noise-boldsymbolepsilon-rather-than-the-clean-image-mathbfx_0-directly">Q2: Why did DDPM parameterize the network to predict noise <span class="arithmatex">\(\boldsymbol{\epsilon}\)</span> rather than the clean image <span class="arithmatex">\(\mathbf{x}_0\)</span> directly?<a class="headerlink" href="#q2-why-did-ddpm-parameterize-the-network-to-predict-noise-boldsymbolepsilon-rather-than-the-clean-image-mathbfx_0-directly" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-1. <strong>Connection to Score Matching</strong>: As shown by Song et al., predicting noise is equivalent to estimating the Stein score <span class="arithmatex">\(\nabla_\mathbf{x} \log p(\mathbf{x})\)</span>. Predicting <span class="arithmatex">\(\boldsymbol{\epsilon}\)</span> models the direction towards high-probability regions of the data manifold.
-2. <strong>Loss Landscape &amp; Multi-frequency Dynamics</strong>: If predicting <span class="arithmatex">\(\mathbf{x}_0\)</span> directly at high timesteps <span class="arithmatex">\(t \approx T\)</span> (where <span class="arithmatex">\(\mathbf{x}_T\)</span> is nearly pure noise), the <span class="arithmatex">\(L_2\)</span> loss forces the network to predict the conditional expectation <span class="arithmatex">\(\mathbb{E}[\mathbf{x}_0 \mid \mathbf{x}_T]\)</span>, which is the blurry average of all images in the training set. Predicting <span class="arithmatex">\(\boldsymbol{\epsilon}\)</span> normalizes the target distribution: the noise is always zero-mean and unit-variance across all timesteps <span class="arithmatex">\(t\)</span>, preventing the regression loss from collapsing early training dynamics towards blurry mean modes.
-3. Ho et al. empirically proved that predicting <span class="arithmatex">\(\boldsymbol{\epsilon}\)</span> yields vastly superior FID scores compared to predicting <span class="arithmatex">\(\mathbf{x}_0\)</span> or the posterior mean <span class="arithmatex">\(\tilde{\boldsymbol{\mu}}_t\)</span>.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ol>
+<li><strong>Connection to Score Matching</strong>: As shown by Song et al., predicting noise is equivalent to estimating the Stein score <span class="arithmatex">\(\nabla_\mathbf{x} \log p(\mathbf{x})\)</span>. Predicting <span class="arithmatex">\(\boldsymbol{\epsilon}\)</span> models the direction towards high-probability regions of the data manifold.</li>
+<li><strong>Loss Landscape &amp; Multi-frequency Dynamics</strong>: If predicting <span class="arithmatex">\(\mathbf{x}_0\)</span> directly at high timesteps <span class="arithmatex">\(t \approx T\)</span> (where <span class="arithmatex">\(\mathbf{x}_T\)</span> is nearly pure noise), the <span class="arithmatex">\(L_2\)</span> loss forces the network to predict the conditional expectation <span class="arithmatex">\(\mathbb{E}[\mathbf{x}_0 \mid \mathbf{x}_T]\)</span>, which is the blurry average of all images in the training set. Predicting <span class="arithmatex">\(\boldsymbol{\epsilon}\)</span> normalizes the target distribution: the noise is always zero-mean and unit-variance across all timesteps <span class="arithmatex">\(t\)</span>, preventing the regression loss from collapsing early training dynamics towards blurry mean modes.</li>
+<li>Ho et al. empirically proved that predicting <span class="arithmatex">\(\boldsymbol{\epsilon}\)</span> yields vastly superior FID scores compared to predicting <span class="arithmatex">\(\mathbf{x}_0\)</span> or the posterior mean <span class="arithmatex">\(\tilde{\boldsymbol{\mu}}_t\)</span>.</li>
+</ol>
 <hr />
 <h3 id="q3-derive-classifier-free-guidance-cfg-why-does-extrapolating-between-conditional-and-unconditional-scores-improve-text-fidelity">Q3: Derive Classifier-Free Guidance (CFG). Why does extrapolating between conditional and unconditional scores improve text fidelity?<a class="headerlink" href="#q3-derive-classifier-free-guidance-cfg-why-does-extrapolating-between-conditional-and-unconditional-scores-improve-text-fidelity" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
@@ -4643,32 +4659,40 @@ When <span class="arithmatex">\(s &gt; 1\)</span>, the model sharpens the probab
 <hr />
 <h3 id="q4-explain-how-latent-diffusion-models-ldms-achieve-a-64times-reduction-in-computational-operations-without-sacrificing-high-frequency-perceptual-fidelity">Q4: Explain how Latent Diffusion Models (LDMs) achieve a <span class="arithmatex">\(64\times\)</span> reduction in computational operations without sacrificing high-frequency perceptual fidelity.<a class="headerlink" href="#q4-explain-how-latent-diffusion-models-ldms-achieve-a-64times-reduction-in-computational-operations-without-sacrificing-high-frequency-perceptual-fidelity" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
-Natural images contain two distinct regimes of information:
-1. <strong>Perceptual Compression</strong>: High-frequency details (individual pores, hair strands, imperceptible sensor noise) that contribute little to semantic understanding.
-2. <strong>Semantic / Conceptual Content</strong>: Global object layouts, geometry, lighting, and relations.<br />
+Natural images contain two distinct regimes of information:</p>
+<ol>
+<li><strong>Perceptual Compression</strong>: High-frequency details (individual pores, hair strands, imperceptible sensor noise) that contribute little to semantic understanding.</li>
+<li>
+<p><strong>Semantic / Conceptual Content</strong>: Global object layouts, geometry, lighting, and relations.<br />
 Pixel-space diffusion wastes over <span class="arithmatex">\(90\%\)</span> of its capacity modeling stochastic high-frequency pixel variations.<br />
-LDM decouples these stages:
-- A pretrained VAE performs perceptual downsampling by a factor of <span class="arithmatex">\(f = 8\)</span>, reducing spatial dimensions from <span class="arithmatex">\(512 \times 512\)</span> to <span class="arithmatex">\(64 \times 64\)</span>.
-- The number of spatial tokens processed by self-attention layers in the U-Net drops from <span class="arithmatex">\((512/8)^2 = 4096\)</span> to <span class="arithmatex">\((64/8)^2 = 64\)</span>. Because attention is quadratic in spatial resolution, attention operations drop by <span class="arithmatex">\((64)^2 = 4096\times\)</span>, and total FLOPs decrease by <span class="arithmatex">\(64\times\)</span>.
-- The VAE decoder then reconstructs high-frequency textures in a single deterministic pass.</p>
+LDM decouples these stages:</p>
+</li>
+<li>
+<p>A pretrained VAE performs perceptual downsampling by a factor of <span class="arithmatex">\(f = 8\)</span>, reducing spatial dimensions from <span class="arithmatex">\(512 \times 512\)</span> to <span class="arithmatex">\(64 \times 64\)</span>.</p>
+</li>
+<li>The number of spatial tokens processed by self-attention layers in the U-Net drops from <span class="arithmatex">\((512/8)^2 = 4096\)</span> to <span class="arithmatex">\((64/8)^2 = 64\)</span>. Because attention is quadratic in spatial resolution, attention operations drop by <span class="arithmatex">\((64)^2 = 4096\times\)</span>, and total FLOPs decrease by <span class="arithmatex">\(64\times\)</span>.</li>
+<li>The VAE decoder then reconstructs high-frequency textures in a single deterministic pass.</li>
+</ol>
 <hr />
 <h3 id="q5-contrast-ddpm-and-ddim-sampling-why-can-ddim-sample-images-in-20-steps-while-ddpm-requires-1000-steps">Q5: Contrast DDPM and DDIM sampling. Why can DDIM sample images in 20 steps while DDPM requires 1,000 steps?<a class="headerlink" href="#q5-contrast-ddpm-and-ddim-sampling-why-can-ddim-sample-images-in-20-steps-while-ddpm-requires-1000-steps" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>DDPM</strong>: The reverse process is strictly <strong>Markovian</strong>: <span class="arithmatex">\(p_\theta(\mathbf{x}_{t-1} \mid \mathbf{x}_t)\)</span> requires adding stochastic Gaussian noise <span class="arithmatex">\(\sigma_t \mathbf{z}\)</span> at every step. If you skip steps (e.g. jumping from <span class="arithmatex">\(t=100\)</span> to <span class="arithmatex">\(t=50\)</span>), the accumulated variance violates the Markov assumption, resulting in blurry, degraded outputs. Hence DDPM requires small steps (<span class="arithmatex">\(T=1000\)</span>).
-- <strong>DDIM</strong>: Observes that the marginal distributions <span class="arithmatex">\(q(\mathbf{x}_t \mid \mathbf{x}_0)\)</span> depend only on <span class="arithmatex">\(\mathbf{x}_0\)</span>, not on the Markovian assumption. Song et al. constructed a family of <strong>non-Markovian forward processes</strong> that share the exact same marginals <span class="arithmatex">\(q(\mathbf{x}_t \mid \mathbf{x}_0)\)</span> as DDPM. Setting the forward noise variance to zero (<span class="arithmatex">\(\sigma_t = 0\)</span>) turns the reverse process into a <strong>deterministic Ordinary Differential Equation (ODE)</strong>. Because ODE trajectories are smooth and continuous, higher-order numerical solvers can take large discrete steps (<span class="arithmatex">\(20-50\)</span> steps) along the trajectory without accumulating random walk variance drift.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>DDPM</strong>: The reverse process is strictly <strong>Markovian</strong>: <span class="arithmatex">\(p_\theta(\mathbf{x}_{t-1} \mid \mathbf{x}_t)\)</span> requires adding stochastic Gaussian noise <span class="arithmatex">\(\sigma_t \mathbf{z}\)</span> at every step. If you skip steps (e.g. jumping from <span class="arithmatex">\(t=100\)</span> to <span class="arithmatex">\(t=50\)</span>), the accumulated variance violates the Markov assumption, resulting in blurry, degraded outputs. Hence DDPM requires small steps (<span class="arithmatex">\(T=1000\)</span>).</li>
+<li><strong>DDIM</strong>: Observes that the marginal distributions <span class="arithmatex">\(q(\mathbf{x}_t \mid \mathbf{x}_0)\)</span> depend only on <span class="arithmatex">\(\mathbf{x}_0\)</span>, not on the Markovian assumption. Song et al. constructed a family of <strong>non-Markovian forward processes</strong> that share the exact same marginals <span class="arithmatex">\(q(\mathbf{x}_t \mid \mathbf{x}_0)\)</span> as DDPM. Setting the forward noise variance to zero (<span class="arithmatex">\(\sigma_t = 0\)</span>) turns the reverse process into a <strong>deterministic Ordinary Differential Equation (ODE)</strong>. Because ODE trajectories are smooth and continuous, higher-order numerical solvers can take large discrete steps (<span class="arithmatex">\(20-50\)</span> steps) along the trajectory without accumulating random walk variance drift.</li>
+</ul>
 <hr />
 <h2 id="12-mastery-ladder">12. Mastery Ladder<a class="headerlink" href="#12-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Formulate the Gaussian transition kernel <span class="arithmatex">\(q(\mathbf{x}_t \mid \mathbf{x}_{t-1})\)</span> in the forward diffusion process.</li>
-<li>[ ] <strong>L2:</strong> Prove the closed-form sampling formula <span class="arithmatex">\(\mathbf{x}_t = \sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1 - \bar{\alpha}_t}\boldsymbol{\epsilon}\)</span> by induction.</li>
-<li>[ ] <strong>L3:</strong> Derive the posterior mean <span class="arithmatex">\(\tilde{\boldsymbol{\mu}}_t\)</span> and explain why predicting noise <span class="arithmatex">\(\boldsymbol{\epsilon}\)</span> suffices for denoising.</li>
-<li>[ ] <strong>L4:</strong> Write the simplified DDPM MSE loss function <span class="arithmatex">\(\mathcal{L}_{\text{simple}}(\theta)\)</span>.</li>
-<li>[ ] <strong>L5:</strong> Explain the relationship between noise prediction <span class="arithmatex">\(\boldsymbol{\epsilon}_\theta\)</span> and the Stein score <span class="arithmatex">\(\nabla_\mathbf{x} \log p(\mathbf{x})\)</span>.</li>
-<li>[ ] <strong>L6:</strong> Describe how sinusoidal timestep embeddings are injected into U-Net residual blocks.</li>
-<li>[ ] <strong>L7:</strong> Explain the two stages of Latent Diffusion Models and calculate the compute reduction factor.</li>
-<li>[ ] <strong>L8:</strong> Derive the Classifier-Free Guidance (CFG) equation and explain the role of guidance scale <span class="arithmatex">\(s\)</span>.</li>
-<li>[ ] <strong>L9:</strong> Contrast the stochastic Markovian sampling of DDPM with the deterministic ODE sampling of DDIM.</li>
-<li>[ ] <strong>L10:</strong> Implement a functional 1D diffusion model with forward schedule, U-Net/MLP denoiser, and reverse sampling loop in PyTorch.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Formulate the Gaussian transition kernel <span class="arithmatex">\(q(\mathbf{x}_t \mid \mathbf{x}_{t-1})\)</span> in the forward diffusion process.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Prove the closed-form sampling formula <span class="arithmatex">\(\mathbf{x}_t = \sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1 - \bar{\alpha}_t}\boldsymbol{\epsilon}\)</span> by induction.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Derive the posterior mean <span class="arithmatex">\(\tilde{\boldsymbol{\mu}}_t\)</span> and explain why predicting noise <span class="arithmatex">\(\boldsymbol{\epsilon}\)</span> suffices for denoising.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Write the simplified DDPM MSE loss function <span class="arithmatex">\(\mathcal{L}_{\text{simple}}(\theta)\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Explain the relationship between noise prediction <span class="arithmatex">\(\boldsymbol{\epsilon}_\theta\)</span> and the Stein score <span class="arithmatex">\(\nabla_\mathbf{x} \log p(\mathbf{x})\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Describe how sinusoidal timestep embeddings are injected into U-Net residual blocks.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Explain the two stages of Latent Diffusion Models and calculate the compute reduction factor.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Derive the Classifier-Free Guidance (CFG) equation and explain the role of guidance scale <span class="arithmatex">\(s\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Contrast the stochastic Markovian sampling of DDPM with the deterministic ODE sampling of DDIM.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Implement a functional 1D diffusion model with forward schedule, U-Net/MLP denoiser, and reverse sampling loop in PyTorch.</li>
 </ul>
 
 

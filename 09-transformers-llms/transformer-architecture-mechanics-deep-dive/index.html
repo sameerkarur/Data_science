@@ -4366,11 +4366,13 @@
         AllToAll --&gt; FFN["Position-wise FFN / SwiGLU"]
         FFN --&gt; ResidualStream["Residual Stream (Pre-LN / RMSNorm)"]
     end</code></pre>
-<p>The original architecture was an <strong>Encoder-Decoder</strong> designed for bilingual machine translation. Over the subsequent decade, modern large language models converged primarily onto the <strong>Decoder-only</strong> autoregressive architecture (GPT, LLaMA, Mistral, DeepSeek), incorporating architectural enhancements including:
-- <strong>Pre-Layer Normalization</strong> or <strong>RMSNorm</strong> for training stability without delicate warmup schedules.
-- <strong>Rotary Position Embeddings (RoPE)</strong> or <strong>ALiBi</strong> replacing static sinusoidal absolute embeddings.
-- <strong>SwiGLU</strong> activation replacing standard ReLU/GELU feed-forward networks.
-- <strong>KV Caching</strong> during inference to convert <span class="arithmatex">\(\mathcal{O}(N^2)\)</span> autoregressive token generation into <span class="arithmatex">\(\mathcal{O}(N)\)</span> compute per token.</p>
+<p>The original architecture was an <strong>Encoder-Decoder</strong> designed for bilingual machine translation. Over the subsequent decade, modern large language models converged primarily onto the <strong>Decoder-only</strong> autoregressive architecture (GPT, LLaMA, Mistral, DeepSeek), incorporating architectural enhancements including:</p>
+<ul>
+<li><strong>Pre-Layer Normalization</strong> or <strong>RMSNorm</strong> for training stability without delicate warmup schedules.</li>
+<li><strong>Rotary Position Embeddings (RoPE)</strong> or <strong>ALiBi</strong> replacing static sinusoidal absolute embeddings.</li>
+<li><strong>SwiGLU</strong> activation replacing standard ReLU/GELU feed-forward networks.</li>
+<li><strong>KV Caching</strong> during inference to convert <span class="arithmatex">\(\mathcal{O}(N^2)\)</span> autoregressive token generation into <span class="arithmatex">\(\mathcal{O}(N)\)</span> compute per token.</li>
+</ul>
 <pre class="mermaid"><code>flowchart LR
     subgraph OriginalTransformer["Original Transformer (2017)"]
         direction TB
@@ -4388,10 +4390,12 @@
 <h2 id="2-self-attention-mechanics-mathematical-foundations">2. Self-Attention Mechanics &amp; Mathematical Foundations<a class="headerlink" href="#2-self-attention-mechanics-mathematical-foundations" title="Permanent link">&para;</a></h2>
 <h3 id="21-the-query-key-value-formulation">2.1 The Query, Key, Value Formulation<a class="headerlink" href="#21-the-query-key-value-formulation" title="Permanent link">&para;</a></h3>
 <p>Let an input sequence of <span class="arithmatex">\(N\)</span> tokens embedded in dimension <span class="arithmatex">\(d_{\text{model}}\)</span> be represented as a matrix <span class="arithmatex">\(\mathbf{X} \in \mathbb{R}^{N \times d_{\text{model}}}\)</span>. </p>
-<p>The model projects <span class="arithmatex">\(\mathbf{X}\)</span> into three distinct vector spaces using learned linear transformation matrices:
-- <strong>Queries (<span class="arithmatex">\(\mathbf{Q}\)</span>)</strong>: What each token is searching for.
-- <strong>Keys (<span class="arithmatex">\(\mathbf{K}\)</span>)</strong>: What each token contains or offers to matching queries.
-- <strong>Values (<span class="arithmatex">\(\mathbf{V}\)</span>)</strong>: The actual informational payload extracted when a query matches a key.</p>
+<p>The model projects <span class="arithmatex">\(\mathbf{X}\)</span> into three distinct vector spaces using learned linear transformation matrices:</p>
+<ul>
+<li><strong>Queries (<span class="arithmatex">\(\mathbf{Q}\)</span>)</strong>: What each token is searching for.</li>
+<li><strong>Keys (<span class="arithmatex">\(\mathbf{K}\)</span>)</strong>: What each token contains or offers to matching queries.</li>
+<li><strong>Values (<span class="arithmatex">\(\mathbf{V}\)</span>)</strong>: The actual informational payload extracted when a query matches a key.</li>
+</ul>
 <div class="arithmatex">\[
 \mathbf{Q} = \mathbf{X} \mathbf{W}^Q, \quad \mathbf{K} = \mathbf{X} \mathbf{W}^K, \quad \mathbf{V} = \mathbf{X} \mathbf{W}^V
 \]</div>
@@ -4455,13 +4459,17 @@ p_i = \frac{e^{s_i}}{\sum_{j=1}^N e^{s_j}}
 \frac{\partial p_i}{\partial s_j} = p_i (\delta_{ij} - p_j), \quad \text{where } \delta_{ij} = \begin{cases} 1 &amp; \text{if } i = j \\ 0 &amp; \text{if } i \ne j \end{cases}
 \]</div>
 <p>As <span class="arithmatex">\(d_k\)</span> grows large (for instance, <span class="arithmatex">\(d_k = 64\)</span> gives <span class="arithmatex">\(\sigma = 8\)</span>; <span class="arithmatex">\(d_k = 128\)</span> gives <span class="arithmatex">\(\sigma \approx 11.3\)</span>), the logits <span class="arithmatex">\(s_i\)</span> diverge significantly in magnitude. In a set of <span class="arithmatex">\(N\)</span> Gaussian random variables with standard deviation <span class="arithmatex">\(\sqrt{d_k}\)</span>, the maximum logit <span class="arithmatex">\(s_{\max}\)</span> is on the order of <span class="arithmatex">\(\sqrt{2 \ln N} \cdot \sqrt{d_k}\)</span>.</p>
-<p>When <span class="arithmatex">\(s_{\max} - s_j \gg 1\)</span> for all <span class="arithmatex">\(j \ne \max\)</span>:
-- <span class="arithmatex">\(p_{\max} \to 1.0\)</span>
-- <span class="arithmatex">\(p_j \to 0.0\)</span> for all <span class="arithmatex">\(j \ne \max\)</span></p>
-<p>Evaluate the Jacobian in this saturated regime:
-- For the peak entry: <span class="arithmatex">\(\frac{\partial p_{\max}}{\partial s_{\max}} = p_{\max}(1 - p_{\max}) \approx 1(1 - 1) = 0\)</span>.
-- For all other entries: <span class="arithmatex">\(\frac{\partial p_j}{\partial s_j} = p_j(1 - p_j) \approx 0(1 - 0) = 0\)</span>.
-- Cross terms: <span class="arithmatex">\(\frac{\partial p_i}{\partial s_j} = -p_i p_j \approx 0\)</span>.</p>
+<p>When <span class="arithmatex">\(s_{\max} - s_j \gg 1\)</span> for all <span class="arithmatex">\(j \ne \max\)</span>:</p>
+<ul>
+<li><span class="arithmatex">\(p_{\max} \to 1.0\)</span></li>
+<li><span class="arithmatex">\(p_j \to 0.0\)</span> for all <span class="arithmatex">\(j \ne \max\)</span></li>
+</ul>
+<p>Evaluate the Jacobian in this saturated regime:</p>
+<ul>
+<li>For the peak entry: <span class="arithmatex">\(\frac{\partial p_{\max}}{\partial s_{\max}} = p_{\max}(1 - p_{\max}) \approx 1(1 - 1) = 0\)</span>.</li>
+<li>For all other entries: <span class="arithmatex">\(\frac{\partial p_j}{\partial s_j} = p_j(1 - p_j) \approx 0(1 - 0) = 0\)</span>.</li>
+<li>Cross terms: <span class="arithmatex">\(\frac{\partial p_i}{\partial s_j} = -p_i p_j \approx 0\)</span>.</li>
+</ul>
 <p>Every single element of the softmax Jacobian collapses to zero:</p>
 <div class="arithmatex">\[
 \lim_{d_k \to \infty} \left\| \frac{\partial \mathbf{p}}{\partial \mathbf{s}} \right\|_F = 0
@@ -4480,11 +4488,13 @@ p_i = \frac{e^{s_i}}{\sum_{j=1}^N e^{s_j}}
 <hr />
 <h2 id="3-multi-head-attention-mha">3. Multi-Head Attention (MHA)<a class="headerlink" href="#3-multi-head-attention-mha" title="Permanent link">&para;</a></h2>
 <h3 id="31-motivation-geometric-intuition">3.1 Motivation &amp; Geometric Intuition<a class="headerlink" href="#31-motivation-geometric-intuition" title="Permanent link">&para;</a></h3>
-<p>A single attention head computes a single convex combination of value vectors. However, a word or token in natural language engages in multiple simultaneous grammatical, syntactic, and semantic relationships:
-- In <em>"The animal didn't cross the street because it was too tired"</em>, the token <em>"it"</em> must simultaneously link to:
-  1. <em>"animal"</em> (coreference resolution / semantic subject).
-  2. <em>"tired"</em> (predicate attribute / causal reason).
-  3. <em>"cross"</em> (action being modulated).</p>
+<p>A single attention head computes a single convex combination of value vectors. However, a word or token in natural language engages in multiple simultaneous grammatical, syntactic, and semantic relationships:</p>
+<ul>
+<li>In <em>"The animal didn't cross the street because it was too tired"</em>, the token <em>"it"</em> must simultaneously link to:</li>
+<li><em>"animal"</em> (coreference resolution / semantic subject).</li>
+<li><em>"tired"</em> (predicate attribute / causal reason).</li>
+<li><em>"cross"</em> (action being modulated).</li>
+</ul>
 <p>A single attention distribution can only place high probability mass in one or two directions before blurring the value vectors into an uninformative mean. Multi-Head Attention solves this by projecting queries, keys, and values into <span class="arithmatex">\(h\)</span> distinct representation subspaces.</p>
 <pre class="mermaid"><code>flowchart TD
     X["Input X (N × d_model)"] --&gt; Q1["Q W_1^Q"]
@@ -4522,12 +4532,18 @@ p_i = \frac{e^{s_i}}{\sum_{j=1}^N e^{s_j}}
 <p>where <span class="arithmatex">\(\mathbf{W}^O \in \mathbb{R}^{(h \cdot d_v) \times d_{\text{model}}}\)</span> is the final output projection matrix.</p>
 <p>In standard architectures, <span class="arithmatex">\(d_k = d_v = \frac{d_{\text{model}}}{h}\)</span>. The concatenated dimension is <span class="arithmatex">\(h \cdot d_v = d_{\text{model}}\)</span>.</p>
 <h3 id="33-complexity-analysis">3.3 Complexity Analysis<a class="headerlink" href="#33-complexity-analysis" title="Permanent link">&para;</a></h3>
-<p>Let <span class="arithmatex">\(N\)</span> be sequence length and <span class="arithmatex">\(d = d_{\text{model}}\)</span>.
-1. <strong>Projections</strong>: Projecting <span class="arithmatex">\(\mathbf{X}\)</span> to <span class="arithmatex">\(\mathbf{Q}, \mathbf{K}, \mathbf{V}\)</span> costs <span class="arithmatex">\(3 \times \mathcal{O}(N d^2)\)</span>.
-2. <strong>Attention Scores <span class="arithmatex">\(\mathbf{Q} \mathbf{K}^T\)</span></strong>: For each of the <span class="arithmatex">\(h\)</span> heads, multiplying <span class="arithmatex">\((N \times d_k)\)</span> by <span class="arithmatex">\((d_k \times N)\)</span> costs <span class="arithmatex">\(\mathcal{O}(N^2 d_k)\)</span>. Across <span class="arithmatex">\(h\)</span> heads:
-   $<span class="arithmatex">\(h \cdot \mathcal{O}(N^2 d_k) = \mathcal{O}\left( N^2 \cdot (h d_k) \right) = \mathcal{O}(N^2 d)\)</span>$
-3. <strong>Softmax &amp; Weighting <span class="arithmatex">\(\mathbf{A} \mathbf{V}\)</span></strong>: Multiplying <span class="arithmatex">\((N \times N)\)</span> by <span class="arithmatex">\((N \times d_v)\)</span> per head costs <span class="arithmatex">\(h \cdot \mathcal{O}(N^2 d_v) = \mathcal{O}(N^2 d)\)</span>.
-4. <strong>Final Linear Projection <span class="arithmatex">\(\mathbf{W}^O\)</span></strong>: Multiplying <span class="arithmatex">\((N \times d)\)</span> by <span class="arithmatex">\((d \times d)\)</span> costs <span class="arithmatex">\(\mathcal{O}(N d^2)\)</span>.</p>
+<p>Let <span class="arithmatex">\(N\)</span> be sequence length and <span class="arithmatex">\(d = d_{\text{model}}\)</span>.</p>
+<ol>
+<li><strong>Projections</strong>: Projecting <span class="arithmatex">\(\mathbf{X}\)</span> to <span class="arithmatex">\(\mathbf{Q}, \mathbf{K}, \mathbf{V}\)</span> costs <span class="arithmatex">\(3 \times \mathcal{O}(N d^2)\)</span>.</li>
+<li>
+<p><strong>Attention Scores <span class="arithmatex">\(\mathbf{Q} \mathbf{K}^T\)</span></strong>: For each of the <span class="arithmatex">\(h\)</span> heads, multiplying <span class="arithmatex">\((N \times d_k)\)</span> by <span class="arithmatex">\((d_k \times N)\)</span> costs <span class="arithmatex">\(\mathcal{O}(N^2 d_k)\)</span>. Across <span class="arithmatex">\(h\)</span> heads:
+   $<span class="arithmatex">\(h \cdot \mathcal{O}(N^2 d_k) = \mathcal{O}\left( N^2 \cdot (h d_k) \right) = \mathcal{O}(N^2 d)\)</span>$</p>
+</li>
+<li>
+<p><strong>Softmax &amp; Weighting <span class="arithmatex">\(\mathbf{A} \mathbf{V}\)</span></strong>: Multiplying <span class="arithmatex">\((N \times N)\)</span> by <span class="arithmatex">\((N \times d_v)\)</span> per head costs <span class="arithmatex">\(h \cdot \mathcal{O}(N^2 d_v) = \mathcal{O}(N^2 d)\)</span>.</p>
+</li>
+<li><strong>Final Linear Projection <span class="arithmatex">\(\mathbf{W}^O\)</span></strong>: Multiplying <span class="arithmatex">\((N \times d)\)</span> by <span class="arithmatex">\((d \times d)\)</span> costs <span class="arithmatex">\(\mathcal{O}(N d^2)\)</span>.</li>
+</ol>
 <p>Total Time Complexity: <span class="arithmatex">\(\mathcal{O}(N^2 d + N d^2)\)</span>.<br />
 Total Space Complexity: Storing the attention maps requires <span class="arithmatex">\(\mathcal{O}(h N^2)\)</span> memory per layer.</p>
 <hr />
@@ -4539,10 +4555,10 @@ Total Space Complexity: Storing the attention maps requires <span class="arithma
 <div class="arithmatex">\[
 \text{Attention}(\mathbf{P}\mathbf{X}\mathbf{W}^Q, \mathbf{P}\mathbf{X}\mathbf{W}^K, \mathbf{P}\mathbf{X}\mathbf{W}^V) = \mathbf{P} \, \text{Attention}(\mathbf{X}\mathbf{W}^Q, \mathbf{X}\mathbf{W}^K, \mathbf{X}\mathbf{W}^V)
 \]</div>
-<p><strong>Proof:</strong>
-$$
+<p><strong>Proof:</strong></p>
+<div class="arithmatex">\[
 \mathbf{Q}' = \mathbf{P} \mathbf{X} \mathbf{W}^Q = \mathbf{P} \mathbf{Q}, \quad \mathbf{K}' = \mathbf{P} \mathbf{K}, \quad \mathbf{V}' = \mathbf{P} \mathbf{V}
-$$</p>
+\]</div>
 <p>The attention logits become:</p>
 <div class="arithmatex">\[
 \mathbf{S}' = \frac{\mathbf{Q}' (\mathbf{K}')^T}{\sqrt{d_k}} = \frac{(\mathbf{P}\mathbf{Q})(\mathbf{P}\mathbf{K})^T}{\sqrt{d_k}} = \frac{\mathbf{P}\mathbf{Q}\mathbf{K}^T \mathbf{P}^T}{\sqrt{d_k}} = \mathbf{P} \mathbf{S} \mathbf{P}^T
@@ -4581,9 +4597,11 @@ Consider the 2D subspace for frequency <span class="arithmatex">\(\omega_i\)</sp
 <div class="arithmatex">\[
 \mathbf{u}_{pos+k} = \begin{bmatrix} \sin((pos + k)\omega_i) \\ \cos((pos + k)\omega_i) \end{bmatrix}
 \]</div>
-<p>Using the angle addition formulas:
-- <span class="arithmatex">\(\sin(a + b) = \sin(a)\cos(b) + \cos(a)\sin(b)\)</span>
-- <span class="arithmatex">\(\cos(a + b) = \cos(a)\cos(b) - \sin(a)\sin(b)\)</span></p>
+<p>Using the angle addition formulas:</p>
+<ul>
+<li><span class="arithmatex">\(\sin(a + b) = \sin(a)\cos(b) + \cos(a)\sin(b)\)</span></li>
+<li><span class="arithmatex">\(\cos(a + b) = \cos(a)\cos(b) - \sin(a)\sin(b)\)</span></li>
+</ul>
 <p>We rewrite <span class="arithmatex">\(\mathbf{u}_{pos+k}\)</span> as a matrix-vector product:</p>
 <div class="arithmatex">\[
 \begin{bmatrix} \sin((pos+k)\omega_i) \\ \cos((pos+k)\omega_i) \end{bmatrix} = \begin{bmatrix} \cos(k\omega_i) &amp; \sin(k\omega_i) \\ -\sin(k\omega_i) &amp; \cos(k\omega_i) \end{bmatrix} \begin{bmatrix} \sin(pos \cdot \omega_i) \\ \cos(pos \cdot \omega_i) \end{bmatrix}
@@ -4754,9 +4772,11 @@ a_{31} &amp; a_{32} &amp; a_{33}
     end</code></pre>
 <hr />
 <h3 id="53-cross-attention">5.3 Cross-Attention<a class="headerlink" href="#53-cross-attention" title="Permanent link">&para;</a></h3>
-<p>In Encoder-Decoder models (T5, original Transformer), the decoder contains a <strong>Cross-Attention</strong> sublayer bridging source and target sequences:
-- <strong>Queries (<span class="arithmatex">\(\mathbf{Q}\)</span>)</strong> come from the previous Decoder sublayer: <span class="arithmatex">\(\mathbf{Q} = \mathbf{H}_{\text{dec}} \mathbf{W}^Q \in \mathbb{R}^{T_{\text{target}} \times d_k}\)</span>.
-- <strong>Keys (<span class="arithmatex">\(\mathbf{K}\)</span>)</strong> and <strong>Values (<span class="arithmatex">\(\mathbf{V}\)</span>)</strong> come from the final output of the Encoder: <span class="arithmatex">\(\mathbf{K} = \mathbf{H}_{\text{enc}} \mathbf{W}^K \in \mathbb{R}^{T_{\text{source}} \times d_k}\)</span>, <span class="arithmatex">\(\mathbf{V} = \mathbf{H}_{\text{enc}} \mathbf{W}^V \in \mathbb{R}^{T_{\text{source}} \times d_v}\)</span>.</p>
+<p>In Encoder-Decoder models (T5, original Transformer), the decoder contains a <strong>Cross-Attention</strong> sublayer bridging source and target sequences:</p>
+<ul>
+<li><strong>Queries (<span class="arithmatex">\(\mathbf{Q}\)</span>)</strong> come from the previous Decoder sublayer: <span class="arithmatex">\(\mathbf{Q} = \mathbf{H}_{\text{dec}} \mathbf{W}^Q \in \mathbb{R}^{T_{\text{target}} \times d_k}\)</span>.</li>
+<li><strong>Keys (<span class="arithmatex">\(\mathbf{K}\)</span>)</strong> and <strong>Values (<span class="arithmatex">\(\mathbf{V}\)</span>)</strong> come from the final output of the Encoder: <span class="arithmatex">\(\mathbf{K} = \mathbf{H}_{\text{enc}} \mathbf{W}^K \in \mathbb{R}^{T_{\text{source}} \times d_k}\)</span>, <span class="arithmatex">\(\mathbf{V} = \mathbf{H}_{\text{enc}} \mathbf{W}^V \in \mathbb{R}^{T_{\text{source}} \times d_v}\)</span>.</li>
+</ul>
 <p>The resulting attention matrix has dimensions <span class="arithmatex">\((T_{\text{target}} \times T_{\text{source}})\)</span>, allowing each generated target token to query the entire source input.</p>
 <hr />
 <h2 id="6-sublayer-components-normalization-residuals-activations">6. Sublayer Components: Normalization, Residuals &amp; Activations<a class="headerlink" href="#6-sublayer-components-normalization-residuals-activations" title="Permanent link">&para;</a></h2>
@@ -4837,10 +4857,12 @@ a_{31} &amp; a_{32} &amp; a_{33}
 <div class="arithmatex">\[
 \text{SwiGLU}(\mathbf{x}) = \left( \text{Swish}(\mathbf{x} \mathbf{W}_{\text{gate}}) \odot \mathbf{x} \mathbf{W}_{\text{up}} \right) \mathbf{W}_{\text{down}}
 \]</div>
-<p>where:
-- <span class="arithmatex">\(\mathbf{W}_{\text{gate}} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{ff}}}\)</span>
-- <span class="arithmatex">\(\mathbf{W}_{\text{up}} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{ff}}}\)</span>
-- <span class="arithmatex">\(\mathbf{W}_{\text{down}} \in \mathbb{R}^{d_{\text{ff}} \times d_{\text{model}}}\)</span></p>
+<p>where:</p>
+<ul>
+<li><span class="arithmatex">\(\mathbf{W}_{\text{gate}} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{ff}}}\)</span></li>
+<li><span class="arithmatex">\(\mathbf{W}_{\text{up}} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{ff}}}\)</span></li>
+<li><span class="arithmatex">\(\mathbf{W}_{\text{down}} \in \mathbb{R}^{d_{\text{ff}} \times d_{\text{model}}}\)</span></li>
+</ul>
 <p>To keep parameter count matching a standard FFN with hidden dimension <span class="arithmatex">\(4d_{\text{model}}\)</span>, SwiGLU sets the intermediate dimension to:</p>
 <div class="arithmatex">\[
 d_{\text{ff}} \approx \frac{8}{3} d_{\text{model}}
@@ -4859,9 +4881,11 @@ d_{\text{ff}} \approx \frac{8}{3} d_{\text{model}}
 <p>Without caching, computing attention for token <span class="arithmatex">\(t\)</span> recalculates keys and values for all previous <span class="arithmatex">\(t-1\)</span> tokens from scratch:</p>
 <div class="arithmatex">\[\sum_{t=1}^T \mathcal{O}(t^2 d) = \mathcal{O}(T^3 d)\]</div>
 <p>However, because earlier tokens do not change, their Key and Value projections <span class="arithmatex">\(\mathbf{k}_1, \dots, \mathbf{k}_{t-1}\)</span> and <span class="arithmatex">\(\mathbf{v}_1, \dots, \mathbf{v}_{t-1}\)</span> remain identical.</p>
-<p>The <strong>KV Cache</strong> stores previous keys and values in GPU VRAM:
-1. <strong>Prefill Phase</strong>: Process the entire prompt of length <span class="arithmatex">\(N_{\text{prompt}}\)</span> in parallel. Cache all keys and values: <span class="arithmatex">\(\mathbf{K}_{\text{cache}} \in \mathbb{R}^{B \times H \times N_{\text{prompt}} \times d_k}\)</span>.
-2. <strong>Generation Phase</strong>: At each subsequent step, input <strong>only 1 new token</strong>. Compute its <span class="arithmatex">\(\mathbf{q}_t, \mathbf{k}_t, \mathbf{v}_t\)</span>. Concatenate <span class="arithmatex">\(\mathbf{k}_t\)</span> and <span class="arithmatex">\(\mathbf{v}_t\)</span> to the cache. Compute attention of <span class="arithmatex">\(\mathbf{q}_t\)</span> against the full cached <span class="arithmatex">\(\mathbf{K}\)</span>:</p>
+<p>The <strong>KV Cache</strong> stores previous keys and values in GPU VRAM:</p>
+<ol>
+<li><strong>Prefill Phase</strong>: Process the entire prompt of length <span class="arithmatex">\(N_{\text{prompt}}\)</span> in parallel. Cache all keys and values: <span class="arithmatex">\(\mathbf{K}_{\text{cache}} \in \mathbb{R}^{B \times H \times N_{\text{prompt}} \times d_k}\)</span>.</li>
+<li><strong>Generation Phase</strong>: At each subsequent step, input <strong>only 1 new token</strong>. Compute its <span class="arithmatex">\(\mathbf{q}_t, \mathbf{k}_t, \mathbf{v}_t\)</span>. Concatenate <span class="arithmatex">\(\mathbf{k}_t\)</span> and <span class="arithmatex">\(\mathbf{v}_t\)</span> to the cache. Compute attention of <span class="arithmatex">\(\mathbf{q}_t\)</span> against the full cached <span class="arithmatex">\(\mathbf{K}\)</span>:</li>
+</ol>
 <div class="arithmatex">\[
 \mathbf{y}_t = \text{softmax}\left( \frac{\mathbf{q}_t \mathbf{K}_{\text{cache}}^T}{\sqrt{d_k}} \right) \mathbf{V}_{\text{cache}}
 \]</div>
@@ -4877,12 +4901,14 @@ d_{\text{ff}} \approx \frac{8}{3} d_{\text{model}}
     end</code></pre>
 <hr />
 <h2 id="8-complete-pytorch-implementation-from-scratch">8. Complete PyTorch Implementation from Scratch<a class="headerlink" href="#8-complete-pytorch-implementation-from-scratch" title="Permanent link">&para;</a></h2>
-<p>Below is a complete, self-contained implementation of an autoregressive Transformer Decoder featuring:
-- <strong>RMSNorm</strong>
-- <strong>Rotary Position Embeddings (RoPE)</strong>
-- <strong>Multi-Head Causal Self-Attention with KV Caching</strong>
-- <strong>SwiGLU Feed-Forward Networks</strong>
-- <strong>Autoregressive Generation Loop</strong></p>
+<p>Below is a complete, self-contained implementation of an autoregressive Transformer Decoder featuring:</p>
+<ul>
+<li><strong>RMSNorm</strong></li>
+<li><strong>Rotary Position Embeddings (RoPE)</strong></li>
+<li><strong>Multi-Head Causal Self-Attention with KV Caching</strong></li>
+<li><strong>SwiGLU Feed-Forward Networks</strong></li>
+<li><strong>Autoregressive Generation Loop</strong></li>
+</ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
@@ -5224,40 +5250,46 @@ $<span class="arithmatex">\(\langle \tilde{\mathbf{q}}_m, \tilde{\mathbf{k}}_n \
 The inner product is mathematically an exact function of the relative distance <span class="arithmatex">\((m - n)\)</span>, invariant to absolute shift <span class="arithmatex">\(m \to m + k, n \to n + k\)</span>.</p>
 <hr />
 <h3 id="q3-contrast-pre-ln-and-post-ln-architectures-why-did-modern-llms-completely-abandon-post-ln">Q3: Contrast Pre-LN and Post-LN architectures. Why did modern LLMs completely abandon Post-LN?<a class="headerlink" href="#q3-contrast-pre-ln-and-post-ln-architectures-why-did-modern-llms-completely-abandon-post-ln" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Post-LN</strong>: <span class="arithmatex">\(\mathbf{x}_{l+1} = \text{LN}(\mathbf{x}_l + \mathcal{F}(\mathbf{x}_l))\)</span>. The normalization is outside the residual addition. Unrolling the recurrence from layer 1 to <span class="arithmatex">\(L\)</span> shows that the gradient must pass through a product of normalization scale factors: <span class="arithmatex">\(\prod_{l=1}^L \frac{1}{\sigma_l}\)</span>. Because each sublayer adds variance, <span class="arithmatex">\(\sigma_l\)</span> grows with depth, causing the gradient to vanish exponentially for early layers. To prevent divergence, Post-LN models require a strict learning rate warmup (hundreds to thousands of steps with near-zero learning rates).
-- <strong>Pre-LN</strong>: <span class="arithmatex">\(\mathbf{x}_{l+1} = \mathbf{x}_l + \mathcal{F}(\text{LN}(\mathbf{x}_l))\)</span>. The residual connection forms an uninterrupted identity pathway from input to output: <span class="arithmatex">\(\mathbf{x}_L = \mathbf{x}_1 + \sum_{l=1}^{L-1} \mathcal{F}(\text{LN}(\mathbf{x}_l))\)</span>. The derivative contains an identity term: <span class="arithmatex">\(\frac{\partial \mathbf{x}_L}{\partial \mathbf{x}_1} = \mathbf{I} + \sum \frac{\partial \mathcal{F}}{\partial \mathbf{x}_1}\)</span>. Gradients flow directly to early layers without attenuation. Modern LLMs abandoned Post-LN because Pre-LN (and RMSNorm) enables stable training of 100B+ parameter models at high learning rates without divergence.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Post-LN</strong>: <span class="arithmatex">\(\mathbf{x}_{l+1} = \text{LN}(\mathbf{x}_l + \mathcal{F}(\mathbf{x}_l))\)</span>. The normalization is outside the residual addition. Unrolling the recurrence from layer 1 to <span class="arithmatex">\(L\)</span> shows that the gradient must pass through a product of normalization scale factors: <span class="arithmatex">\(\prod_{l=1}^L \frac{1}{\sigma_l}\)</span>. Because each sublayer adds variance, <span class="arithmatex">\(\sigma_l\)</span> grows with depth, causing the gradient to vanish exponentially for early layers. To prevent divergence, Post-LN models require a strict learning rate warmup (hundreds to thousands of steps with near-zero learning rates).</li>
+<li><strong>Pre-LN</strong>: <span class="arithmatex">\(\mathbf{x}_{l+1} = \mathbf{x}_l + \mathcal{F}(\text{LN}(\mathbf{x}_l))\)</span>. The residual connection forms an uninterrupted identity pathway from input to output: <span class="arithmatex">\(\mathbf{x}_L = \mathbf{x}_1 + \sum_{l=1}^{L-1} \mathcal{F}(\text{LN}(\mathbf{x}_l))\)</span>. The derivative contains an identity term: <span class="arithmatex">\(\frac{\partial \mathbf{x}_L}{\partial \mathbf{x}_1} = \mathbf{I} + \sum \frac{\partial \mathcal{F}}{\partial \mathbf{x}_1}\)</span>. Gradients flow directly to early layers without attenuation. Modern LLMs abandoned Post-LN because Pre-LN (and RMSNorm) enables stable training of 100B+ parameter models at high learning rates without divergence.</li>
+</ul>
 <hr />
 <h3 id="q4-explain-the-computational-and-memory-trade-offs-of-the-kv-cache-during-autoregressive-generation">Q4: Explain the computational and memory trade-offs of the KV Cache during autoregressive generation.<a class="headerlink" href="#q4-explain-the-computational-and-memory-trade-offs-of-the-kv-cache-during-autoregressive-generation" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Computational Trade-off</strong>: Without a KV cache, generating token <span class="arithmatex">\(T\)</span> requires re-running attention over all tokens <span class="arithmatex">\(1, \dots, T-1\)</span>. Generating <span class="arithmatex">\(N\)</span> tokens costs <span class="arithmatex">\(\sum_{t=1}^N \mathcal{O}(t^2 d) = \mathcal{O}(N^3 d)\)</span>. With a KV cache, previous Keys and Values are retrieved from memory; computing token <span class="arithmatex">\(T\)</span> requires projecting only the new token's <span class="arithmatex">\(q_T, k_T, v_T\)</span> (<span class="arithmatex">\(\mathcal{O}(d^2)\)</span>) and computing attention against the cached keys (<span class="arithmatex">\(\mathcal{O}(T d)\)</span>). The total generation cost collapses from <span class="arithmatex">\(\mathcal{O}(N^3 d)\)</span> to <span class="arithmatex">\(\mathcal{O}(N^2 d)\)</span>.
-- <strong>Memory Footprint</strong>: The KV cache must reside in high-bandwidth GPU memory (HBM). For batch size <span class="arithmatex">\(B\)</span>, sequence length <span class="arithmatex">\(L\)</span>, number of layers <span class="arithmatex">\(n_{\text{layers}}\)</span>, number of heads <span class="arithmatex">\(H\)</span>, and head dimension <span class="arithmatex">\(d_k\)</span>, storing FP16 (2 bytes) keys and values requires:
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Computational Trade-off</strong>: Without a KV cache, generating token <span class="arithmatex">\(T\)</span> requires re-running attention over all tokens <span class="arithmatex">\(1, \dots, T-1\)</span>. Generating <span class="arithmatex">\(N\)</span> tokens costs <span class="arithmatex">\(\sum_{t=1}^N \mathcal{O}(t^2 d) = \mathcal{O}(N^3 d)\)</span>. With a KV cache, previous Keys and Values are retrieved from memory; computing token <span class="arithmatex">\(T\)</span> requires projecting only the new token's <span class="arithmatex">\(q_T, k_T, v_T\)</span> (<span class="arithmatex">\(\mathcal{O}(d^2)\)</span>) and computing attention against the cached keys (<span class="arithmatex">\(\mathcal{O}(T d)\)</span>). The total generation cost collapses from <span class="arithmatex">\(\mathcal{O}(N^3 d)\)</span> to <span class="arithmatex">\(\mathcal{O}(N^2 d)\)</span>.</li>
+<li><strong>Memory Footprint</strong>: The KV cache must reside in high-bandwidth GPU memory (HBM). For batch size <span class="arithmatex">\(B\)</span>, sequence length <span class="arithmatex">\(L\)</span>, number of layers <span class="arithmatex">\(n_{\text{layers}}\)</span>, number of heads <span class="arithmatex">\(H\)</span>, and head dimension <span class="arithmatex">\(d_k\)</span>, storing FP16 (2 bytes) keys and values requires:
 $<span class="arithmatex">\(\text{Memory}_{\text{KV}} = 2 \times 2 \times B \times L \times n_{\text{layers}} \times H \times d_k \text{ bytes} = 4 B L n_{\text{layers}} d_{\text{model}} \text{ bytes}\)</span>$
 For a 70B parameter model (<span class="arithmatex">\(d_{\text{model}}=8192, n_{\text{layers}}=80\)</span>) with batch size 16 and context length 8,192:
 $<span class="arithmatex">\(\text{Memory} = 4 \times 16 \times 8192 \times 80 \times 8192 \approx 343 \text{ GB}\)</span>$
-This exceeds the memory of four A100 (80GB) GPUs purely for cached activations, necessitating Grouped-Query Attention (GQA) and vLLM (PagedAttention).</p>
+This exceeds the memory of four A100 (80GB) GPUs purely for cached activations, necessitating Grouped-Query Attention (GQA) and vLLM (PagedAttention).</li>
+</ul>
 <hr />
 <h3 id="q5-what-is-the-theoretical-advantage-of-swiglu-over-standard-gelu-or-relu-feed-forward-networks">Q5: What is the theoretical advantage of SwiGLU over standard GELU or ReLU feed-forward networks?<a class="headerlink" href="#q5-what-is-the-theoretical-advantage-of-swiglu-over-standard-gelu-or-relu-feed-forward-networks" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
 A standard FFN computes <span class="arithmatex">\(\text{FFN}(x) = \sigma(x W_1) W_2\)</span>, where non-linearity acts as an elementwise soft threshold.<br />
 SwiGLU computes <span class="arithmatex">\(\text{SwiGLU}(x) = (\text{Swish}(x W_{\text{gate}}) \odot x W_{\text{up}}) W_{\text{down}}\)</span>.<br />
-Theoretical advantages:
-1. <strong>Dynamic Multiplicative Gating</strong>: The gate branch acts as a continuous, input-dependent router, dynamically selecting which feature components of <span class="arithmatex">\(x W_{\text{up}}\)</span> are amplified, suppressed, or inverted. This gives the network second-order interaction capacity in a single layer.
-2. <strong>Non-monotonic Gradient Flow</strong>: Swish (<span class="arithmatex">\(x \cdot \sigma(x)\)</span>) is smooth and non-monotonic; for negative inputs near 0, its derivative is non-zero and slightly negative, preventing "dead neurons" (which plague ReLU) while providing self-regularizing curvature.
-3. Empirical studies across PaLM, LLaMA, and Chinchilla show that SwiGLU achieves lower validation perplexity per compute FLOP than ReLU or GELU, even when parameter counts are strictly normalized by scaling the hidden dimension to <span class="arithmatex">\(\frac{8}{3} d_{\text{model}}\)</span>.</p>
+Theoretical advantages:</p>
+<ol>
+<li><strong>Dynamic Multiplicative Gating</strong>: The gate branch acts as a continuous, input-dependent router, dynamically selecting which feature components of <span class="arithmatex">\(x W_{\text{up}}\)</span> are amplified, suppressed, or inverted. This gives the network second-order interaction capacity in a single layer.</li>
+<li><strong>Non-monotonic Gradient Flow</strong>: Swish (<span class="arithmatex">\(x \cdot \sigma(x)\)</span>) is smooth and non-monotonic; for negative inputs near 0, its derivative is non-zero and slightly negative, preventing "dead neurons" (which plague ReLU) while providing self-regularizing curvature.</li>
+<li>Empirical studies across PaLM, LLaMA, and Chinchilla show that SwiGLU achieves lower validation perplexity per compute FLOP than ReLU or GELU, even when parameter counts are strictly normalized by scaling the hidden dimension to <span class="arithmatex">\(\frac{8}{3} d_{\text{model}}\)</span>.</li>
+</ol>
 <hr />
 <h2 id="11-mastery-ladder">11. Mastery Ladder<a class="headerlink" href="#11-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> State the mathematical definition of Scaled Dot-Product Attention: <span class="arithmatex">\(\text{softmax}(QK^T / \sqrt{d_k})V\)</span>.</li>
-<li>[ ] <strong>L2:</strong> Prove why the variance of <span class="arithmatex">\(\mathbf{q}^T \mathbf{k}\)</span> equals <span class="arithmatex">\(d_k\)</span> when coordinates are independent with unit variance.</li>
-<li>[ ] <strong>L3:</strong> Derive the softmax Jacobian <span class="arithmatex">\(\frac{\partial p_i}{\partial s_j} = p_i(\delta_{ij} - p_j)\)</span> and explain how large logits cause vanishing gradients.</li>
-<li>[ ] <strong>L4:</strong> Prove that pure Self-Attention is permutation equivariant: <span class="arithmatex">\(\text{Attention}(PX) = P \cdot \text{Attention}(X)\)</span>.</li>
-<li>[ ] <strong>L5:</strong> Derive the linear shift property of Sinusoidal Positional Encodings: <span class="arithmatex">\(\mathbf{PE}_{pos+k} = \mathbf{M}_k \mathbf{PE}_{pos}\)</span>.</li>
-<li>[ ] <strong>L6:</strong> Formulate Rotary Position Embedding (RoPE) in the 2D complex plane and prove that <span class="arithmatex">\(\langle R_m q, R_n k \rangle\)</span> depends only on <span class="arithmatex">\(m-n\)</span>.</li>
-<li>[ ] <strong>L7:</strong> Compare Pre-LN and Post-LN architectures and show why Pre-LN prevents vanishing gradients through the residual stream.</li>
-<li>[ ] <strong>L8:</strong> Formulate RMSNorm and calculate its computational savings over standard LayerNorm.</li>
-<li>[ ] <strong>L9:</strong> Write the mathematical equation for SwiGLU and explain why the intermediate dimension is set to <span class="arithmatex">\(\frac{8}{3} d_{\text{model}}\)</span>.</li>
-<li>[ ] <strong>L10:</strong> Implement a complete autoregressive Transformer Decoder with RoPE, causal masking, and KV caching from scratch in PyTorch.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> State the mathematical definition of Scaled Dot-Product Attention: <span class="arithmatex">\(\text{softmax}(QK^T / \sqrt{d_k})V\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Prove why the variance of <span class="arithmatex">\(\mathbf{q}^T \mathbf{k}\)</span> equals <span class="arithmatex">\(d_k\)</span> when coordinates are independent with unit variance.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Derive the softmax Jacobian <span class="arithmatex">\(\frac{\partial p_i}{\partial s_j} = p_i(\delta_{ij} - p_j)\)</span> and explain how large logits cause vanishing gradients.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Prove that pure Self-Attention is permutation equivariant: <span class="arithmatex">\(\text{Attention}(PX) = P \cdot \text{Attention}(X)\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Derive the linear shift property of Sinusoidal Positional Encodings: <span class="arithmatex">\(\mathbf{PE}_{pos+k} = \mathbf{M}_k \mathbf{PE}_{pos}\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Formulate Rotary Position Embedding (RoPE) in the 2D complex plane and prove that <span class="arithmatex">\(\langle R_m q, R_n k \rangle\)</span> depends only on <span class="arithmatex">\(m-n\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Compare Pre-LN and Post-LN architectures and show why Pre-LN prevents vanishing gradients through the residual stream.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Formulate RMSNorm and calculate its computational savings over standard LayerNorm.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Write the mathematical equation for SwiGLU and explain why the intermediate dimension is set to <span class="arithmatex">\(\frac{8}{3} d_{\text{model}}\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Implement a complete autoregressive Transformer Decoder with RoPE, causal masking, and KV caching from scratch in PyTorch.</li>
 </ul>
 
 

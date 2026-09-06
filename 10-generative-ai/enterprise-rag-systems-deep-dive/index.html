@@ -4202,11 +4202,13 @@
 </div>
 <hr />
 <h2 id="1-the-big-picture-parametric-vs-non-parametric-memory">1. The Big Picture: Parametric vs. Non-Parametric Memory<a class="headerlink" href="#1-the-big-picture-parametric-vs-non-parametric-memory" title="Permanent link">&para;</a></h2>
-<p>Foundation models possess <strong>parametric memory</strong>: knowledge compressed into billions of neural network weights during pretraining. While powerful, parametric memory exhibits fatal enterprise deficiencies:
-1. <strong>Knowledge Cutoffs</strong>: Weights cannot access information created after the pretraining cut-off date.
-2. <strong>Hallucination Risk</strong>: When generating rare or long-tail factual claims, models hallucinate plausible-sounding falsehoods.
-3. <strong>Lack of Auditability &amp; Citations</strong>: Weights cannot provide verifiable source provenance.
-4. <strong>Data Privacy &amp; Access Control</strong>: Access control lists (ACLs) cannot be enforced within monolithic model weights.</p>
+<p>Foundation models possess <strong>parametric memory</strong>: knowledge compressed into billions of neural network weights during pretraining. While powerful, parametric memory exhibits fatal enterprise deficiencies:</p>
+<ol>
+<li><strong>Knowledge Cutoffs</strong>: Weights cannot access information created after the pretraining cut-off date.</li>
+<li><strong>Hallucination Risk</strong>: When generating rare or long-tail factual claims, models hallucinate plausible-sounding falsehoods.</li>
+<li><strong>Lack of Auditability &amp; Citations</strong>: Weights cannot provide verifiable source provenance.</li>
+<li><strong>Data Privacy &amp; Access Control</strong>: Access control lists (ACLs) cannot be enforced within monolithic model weights.</li>
+</ol>
 <p><strong>Retrieval-Augmented Generation (RAG, Lewis et al. 2020)</strong> bridges this gap by decoupling reasoning from knowledge storage. The LLM acts as an inference and synthesis engine over dynamic <strong>non-parametric memory</strong> (external vector databases, search engines, and knowledge graphs).</p>
 <pre class="mermaid"><code>flowchart TD
     subgraph Offline["Offline Ingestion &amp; Indexing Pipeline"]
@@ -4229,9 +4231,11 @@
     end</code></pre>
 <hr />
 <h2 id="2-chunking-strategies-context-engineering">2. Chunking Strategies &amp; Context Engineering<a class="headerlink" href="#2-chunking-strategies-context-engineering" title="Permanent link">&para;</a></h2>
-<p>Chunking transforms raw variable-length documents into discrete informational units. Choosing an suboptimal chunk size introduces a fundamental trade-off:
-- <strong>Chunks Too Small</strong>: Loses surrounding semantic context, resulting in fragmented fragments that baffle the generator.
-- <strong>Chunks Too Large</strong>: Dilutes specific facts in noise, causing vector embeddings to average out into generic topic centroids.</p>
+<p>Chunking transforms raw variable-length documents into discrete informational units. Choosing an suboptimal chunk size introduces a fundamental trade-off:</p>
+<ul>
+<li><strong>Chunks Too Small</strong>: Loses surrounding semantic context, resulting in fragmented fragments that baffle the generator.</li>
+<li><strong>Chunks Too Large</strong>: Dilutes specific facts in noise, causing vector embeddings to average out into generic topic centroids.</li>
+</ul>
 <pre class="mermaid"><code>flowchart TD
     Strategies["Chunking Taxonomy"] --&gt; Fixed["1. Fixed-Size with Overlap\nSplit every N tokens with stride S"]
     Strategies --&gt; Recursive["2. Recursive Character Splitting\nSplit by paragraphs (\\n\\n) -&gt; sentences (\\n) -&gt; words"]
@@ -4259,9 +4263,13 @@
 <ol>
 <li>Split text into individual sentences <span class="arithmatex">\((s_1, s_2, \dots, s_T)\)</span>.</li>
 <li>Compute embeddings <span class="arithmatex">\(\mathbf{e}_t = \phi(s_t)\)</span>.</li>
-<li>Compute cosine distance between adjacent sentences:
-   $<span class="arithmatex">\(d_t = 1 - \cos(\mathbf{e}_t, \mathbf{e}_{t+1})\)</span>$</li>
-<li>Place a chunk boundary at index <span class="arithmatex">\(t\)</span> if <span class="arithmatex">\(d_t &gt; \tau\)</span>, where threshold <span class="arithmatex">\(\tau\)</span> is dynamically set to the <span class="arithmatex">\(95\text{th}\)</span> percentile of all observed distances.</li>
+<li>
+<p>Compute cosine distance between adjacent sentences:
+   $<span class="arithmatex">\(d_t = 1 - \cos(\mathbf{e}_t, \mathbf{e}_{t+1})\)</span>$</p>
+</li>
+<li>
+<p>Place a chunk boundary at index <span class="arithmatex">\(t\)</span> if <span class="arithmatex">\(d_t &gt; \tau\)</span>, where threshold <span class="arithmatex">\(\tau\)</span> is dynamically set to the <span class="arithmatex">\(95\text{th}\)</span> percentile of all observed distances.</p>
+</li>
 </ol>
 <hr />
 <h3 id="24-hierarchical-parent-document-chunking">2.4 Hierarchical &amp; Parent-Document Chunking<a class="headerlink" href="#24-hierarchical-parent-document-chunking" title="Permanent link">&para;</a></h3>
@@ -4313,9 +4321,13 @@
 <h4 id="graph-construction-hierarchy">Graph Construction &amp; Hierarchy<a class="headerlink" href="#graph-construction-hierarchy" title="Permanent link">&para;</a></h4>
 <ul>
 <li>Vectors are inserted into a multi-layer graph structure.</li>
-<li>The maximum layer <span class="arithmatex">\(l\)</span> for a new vector is sampled exponentially:
-  $<span class="arithmatex">\(l = \lfloor -\ln(\text{uniform}(0, 1)) \cdot m_L \rfloor, \quad \text{where } m_L = \frac{1}{\ln(M)}\)</span>$</li>
-<li>Layer 0 contains <strong>all</strong> <span class="arithmatex">\(N\)</span> vectors with high clustering and short-range links.</li>
+<li>
+<p>The maximum layer <span class="arithmatex">\(l\)</span> for a new vector is sampled exponentially:
+  $<span class="arithmatex">\(l = \lfloor -\ln(\text{uniform}(0, 1)) \cdot m_L \rfloor, \quad \text{where } m_L = \frac{1}{\ln(M)}\)</span>$</p>
+</li>
+<li>
+<p>Layer 0 contains <strong>all</strong> <span class="arithmatex">\(N\)</span> vectors with high clustering and short-range links.</p>
+</li>
 <li>Higher layers contain an exponentially decreasing subset of vectors with long-range "expressway" links.</li>
 </ul>
 <h4 id="greedy-search-procedure">Greedy Search Procedure<a class="headerlink" href="#greedy-search-procedure" title="Permanent link">&para;</a></h4>
@@ -4325,16 +4337,20 @@
 <li>Drop down to layer <span class="arithmatex">\(l-1\)</span> using that local minimum as the entry point.</li>
 <li>At layer 0, expand the search frontier up to <span class="arithmatex">\(efSearch\)</span> candidates to return the top-<span class="arithmatex">\(k\)</span> nearest neighbors.</li>
 </ol>
-<p><strong>HNSW Hyperparameters:</strong>
-- <span class="arithmatex">\(M \in [16, 64]\)</span>: Maximum bi-directional links per node. Higher <span class="arithmatex">\(M\)</span> increases recall and index size.
-- <span class="arithmatex">\(efConstruction \in [100, 400]\)</span>: Size of dynamic candidate list during graph construction. Controls build time vs. graph quality.
-- <span class="arithmatex">\(efSearch \in [32, 256]\)</span>: Size of dynamic candidate list during query execution. Tunes the query latency vs. recall trade-off without rebuilding the index.</p>
+<p><strong>HNSW Hyperparameters:</strong></p>
+<ul>
+<li><span class="arithmatex">\(M \in [16, 64]\)</span>: Maximum bi-directional links per node. Higher <span class="arithmatex">\(M\)</span> increases recall and index size.</li>
+<li><span class="arithmatex">\(efConstruction \in [100, 400]\)</span>: Size of dynamic candidate list during graph construction. Controls build time vs. graph quality.</li>
+<li><span class="arithmatex">\(efSearch \in [32, 256]\)</span>: Size of dynamic candidate list during query execution. Tunes the query latency vs. recall trade-off without rebuilding the index.</li>
+</ul>
 <hr />
 <h3 id="33-product-quantization-pq">3.3 Product Quantization (PQ)<a class="headerlink" href="#33-product-quantization-pq" title="Permanent link">&para;</a></h3>
-<p>Product Quantization (<a href="https://ieeexplore.ieee.org/document/5432242">Jégou et al., 2011</a>) compresses vectors by orders of magnitude:
-1. Split <span class="arithmatex">\(d\)</span>-dimensional space <span class="arithmatex">\(\mathbb{R}^d\)</span> into <span class="arithmatex">\(m\)</span> orthogonal sub-vectors of dimension <span class="arithmatex">\(d^* = d / m\)</span>.
-2. For each subspace <span class="arithmatex">\(j \in \{1, \dots, m\}\)</span>, run <span class="arithmatex">\(k\)</span>-means to learn <span class="arithmatex">\(k^* = 256\)</span> centroids: codebook <span class="arithmatex">\(\mathcal{C}_j = \{ \mathbf{c}_{j, 1}, \dots, \mathbf{c}_{j, 256} \}\)</span>.
-3. Each sub-vector is replaced by the 8-bit index (<span class="arithmatex">\(1\text{ byte}\)</span>) of its nearest centroid.</p>
+<p>Product Quantization (<a href="https://ieeexplore.ieee.org/document/5432242">Jégou et al., 2011</a>) compresses vectors by orders of magnitude:</p>
+<ol>
+<li>Split <span class="arithmatex">\(d\)</span>-dimensional space <span class="arithmatex">\(\mathbb{R}^d\)</span> into <span class="arithmatex">\(m\)</span> orthogonal sub-vectors of dimension <span class="arithmatex">\(d^* = d / m\)</span>.</li>
+<li>For each subspace <span class="arithmatex">\(j \in \{1, \dots, m\}\)</span>, run <span class="arithmatex">\(k\)</span>-means to learn <span class="arithmatex">\(k^* = 256\)</span> centroids: codebook <span class="arithmatex">\(\mathcal{C}_j = \{ \mathbf{c}_{j, 1}, \dots, \mathbf{c}_{j, 256} \}\)</span>.</li>
+<li>Each sub-vector is replaced by the 8-bit index (<span class="arithmatex">\(1\text{ byte}\)</span>) of its nearest centroid.</li>
+</ol>
 <p>A 1536-dimensional FP32 vector (<span class="arithmatex">\(6,144\text{ bytes}\)</span>) split into <span class="arithmatex">\(m=96\)</span> sub-vectors is compressed into <strong><span class="arithmatex">\(96\text{ bytes}\)</span></strong> (a <strong><span class="arithmatex">\(64\times\)</span> memory reduction</strong>), enabling billions of vectors to reside entirely in RAM.</p>
 <hr />
 <h2 id="4-hybrid-search-advanced-retrieval">4. Hybrid Search &amp; Advanced Retrieval<a class="headerlink" href="#4-hybrid-search-advanced-retrieval" title="Permanent link">&para;</a></h2>
@@ -4354,12 +4370,14 @@
 <div class="arithmatex">\[
 \text{BM25}(D, Q) = \sum_{i=1}^n \text{IDF}(q_i) \cdot \frac{f(q_i, D) \cdot (k_1 + 1)}{f(q_i, D) + k_1 \cdot \left( 1 - b + b \cdot \frac{|D|}{\text{avgdl}} \right)}
 \]</div>
-<p>where:
-- <span class="arithmatex">\(f(q_i, D)\)</span> is the term frequency of query token <span class="arithmatex">\(q_i\)</span> in document <span class="arithmatex">\(D\)</span>.
-- <span class="arithmatex">\(|D|\)</span> is the document length in tokens, and <span class="arithmatex">\(\text{avgdl}\)</span> is the average document length across the corpus.
-- <span class="arithmatex">\(k_1 \in [1.2, 2.0]\)</span> controls <strong>term frequency saturation</strong>: as <span class="arithmatex">\(f(q_i, D) \to \infty\)</span>, the term score asymptotically approaches <span class="arithmatex">\(k_1 + 1\)</span>.
-- <span class="arithmatex">\(b \in [0.75]\)</span> controls <strong>document length normalization</strong>: <span class="arithmatex">\(b=1\)</span> fully penalizes verbose documents; <span class="arithmatex">\(b=0\)</span> ignores document length.
-- <span class="arithmatex">\(\text{IDF}(q_i)\)</span> is the Robertson-Spärck Jones Inverse Document Frequency:</p>
+<p>where:</p>
+<ul>
+<li><span class="arithmatex">\(f(q_i, D)\)</span> is the term frequency of query token <span class="arithmatex">\(q_i\)</span> in document <span class="arithmatex">\(D\)</span>.</li>
+<li><span class="arithmatex">\(|D|\)</span> is the document length in tokens, and <span class="arithmatex">\(\text{avgdl}\)</span> is the average document length across the corpus.</li>
+<li><span class="arithmatex">\(k_1 \in [1.2, 2.0]\)</span> controls <strong>term frequency saturation</strong>: as <span class="arithmatex">\(f(q_i, D) \to \infty\)</span>, the term score asymptotically approaches <span class="arithmatex">\(k_1 + 1\)</span>.</li>
+<li><span class="arithmatex">\(b \in [0.75]\)</span> controls <strong>document length normalization</strong>: <span class="arithmatex">\(b=1\)</span> fully penalizes verbose documents; <span class="arithmatex">\(b=0\)</span> ignores document length.</li>
+<li><span class="arithmatex">\(\text{IDF}(q_i)\)</span> is the Robertson-Spärck Jones Inverse Document Frequency:</li>
+</ul>
 <div class="arithmatex">\[
 \text{IDF}(q_i) = \ln\left( \frac{N - n(q_i) + 0.5}{n(q_i) + 0.5} + 1 \right)
 \]</div>
@@ -4371,13 +4389,17 @@
 \text{RRF}(d) = \sum_{m \in \mathcal{M}} \frac{1}{k + r_m(d)}
 \]</div>
 <p>where <span class="arithmatex">\(\mathcal{M} = \{\text{dense}, \text{sparse}\}\)</span>, <span class="arithmatex">\(r_m(d)\)</span> is the 1-based rank of document <span class="arithmatex">\(d\)</span> in system <span class="arithmatex">\(m\)</span>, and <span class="arithmatex">\(k\)</span> is a constant smoothing hyperparameter (standard <span class="arithmatex">\(k = 60\)</span>).</p>
-<p><strong>Why RRF Works:</strong>
-1. Invariant to score scale, calibration, and distribution shape.
-2. Heavily rewards documents that rank in the top 5 of <em>either</em> system while smoothly promoting documents appearing moderately high in <em>both</em>.</p>
+<p><strong>Why RRF Works:</strong></p>
+<ol>
+<li>Invariant to score scale, calibration, and distribution shape.</li>
+<li>Heavily rewards documents that rank in the top 5 of <em>either</em> system while smoothly promoting documents appearing moderately high in <em>both</em>.</li>
+</ol>
 <hr />
 <h2 id="5-knowledge-graphs-graphrag">5. Knowledge Graphs &amp; GraphRAG<a class="headerlink" href="#5-knowledge-graphs-graphrag" title="Permanent link">&para;</a></h2>
-<p>Traditional vector RAG fails on <strong>global thematic queries</strong> that span an entire corpus:
-- <em>"What are the top three operational risks across all internal audit reports?"</em></p>
+<p>Traditional vector RAG fails on <strong>global thematic queries</strong> that span an entire corpus:</p>
+<ul>
+<li><em>"What are the top three operational risks across all internal audit reports?"</em></li>
+</ul>
 <p>Because no single chunk contains the answer, vector search retrieves arbitrary localized fragments.</p>
 <p><a href="https://arxiv.org/abs/2404.16130">Microsoft Research (Edge et al., 2024)</a> introduced <strong>GraphRAG</strong>, integrating Knowledge Graphs with hierarchical community summaries:</p>
 <pre class="mermaid"><code>flowchart TD
@@ -4409,29 +4431,39 @@
     end</code></pre>
 <h3 id="61-the-ragas-triad">6.1 The Ragas Triad<a class="headerlink" href="#61-the-ragas-triad" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Faithfulness (Groundedness)</strong>:
+<li>
+<p><strong>Faithfulness (Groundedness)</strong>:
    Extract all factual claims from generated answer <span class="arithmatex">\(A\)</span>: <span class="arithmatex">\(\{c_1, \dots, c_n\}\)</span>. For each claim, check if it can be inferred directly from retrieved context <span class="arithmatex">\(C\)</span>:
    $<span class="arithmatex">\(\text{Faithfulness} = \frac{|\{c_i \mid C \models c_i\}|}{|\{c_1, \dots, c_n\}|}\)</span>$
-   Measures hallucination rate (<span class="arithmatex">\(1.0 = \text{zero hallucination}\)</span>).</li>
-<li><strong>Answer Relevance</strong>:
+   Measures hallucination rate (<span class="arithmatex">\(1.0 = \text{zero hallucination}\)</span>).</p>
+</li>
+<li>
+<p><strong>Answer Relevance</strong>:
    Evaluate whether the response addresses the prompt without extraneous verbosity. Computed by prompting an LLM to generate <span class="arithmatex">\(m\)</span> synthetic queries from answer <span class="arithmatex">\(A\)</span> and measuring mean cosine similarity against the original query <span class="arithmatex">\(q\)</span>:
-   $<span class="arithmatex">\(\text{Answer Relevance} = \frac{1}{m} \sum_{i=1}^m \cos(\phi(q), \phi(\tilde{q}_i))\)</span>$</li>
-<li><strong>Context Precision</strong>:
-   Evaluates retrieval ranking quality. Measures whether ground-truth relevant chunks appear near the top of the retrieved list (equivalent to Mean Average Precision @ K).</li>
+   $<span class="arithmatex">\(\text{Answer Relevance} = \frac{1}{m} \sum_{i=1}^m \cos(\phi(q), \phi(\tilde{q}_i))\)</span>$</p>
+</li>
+<li>
+<p><strong>Context Precision</strong>:
+   Evaluates retrieval ranking quality. Measures whether ground-truth relevant chunks appear near the top of the retrieved list (equivalent to Mean Average Precision @ K).</p>
+</li>
 </ol>
 <hr />
 <h3 id="62-the-lost-in-the-middle-effect">6.2 The "Lost in the Middle" Effect<a class="headerlink" href="#62-the-lost-in-the-middle-effect" title="Permanent link">&para;</a></h3>
-<p><a href="https://arxiv.org/abs/2307.03172">Liu et al. (2023)</a> demonstrated that decoder-only LLMs exhibit severe <strong>U-shaped position bias</strong>:
-- Retrieval information placed at the <strong>very beginning</strong> or <strong>very end</strong> of the context prompt achieves <span class="arithmatex">\(70-80\%\)</span> accuracy.
-- When critical information is located in the <strong>middle</strong> of a long context window (<span class="arithmatex">\(&gt;4\text{k tokens}\)</span>), accuracy drops below <span class="arithmatex">\(30\%\)</span>.</p>
+<p><a href="https://arxiv.org/abs/2307.03172">Liu et al. (2023)</a> demonstrated that decoder-only LLMs exhibit severe <strong>U-shaped position bias</strong>:</p>
+<ul>
+<li>Retrieval information placed at the <strong>very beginning</strong> or <strong>very end</strong> of the context prompt achieves <span class="arithmatex">\(70-80\%\)</span> accuracy.</li>
+<li>When critical information is located in the <strong>middle</strong> of a long context window (<span class="arithmatex">\(&gt;4\text{k tokens}\)</span>), accuracy drops below <span class="arithmatex">\(30\%\)</span>.</li>
+</ul>
 <p><strong>Mitigation</strong>: Reorder retrieved chunks before prompt assembly: place the highest-ranked chunk at the top, the second highest at the bottom, and lower-ranked chunks in the middle.</p>
 <hr />
 <h2 id="7-complete-runnable-python-implementation">7. Complete Runnable Python Implementation<a class="headerlink" href="#7-complete-runnable-python-implementation" title="Permanent link">&para;</a></h2>
-<p>Below is a complete, self-contained implementation featuring:
-- <strong>BM25 Lexical Inverted Index</strong>.
-- <strong>Dense Vector Search with Cosine Similarity</strong>.
-- <strong>Reciprocal Rank Fusion (RRF) Hybrid Combiner</strong>.
-- <strong>End-to-End Grounded Generation Pipeline</strong>.</p>
+<p>Below is a complete, self-contained implementation featuring:</p>
+<ul>
+<li><strong>BM25 Lexical Inverted Index</strong>.</li>
+<li><strong>Dense Vector Search with Cosine Similarity</strong>.</li>
+<li><strong>Reciprocal Rank Fusion (RRF) Hybrid Combiner</strong>.</li>
+<li><strong>End-to-End Grounded Generation Pipeline</strong>.</li>
+</ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">collections</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
@@ -4655,69 +4687,87 @@
 <h3 id="q1-derive-the-reciprocal-rank-fusion-rrf-formula-why-does-it-outperform-linear-score-combination-when-merging-dense-and-sparse-retrievers">Q1: Derive the Reciprocal Rank Fusion (RRF) formula. Why does it outperform linear score combination when merging dense and sparse retrievers?<a class="headerlink" href="#q1-derive-the-reciprocal-rank-fusion-rrf-formula-why-does-it-outperform-linear-score-combination-when-merging-dense-and-sparse-retrievers" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
 Linear score combination computes <span class="arithmatex">\(S_{\text{hybrid}}(d) = \alpha S_{\text{dense}}(d) + (1 - \alpha) S_{\text{sparse}}(d)\)</span>.<br />
-This fails in production because:
-1. Dense cosine similarity is bounded in <span class="arithmatex">\([-1, 1]\)</span> and concentrated in <span class="arithmatex">\([0.6, 0.9]\)</span>.
-2. Sparse BM25 scores are unbounded <span class="arithmatex">\([0, \infty)\)</span> and scale with query length and term uniqueness (a rare token yields scores <span class="arithmatex">\(&gt;25\)</span>, while common terms yield <span class="arithmatex">\(&lt;3\)</span>).
-3. Attempting to normalize BM25 via min-max scaling depends on the maximum score in the current result set, causing score instability across queries.<br />
+This fails in production because:</p>
+<ol>
+<li>Dense cosine similarity is bounded in <span class="arithmatex">\([-1, 1]\)</span> and concentrated in <span class="arithmatex">\([0.6, 0.9]\)</span>.</li>
+<li>Sparse BM25 scores are unbounded <span class="arithmatex">\([0, \infty)\)</span> and scale with query length and term uniqueness (a rare token yields scores <span class="arithmatex">\(&gt;25\)</span>, while common terms yield <span class="arithmatex">\(&lt;3\)</span>).</li>
+<li>
+<p>Attempting to normalize BM25 via min-max scaling depends on the maximum score in the current result set, causing score instability across queries.<br />
 RRF discards raw scores entirely and operates purely on ranks:
 $<span class="arithmatex">\(\text{RRF}(d) = \sum_{m \in \mathcal{M}} \frac{1}{k + r_m(d)}\)</span>$
-Mathematical properties:
-- Invariant to score scale and distribution shifts.
-- The parameter <span class="arithmatex">\(k\)</span> (typically 60) regulates the penalty gradient: the difference in reward between rank 1 and rank 2 is <span class="arithmatex">\(\frac{1}{61} - \frac{1}{62} \approx 0.00026\)</span>, preventing an outlier rank 1 from completely dominating if the document is absent from the other retriever.
-- An item ranking top-3 in both systems achieves higher fused score than an item ranking #1 in one system but absent (or ranked #100) in the other.</p>
+Mathematical properties:</p>
+</li>
+<li>
+<p>Invariant to score scale and distribution shifts.</p>
+</li>
+<li>The parameter <span class="arithmatex">\(k\)</span> (typically 60) regulates the penalty gradient: the difference in reward between rank 1 and rank 2 is <span class="arithmatex">\(\frac{1}{61} - \frac{1}{62} \approx 0.00026\)</span>, preventing an outlier rank 1 from completely dominating if the document is absent from the other retriever.</li>
+<li>An item ranking top-3 in both systems achieves higher fused score than an item ranking #1 in one system but absent (or ranked #100) in the other.</li>
+</ol>
 <hr />
 <h3 id="q2-explain-the-hierarchical-navigable-small-world-hnsw-search-algorithm-how-does-it-achieve-mathcalolog-n-query-complexity">Q2: Explain the Hierarchical Navigable Small World (HNSW) search algorithm. How does it achieve <span class="arithmatex">\(\mathcal{O}(\log N)\)</span> query complexity?<a class="headerlink" href="#q2-explain-the-hierarchical-navigable-small-world-hnsw-search-algorithm-how-does-it-achieve-mathcalolog-n-query-complexity" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
-HNSW structures data into a multi-layer graph hierarchy modeled after skip lists:
-1. <strong>Layer Hierarchy</strong>: Layers are numbered <span class="arithmatex">\(0\)</span> to <span class="arithmatex">\(l_{\max}\)</span>. Every node exists in Layer 0. Nodes are assigned to higher layers with exponentially decreasing probability <span class="arithmatex">\(p = 1 / \ln(M)\)</span>. Higher layers contain few nodes connected by long-range links; lower layers contain all nodes connected by short-range, local cluster links.
-2. <strong>Greedy Traversal</strong>: Search begins at the top layer <span class="arithmatex">\(l_{\max}\)</span> at a global entry point. At the current layer, the algorithm greedily hops to whichever neighbor has the smallest distance to query <span class="arithmatex">\(\mathbf{q}\)</span>. When no neighbor is closer than the current node, search drops down one layer, using that local minimum as the entry point for the layer below.
-3. <strong>Complexity</strong>: Because the number of nodes decreases exponentially with layer height, the number of hops per layer is bounded by a constant. Traversing <span class="arithmatex">\(\ln(N)\)</span> layers yields <span class="arithmatex">\(\mathcal{O}(\log N)\)</span> overall query complexity while maintaining high clustering coefficients and small-world short path lengths.</p>
+HNSW structures data into a multi-layer graph hierarchy modeled after skip lists:</p>
+<ol>
+<li><strong>Layer Hierarchy</strong>: Layers are numbered <span class="arithmatex">\(0\)</span> to <span class="arithmatex">\(l_{\max}\)</span>. Every node exists in Layer 0. Nodes are assigned to higher layers with exponentially decreasing probability <span class="arithmatex">\(p = 1 / \ln(M)\)</span>. Higher layers contain few nodes connected by long-range links; lower layers contain all nodes connected by short-range, local cluster links.</li>
+<li><strong>Greedy Traversal</strong>: Search begins at the top layer <span class="arithmatex">\(l_{\max}\)</span> at a global entry point. At the current layer, the algorithm greedily hops to whichever neighbor has the smallest distance to query <span class="arithmatex">\(\mathbf{q}\)</span>. When no neighbor is closer than the current node, search drops down one layer, using that local minimum as the entry point for the layer below.</li>
+<li><strong>Complexity</strong>: Because the number of nodes decreases exponentially with layer height, the number of hops per layer is bounded by a constant. Traversing <span class="arithmatex">\(\ln(N)\)</span> layers yields <span class="arithmatex">\(\mathcal{O}(\log N)\)</span> overall query complexity while maintaining high clustering coefficients and small-world short path lengths.</li>
+</ol>
 <hr />
 <h3 id="q3-contrast-standard-vector-rag-with-microsoft-graphrag-what-fundamental-query-failure-mode-does-graphrag-solve">Q3: Contrast standard Vector RAG with Microsoft GraphRAG. What fundamental query failure mode does GraphRAG solve?<a class="headerlink" href="#q3-contrast-standard-vector-rag-with-microsoft-graphrag-what-fundamental-query-failure-mode-does-graphrag-solve" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Vector RAG</strong>: Indexes isolated text chunks as dense vectors. When a query is issued, it retrieves chunks via cosine similarity (point-to-point semantic similarity).
-  - <em>Failure Mode</em>: Fails on global, corpus-wide thematic queries (<em>"What are the major themes across all 5,000 customer interviews?"</em>). Because no single chunk contains the comprehensive theme, top-<span class="arithmatex">\(k\)</span> vector retrieval returns disconnected anecdotal fragments.
-- <strong>GraphRAG</strong>:
-  1. Uses an LLM to extract entity-relationship graphs (nodes, edges, claims) from all chunks.
-  2. Partitions the graph into a hierarchy of communities using the <strong>Leiden community detection algorithm</strong>.
-  3. Pre-computes recursive LLM summaries for each community cluster at each hierarchy level.
-  4. Answers global queries by running a parallel Map-Reduce sweep across the pre-computed community summaries, synthesizing systemic insights across the entire dataset.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Vector RAG</strong>: Indexes isolated text chunks as dense vectors. When a query is issued, it retrieves chunks via cosine similarity (point-to-point semantic similarity).</li>
+<li><em>Failure Mode</em>: Fails on global, corpus-wide thematic queries (<em>"What are the major themes across all 5,000 customer interviews?"</em>). Because no single chunk contains the comprehensive theme, top-<span class="arithmatex">\(k\)</span> vector retrieval returns disconnected anecdotal fragments.</li>
+<li><strong>GraphRAG</strong>:</li>
+<li>Uses an LLM to extract entity-relationship graphs (nodes, edges, claims) from all chunks.</li>
+<li>Partitions the graph into a hierarchy of communities using the <strong>Leiden community detection algorithm</strong>.</li>
+<li>Pre-computes recursive LLM summaries for each community cluster at each hierarchy level.</li>
+<li>Answers global queries by running a parallel Map-Reduce sweep across the pre-computed community summaries, synthesizing systemic insights across the entire dataset.</li>
+</ul>
 <hr />
 <h3 id="q4-what-is-the-lost-in-the-middle-effect-in-long-context-llms-and-how-should-an-enterprise-rag-pipeline-mitigate-it">Q4: What is the "Lost in the Middle" effect in long-context LLMs, and how should an enterprise RAG pipeline mitigate it?<a class="headerlink" href="#q4-what-is-the-lost-in-the-middle-effect-in-long-context-llms-and-how-should-an-enterprise-rag-pipeline-mitigate-it" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
 Liu et al. (2023) demonstrated that decoder-only Transformers exhibit a U-shaped accuracy curve as context length grows. When critical retrieval context is placed at the very beginning (primacy effect) or very end (recency effect) of the input prompt, retrieval accuracy reaches <span class="arithmatex">\(70-80\%\)</span>. When the critical fact is placed in the middle of a <span class="arithmatex">\(4\text{k}-32\text{k}\)</span> token context, accuracy drops below <span class="arithmatex">\(30\%\)</span>.<br />
-This occurs because:
-1. Rotary Position Embeddings (RoPE) and causal attention naturally maintain sharp attention weights at the current token (recency) and initial prompt system tokens (attention sinks).
-2. Gradients attenuate over long intervening token distances.<br />
-<strong>Mitigation Strategy</strong>: Context Reordering. After ranking retrieved chunks by relevance, the pipeline re-orders them such that:
-- Rank 1 chunk is placed at the top (beginning of context).
-- Rank 2 chunk is placed at the bottom (immediately before user question).
-- Lower-ranked chunks (Ranks 3, 4, 5) are placed in the middle.</p>
+This occurs because:</p>
+<ol>
+<li>Rotary Position Embeddings (RoPE) and causal attention naturally maintain sharp attention weights at the current token (recency) and initial prompt system tokens (attention sinks).</li>
+<li>
+<p>Gradients attenuate over long intervening token distances.<br />
+<strong>Mitigation Strategy</strong>: Context Reordering. After ranking retrieved chunks by relevance, the pipeline re-orders them such that:</p>
+</li>
+<li>
+<p>Rank 1 chunk is placed at the top (beginning of context).</p>
+</li>
+<li>Rank 2 chunk is placed at the bottom (immediately before user question).</li>
+<li>Lower-ranked chunks (Ranks 3, 4, 5) are placed in the middle.</li>
+</ol>
 <hr />
 <h3 id="q5-how-do-the-three-metrics-of-the-ragas-framework-faithfulness-answer-relevance-context-precision-isolate-failure-modes-between-the-retriever-and-the-generator">Q5: How do the three metrics of the Ragas framework (Faithfulness, Answer Relevance, Context Precision) isolate failure modes between the Retriever and the Generator?<a class="headerlink" href="#q5-how-do-the-three-metrics-of-the-ragas-framework-faithfulness-answer-relevance-context-precision-isolate-failure-modes-between-the-retriever-and-the-generator" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-1. <strong>Context Precision</strong> isolates the <strong>Retriever</strong>:
-   - Compares retrieved chunks against the ground truth / query intent.
-   - Low Context Precision means the retriever returned noisy, irrelevant, or misranked documents.
-2. <strong>Faithfulness</strong> isolates <strong>Generator Hallucination</strong>:
-   - Evaluates whether every atomic claim in the generated response is entailed by the retrieved context.
-   - Low Faithfulness indicates the generator is hallucinating facts from its pretraining weights or making unfounded deductive leaps.
-3. <strong>Answer Relevance</strong> isolates <strong>Generator Drift / Evasion</strong>:
-   - Evaluates whether the generated response directly answers the user's question, independent of factual grounding.
-   - Low Answer Relevance means the model gave an evasive, verbose, or off-topic answer despite having retrieved context.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ol>
+<li><strong>Context Precision</strong> isolates the <strong>Retriever</strong>:</li>
+<li>Compares retrieved chunks against the ground truth / query intent.</li>
+<li>Low Context Precision means the retriever returned noisy, irrelevant, or misranked documents.</li>
+<li><strong>Faithfulness</strong> isolates <strong>Generator Hallucination</strong>:</li>
+<li>Evaluates whether every atomic claim in the generated response is entailed by the retrieved context.</li>
+<li>Low Faithfulness indicates the generator is hallucinating facts from its pretraining weights or making unfounded deductive leaps.</li>
+<li><strong>Answer Relevance</strong> isolates <strong>Generator Drift / Evasion</strong>:</li>
+<li>Evaluates whether the generated response directly answers the user's question, independent of factual grounding.</li>
+<li>Low Answer Relevance means the model gave an evasive, verbose, or off-topic answer despite having retrieved context.</li>
+</ol>
 <hr />
 <h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Contrast parametric and non-parametric memory in LLM systems.</li>
-<li>[ ] <strong>L2:</strong> Implement a fixed-size sliding-window chunking function in Python.</li>
-<li>[ ] <strong>L3:</strong> Explain the algorithm for Semantic Chunking using moving-window cosine distances.</li>
-<li>[ ] <strong>L4:</strong> Describe the hierarchical skip-list structure and greedy search algorithm of HNSW.</li>
-<li>[ ] <strong>L5:</strong> Write the BM25 formula and explain the role of <span class="arithmatex">\(k_1\)</span> (saturation) and <span class="arithmatex">\(b\)</span> (length normalization).</li>
-<li>[ ] <strong>L6:</strong> Derive why Reciprocal Rank Fusion (RRF) avoids score calibration issues between BM25 and vector search.</li>
-<li>[ ] <strong>L7:</strong> Explain the 4 steps of Microsoft GraphRAG (Extraction, Leiden Community Detection, Summarization, Map-Reduce).</li>
-<li>[ ] <strong>L8:</strong> Formulate the Ragas Triad metrics (Faithfulness, Answer Relevance, Context Precision).</li>
-<li>[ ] <strong>L9:</strong> Explain the "Lost in the Middle" phenomenon and implement optimal context reordering.</li>
-<li>[ ] <strong>L10:</strong> Implement a functional end-to-end RAG pipeline combining BM25, dense vector search, and RRF in Python.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Contrast parametric and non-parametric memory in LLM systems.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Implement a fixed-size sliding-window chunking function in Python.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Explain the algorithm for Semantic Chunking using moving-window cosine distances.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Describe the hierarchical skip-list structure and greedy search algorithm of HNSW.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Write the BM25 formula and explain the role of <span class="arithmatex">\(k_1\)</span> (saturation) and <span class="arithmatex">\(b\)</span> (length normalization).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Derive why Reciprocal Rank Fusion (RRF) avoids score calibration issues between BM25 and vector search.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Explain the 4 steps of Microsoft GraphRAG (Extraction, Leiden Community Detection, Summarization, Map-Reduce).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Formulate the Ragas Triad metrics (Faithfulness, Answer Relevance, Context Precision).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Explain the "Lost in the Middle" phenomenon and implement optimal context reordering.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Implement a functional end-to-end RAG pipeline combining BM25, dense vector search, and RRF in Python.</li>
 </ul>
 
 

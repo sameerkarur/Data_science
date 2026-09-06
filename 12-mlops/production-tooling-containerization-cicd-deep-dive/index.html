@@ -4306,12 +4306,14 @@
     FastAPIServing --&gt; MLTesting
     MLTesting --&gt; CICD
     CICD --&gt; ProductionDeploy</code></pre>
-<p>Production AI engineering requires mastering five foundational pillars:
-1. <strong>Operating System &amp; Kernel Architecture</strong>: How the Linux kernel allocates physical memory, balances swap, isolates processes through control groups (<code>cgroups</code>), handles inter-process communication (IPC), and schedules asynchronous disk and network I/O (<code>io_uring</code>).
-2. <strong>Containerization &amp; Driver Integration</strong>: How Docker container layers are cached and constructed, how the NVIDIA Container Toolkit (<code>nvidia-ctk</code>) hooks host GPU drivers into isolated namespaces, and how shared memory limits prevent IPC deadlocks in PyTorch data loaders.
-3. <strong>High-Performance Serving Gateways</strong>: How the Asynchronous Server Gateway Interface (ASGI) event loop operates, how to decouple CPU-bound tensor execution from I/O polling, and how dynamic mini-batching amortizes model forward pass latency.
-4. <strong>Behavioral &amp; Contract-Driven Testing</strong>: Why traditional unit tests are insufficient for stochastic models, and how to implement directional expectation tests, minimum functionality tests, and data contract validations.
-5. <strong>Continuous Integration &amp; Continuous Delivery (CI/CD)</strong>: How to automate code quality gates, deterministic image builds, artifact provenance signing, and automated staging deployments using GitHub Actions.</p>
+<p>Production AI engineering requires mastering five foundational pillars:</p>
+<ol>
+<li><strong>Operating System &amp; Kernel Architecture</strong>: How the Linux kernel allocates physical memory, balances swap, isolates processes through control groups (<code>cgroups</code>), handles inter-process communication (IPC), and schedules asynchronous disk and network I/O (<code>io_uring</code>).</li>
+<li><strong>Containerization &amp; Driver Integration</strong>: How Docker container layers are cached and constructed, how the NVIDIA Container Toolkit (<code>nvidia-ctk</code>) hooks host GPU drivers into isolated namespaces, and how shared memory limits prevent IPC deadlocks in PyTorch data loaders.</li>
+<li><strong>High-Performance Serving Gateways</strong>: How the Asynchronous Server Gateway Interface (ASGI) event loop operates, how to decouple CPU-bound tensor execution from I/O polling, and how dynamic mini-batching amortizes model forward pass latency.</li>
+<li><strong>Behavioral &amp; Contract-Driven Testing</strong>: Why traditional unit tests are insufficient for stochastic models, and how to implement directional expectation tests, minimum functionality tests, and data contract validations.</li>
+<li><strong>Continuous Integration &amp; Continuous Delivery (CI/CD)</strong>: How to automate code quality gates, deterministic image builds, artifact provenance signing, and automated staging deployments using GitHub Actions.</li>
+</ol>
 <hr />
 <h2 id="2-linux-systems-programming-for-ai-engineers">2. Linux Systems Programming for AI Engineers<a class="headerlink" href="#2-linux-systems-programming-for-ai-engineers" title="Permanent link">&para;</a></h2>
 <p>Production machine learning workloads push the Linux kernel to its limits. Training and inference processes saturate memory bandwidth, trigger high page-fault frequencies, and exhaust kernel-level inter-process communication pipes.</p>
@@ -4341,17 +4343,21 @@
 <p>Linux allows <strong>memory overcommit</strong> (<code>/proc/sys/vm/overcommit_memory = 0</code> or <code>1</code>), gambling that processes will not simultaneously utilize their full virtual allocations. When physical memory and swap are exhausted, the kernel invokes the <strong>OOM Killer</strong> (<code>mm/oom_kill.c</code>).</p>
 <p>The OOM Killer calculates an badness score for every active process:</p>
 <div class="arithmatex">\[\text{oom\_score} = \frac{\text{RSS} + \text{swap\_usage}}{\text{total\_physical\_ram}} \times 1000 + \text{oom\_score\_adj}\]</div>
-<p>Where:
-- <span class="arithmatex">\(\text{RSS}\)</span> is the Resident Set Size (pages physically resident in RAM).
-- <span class="arithmatex">\(\text{oom\_score\_adj} \in [-1000, 1000]\)</span> is a user-configurable bias stored in <code>/proc/&lt;PID&gt;/oom_score_adj</code>.
-- If <span class="arithmatex">\(\text{oom\_score\_adj} = -1000\)</span>, the process is completely immune from OOM termination.</p>
+<p>Where:</p>
+<ul>
+<li><span class="arithmatex">\(\text{RSS}\)</span> is the Resident Set Size (pages physically resident in RAM).</li>
+<li><span class="arithmatex">\(\text{oom\_score\_adj} \in [-1000, 1000]\)</span> is a user-configurable bias stored in <code>/proc/&lt;PID&gt;/oom_score_adj</code>.</li>
+<li>If <span class="arithmatex">\(\text{oom\_score\_adj} = -1000\)</span>, the process is completely immune from OOM termination.</li>
+</ul>
 <p>When an AI model loads large weight matrices or experiences unbounded request queues, its RSS balloons, driving its <code>oom_score</code> close to <span class="arithmatex">\(1000\)</span>. The kernel abruptly sends <code>SIGKILL</code> (signal 9), yielding container exit code:</p>
 <div class="arithmatex">\[\text{Exit Code} = 128 + 9 = 137\]</div>
 <h3 id="22-control-groups-cgroups-v2-and-resource-throttling">2.2 Control Groups (cgroups v2) and Resource Throttling<a class="headerlink" href="#22-control-groups-cgroups-v2-and-resource-throttling" title="Permanent link">&para;</a></h3>
-<p>Modern container runtimes rely on Linux <code>cgroups v2</code> to enforce hard and soft resource ceilings. In Kubernetes and Docker:
-- <code>memory.max</code>: Hard upper limit. If process memory exceeds this threshold and cannot be reclaimed by evicting page cache, the kernel triggers the cgroup OOM killer.
-- <code>memory.high</code>: Soft limit. Exceeding this triggers memory throttling and synchronous page-cache reclamation, slowing down process execution without immediate termination.
-- <code>cpu.max</code>: Enforces quota within a fixed period (typically <span class="arithmatex">\(100\text{ ms} = 100,000\text{ }\mu\text{s}\)</span>). If a container is assigned <span class="arithmatex">\(2.5\text{ CPUs}\)</span>, <code>cpu.max</code> is configured as <code>250000 100000</code>. Once the process consumes <span class="arithmatex">\(250\text{ ms}\)</span> of aggregated CPU runtime within the <span class="arithmatex">\(100\text{ ms}\)</span> wall-clock window, the kernel scheduler completely freezes the process threads until the next period begins (<strong>CPU Throttling</strong>).</p>
+<p>Modern container runtimes rely on Linux <code>cgroups v2</code> to enforce hard and soft resource ceilings. In Kubernetes and Docker:</p>
+<ul>
+<li><code>memory.max</code>: Hard upper limit. If process memory exceeds this threshold and cannot be reclaimed by evicting page cache, the kernel triggers the cgroup OOM killer.</li>
+<li><code>memory.high</code>: Soft limit. Exceeding this triggers memory throttling and synchronous page-cache reclamation, slowing down process execution without immediate termination.</li>
+<li><code>cpu.max</code>: Enforces quota within a fixed period (typically <span class="arithmatex">\(100\text{ ms} = 100,000\text{ }\mu\text{s}\)</span>). If a container is assigned <span class="arithmatex">\(2.5\text{ CPUs}\)</span>, <code>cpu.max</code> is configured as <code>250000 100000</code>. Once the process consumes <span class="arithmatex">\(250\text{ ms}\)</span> of aggregated CPU runtime within the <span class="arithmatex">\(100\text{ ms}\)</span> wall-clock window, the kernel scheduler completely freezes the process threads until the next period begins (<strong>CPU Throttling</strong>).</li>
+</ul>
 <h3 id="23-inter-process-communication-ipc-and-shared-memory-devshm">2.3 Inter-Process Communication (IPC) and Shared Memory (<code>/dev/shm</code>)<a class="headerlink" href="#23-inter-process-communication-ipc-and-shared-memory-devshm" title="Permanent link">&para;</a></h3>
 <p>In deep learning frameworks like PyTorch, multi-worker data loading (<code>DataLoader(num_workers &gt; 0)</code>) uses Python's multiprocessing subsystem. Rather than serializing multidimensional NumPy arrays or PyTorch tensors over network sockets or UNIX domain pipes (which introduces prohibitive serialization and copy overhead), PyTorch passes tensor memory via <strong>POSIX shared memory</strong> backed by the RAM filesystem <code>/dev/shm</code>.</p>
 <p>The standard default <code>/dev/shm</code> size in Docker containers is only <span class="arithmatex">\(64\text{ MB}\)</span>. When workers stream large image batches or audio tensors into shared memory:
@@ -4404,16 +4410,20 @@ A <strong>Bus Error</strong> (<code>SIGBUS</code>) occurs because the kernel map
     CUDARuntime --&gt; CUDAUser
     PyTorchApp --&gt; CUDARuntime</code></pre>
 <h3 id="31-the-nvidia-container-toolkit-architecture">3.1 The NVIDIA Container Toolkit Architecture<a class="headerlink" href="#31-the-nvidia-container-toolkit-architecture" title="Permanent link">&para;</a></h3>
-<p>Docker isolated namespaces cannot access host hardware devices by default. The <strong>NVIDIA Container Toolkit</strong> (<code>nvidia-ctk</code>) solves this using an OCI (Open Container Initiative) prestart hook:
-1. When Docker starts a container with <code>--gpus all</code> (or <code>device_requests</code>), containerd invokes <code>nvidia-container-runtime-hook</code>.
-2. The hook inspects the host's installed NVIDIA driver version.
-3. It selectively mounts the required character device nodes (<code>/dev/nvidia0</code>, <code>/dev/nvidiactl</code>, <code>/dev/nvidia-uvm</code>) and injects the host's dynamic user-space driver libraries (e.g., <code>libcuda.so.1</code>, <code>libnvidia-ml.so</code>) into the container's root filesystem.
-4. Consequently, the Docker image <strong>must never package the kernel driver</strong>; it only packages the user-space CUDA runtime libraries (<code>libcudart.so</code>).</p>
+<p>Docker isolated namespaces cannot access host hardware devices by default. The <strong>NVIDIA Container Toolkit</strong> (<code>nvidia-ctk</code>) solves this using an OCI (Open Container Initiative) prestart hook:</p>
+<ol>
+<li>When Docker starts a container with <code>--gpus all</code> (or <code>device_requests</code>), containerd invokes <code>nvidia-container-runtime-hook</code>.</li>
+<li>The hook inspects the host's installed NVIDIA driver version.</li>
+<li>It selectively mounts the required character device nodes (<code>/dev/nvidia0</code>, <code>/dev/nvidiactl</code>, <code>/dev/nvidia-uvm</code>) and injects the host's dynamic user-space driver libraries (e.g., <code>libcuda.so.1</code>, <code>libnvidia-ml.so</code>) into the container's root filesystem.</li>
+<li>Consequently, the Docker image <strong>must never package the kernel driver</strong>; it only packages the user-space CUDA runtime libraries (<code>libcudart.so</code>).</li>
+</ol>
 <h3 id="32-cuda-image-variants-base-vs-runtime-vs-devel">3.2 CUDA Image Variants: <code>base</code> vs <code>runtime</code> vs <code>devel</code><a class="headerlink" href="#32-cuda-image-variants-base-vs-runtime-vs-devel" title="Permanent link">&para;</a></h3>
-<p>NVIDIA publishes three distinct base image tiers on Docker Hub (<code>nvidia/cuda</code>):
-- <code>base</code>: Contains only the CUDA runtime entrypoint and dynamic driver stubs (<code>libcuda.so</code>). Ultra-lightweight (<span class="arithmatex">\(~150\text{ MB}\)</span>), but cannot run any framework compiled with cuDNN or cuBLAS unless packaged separately.
-- <code>runtime</code>: Contains <code>base</code> plus precompiled runtime libraries: cuBLAS, cuDNN, NCCL, and TensorRT. Ideal for production inference containers (<span class="arithmatex">\(~2-3\text{ GB}\)</span>).
-- <code>devel</code>: Contains <code>runtime</code> plus the complete CUDA Compiler driver (<code>nvcc</code>), C/C++ header files (<code>cuda.h</code>), and static development archives. Necessary only when compiling custom C++/CUDA kernels (e.g. FlashAttention, vLLM custom ops) (<span class="arithmatex">\(~5-8\text{ GB}\)</span>).</p>
+<p>NVIDIA publishes three distinct base image tiers on Docker Hub (<code>nvidia/cuda</code>):</p>
+<ul>
+<li><code>base</code>: Contains only the CUDA runtime entrypoint and dynamic driver stubs (<code>libcuda.so</code>). Ultra-lightweight (<span class="arithmatex">\(~150\text{ MB}\)</span>), but cannot run any framework compiled with cuDNN or cuBLAS unless packaged separately.</li>
+<li><code>runtime</code>: Contains <code>base</code> plus precompiled runtime libraries: cuBLAS, cuDNN, NCCL, and TensorRT. Ideal for production inference containers (<span class="arithmatex">\(~2-3\text{ GB}\)</span>).</li>
+<li><code>devel</code>: Contains <code>runtime</code> plus the complete CUDA Compiler driver (<code>nvcc</code>), C/C++ header files (<code>cuda.h</code>), and static development archives. Necessary only when compiling custom C++/CUDA kernels (e.g. FlashAttention, vLLM custom ops) (<span class="arithmatex">\(~5-8\text{ GB}\)</span>).</li>
+</ul>
 <h3 id="33-multi-stage-docker-build-mechanics">3.3 Multi-Stage Docker Build Mechanics<a class="headerlink" href="#33-multi-stage-docker-build-mechanics" title="Permanent link">&para;</a></h3>
 <p>To produce hardened, lean production images, we decouple the build environment (which requires compilers, headers, and git) from the final runtime image:</p>
 <div class="language-dockerfile highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># -------------------------------------------------------------</span>
@@ -4483,9 +4493,11 @@ A <strong>Bus Error</strong> (<code>SIGBUS</code>) occurs because the kernel map
 </span></code></pre></div>
 <hr />
 <h2 id="4-production-serving-with-fastapi-high-throughput-io">4. Production Serving with FastAPI &amp; High-Throughput I/O<a class="headerlink" href="#4-production-serving-with-fastapi-high-throughput-io" title="Permanent link">&para;</a></h2>
-<p>Serving machine learning models requires bridging two conflicting operational models:
-1. <strong>Network I/O Handling</strong>: Highly concurrent, non-blocking asynchronous event loops suited for HTTP request ingestion, connection pooling, and payload validation.
-2. <strong>Tensor Inference Execution</strong>: Compute-heavy, memory-bandwidth-bound matrix multiplications that saturate CPU/GPU cores and block the Python thread.</p>
+<p>Serving machine learning models requires bridging two conflicting operational models:</p>
+<ol>
+<li><strong>Network I/O Handling</strong>: Highly concurrent, non-blocking asynchronous event loops suited for HTTP request ingestion, connection pooling, and payload validation.</li>
+<li><strong>Tensor Inference Execution</strong>: Compute-heavy, memory-bandwidth-bound matrix multiplications that saturate CPU/GPU cores and block the Python thread.</li>
+</ol>
 <pre class="mermaid"><code>flowchart TD
     Client["Client HTTP Requests (REST / SSE)"] --&gt; Gunicorn["Gunicorn Master Process (Process Supervisor)"]
     Gunicorn --&gt; Worker1["Uvicorn Worker 1 (ASGI Process)"]
@@ -4518,11 +4530,15 @@ A <strong>Bus Error</strong> (<code>SIGBUS</code>) occurs because the kernel map
 While <code>model(tensor)</code> executes on the CPU or synchronizes with the GPU via <code>.item()</code> or <code>.tolist()</code>, the Python main thread is blocked. No other network requests can be accepted, health checks fail, and latency percentiles skyrocket.</p>
 <h4 id="the-concurrency-solution-threadpools-and-process-pools">The Concurrency Solution: Threadpools and Process Pools<a class="headerlink" href="#the-concurrency-solution-threadpools-and-process-pools" title="Permanent link">&para;</a></h4>
 <ul>
-<li>For <strong>lightweight CPU inference</strong> or I/O-bound pre-processing, delegate the blocking function to the worker threadpool using FastAPI's background runner:
+<li>
+<p>For <strong>lightweight CPU inference</strong> or I/O-bound pre-processing, delegate the blocking function to the worker threadpool using FastAPI's background runner:
   <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">starlette.concurrency</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_in_threadpool</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_in_threadpool</span><span class="p">(</span><span class="n">blocking_inference</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span>
-</span></code></pre></div></li>
-<li>For <strong>GPU inference</strong>, requests should feed into an asynchronous queue processed by a background worker that dynamically groups concurrent inputs into a single batched tensor pass.</li>
+</span></code></pre></div></p>
+</li>
+<li>
+<p>For <strong>GPU inference</strong>, requests should feed into an asynchronous queue processed by a background worker that dynamically groups concurrent inputs into a single batched tensor pass.</p>
+</li>
 </ul>
 <h3 id="42-dynamic-mini-batching-mechanics">4.2 Dynamic Mini-Batching Mechanics<a class="headerlink" href="#42-dynamic-mini-batching-mechanics" title="Permanent link">&para;</a></h3>
 <p>GPU Tensor Cores achieve maximum floating-point efficiency when computing large matrix multiplications. Executing single-item inferences (<span class="arithmatex">\(B = 1\)</span>) underutilizes GPU compute cores while incurring constant PCIe kernel-launch overhead:</p>
@@ -4546,11 +4562,13 @@ While <code>model(tensor)</code> executes on the CPU or synchronizes with the GP
     Engine--&gt;&gt;C2: Return Response 2
     Engine--&gt;&gt;C3: Return Response 3</code></pre>
 <h3 id="43-complete-production-fastapi-service-implementation">4.3 Complete Production FastAPI Service Implementation<a class="headerlink" href="#43-complete-production-fastapi-service-implementation" title="Permanent link">&para;</a></h3>
-<p>Below is a complete, runnable, production-grade FastAPI service implementing:
-- Pydantic v2 validation contracts.
-- Asynchronous lifespan management (warmup, resource allocation, clean shutdown).
-- Dynamic mini-batch queue running in a dedicated background task.
-- Server-Sent Events (SSE) streaming endpoint.</p>
+<p>Below is a complete, runnable, production-grade FastAPI service implementing:</p>
+<ul>
+<li>Pydantic v2 validation contracts.</li>
+<li>Asynchronous lifespan management (warmup, resource allocation, clean shutdown).</li>
+<li>Dynamic mini-batch queue running in a dedicated background task.</li>
+<li>Server-Sent Events (SSE) streaming endpoint.</li>
+</ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
@@ -4741,10 +4759,12 @@ While <code>model(tensor)</code> executes on the CPU or synchronizes with the GP
     MLTesting --&gt; Behavioral["2. Behavioral Tests (CheckList)\n(Invariance, Directional Expectation, Minimum Functionality)"]
     MLTesting --&gt; DataContract["3. Data Pipeline &amp; Contract Tests\n(Null ratios, schema drift, schema enforcement via Pandera)"]</code></pre>
 <h3 id="51-unit-testing-gradients-invariants-and-convergence">5.1 Unit Testing: Gradients, Invariants, and Convergence<a class="headerlink" href="#51-unit-testing-gradients-invariants-and-convergence" title="Permanent link">&para;</a></h3>
-<p>Unit tests verify that code components conform to basic numerical and algorithmic invariants:
-1. <strong>Tensor Shape Invariance</strong>: Verify output dimensions match expected batch sizes and channel lengths across all layer boundaries.
-2. <strong>Gradient Flow</strong>: Ensure no layers produce zero or NaN gradients during backpropagation (detecting vanishing/exploding gradients).
-3. <strong>Overfitting on Single Batch</strong>: A neural network implementation should be able to overfit a 2-sample batch to near-zero loss (<span class="arithmatex">\(\mathcal{L} \le 10^{-4}\)</span>) within 100 iterations. If it cannot, the architecture contains fundamental bugs (e.g., misconfigured loss reduction, disconnected gradient graphs, or wrong activation functions).</p>
+<p>Unit tests verify that code components conform to basic numerical and algorithmic invariants:</p>
+<ol>
+<li><strong>Tensor Shape Invariance</strong>: Verify output dimensions match expected batch sizes and channel lengths across all layer boundaries.</li>
+<li><strong>Gradient Flow</strong>: Ensure no layers produce zero or NaN gradients during backpropagation (detecting vanishing/exploding gradients).</li>
+<li><strong>Overfitting on Single Batch</strong>: A neural network implementation should be able to overfit a 2-sample batch to near-zero loss (<span class="arithmatex">\(\mathcal{L} \le 10^{-4}\)</span>) within 100 iterations. If it cannot, the architecture contains fundamental bugs (e.g., misconfigured loss reduction, disconnected gradient graphs, or wrong activation functions).</li>
+</ol>
 <h3 id="52-behavioral-testing-the-checklist-framework">5.2 Behavioral Testing: The CheckList Framework<a class="headerlink" href="#52-behavioral-testing-the-checklist-framework" title="Permanent link">&para;</a></h3>
 <p>Introduced by <a href="https://arxiv.org/abs/2005.04118">Ribeiro et al. (2020)</a>, behavioral testing treats the model as a black box and validates linguistic or feature behaviors:</p>
 <pre class="mermaid"><code>flowchart LR
@@ -4977,55 +4997,67 @@ While <code>model(tensor)</code> executes on the CPU or synchronizes with the GP
 <hr />
 <h2 id="8-staff-level-technical-interview-questions">8. Staff-Level Technical Interview Questions<a class="headerlink" href="#8-staff-level-technical-interview-questions" title="Permanent link">&para;</a></h2>
 <h3 id="q1-explain-the-operational-differences-between-asgi-and-wsgi-why-is-wsgi-inadequate-for-modern-llm-token-streaming-services">Q1: Explain the operational differences between ASGI and WSGI. Why is WSGI inadequate for modern LLM token streaming services?<a class="headerlink" href="#q1-explain-the-operational-differences-between-asgi-and-wsgi-why-is-wsgi-inadequate-for-modern-llm-token-streaming-services" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>WSGI (Web Server Gateway Interface - PEP 3333)</strong> is a synchronous request-response protocol. Each incoming HTTP request occupies an entire worker process or thread from start to finish. When handling streaming responses (e.g. Large Language Model Server-Sent Events generating 500 tokens over 15 seconds), that thread remains completely blocked, unable to process other requests. Scaling to 1,000 concurrent streaming connections would require 1,000 OS processes, inducing crushing memory consumption and kernel context-switching overhead.
-- <strong>ASGI (Asynchronous Server Gateway Interface)</strong> decouples request handling using non-blocking event loops (<code>asyncio</code>). An ASGI server (such as Uvicorn) manages thousands of concurrent open HTTP connections on a single OS thread using OS notification mechanisms (<code>epoll</code> on Linux, <code>kqueue</code> on macOS). For token streaming, the route yields control back to the event loop between tokens (<code>await asyncio.sleep(...)</code> or awaiting the next token from an asynchronous queue), multiplexing thousands of concurrent streaming connections with minimal memory overhead.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>WSGI (Web Server Gateway Interface - PEP 3333)</strong> is a synchronous request-response protocol. Each incoming HTTP request occupies an entire worker process or thread from start to finish. When handling streaming responses (e.g. Large Language Model Server-Sent Events generating 500 tokens over 15 seconds), that thread remains completely blocked, unable to process other requests. Scaling to 1,000 concurrent streaming connections would require 1,000 OS processes, inducing crushing memory consumption and kernel context-switching overhead.</li>
+<li><strong>ASGI (Asynchronous Server Gateway Interface)</strong> decouples request handling using non-blocking event loops (<code>asyncio</code>). An ASGI server (such as Uvicorn) manages thousands of concurrent open HTTP connections on a single OS thread using OS notification mechanisms (<code>epoll</code> on Linux, <code>kqueue</code> on macOS). For token streaming, the route yields control back to the event loop between tokens (<code>await asyncio.sleep(...)</code> or awaiting the next token from an asynchronous queue), multiplexing thousands of concurrent streaming connections with minimal memory overhead.</li>
+</ul>
 <hr />
 <h3 id="q2-what-is-the-exact-sequence-of-events-when-a-containerized-process-accesses-an-nvidia-gpu-via-docker-gpus-all">Q2: What is the exact sequence of events when a containerized process accesses an NVIDIA GPU via Docker <code>--gpus all</code>?<a class="headerlink" href="#q2-what-is-the-exact-sequence-of-events-when-a-containerized-process-accesses-an-nvidia-gpu-via-docker-gpus-all" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-1. <strong>Container Initiation</strong>: Docker delegates container creation to <code>containerd</code>, which invokes the OCI runtime (<code>runc</code>).
-2. <strong>Hook Execution</strong>: An OCI prestart hook registered by the NVIDIA Container Toolkit (<code>nvidia-container-runtime-hook</code>) intercepts container setup before the entrypoint launches.
-3. <strong>Hardware Discovery</strong>: The hook queries the host kernel via <code>libnvidia-container</code> to discover installed NVIDIA GPU devices and driver versions.
-4. <strong>Device Node Injection</strong>: The hook dynamically creates device nodes inside the container's <code>/dev</code> namespace (e.g. <code>/dev/nvidia0</code>, <code>/dev/nvidiactl</code>, <code>/dev/nvidia-uvm</code>).
-5. <strong>Driver Library Mounting</strong>: The hook mounts the host's user-space driver libraries (<code>libcuda.so</code>, <code>libnvidia-ml.so</code>) from the host into the container's library paths (<code>/usr/lib/x86_64-linux-gnu</code>).
-6. <strong>Execution</strong>: The application inside the container invokes the CUDA Runtime API (<code>libcudart.so</code>), which dispatches calls through the mounted <code>libcuda.so</code>, communicating with the host kernel driver (<code>nvidia.ko</code>) via <code>ioctl</code> system calls.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ol>
+<li><strong>Container Initiation</strong>: Docker delegates container creation to <code>containerd</code>, which invokes the OCI runtime (<code>runc</code>).</li>
+<li><strong>Hook Execution</strong>: An OCI prestart hook registered by the NVIDIA Container Toolkit (<code>nvidia-container-runtime-hook</code>) intercepts container setup before the entrypoint launches.</li>
+<li><strong>Hardware Discovery</strong>: The hook queries the host kernel via <code>libnvidia-container</code> to discover installed NVIDIA GPU devices and driver versions.</li>
+<li><strong>Device Node Injection</strong>: The hook dynamically creates device nodes inside the container's <code>/dev</code> namespace (e.g. <code>/dev/nvidia0</code>, <code>/dev/nvidiactl</code>, <code>/dev/nvidia-uvm</code>).</li>
+<li><strong>Driver Library Mounting</strong>: The hook mounts the host's user-space driver libraries (<code>libcuda.so</code>, <code>libnvidia-ml.so</code>) from the host into the container's library paths (<code>/usr/lib/x86_64-linux-gnu</code>).</li>
+<li><strong>Execution</strong>: The application inside the container invokes the CUDA Runtime API (<code>libcudart.so</code>), which dispatches calls through the mounted <code>libcuda.so</code>, communicating with the host kernel driver (<code>nvidia.ko</code>) via <code>ioctl</code> system calls.</li>
+</ol>
 <hr />
 <h3 id="q3-contrast-invariance-tests-inv-and-directional-expectation-tests-dir-in-the-checklist-framework-provide-a-mathematical-formulation-and-test-case-for-each">Q3: Contrast Invariance Tests (INV) and Directional Expectation Tests (DIR) in the CheckList framework. Provide a mathematical formulation and test case for each.<a class="headerlink" href="#q3-contrast-invariance-tests-inv-and-directional-expectation-tests-dir-in-the-checklist-framework-provide-a-mathematical-formulation-and-test-case-for-each" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Invariance Tests (INV)</strong> assert that label predictions remain stable under semantic-preserving transformations:</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Invariance Tests (INV)</strong> assert that label predictions remain stable under semantic-preserving transformations:</li>
+</ul>
 <p>$<span class="arithmatex">\(\forall x \in \mathcal{X}, \quad |f(x) - f(g_{\text{inv}}(x))| \le \epsilon\)</span>$</p>
-<p><em>Example</em>: In fraud detection, swapping an applicant's phone number or zip code within the same census tract should not alter the model's calculated fraud risk score.
-- <strong>Directional Expectation Tests (DIR)</strong> assert that perturbations designed to push a feature along a known gradient produce monotonic changes in output:</p>
+<p><em>Example</em>: In fraud detection, swapping an applicant's phone number or zip code within the same census tract should not alter the model's calculated fraud risk score.</p>
+<ul>
+<li><strong>Directional Expectation Tests (DIR)</strong> assert that perturbations designed to push a feature along a known gradient produce monotonic changes in output:</li>
+</ul>
 <p>$<span class="arithmatex">\(\text{If } x' = g_{\text{dir}}(x) \text{ increases risk factors, then } f(x') \ge f(x)\)</span>$</p>
 <p><em>Example</em>: In an automated loan underwriting model, adding a 90-day delinquency record to a credit history must strictly increase the calculated probability of default or leave it unchanged. Any drop in predicted risk indicates an erroneous model artifact or multicollinearity failure.</p>
 <hr />
 <h3 id="q4-how-does-linux-cgroups-v2-enforce-cpu-limits-and-how-does-cpu-throttling-degrade-model-inference-latencies">Q4: How does Linux cgroups v2 enforce CPU limits, and how does CPU throttling degrade model inference latencies?<a class="headerlink" href="#q4-how-does-linux-cgroups-v2-enforce-cpu-limits-and-how-does-cpu-throttling-degrade-model-inference-latencies" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
-Linux <code>cgroups v2</code> enforces CPU allocation using the Completely Fair Scheduler (CFS) bandwidth control parameters defined in <code>cpu.max = quota period</code>.<br />
-- Default <code>period</code> is typically <span class="arithmatex">\(100\text{ ms}\)</span> (<span class="arithmatex">\(100,000\text{ }\mu\text{s}\)</span>). If a container is assigned <span class="arithmatex">\(2.0\text{ CPUs}\)</span>, its quota is <span class="arithmatex">\(200,000\text{ }\mu\text{s}\)</span>.
-- If an inference microservice spawns 8 threads to process an incoming image batch using OpenMP/MKL, those 8 threads can exhaust the <span class="arithmatex">\(200,000\text{ }\mu\text{s}\)</span> quota in just <span class="arithmatex">\(25\text{ ms}\)</span> of elapsed wall-clock time (<span class="arithmatex">\(8 \times 25\text{ ms} = 200\text{ ms}\)</span>).
-- For the remaining <span class="arithmatex">\(75\text{ ms}\)</span> of that <span class="arithmatex">\(100\text{ ms}\)</span> period, the CFS scheduler <strong>completely deschedules and freezes all container threads</strong>.
-- This manifests as severe latency spikes where <span class="arithmatex">\(P_{50}\)</span> is <span class="arithmatex">\(25\text{ ms}\)</span>, but <span class="arithmatex">\(P_{99}\)</span> spikes to over <span class="arithmatex">\(100\text{ ms}\)</span>.
-- <em>Mitigation</em>: Set <code>OMP_NUM_THREADS</code> and <code>TORCH_NUM_THREADS</code> equal to the integer number of assigned CPU cores, avoiding over-subscription and scheduler throttling.</p>
+Linux <code>cgroups v2</code> enforces CPU allocation using the Completely Fair Scheduler (CFS) bandwidth control parameters defined in <code>cpu.max = quota period</code>.  </p>
+<ul>
+<li>Default <code>period</code> is typically <span class="arithmatex">\(100\text{ ms}\)</span> (<span class="arithmatex">\(100,000\text{ }\mu\text{s}\)</span>). If a container is assigned <span class="arithmatex">\(2.0\text{ CPUs}\)</span>, its quota is <span class="arithmatex">\(200,000\text{ }\mu\text{s}\)</span>.</li>
+<li>If an inference microservice spawns 8 threads to process an incoming image batch using OpenMP/MKL, those 8 threads can exhaust the <span class="arithmatex">\(200,000\text{ }\mu\text{s}\)</span> quota in just <span class="arithmatex">\(25\text{ ms}\)</span> of elapsed wall-clock time (<span class="arithmatex">\(8 \times 25\text{ ms} = 200\text{ ms}\)</span>).</li>
+<li>For the remaining <span class="arithmatex">\(75\text{ ms}\)</span> of that <span class="arithmatex">\(100\text{ ms}\)</span> period, the CFS scheduler <strong>completely deschedules and freezes all container threads</strong>.</li>
+<li>This manifests as severe latency spikes where <span class="arithmatex">\(P_{50}\)</span> is <span class="arithmatex">\(25\text{ ms}\)</span>, but <span class="arithmatex">\(P_{99}\)</span> spikes to over <span class="arithmatex">\(100\text{ ms}\)</span>.</li>
+<li><em>Mitigation</em>: Set <code>OMP_NUM_THREADS</code> and <code>TORCH_NUM_THREADS</code> equal to the integer number of assigned CPU cores, avoiding over-subscription and scheduler throttling.</li>
+</ul>
 <hr />
 <h3 id="q5-how-do-multi-stage-docker-builds-optimize-image-size-attack-surface-and-build-cache-invalidation-in-production-ml-systems">Q5: How do multi-stage Docker builds optimize image size, attack surface, and build cache invalidation in production ML systems?<a class="headerlink" href="#q5-how-do-multi-stage-docker-builds-optimize-image-size-attack-surface-and-build-cache-invalidation-in-production-ml-systems" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-1. <strong>Size Reduction</strong>: Build tools (compilers, headers, git, dev libraries) frequently exceed <span class="arithmatex">\(2-4\text{ GB}\)</span>. Multi-stage builds compile artifacts in a builder image and copy only final compiled binaries and site-packages into a lean runtime image, slashing total image size by up to <span class="arithmatex">\(75\%\)</span>.
-2. <strong>Attack Surface Minimization</strong>: Production containers should never package compilers (<code>gcc</code>, <code>g++</code>), package managers (<code>apt</code>, <code>pip</code>), or shell utilities that facilitate arbitrary code execution after remote exploit. Running as a non-root user prevents container breakout attacks.
-3. <strong>Cache Optimization</strong>: Docker caches layers sequentially. By copying <code>requirements.txt</code> and installing wheels in an isolated step before copying dynamic application code (<code>COPY src/ /app/src/</code>), code changes do not invalidate the heavy Python dependency installation layer, accelerating CI build cycles from minutes to seconds.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ol>
+<li><strong>Size Reduction</strong>: Build tools (compilers, headers, git, dev libraries) frequently exceed <span class="arithmatex">\(2-4\text{ GB}\)</span>. Multi-stage builds compile artifacts in a builder image and copy only final compiled binaries and site-packages into a lean runtime image, slashing total image size by up to <span class="arithmatex">\(75\%\)</span>.</li>
+<li><strong>Attack Surface Minimization</strong>: Production containers should never package compilers (<code>gcc</code>, <code>g++</code>), package managers (<code>apt</code>, <code>pip</code>), or shell utilities that facilitate arbitrary code execution after remote exploit. Running as a non-root user prevents container breakout attacks.</li>
+<li><strong>Cache Optimization</strong>: Docker caches layers sequentially. By copying <code>requirements.txt</code> and installing wheels in an isolated step before copying dynamic application code (<code>COPY src/ /app/src/</code>), code changes do not invalidate the heavy Python dependency installation layer, accelerating CI build cycles from minutes to seconds.</li>
+</ol>
 <hr />
 <h2 id="9-mastery-ladder">9. Mastery Ladder<a class="headerlink" href="#9-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Explain the lifecycle of physical vs. virtual memory allocation and page faults in Linux.</li>
-<li>[ ] <strong>L2:</strong> Diagnose and resolve container termination with exit code 137 using <code>dmesg</code> and <code>oom_score_adj</code>.</li>
-<li>[ ] <strong>L3:</strong> Explain why PyTorch multi-process data loaders require configuring <code>--shm-size</code> in Docker.</li>
-<li>[ ] <strong>L4:</strong> Describe the internal architecture of the NVIDIA Container Toolkit and its OCI prestart hook.</li>
-<li>[ ] <strong>L5:</strong> Distinguish between NVIDIA CUDA <code>base</code>, <code>runtime</code>, and <code>devel</code> images and identify appropriate production use-cases.</li>
-<li>[ ] <strong>L6:</strong> Construct a multi-stage Dockerfile that separates compiler toolchains from production runtime environments and enforces non-root execution.</li>
-<li>[ ] <strong>L7:</strong> Explain the difference between WSGI and ASGI, and why synchronous tensor calls must be isolated from the asyncio event loop.</li>
-<li>[ ] <strong>L8:</strong> Implement an asynchronous dynamic mini-batching queue in FastAPI to maximize GPU Tensor Core utilization.</li>
-<li>[ ] <strong>L9:</strong> Implement unit, behavioral (CheckList INV, DIR, MFT), and data contract (Pandera) test suites for machine learning models.</li>
-<li>[ ] <strong>L10:</strong> Author a complete GitHub Actions CI/CD pipeline featuring static analysis, container building, and cryptographic image signing with Cosign.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Explain the lifecycle of physical vs. virtual memory allocation and page faults in Linux.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Diagnose and resolve container termination with exit code 137 using <code>dmesg</code> and <code>oom_score_adj</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Explain why PyTorch multi-process data loaders require configuring <code>--shm-size</code> in Docker.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Describe the internal architecture of the NVIDIA Container Toolkit and its OCI prestart hook.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Distinguish between NVIDIA CUDA <code>base</code>, <code>runtime</code>, and <code>devel</code> images and identify appropriate production use-cases.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Construct a multi-stage Dockerfile that separates compiler toolchains from production runtime environments and enforces non-root execution.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Explain the difference between WSGI and ASGI, and why synchronous tensor calls must be isolated from the asyncio event loop.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Implement an asynchronous dynamic mini-batching queue in FastAPI to maximize GPU Tensor Core utilization.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Implement unit, behavioral (CheckList INV, DIR, MFT), and data contract (Pandera) test suites for machine learning models.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Author a complete GitHub Actions CI/CD pipeline featuring static analysis, container building, and cryptographic image signing with Cosign.</li>
 </ul>
 
 

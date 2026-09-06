@@ -4452,11 +4452,13 @@ W^{[L]} (W^{[L-1]} \dots (W^{[1]} \mathbf{x} + \mathbf{b}^{[1]}) \dots + \mathbf
 <hr />
 <h2 id="2-biological-inspiration-vs-artificial-perceptron">2. Biological Inspiration vs. Artificial Perceptron<a class="headerlink" href="#2-biological-inspiration-vs-artificial-perceptron" title="Permanent link">&para;</a></h2>
 <h3 id="21-the-biological-metaphor-and-mcculloch-pitts-1943">2.1 The Biological Metaphor and McCulloch-Pitts (1943)<a class="headerlink" href="#21-the-biological-metaphor-and-mcculloch-pitts-1943" title="Permanent link">&para;</a></h3>
-<p>The biological neuron consists of:
-- <strong>Dendrites</strong>: Branching filaments receiving chemical neurotransmitter inputs from adjacent axon terminals.
-- <strong>Soma (Cell Body)</strong>: Integrates incoming post-synaptic electrical potentials over time and space.
-- <strong>Axon Hillock &amp; Axon</strong>: If the accumulated membrane potential exceeds a critical threshold (<span class="arithmatex">\(\approx -55\text{ mV}\)</span>), an all-or-none action potential (spike) propagates down the myelinated axon.
-- <strong>Synapses</strong>: Junction gaps where neurotransmitter vesicle release modulates connection strength (plasticity).</p>
+<p>The biological neuron consists of:</p>
+<ul>
+<li><strong>Dendrites</strong>: Branching filaments receiving chemical neurotransmitter inputs from adjacent axon terminals.</li>
+<li><strong>Soma (Cell Body)</strong>: Integrates incoming post-synaptic electrical potentials over time and space.</li>
+<li><strong>Axon Hillock &amp; Axon</strong>: If the accumulated membrane potential exceeds a critical threshold (<span class="arithmatex">\(\approx -55\text{ mV}\)</span>), an all-or-none action potential (spike) propagates down the myelinated axon.</li>
+<li><strong>Synapses</strong>: Junction gaps where neurotransmitter vesicle release modulates connection strength (plasticity).</li>
+</ul>
 <p>In 1943, Warren McCulloch and Walter Pitts formalized a simplified binary threshold model:</p>
 <div class="arithmatex">\[
 y = \Theta \left( \sum_{i=1}^n w_i x_i - \theta \right)
@@ -4541,12 +4543,14 @@ w_1 + w_2 + 2b \ge 0 \implies w_1 + w_2 + b \ge -b
 <h2 id="3-multi-layer-architecture-representation-capacity">3. Multi-Layer Architecture &amp; Representation Capacity<a class="headerlink" href="#3-multi-layer-architecture-representation-capacity" title="Permanent link">&para;</a></h2>
 <h3 id="31-mathematical-formulation-of-deep-networks">3.1 Mathematical Formulation of Deep Networks<a class="headerlink" href="#31-mathematical-formulation-of-deep-networks" title="Permanent link">&para;</a></h3>
 <p>Consider an <span class="arithmatex">\(L\)</span>-layer neural network (counting hidden and output layers, excluding the input layer <span class="arithmatex">\(l=0\)</span>).
-Let:
-- <span class="arithmatex">\(n^{[l]}\)</span> denote the number of neurons in layer <span class="arithmatex">\(l \in \{0, 1, \dots, L\}\)</span>.
-- <span class="arithmatex">\(\mathbf{a}^{[0]} = \mathbf{x} \in \mathbb{R}^{n^{[0]}}\)</span> be the input vector.
-- <span class="arithmatex">\(W^{[l]} \in \mathbb{R}^{n^{[l]} \times n^{[l-1]}}\)</span> be the weight matrix for layer <span class="arithmatex">\(l\)</span>.
-- <span class="arithmatex">\(\mathbf{b}^{[l]} \in \mathbb{R}^{n^{[l]}}\)</span> be the bias vector for layer <span class="arithmatex">\(l\)</span>.
-- <span class="arithmatex">\(\sigma^{[l]}: \mathbb{R} \to \mathbb{R}\)</span> be an element-wise activation function.</p>
+Let:</p>
+<ul>
+<li><span class="arithmatex">\(n^{[l]}\)</span> denote the number of neurons in layer <span class="arithmatex">\(l \in \{0, 1, \dots, L\}\)</span>.</li>
+<li><span class="arithmatex">\(\mathbf{a}^{[0]} = \mathbf{x} \in \mathbb{R}^{n^{[0]}}\)</span> be the input vector.</li>
+<li><span class="arithmatex">\(W^{[l]} \in \mathbb{R}^{n^{[l]} \times n^{[l-1]}}\)</span> be the weight matrix for layer <span class="arithmatex">\(l\)</span>.</li>
+<li><span class="arithmatex">\(\mathbf{b}^{[l]} \in \mathbb{R}^{n^{[l]}}\)</span> be the bias vector for layer <span class="arithmatex">\(l\)</span>.</li>
+<li><span class="arithmatex">\(\sigma^{[l]}: \mathbb{R} \to \mathbb{R}\)</span> be an element-wise activation function.</li>
+</ul>
 <p>The forward propagation recurrences for layer <span class="arithmatex">\(l \in \{1, \dots, L\}\)</span> are:</p>
 <div class="arithmatex">\[
 \mathbf{z}^{[l]} = W^{[l]} \mathbf{a}^{[l-1]} + \mathbf{b}^{[l]}
@@ -4563,18 +4567,22 @@ W^{[1]} = \begin{bmatrix} 1 &amp; 1 \\ 1 &amp; 1 \end{bmatrix}, \quad \mathbf{b}
 <div class="arithmatex">\[
 W^{[2]} = \begin{bmatrix} 1 &amp; -2 \end{bmatrix}, \quad b^{[2]} = 0, \quad \hat{y} = W^{[2]} \mathbf{a}^{[1]} + b^{[2]}
 \]</div>
-<p>Tracing the transformation:
-- For <span class="arithmatex">\(\mathbf{x} = [0, 0]^T\)</span>: <span class="arithmatex">\(\mathbf{z}^{[1]} = [0, -1]^T \implies \mathbf{a}^{[1]} = [0, 0]^T \implies \hat{y} = 0\)</span>.
-- For <span class="arithmatex">\(\mathbf{x} = [1, 0]^T\)</span>: <span class="arithmatex">\(\mathbf{z}^{[1]} = [1, 0]^T \implies \mathbf{a}^{[1]} = [1, 0]^T \implies \hat{y} = 1\)</span>.
-- For <span class="arithmatex">\(\mathbf{x} = [0, 1]^T\)</span>: <span class="arithmatex">\(\mathbf{z}^{[1]} = [1, 0]^T \implies \mathbf{a}^{[1]} = [1, 0]^T \implies \hat{y} = 1\)</span>.
-- For <span class="arithmatex">\(\mathbf{x} = [1, 1]^T\)</span>: <span class="arithmatex">\(\mathbf{z}^{[1]} = [2, 1]^T \implies \mathbf{a}^{[1]} = [2, 1]^T \implies \hat{y} = 1(2) - 2(1) = 0\)</span>.</p>
+<p>Tracing the transformation:</p>
+<ul>
+<li>For <span class="arithmatex">\(\mathbf{x} = [0, 0]^T\)</span>: <span class="arithmatex">\(\mathbf{z}^{[1]} = [0, -1]^T \implies \mathbf{a}^{[1]} = [0, 0]^T \implies \hat{y} = 0\)</span>.</li>
+<li>For <span class="arithmatex">\(\mathbf{x} = [1, 0]^T\)</span>: <span class="arithmatex">\(\mathbf{z}^{[1]} = [1, 0]^T \implies \mathbf{a}^{[1]} = [1, 0]^T \implies \hat{y} = 1\)</span>.</li>
+<li>For <span class="arithmatex">\(\mathbf{x} = [0, 1]^T\)</span>: <span class="arithmatex">\(\mathbf{z}^{[1]} = [1, 0]^T \implies \mathbf{a}^{[1]} = [1, 0]^T \implies \hat{y} = 1\)</span>.</li>
+<li>For <span class="arithmatex">\(\mathbf{x} = [1, 1]^T\)</span>: <span class="arithmatex">\(\mathbf{z}^{[1]} = [2, 1]^T \implies \mathbf{a}^{[1]} = [2, 1]^T \implies \hat{y} = 1(2) - 2(1) = 0\)</span>.</li>
+</ul>
 <p>The hidden layer collapses the parallel points <span class="arithmatex">\((1,0)\)</span> and <span class="arithmatex">\((0,1)\)</span> into the coordinate <span class="arithmatex">\([1,0]^T\)</span>, while folding <span class="arithmatex">\((1,1)\)</span> to <span class="arithmatex">\([2,1]^T\)</span>, enabling a single linear output threshold to achieve 100% classification accuracy.</p>
 <hr />
 <h2 id="4-forward-propagation-computation-graphs">4. Forward Propagation &amp; Computation Graphs<a class="headerlink" href="#4-forward-propagation-computation-graphs" title="Permanent link">&para;</a></h2>
 <h3 id="41-the-directed-acyclic-graph-dag-view">4.1 The Directed Acyclic Graph (DAG) View<a class="headerlink" href="#41-the-directed-acyclic-graph-dag-view" title="Permanent link">&para;</a></h3>
-<p>Every deep learning framework (PyTorch <code>torch.autograd</code>, TensorFlow <code>tf.GradientTape</code>) abstracts execution as a computational DAG <span class="arithmatex">\(\mathcal{G} = (\mathcal{V}, \mathcal{E})\)</span>:
-- <strong>Vertices <span class="arithmatex">\(\mathcal{V}\)</span></strong>: Represent elementary mathematical operations (<span class="arithmatex">\(+\)</span>, <span class="arithmatex">\(\times\)</span>, <span class="arithmatex">\(\exp\)</span>, <span class="arithmatex">\(\ln\)</span>) or variables (leaf tensors).
-- <strong>Edges <span class="arithmatex">\(\mathcal{E}\)</span></strong>: Directed data dependencies carrying tensor values forward and adjoint gradient tensors backward.</p>
+<p>Every deep learning framework (PyTorch <code>torch.autograd</code>, TensorFlow <code>tf.GradientTape</code>) abstracts execution as a computational DAG <span class="arithmatex">\(\mathcal{G} = (\mathcal{V}, \mathcal{E})\)</span>:</p>
+<ul>
+<li><strong>Vertices <span class="arithmatex">\(\mathcal{V}\)</span></strong>: Represent elementary mathematical operations (<span class="arithmatex">\(+\)</span>, <span class="arithmatex">\(\times\)</span>, <span class="arithmatex">\(\exp\)</span>, <span class="arithmatex">\(\ln\)</span>) or variables (leaf tensors).</li>
+<li><strong>Edges <span class="arithmatex">\(\mathcal{E}\)</span></strong>: Directed data dependencies carrying tensor values forward and adjoint gradient tensors backward.</li>
+</ul>
 <pre class="mermaid"><code>flowchart TD
     X["x (Batch, n⁰)"] --&gt; M1["MatMul: W¹ · a⁰"]
     W1["W¹ (n¹, n⁰)"] --&gt; M1
@@ -4663,9 +4671,11 @@ By the multivariate chain rule, the derivative of <span class="arithmatex">\(\ma
 \nabla_{\mathbf{z}} \mathcal{L} = \nabla_{\mathbf{a}} \mathcal{L} \cdot J_{\mathbf{a}}(\mathbf{z})
 \]</div>
 <p>where <span class="arithmatex">\(J_{\mathbf{a}}(\mathbf{z}) \in \mathbb{R}^{p \times n}\)</span> is the <strong>Jacobian matrix</strong> whose entries are <span class="arithmatex">\(J_{kj} = \frac{\partial a_k}{\partial z_j}\)</span>.</p>
-<p><strong>Why Reverse-Mode AD? Forward vs. Reverse Accumulation:</strong>
-- <strong>Forward-mode AD</strong>: Computes Jacobian-Vector Products (JVPs) <span class="arithmatex">\(J \cdot \mathbf{v}\)</span>. For a network mapping <span class="arithmatex">\(n\)</span> inputs <span class="arithmatex">\(\to 1\)</span> scalar loss, forward-mode requires <span class="arithmatex">\(n\)</span> forward passes (one per parameter). For a modern network with <span class="arithmatex">\(10^8\)</span> parameters, computing the full gradient would require <span class="arithmatex">\(10^8\)</span> passes!
-- <strong>Reverse-mode AD (Backpropagation)</strong>: Computes Vector-Jacobian Products (VJPs) <span class="arithmatex">\(\mathbf{v}^T \cdot J\)</span>, starting with scalar seed <span class="arithmatex">\(\mathbf{v} = \frac{\partial \mathcal{L}}{\partial \mathcal{L}} = 1\)</span>. It computes the exact gradient with respect to <strong>all parameters</strong> in a single backward pass, with compute cost bounded by <span class="arithmatex">\(\le 3\times\)</span> the forward pass.</p>
+<p><strong>Why Reverse-Mode AD? Forward vs. Reverse Accumulation:</strong></p>
+<ul>
+<li><strong>Forward-mode AD</strong>: Computes Jacobian-Vector Products (JVPs) <span class="arithmatex">\(J \cdot \mathbf{v}\)</span>. For a network mapping <span class="arithmatex">\(n\)</span> inputs <span class="arithmatex">\(\to 1\)</span> scalar loss, forward-mode requires <span class="arithmatex">\(n\)</span> forward passes (one per parameter). For a modern network with <span class="arithmatex">\(10^8\)</span> parameters, computing the full gradient would require <span class="arithmatex">\(10^8\)</span> passes!</li>
+<li><strong>Reverse-mode AD (Backpropagation)</strong>: Computes Vector-Jacobian Products (VJPs) <span class="arithmatex">\(\mathbf{v}^T \cdot J\)</span>, starting with scalar seed <span class="arithmatex">\(\mathbf{v} = \frac{\partial \mathcal{L}}{\partial \mathcal{L}} = 1\)</span>. It computes the exact gradient with respect to <strong>all parameters</strong> in a single backward pass, with compute cost bounded by <span class="arithmatex">\(\le 3\times\)</span> the forward pass.</li>
+</ul>
 <h3 id="62-the-error-vector-boldsymboldeltal">6.2 The Error Vector <span class="arithmatex">\(\boldsymbol{\delta}^{[l]}\)</span><a class="headerlink" href="#62-the-error-vector-boldsymboldeltal" title="Permanent link">&para;</a></h3>
 <p>Define the canonical layer error vector <span class="arithmatex">\(\boldsymbol{\delta}^{[l]} \in \mathbb{R}^{n^{[l]}}\)</span> as the gradient of the scalar loss <span class="arithmatex">\(\mathcal{L}\)</span> with respect to the layer's pre-activation vector <span class="arithmatex">\(\mathbf{z}^{[l]}\)</span>:</p>
 <div class="arithmatex">\[
@@ -4750,10 +4760,12 @@ Notice that <span class="arithmatex">\(\mathbf{z}^{[l-1]}\)</span> influences <s
 \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[l]}} = \boldsymbol{\delta}^{[l]} \in \mathbb{R}^{n^{[l]}}
 \]</div>
 <h3 id="66-step-4-batched-matrix-formulation">6.6 Step 4: Batched Matrix Formulation<a class="headerlink" href="#66-step-4-batched-matrix-formulation" title="Permanent link">&para;</a></h3>
-<p>For a mini-batch of <span class="arithmatex">\(m\)</span> examples with design matrix <span class="arithmatex">\(X \in \mathbb{R}^{m \times n^{[0]}}\)</span>, let:
-- <span class="arithmatex">\(Z^{[l]} \in \mathbb{R}^{m \times n^{[l]}}\)</span>
-- <span class="arithmatex">\(A^{[l]} \in \mathbb{R}^{m \times n^{[l]}}\)</span>
-- <span class="arithmatex">\(\Delta^{[l]} = \frac{\partial \mathcal{L}}{\partial Z^{[l]}} \in \mathbb{R}^{m \times n^{[l]}}\)</span></p>
+<p>For a mini-batch of <span class="arithmatex">\(m\)</span> examples with design matrix <span class="arithmatex">\(X \in \mathbb{R}^{m \times n^{[0]}}\)</span>, let:</p>
+<ul>
+<li><span class="arithmatex">\(Z^{[l]} \in \mathbb{R}^{m \times n^{[l]}}\)</span></li>
+<li><span class="arithmatex">\(A^{[l]} \in \mathbb{R}^{m \times n^{[l]}}\)</span></li>
+<li><span class="arithmatex">\(\Delta^{[l]} = \frac{\partial \mathcal{L}}{\partial Z^{[l]}} \in \mathbb{R}^{m \times n^{[l]}}\)</span></li>
+</ul>
 <p>The batched gradient update formulas are:</p>
 <div class="arithmatex">\[
 \Delta^{[L]} = \frac{1}{m} (A^{[L]} - Y) \quad \text{(for Softmax/Cross-Entropy or Sigmoid/BCE)}
@@ -5229,11 +5241,17 @@ Conversely, forward-mode AD propagates directional derivatives forward. To compu
 <h3 id="q3-prove-that-the-gradient-of-categorical-cross-entropy-with-softmax-output-with-respect-to-logits-is-hatmathbfy-mathbfy">Q3: Prove that the gradient of Categorical Cross-Entropy with Softmax output with respect to logits is <span class="arithmatex">\(\hat{\mathbf{y}} - \mathbf{y}\)</span>.<a class="headerlink" href="#q3-prove-that-the-gradient-of-categorical-cross-entropy-with-softmax-output-with-respect-to-logits-is-hatmathbfy-mathbfy" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
 Let <span class="arithmatex">\(z_j\)</span> be the <span class="arithmatex">\(j\)</span>-th logit, <span class="arithmatex">\(\hat{y}_k = \frac{e^{z_k}}{\sum_m e^{z_m}}\)</span>, and <span class="arithmatex">\(\mathcal{L} = -\sum_k y_k \ln \hat{y}_k\)</span>.<br />
-First, compute the derivative of <span class="arithmatex">\(\hat{y}_k\)</span> with respect to <span class="arithmatex">\(z_j\)</span>:
-- When <span class="arithmatex">\(k = j\)</span>:
-  $<span class="arithmatex">\(\frac{\partial \hat{y}_j}{\partial z_j} = \frac{e^{z_j} \sum_m e^{z_m} - (e^{z_j})^2}{\left(\sum_m e^{z_m}\right)^2} = \hat{y}_j - \hat{y}_j^2 = \hat{y}_j(1 - \hat{y}_j)\)</span>$
-- When <span class="arithmatex">\(k \ne j\)</span>:
+First, compute the derivative of <span class="arithmatex">\(\hat{y}_k\)</span> with respect to <span class="arithmatex">\(z_j\)</span>:</p>
+<ul>
+<li>
+<p>When <span class="arithmatex">\(k = j\)</span>:
+  $<span class="arithmatex">\(\frac{\partial \hat{y}_j}{\partial z_j} = \frac{e^{z_j} \sum_m e^{z_m} - (e^{z_j})^2}{\left(\sum_m e^{z_m}\right)^2} = \hat{y}_j - \hat{y}_j^2 = \hat{y}_j(1 - \hat{y}_j)\)</span>$</p>
+</li>
+<li>
+<p>When <span class="arithmatex">\(k \ne j\)</span>:
   $<span class="arithmatex">\(\frac{\partial \hat{y}_k}{\partial z_j} = \frac{0 - e^{z_k} e^{z_j}}{\left(\sum_m e^{z_m}\right)^2} = -\hat{y}_k \hat{y}_j\)</span>$</p>
+</li>
+</ul>
 <p>Combining into a single expression using the Kronecker delta <span class="arithmatex">\(\delta_{kj}\)</span>:</p>
 <div class="arithmatex">\[\frac{\partial \hat{y}_k}{\partial z_j} = \hat{y}_k (\delta_{kj} - \hat{y}_j)\]</div>
 <p>Applying the multivariate chain rule to differentiate the loss <span class="arithmatex">\(\mathcal{L}\)</span>:</p>
@@ -5265,17 +5283,17 @@ The forward pass is:</p>
 <p>A composition of <span class="arithmatex">\(L\)</span> affine transformations is strictly affine. The decision boundary <span class="arithmatex">\(\widetilde{W}\mathbf{x} + \widetilde{\mathbf{b}} = \mathbf{0}\)</span> is always a flat hyperplane in the input space <span class="arithmatex">\(\mathbb{R}^{n^{[0]}}\)</span>, irrespective of depth <span class="arithmatex">\(L\)</span>. Consequently, deep linear networks have the exact same representation capacity as a single-layer perceptron.</p>
 <hr />
 <h2 id="12-mastery-ladder">12. Mastery Ladder<a class="headerlink" href="#12-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> State the difference between biological neurons and Rosenblatt perceptrons, and explain the Heaviside step function.</li>
-<li>[ ] <strong>L2:</strong> Prove algebraically why a single-layer perceptron cannot compute the 2-input XOR function.</li>
-<li>[ ] <strong>L3:</strong> Write the forward propagation matrix equations for an <span class="arithmatex">\(L\)</span>-layer Multi-Layer Perceptron.</li>
-<li>[ ] <strong>L4:</strong> Derive MSE and Binary Cross-Entropy from maximum likelihood principles under Gaussian and Bernoulli models.</li>
-<li>[ ] <strong>L5:</strong> Define Vector-Jacobian Products (VJPs) and explain why reverse-mode AD is asymptotically superior to forward-mode for neural networks.</li>
-<li>[ ] <strong>L6:</strong> Derive the layer error recurrence <span class="arithmatex">\(\boldsymbol{\delta}^{[l-1]} = ((W^{[l]})^T \boldsymbol{\delta}^{[l]}) \odot \sigma'(z^{[l-1]})\)</span>.</li>
-<li>[ ] <strong>L7:</strong> Prove that <span class="arithmatex">\(\nabla_{\mathbf{z}} \mathcal{L} = \hat{\mathbf{y}} - \mathbf{y}\)</span> for Softmax combined with Categorical Cross-Entropy.</li>
-<li>[ ] <strong>L8:</strong> Implement analytical backpropagation and numerical finite-difference gradient checking from scratch in pure NumPy.</li>
-<li>[ ] <strong>L9:</strong> Explain the role of gradient noise in mini-batch SGD for escaping saddle points and converging to flat minima.</li>
-<li>[ ] <strong>L10:</strong> Write a complete modular MLP training pipeline in both pure NumPy and PyTorch, validating 100% convergence on non-linear datasets.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> State the difference between biological neurons and Rosenblatt perceptrons, and explain the Heaviside step function.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Prove algebraically why a single-layer perceptron cannot compute the 2-input XOR function.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Write the forward propagation matrix equations for an <span class="arithmatex">\(L\)</span>-layer Multi-Layer Perceptron.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Derive MSE and Binary Cross-Entropy from maximum likelihood principles under Gaussian and Bernoulli models.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Define Vector-Jacobian Products (VJPs) and explain why reverse-mode AD is asymptotically superior to forward-mode for neural networks.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Derive the layer error recurrence <span class="arithmatex">\(\boldsymbol{\delta}^{[l-1]} = ((W^{[l]})^T \boldsymbol{\delta}^{[l]}) \odot \sigma'(z^{[l-1]})\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Prove that <span class="arithmatex">\(\nabla_{\mathbf{z}} \mathcal{L} = \hat{\mathbf{y}} - \mathbf{y}\)</span> for Softmax combined with Categorical Cross-Entropy.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Implement analytical backpropagation and numerical finite-difference gradient checking from scratch in pure NumPy.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Explain the role of gradient noise in mini-batch SGD for escaping saddle points and converging to flat minima.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Write a complete modular MLP training pipeline in both pure NumPy and PyTorch, validating 100% convergence on non-linear datasets.</li>
 </ul>
 
 

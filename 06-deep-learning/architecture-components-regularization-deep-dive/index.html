@@ -4280,12 +4280,14 @@
 </div>
 <hr />
 <h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
-<p>Deep neural networks are composed of distinct architectural primitives:
-1. <strong>Universal Function Approximators (MLPs)</strong>: Stacking affine transformations with non-linear activations.
-2. <strong>Activation Functions</strong>: Controlling gradient flow, introducing non-linearity, and bounding or shaping coordinate manifolds.
-3. <strong>Normalization Layers (BatchNorm, LayerNorm, GroupNorm)</strong>: Stabilizing internal representation statistics, smoothing the optimization landscape, and enabling larger learning rates.
-4. <strong>Regularization Techniques (Dropout, Weight Decay)</strong>: Preventing co-adaptation of features and preserving generalization capability.
-5. <strong>Principled Weight Initialization (Glorot/Xavier, He/Kaiming)</strong>: Preserving activation and gradient variance across depth to prevent immediate collapse into vanishing or exploding dynamics at iteration zero.</p>
+<p>Deep neural networks are composed of distinct architectural primitives:</p>
+<ol>
+<li><strong>Universal Function Approximators (MLPs)</strong>: Stacking affine transformations with non-linear activations.</li>
+<li><strong>Activation Functions</strong>: Controlling gradient flow, introducing non-linearity, and bounding or shaping coordinate manifolds.</li>
+<li><strong>Normalization Layers (BatchNorm, LayerNorm, GroupNorm)</strong>: Stabilizing internal representation statistics, smoothing the optimization landscape, and enabling larger learning rates.</li>
+<li><strong>Regularization Techniques (Dropout, Weight Decay)</strong>: Preventing co-adaptation of features and preserving generalization capability.</li>
+<li><strong>Principled Weight Initialization (Glorot/Xavier, He/Kaiming)</strong>: Preserving activation and gradient variance across depth to prevent immediate collapse into vanishing or exploding dynamics at iteration zero.</li>
+</ol>
 <pre class="mermaid"><code>flowchart TD
     subgraph Layer Computation Block
         IN["Input: a[l-1]"] --&gt; INIT["Initialized Weights: W[l] ~ N(0, 2/n_in)"]
@@ -4411,10 +4413,12 @@ In the backward pass:</p>
 \frac{\partial \mathcal{L}}{\partial \mathbf{w}_j} = \boldsymbol{\delta}_j \mathbf{x}^T = \left( \sum_k W_{kj}^{[l+1]} \delta_k^{[l+1]} \right) \cdot 0 \cdot \mathbf{x}^T = \mathbf{0}
 \]</div>
 <p>The gradient identically vanishes. The weight vector receives zero updates, permanently "killing" the neuron for all subsequent training epochs.<br />
-<strong>Solutions</strong>:
-1. Initialize biases <span class="arithmatex">\(b_j\)</span> with a small positive constant (<span class="arithmatex">\(+0.01\)</span> or <span class="arithmatex">\(+0.1\)</span>).
-2. Use <strong>Leaky ReLU</strong> or <strong>ELU</strong> where negative inputs maintain a non-zero slope <span class="arithmatex">\(\alpha &gt; 0\)</span>.
-3. Use smooth stochastic activations like <strong>GELU</strong> (standard in GPT, BERT, and ViT).</p>
+<strong>Solutions</strong>:</p>
+<ol>
+<li>Initialize biases <span class="arithmatex">\(b_j\)</span> with a small positive constant (<span class="arithmatex">\(+0.01\)</span> or <span class="arithmatex">\(+0.1\)</span>).</li>
+<li>Use <strong>Leaky ReLU</strong> or <strong>ELU</strong> where negative inputs maintain a non-zero slope <span class="arithmatex">\(\alpha &gt; 0\)</span>.</li>
+<li>Use smooth stochastic activations like <strong>GELU</strong> (standard in GPT, BERT, and ViT).</li>
+</ol>
 <hr />
 <h2 id="4-batch-normalization-ioffe-szegedy-2015">4. Batch Normalization (Ioffe &amp; Szegedy, 2015)<a class="headerlink" href="#4-batch-normalization-ioffe-szegedy-2015" title="Permanent link">&para;</a></h2>
 <h3 id="41-internal-covariate-shift-optimization-smoothing">4.1 Internal Covariate Shift &amp; Optimization Smoothing<a class="headerlink" href="#41-internal-covariate-shift-optimization-smoothing" title="Permanent link">&para;</a></h3>
@@ -4422,16 +4426,24 @@ In the backward pass:</p>
 <h3 id="42-forward-formulation">4.2 Forward Formulation<a class="headerlink" href="#42-forward-formulation" title="Permanent link">&para;</a></h3>
 <p>Given a mini-batch <span class="arithmatex">\(\mathcal{B} = \{x_1, \dots, x_m\}\)</span> of activations for a single scalar feature:</p>
 <ol>
-<li><strong>Mini-batch Mean</strong>:
-   $<span class="arithmatex">\(\mu_{\mathcal{B}} = \frac{1}{m} \sum_{i=1}^m x_i\)</span>$</li>
-<li><strong>Mini-batch Variance</strong>:
-   $<span class="arithmatex">\(\sigma_{\mathcal{B}}^2 = \frac{1}{m} \sum_{i=1}^m (x_i - \mu_{\mathcal{B}})^2\)</span>$</li>
-<li><strong>Standardization</strong>:
+<li>
+<p><strong>Mini-batch Mean</strong>:
+   $<span class="arithmatex">\(\mu_{\mathcal{B}} = \frac{1}{m} \sum_{i=1}^m x_i\)</span>$</p>
+</li>
+<li>
+<p><strong>Mini-batch Variance</strong>:
+   $<span class="arithmatex">\(\sigma_{\mathcal{B}}^2 = \frac{1}{m} \sum_{i=1}^m (x_i - \mu_{\mathcal{B}})^2\)</span>$</p>
+</li>
+<li>
+<p><strong>Standardization</strong>:
    $<span class="arithmatex">\(\hat{x}_i = \frac{x_i - \mu_{\mathcal{B}}}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}}\)</span>$
-   where <span class="arithmatex">\(\epsilon \approx 10^{-5}\)</span> prevents division by zero.</li>
-<li><strong>Scale and Shift (Learnable Affine)</strong>:
+   where <span class="arithmatex">\(\epsilon \approx 10^{-5}\)</span> prevents division by zero.</p>
+</li>
+<li>
+<p><strong>Scale and Shift (Learnable Affine)</strong>:
    $<span class="arithmatex">\(y_i = \gamma \hat{x}_i + \beta\)</span>$
-   where <span class="arithmatex">\(\gamma \in \mathbb{R}\)</span> (scale) and <span class="arithmatex">\(\beta \in \mathbb{R}\)</span> (shift) restore representational capacity. If <span class="arithmatex">\(\gamma = \sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}\)</span> and <span class="arithmatex">\(\beta = \mu_{\mathcal{B}}\)</span>, the identity mapping is perfectly recovered.</li>
+   where <span class="arithmatex">\(\gamma \in \mathbb{R}\)</span> (scale) and <span class="arithmatex">\(\beta \in \mathbb{R}\)</span> (shift) restore representational capacity. If <span class="arithmatex">\(\gamma = \sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}\)</span> and <span class="arithmatex">\(\beta = \mu_{\mathcal{B}}\)</span>, the identity mapping is perfectly recovered.</p>
+</li>
 </ol>
 <h3 id="43-inference-phase-running-statistics-tracking">4.3 Inference Phase: Running Statistics Tracking<a class="headerlink" href="#43-inference-phase-running-statistics-tracking" title="Permanent link">&para;</a></h3>
 <p>During inference (evaluation), predictions must depend strictly on the individual input, not on other samples in the batch. BatchNorm tracks running population statistics during training using an exponential moving average (momentum <span class="arithmatex">\(\rho \approx 0.1\)</span>):</p>
@@ -4464,10 +4476,10 @@ y = \gamma \left( \frac{x - \mu_{\text{running}}}{\sqrt{\sigma_{\text{running}}^
 \frac{\partial \mathcal{L}}{\partial \sigma_{\mathcal{B}}^2} = \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial \hat{x}_i} (x_i - \mu_{\mathcal{B}}) \cdot \left( -\frac{1}{2} (\sigma_{\mathcal{B}}^2 + \epsilon)^{-3/2} \right) = -\frac{1}{2(\sigma_{\mathcal{B}}^2 + \epsilon)} \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial \hat{x}_i} \hat{x}_i
 \]</div>
 <h4 id="step-4-gradient-with-respect-to-mean-mu_mathcalb">Step 4: Gradient with respect to mean <span class="arithmatex">\(\mu_{\mathcal{B}}\)</span><a class="headerlink" href="#step-4-gradient-with-respect-to-mean-mu_mathcalb" title="Permanent link">&para;</a></h4>
-<p>$$
-\frac{\partial \mathcal{L}}{\partial \mu_{\mathcal{B}}} = \left( \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial \hat{x}<em _mathcal_B="\mathcal{B">i} \frac{-1}{\sqrt{\sigma</em>
-$$
-(since }}^2 + \epsilon}} \right) + \frac{\partial \mathcal{L}}{\partial \sigma_{\mathcal{B}}^2} \frac{\sum_{i=1}^m -2(x_i - \mu_{\mathcal{B}})}{m} = -\frac{1}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}} \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial \hat{x}_i<span class="arithmatex">\(\sum_{i=1}^m (x_i - \mu_{\mathcal{B}}) = 0\)</span>).</p>
+<div class="arithmatex">\[
+\frac{\partial \mathcal{L}}{\partial \mu_{\mathcal{B}}} = \left( \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial \hat{x}_i} \frac{-1}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}} \right) + \frac{\partial \mathcal{L}}{\partial \sigma_{\mathcal{B}}^2} \frac{\sum_{i=1}^m -2(x_i - \mu_{\mathcal{B}})}{m} = -\frac{1}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}} \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial \hat{x}_i}
+\]</div>
+<p>(since <span class="arithmatex">\(\sum_{i=1}^m (x_i - \mu_{\mathcal{B}}) = 0\)</span>).</p>
 <h4 id="step-5-gradient-with-respect-to-input-x_i">Step 5: Gradient with respect to input <span class="arithmatex">\(x_i\)</span><a class="headerlink" href="#step-5-gradient-with-respect-to-input-x_i" title="Permanent link">&para;</a></h4>
 <div class="arithmatex">\[
 \frac{\partial \mathcal{L}}{\partial x_i} = \frac{\partial \mathcal{L}}{\partial \hat{x}_i} \frac{1}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}} + \frac{\partial \mathcal{L}}{\partial \sigma_{\mathcal{B}}^2} \frac{2(x_i - \mu_{\mathcal{B}})}{m} + \frac{\partial \mathcal{L}}{\partial \mu_{\mathcal{B}}} \frac{1}{m}
@@ -4540,19 +4552,27 @@ Modern frameworks universally use <strong>Inverted Dropout</strong>, which pre-s
 <div class="arithmatex">\[
 \widetilde{a}_i = \frac{r_i \cdot a_i}{1 - p}
 \]</div>
-<p><strong>Expectation and Variance Preservation:</strong>
-- <strong>Expectation</strong>:
-  $<span class="arithmatex">\(\mathbb{E}[\widetilde{a}_i] = \frac{\mathbb{E}[r_i] \cdot a_i}{1 - p} = \frac{(1 - p) a_i}{1 - p} = a_i\)</span>$
-- <strong>At Test Time</strong>:
+<p><strong>Expectation and Variance Preservation:</strong></p>
+<ul>
+<li>
+<p><strong>Expectation</strong>:
+  $<span class="arithmatex">\(\mathbb{E}[\widetilde{a}_i] = \frac{\mathbb{E}[r_i] \cdot a_i}{1 - p} = \frac{(1 - p) a_i}{1 - p} = a_i\)</span>$</p>
+</li>
+<li>
+<p><strong>At Test Time</strong>:
   $<span class="arithmatex">\(\widetilde{a}_i = a_i \quad (\text{No scaling required! Identical forward graph})\)</span>$</p>
+</li>
+</ul>
 <h3 id="62-ensemble-interpretation">6.2 Ensemble Interpretation<a class="headerlink" href="#62-ensemble-interpretation" title="Permanent link">&para;</a></h3>
 <p>A network with <span class="arithmatex">\(N\)</span> neurons has <span class="arithmatex">\(2^N\)</span> possible subnetworks formed by binary masking. Dropout trains an implicit ensemble of <span class="arithmatex">\(2^N\)</span> thinned models sharing parameters. At test time, running the full unmasked network computes an approximate geometric mean over all <span class="arithmatex">\(2^N\)</span> subnetworks in a single deterministic forward pass.</p>
 <hr />
 <h2 id="7-weight-initialization-vanishing-exploding-gradients">7. Weight Initialization: Vanishing &amp; Exploding Gradients<a class="headerlink" href="#7-weight-initialization-vanishing-exploding-gradients" title="Permanent link">&para;</a></h2>
 <p>Consider a deep linear network without biases: <span class="arithmatex">\(\mathbf{a}^{[L]} = W^{[L]} W^{[L-1]} \dots W^{[1]} \mathbf{x}\)</span>.<br />
-If weights are initialized with variance <span class="arithmatex">\(\sigma^2\)</span>:
-- If <span class="arithmatex">\(\sigma^2 &gt; 1\)</span>: Activations grow exponentially as <span class="arithmatex">\(\mathcal{O}(\sigma^{2L}) \to \infty\)</span> (<strong>Exploding Gradients</strong>).
-- If <span class="arithmatex">\(\sigma^2 &lt; 1\)</span>: Activations decay exponentially as <span class="arithmatex">\(\mathcal{O}(\sigma^{2L}) \to 0\)</span> (<strong>Vanishing Gradients</strong>).</p>
+If weights are initialized with variance <span class="arithmatex">\(\sigma^2\)</span>:</p>
+<ul>
+<li>If <span class="arithmatex">\(\sigma^2 &gt; 1\)</span>: Activations grow exponentially as <span class="arithmatex">\(\mathcal{O}(\sigma^{2L}) \to \infty\)</span> (<strong>Exploding Gradients</strong>).</li>
+<li>If <span class="arithmatex">\(\sigma^2 &lt; 1\)</span>: Activations decay exponentially as <span class="arithmatex">\(\mathcal{O}(\sigma^{2L}) \to 0\)</span> (<strong>Vanishing Gradients</strong>).</li>
+</ul>
 <h3 id="71-derivation-of-xavier-glorot-initialization-for-sigmoid-tanh">7.1 Derivation of Xavier / Glorot Initialization (for Sigmoid / Tanh)<a class="headerlink" href="#71-derivation-of-xavier-glorot-initialization-for-sigmoid-tanh" title="Permanent link">&para;</a></h3>
 <p>Consider a single neuron <span class="arithmatex">\(z = \sum_{i=1}^{n_{\text{in}}} w_i x_i\)</span>.<br />
 Assume <span class="arithmatex">\(w_i\)</span> and <span class="arithmatex">\(x_i\)</span> are independent, identically distributed, with zero mean (<span class="arithmatex">\(\mathbb{E}[w_i] = 0, \mathbb{E}[x_i] = 0\)</span>).<br />
@@ -4593,9 +4613,11 @@ If pre-activation <span class="arithmatex">\(z\)</span> is symmetric with zero m
 <div class="arithmatex">\[
 \frac{1}{2} n_{\text{in}} \text{Var}(W) = 1 \implies \text{Var}(W) = \frac{2}{n_{\text{in}}}
 \]</div>
-<p>This is <strong>He / Kaiming Initialization</strong> (He et al., 2015):
-- <strong>Normal Kaiming</strong>: <span class="arithmatex">\(W \sim \mathcal{N}\left( 0, \frac{2}{n_{\text{in}}} \right)\)</span>
-- <strong>Uniform Kaiming</strong>: <span class="arithmatex">\(W \sim \mathcal{U}\left( -\sqrt{\frac{6}{n_{\text{in}}}}, +\sqrt{\frac{6}{n_{\text{in}}}} \right)\)</span></p>
+<p>This is <strong>He / Kaiming Initialization</strong> (He et al., 2015):</p>
+<ul>
+<li><strong>Normal Kaiming</strong>: <span class="arithmatex">\(W \sim \mathcal{N}\left( 0, \frac{2}{n_{\text{in}}} \right)\)</span></li>
+<li><strong>Uniform Kaiming</strong>: <span class="arithmatex">\(W \sim \mathcal{U}\left( -\sqrt{\frac{6}{n_{\text{in}}}}, +\sqrt{\frac{6}{n_{\text{in}}}} \right)\)</span></li>
+</ul>
 <hr />
 <h2 id="8-implementation-1-vectorized-batchnorm-dropout-layers-from-scratch-numpy">8. Implementation 1 — Vectorized BatchNorm &amp; Dropout Layers from Scratch (NumPy)<a class="headerlink" href="#8-implementation-1-vectorized-batchnorm-dropout-layers-from-scratch-numpy" title="Permanent link">&para;</a></h2>
 <p>The following Python script implements production-grade <code>BatchNormalization</code> and <code>InvertedDropout</code> layers with full analytical forward and backward passes, verified against finite-difference numerical gradients.</p>
@@ -4837,10 +4859,12 @@ In Batch Normalization, each activation <span class="arithmatex">\(x_i\)</span> 
 <hr />
 <h3 id="q3-why-does-layer-normalization-succeed-in-transformers-while-batch-normalization-fails">Q3: Why does Layer Normalization succeed in Transformers while Batch Normalization fails?<a class="headerlink" href="#q3-why-does-layer-normalization-succeed-in-transformers-while-batch-normalization-fails" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
-Three structural properties make LayerNorm superior for Transformers:
-1. <strong>Sequence Length Variability</strong>: NLP inputs are sequences of varying lengths padded with zeros. BatchNorm computes statistics across the batch axis, which conflates true tokens with padding tokens, poisoning the statistics.
-2. <strong>Autoregressive Generation (Batch Size 1)</strong>: During LLM inference, tokens are generated one by one. With batch size <span class="arithmatex">\(N=1\)</span>, BatchNorm variance is <span class="arithmatex">\(0\)</span>, making the operation mathematically undefined without falling back to stale running statistics.
-3. <strong>Temporal Dependency and Distribution Drift</strong>: In recurrent or attention sequences, token representations evolve across positions <span class="arithmatex">\(t \in [1, T]\)</span>. Computing a single batch statistic across heterogeneous semantic positions destroys positional representations. LayerNorm normalizes across the hidden dimension <span class="arithmatex">\(D\)</span> of each token vector individually:</p>
+Three structural properties make LayerNorm superior for Transformers:</p>
+<ol>
+<li><strong>Sequence Length Variability</strong>: NLP inputs are sequences of varying lengths padded with zeros. BatchNorm computes statistics across the batch axis, which conflates true tokens with padding tokens, poisoning the statistics.</li>
+<li><strong>Autoregressive Generation (Batch Size 1)</strong>: During LLM inference, tokens are generated one by one. With batch size <span class="arithmatex">\(N=1\)</span>, BatchNorm variance is <span class="arithmatex">\(0\)</span>, making the operation mathematically undefined without falling back to stale running statistics.</li>
+<li><strong>Temporal Dependency and Distribution Drift</strong>: In recurrent or attention sequences, token representations evolve across positions <span class="arithmatex">\(t \in [1, T]\)</span>. Computing a single batch statistic across heterogeneous semantic positions destroys positional representations. LayerNorm normalizes across the hidden dimension <span class="arithmatex">\(D\)</span> of each token vector individually:</li>
+</ol>
 <div class="arithmatex">\[\mu_i = \frac{1}{D}\sum_{d=1}^D x_{i, d}, \qquad \sigma_i^2 = \frac{1}{D}\sum_{d=1}^D (x_{i, d} - \mu_i)^2\]</div>
 <p>LayerNorm is completely invariant to batch size and sequence position.</p>
 <hr />
@@ -4863,22 +4887,24 @@ GELU (Hendrycks &amp; Gimpel, 2016) weights an input by its probability under a 
 <div class="arithmatex">\[\text{GELU}(x) = x \cdot P(X \le x) = x \cdot \Phi(x) = x \cdot \frac{1}{2} \left[ 1 + \text{erf}\left( \frac{x}{\sqrt{2}} \right) \right]\]</div>
 <p>It can be approximated efficiently without special functions:</p>
 <div class="arithmatex">\[\text{GELU}(x) \approx 0.5x \left( 1 + \tanh\left( \sqrt{\frac{2}{\pi}} (x + 0.044715 x^3) \right) \right)\]</div>
-<p><strong>Advantages over ReLU:</strong>
-1. <strong>Smooth Differentiability</strong>: Unlike ReLU, which has a non-differentiable sharp corner at <span class="arithmatex">\(x=0\)</span>, GELU is infinitely differentiable (<span class="arithmatex">\(C^\infty\)</span>) everywhere.
-2. <strong>Non-Monotonicity and Curvature</strong>: GELU has a small negative curvature zone for <span class="arithmatex">\(x \in (-0.75, 0)\)</span>, reaching a local minimum at <span class="arithmatex">\(x \approx -0.75\)</span> with value <span class="arithmatex">\(\approx -0.17\)</span>. This curvature allows neurons to output small negative activations for weak inhibitory signals rather than aggressively zeroing them out, preventing the catastrophic "dead neuron" failure mode of ReLU while maintaining non-linearity.</p>
+<p><strong>Advantages over ReLU:</strong></p>
+<ol>
+<li><strong>Smooth Differentiability</strong>: Unlike ReLU, which has a non-differentiable sharp corner at <span class="arithmatex">\(x=0\)</span>, GELU is infinitely differentiable (<span class="arithmatex">\(C^\infty\)</span>) everywhere.</li>
+<li><strong>Non-Monotonicity and Curvature</strong>: GELU has a small negative curvature zone for <span class="arithmatex">\(x \in (-0.75, 0)\)</span>, reaching a local minimum at <span class="arithmatex">\(x \approx -0.75\)</span> with value <span class="arithmatex">\(\approx -0.17\)</span>. This curvature allows neurons to output small negative activations for weak inhibitory signals rather than aggressively zeroing them out, preventing the catastrophic "dead neuron" failure mode of ReLU while maintaining non-linearity.</li>
+</ol>
 <hr />
 <h2 id="12-mastery-ladder">12. Mastery Ladder<a class="headerlink" href="#12-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> State Cybenko's Universal Approximation Theorem and explain why depth provides exponential representation efficiency.</li>
-<li>[ ] <strong>L2:</strong> Compare Sigmoid, Tanh, ReLU, Leaky ReLU, and GELU in terms of range, derivative, and saturation characteristics.</li>
-<li>[ ] <strong>L3:</strong> Explain the "Dead ReLU" phenomenon and describe three concrete architectural remedies.</li>
-<li>[ ] <strong>L4:</strong> Write down the 4 equations defining the forward pass of Batch Normalization.</li>
-<li>[ ] <strong>L5:</strong> Derive the full analytical backward pass of Batch Normalization with respect to <span class="arithmatex">\(\gamma\)</span>, <span class="arithmatex">\(\beta\)</span>, and input <span class="arithmatex">\(X\)</span>.</li>
-<li>[ ] <strong>L6:</strong> Compare Batch Normalization, Layer Normalization, Instance Normalization, and Group Normalization by their reduction axes.</li>
-<li>[ ] <strong>L7:</strong> Prove why Inverted Dropout preserves activation expectation and eliminates test-time weight scaling.</li>
-<li>[ ] <strong>L8:</strong> Derive Glorot/Xavier variance <span class="arithmatex">\(\frac{2}{n_{\text{in}} + n_{\text{out}}}\)</span> for linear/tanh activations.</li>
-<li>[ ] <strong>L9:</strong> Derive He/Kaiming variance <span class="arithmatex">\(\frac{2}{n_{\text{in}}}\)</span> accounting for the variance halving of ReLU.</li>
-<li>[ ] <strong>L10:</strong> Implement custom BatchNorm and Inverted Dropout layers from scratch in NumPy with numerical gradient checks.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> State Cybenko's Universal Approximation Theorem and explain why depth provides exponential representation efficiency.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Compare Sigmoid, Tanh, ReLU, Leaky ReLU, and GELU in terms of range, derivative, and saturation characteristics.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Explain the "Dead ReLU" phenomenon and describe three concrete architectural remedies.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Write down the 4 equations defining the forward pass of Batch Normalization.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Derive the full analytical backward pass of Batch Normalization with respect to <span class="arithmatex">\(\gamma\)</span>, <span class="arithmatex">\(\beta\)</span>, and input <span class="arithmatex">\(X\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Compare Batch Normalization, Layer Normalization, Instance Normalization, and Group Normalization by their reduction axes.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Prove why Inverted Dropout preserves activation expectation and eliminates test-time weight scaling.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Derive Glorot/Xavier variance <span class="arithmatex">\(\frac{2}{n_{\text{in}} + n_{\text{out}}}\)</span> for linear/tanh activations.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Derive He/Kaiming variance <span class="arithmatex">\(\frac{2}{n_{\text{in}}}\)</span> accounting for the variance halving of ReLU.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Implement custom BatchNorm and Inverted Dropout layers from scratch in NumPy with numerical gradient checks.</li>
 </ul>
 
 

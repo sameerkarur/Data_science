@@ -4285,9 +4285,13 @@
     C --&gt; D["Artificially Compressed Feature Variance σ²"]
     D --&gt; E["Distorted Correlation between Income and Debt-to-Income"]</code></pre>
 <ol>
-<li><strong>Variance Distortion</strong>: Replacing 25% of points with the mean artificially shrinks the sample variance:
-   $<span class="arithmatex">\(\sigma^2_{\text{imputed}} = 0.75 \sigma^2_{\text{true}} + 0.25 (0) = 0.75 \sigma^2_{\text{true}}\)</span>$</li>
-<li><strong>Covariance Destruction</strong>: If income naturally correlates with credit score (<span class="arithmatex">\(\rho \approx 0.6\)</span>), imputing the static mean completely ignores the applicant's credit score, diluting the correlation toward zero.</li>
+<li>
+<p><strong>Variance Distortion</strong>: Replacing 25% of points with the mean artificially shrinks the sample variance:
+   $<span class="arithmatex">\(\sigma^2_{\text{imputed}} = 0.75 \sigma^2_{\text{true}} + 0.25 (0) = 0.75 \sigma^2_{\text{true}}\)</span>$</p>
+</li>
+<li>
+<p><strong>Covariance Destruction</strong>: If income naturally correlates with credit score (<span class="arithmatex">\(\rho \approx 0.6\)</span>), imputing the static mean completely ignores the applicant's credit score, diluting the correlation toward zero.</p>
+</li>
 <li><strong>Distribution Shift</strong>: If wealthier individuals systematically choose not to disclose their income (Missing Not at Random - MNAR), assigning them the population average assigns high-wealth individuals an artificially low income, severely degrading the model's risk assessment.</li>
 </ol>
 <hr />
@@ -4302,23 +4306,35 @@
     MNAR --&gt; M3["P(Missing | Y_obs, Y_mis) depends on Y_mis itself!"]</code></pre>
 <h3 id="31-missing-completely-at-random-mcar">3.1 Missing Completely at Random (MCAR)<a class="headerlink" href="#31-missing-completely-at-random-mcar" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Definition</strong>: The probability of a value being missing is completely independent of both observed features and the unobserved value itself:
-  $<span class="arithmatex">\(P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(R)\)</span>$</li>
-<li><strong>Real-World Example</strong>: A lab technician accidentally drops and breaks a test tube; a random network packet drops due to physical wire noise.</li>
+<li>
+<p><strong>Definition</strong>: The probability of a value being missing is completely independent of both observed features and the unobserved value itself:
+  $<span class="arithmatex">\(P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(R)\)</span>$</p>
+</li>
+<li>
+<p><strong>Real-World Example</strong>: A lab technician accidentally drops and breaks a test tube; a random network packet drops due to physical wire noise.</p>
+</li>
 <li><strong>Consequence</strong>: Deleting missing rows (complete-case analysis) reduces sample size and statistical power, but <strong>does not introduce bias</strong>.</li>
 </ul>
 <h3 id="32-missing-at-random-mar">3.2 Missing at Random (MAR)<a class="headerlink" href="#32-missing-at-random-mar" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Definition</strong>: The probability of missingness depends systematically on <strong>observed</strong> features, but <em>not</em> on the unobserved missing value itself:
-  $<span class="arithmatex">\(P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(R \mid Y_{\text{obs}})\)</span>$</li>
-<li><strong>Real-World Example</strong>: Male patients are statistically less likely to report depression symptoms on medical surveys than female patients. If we condition on <code>Gender</code> (observed), missingness in <code>Depression_Score</code> is random.</li>
+<li>
+<p><strong>Definition</strong>: The probability of missingness depends systematically on <strong>observed</strong> features, but <em>not</em> on the unobserved missing value itself:
+  $<span class="arithmatex">\(P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(R \mid Y_{\text{obs}})\)</span>$</p>
+</li>
+<li>
+<p><strong>Real-World Example</strong>: Male patients are statistically less likely to report depression symptoms on medical surveys than female patients. If we condition on <code>Gender</code> (observed), missingness in <code>Depression_Score</code> is random.</p>
+</li>
 <li><strong>Consequence</strong>: Complete-case analysis is biased. However, conditioned on observed covariates, principled imputation (e.g., KNN, MICE) yields <strong>unbiased parameter estimates</strong>.</li>
 </ul>
 <h3 id="33-missing-not-at-random-mnar">3.3 Missing Not at Random (MNAR)<a class="headerlink" href="#33-missing-not-at-random-mnar" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Definition</strong>: The probability of missingness depends directly on the <strong>unobserved value itself</strong>, even after controlling for all observed variables:
-  $<span class="arithmatex">\(P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) \ne P(R \mid Y_{\text{obs}})\)</span>$</li>
-<li><strong>Real-World Example</strong>: Individuals with severe mental health symptoms or extreme wealth systematically refuse to answer depression or income survey questions.</li>
+<li>
+<p><strong>Definition</strong>: The probability of missingness depends directly on the <strong>unobserved value itself</strong>, even after controlling for all observed variables:
+  $<span class="arithmatex">\(P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) \ne P(R \mid Y_{\text{obs}})\)</span>$</p>
+</li>
+<li>
+<p><strong>Real-World Example</strong>: Individuals with severe mental health symptoms or extreme wealth systematically refuse to answer depression or income survey questions.</p>
+</li>
 <li><strong>Consequence</strong>: Standard statistical imputation cannot recover the true distribution. You must explicitly model the missingness mechanism (e.g., Heckman selection model) or add an explicit binary missingness indicator column (<code>is_missing_income</code>).</li>
 </ul>
 <hr />
@@ -4406,11 +4422,15 @@
 D_M(\mathbf{x}) = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu})}
 \]</div>
 <ul>
-<li>If features are uncorrelated with unit variance (<span class="arithmatex">\(\Sigma = I\)</span>), Mahalanobis distance collapses to Euclidean distance:
-  $<span class="arithmatex">\(D_M(\mathbf{x}) = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T I (\mathbf{x} - \boldsymbol{\mu})} = \|\mathbf{x} - \boldsymbol{\mu}\|_2\)</span>$</li>
-<li>Under multivariate normality <span class="arithmatex">\(\mathbf{x} \sim \mathcal{N}(\boldsymbol{\mu}, \Sigma)\)</span>, the squared Mahalanobis distance follows a Chi-Square distribution with <span class="arithmatex">\(d\)</span> degrees of freedom:
+<li>
+<p>If features are uncorrelated with unit variance (<span class="arithmatex">\(\Sigma = I\)</span>), Mahalanobis distance collapses to Euclidean distance:
+  $<span class="arithmatex">\(D_M(\mathbf{x}) = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T I (\mathbf{x} - \boldsymbol{\mu})} = \|\mathbf{x} - \boldsymbol{\mu}\|_2\)</span>$</p>
+</li>
+<li>
+<p>Under multivariate normality <span class="arithmatex">\(\mathbf{x} \sim \mathcal{N}(\boldsymbol{\mu}, \Sigma)\)</span>, the squared Mahalanobis distance follows a Chi-Square distribution with <span class="arithmatex">\(d\)</span> degrees of freedom:
   $<span class="arithmatex">\(D_M^2(\mathbf{x}) \sim \chi^2_d\)</span>$
-  Points with <span class="arithmatex">\(D_M^2(\mathbf{x}) &gt; \chi^2_{d, 1 - \alpha}\)</span> (e.g., <span class="arithmatex">\(p &lt; 0.001\)</span>) are statistically confirmed multivariate outliers.</li>
+  Points with <span class="arithmatex">\(D_M^2(\mathbf{x}) &gt; \chi^2_{d, 1 - \alpha}\)</span> (e.g., <span class="arithmatex">\(p &lt; 0.001\)</span>) are statistically confirmed multivariate outliers.</p>
+</li>
 </ul>
 <hr />
 <h2 id="6-categorical-encoding-and-target-leakage-prevention">6. Categorical Encoding and Target Leakage Prevention<a class="headerlink" href="#6-categorical-encoding-and-target-leakage-prevention" title="Permanent link">&para;</a></h2>
@@ -4468,9 +4488,11 @@ S_k = \lambda(n_k) \bar{y}_k + (1 - \lambda(n_k)) \bar{y}_{\text{global}}
 <div class="arithmatex">\[
 \lambda(n_k) = \frac{n_k}{n_k + m}
 \]</div>
-<p>Here, <span class="arithmatex">\(m\)</span> is the smoothing weight parameter:
-- If <span class="arithmatex">\(n_k \gg m\)</span>: <span class="arithmatex">\(\lambda \to 1\)</span>, the estimate relies purely on category evidence <span class="arithmatex">\(\bar{y}_k\)</span>.
-- If <span class="arithmatex">\(n_k \ll m\)</span>: <span class="arithmatex">\(\lambda \to 0\)</span>, the estimate shrinks entirely to the global prior <span class="arithmatex">\(\bar{y}_{\text{global}}\)</span>.</p>
+<p>Here, <span class="arithmatex">\(m\)</span> is the smoothing weight parameter:</p>
+<ul>
+<li>If <span class="arithmatex">\(n_k \gg m\)</span>: <span class="arithmatex">\(\lambda \to 1\)</span>, the estimate relies purely on category evidence <span class="arithmatex">\(\bar{y}_k\)</span>.</li>
+<li>If <span class="arithmatex">\(n_k \ll m\)</span>: <span class="arithmatex">\(\lambda \to 0\)</span>, the estimate shrinks entirely to the global prior <span class="arithmatex">\(\bar{y}_{\text{global}}\)</span>.</li>
+</ul>
 <pre class="mermaid"><code>flowchart TD
     CAT["Category Level k (Count n_k, Local Mean y_bar)"] --&gt; SMOOTH["Bayesian Shrinkage: S_k = (n_k * y_bar + m * global_mean) / (n_k + m)"]
     SMOOTH --&gt; K_FOLD["Out-of-Fold K-Fold Partitioning (Prevent Leakage)"]
@@ -4478,10 +4500,12 @@ S_k = \lambda(n_k) \bar{y}_k + (1 - \lambda(n_k)) \bar{y}_{\text{global}}
     NOISE --&gt; SAFE["Leak-Free Target Encoded Feature"]</code></pre>
 <h3 id="63-out-of-fold-k-fold-target-encoding">6.3 Out-of-Fold (K-Fold) Target Encoding<a class="headerlink" href="#63-out-of-fold-k-fold-target-encoding" title="Permanent link">&para;</a></h3>
 <p>Even with smoothing, computing target statistics using a sample's own label leaks ground truth into the feature.
-To guarantee mathematical isolation, we use <strong>Out-of-Fold Target Encoding</strong>:
-1. Partition the training set into <span class="arithmatex">\(K\)</span> cross-validation folds.
-2. For samples in fold <span class="arithmatex">\(k\)</span>, compute smoothed target encoding statistics using <strong>only samples from the other <span class="arithmatex">\(K-1\)</span> folds</strong>.
-3. For test and production data, compute encodings using the entire training set.</p>
+To guarantee mathematical isolation, we use <strong>Out-of-Fold Target Encoding</strong>:</p>
+<ol>
+<li>Partition the training set into <span class="arithmatex">\(K\)</span> cross-validation folds.</li>
+<li>For samples in fold <span class="arithmatex">\(k\)</span>, compute smoothed target encoding statistics using <strong>only samples from the other <span class="arithmatex">\(K-1\)</span> folds</strong>.</li>
+<li>For test and production data, compute encodings using the entire training set.</li>
+</ol>
 <hr />
 <h2 id="7-feature-scaling-and-normalization">7. Feature Scaling and Normalization<a class="headerlink" href="#7-feature-scaling-and-normalization" title="Permanent link">&para;</a></h2>
 <p>Distance-based models (KNN, SVM, K-Means) and gradient-based models (Neural Networks, Logistic Regression, Linear Regression) depend fundamentally on feature scaling. Tree-based models (Random Forest, XGBoost) are invariant to monotonic scaling because split points depend only on feature rank order.</p>
@@ -4538,11 +4562,13 @@ To guarantee mathematical isolation, we use <strong>Out-of-Fold Target Encoding<
     GX --&gt; MODEL["ML Model Inference (Guaranteed Contract Fulfillment)"]</code></pre>
 <hr />
 <h2 id="9-python-implementation-out-of-fold-target-encoder-and-mahalanobis-filter">9. Python Implementation: Out-of-Fold Target Encoder and Mahalanobis Filter<a class="headerlink" href="#9-python-implementation-out-of-fold-target-encoder-and-mahalanobis-filter" title="Permanent link">&para;</a></h2>
-<p>Below is a complete, runnable script featuring:
-1. A production-grade <strong>Out-of-Fold Target Encoder with Bayesian Smoothing</strong>.
-2. A from-scratch <strong>Mahalanobis Distance Outlier Detector</strong>.
-3. A <strong>Pydantic v2 Data Integrity Contract</strong> with field validators.
-4. A leak-free <strong>Scikit-Learn Preprocessing Pipeline</strong>.</p>
+<p>Below is a complete, runnable script featuring:</p>
+<ol>
+<li>A production-grade <strong>Out-of-Fold Target Encoder with Bayesian Smoothing</strong>.</li>
+<li>A from-scratch <strong>Mahalanobis Distance Outlier Detector</strong>.</li>
+<li>A <strong>Pydantic v2 Data Integrity Contract</strong> with field validators.</li>
+<li>A leak-free <strong>Scikit-Learn Preprocessing Pipeline</strong>.</li>
+</ol>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="sd">"""</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="sd">data_cleaning_preprocessing_deep_dive.py</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="sd">Production implementations of Bayesian smoothed out-of-fold target encoding,</span>
@@ -4773,10 +4799,12 @@ To guarantee mathematical isolation, we use <strong>Out-of-Fold Target Encoding<
 <hr />
 <h2 id="11-staff-level-technical-interview-questions">11. Staff-Level Technical Interview Questions<a class="headerlink" href="#11-staff-level-technical-interview-questions" title="Permanent link">&para;</a></h2>
 <h3 id="q1-distinguish-between-mcar-mar-and-mnar-missing-data-mechanisms-give-real-world-examples-and-explain-why-meanmedian-imputation-causes-severe-bias-under-mnar">Q1: Distinguish between MCAR, MAR, and MNAR missing data mechanisms. Give real-world examples, and explain why mean/median imputation causes severe bias under MNAR.<a class="headerlink" href="#q1-distinguish-between-mcar-mar-and-mnar-missing-data-mechanisms-give-real-world-examples-and-explain-why-meanmedian-imputation-causes-severe-bias-under-mnar" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>MCAR (Missing Completely at Random):</strong> Missingness is completely independent of both observed features and the missing value itself: <span class="arithmatex">\(P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(R)\)</span>. Example: A random sensor battery fails due to physical shock. Complete-case analysis is inefficient but unbiased.
-- <strong>MAR (Missing at Random):</strong> Missingness depends systematically on observed covariates, but not on the unobserved value itself: <span class="arithmatex">\(P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(R \mid Y_{\text{obs}})\)</span>. Example: Elderly patients miss blood glucose follow-ups more often; if age is observed, missingness is random within each age bracket. Unbiased imputation is possible by conditioning on observed features (e.g., MICE).
-- <strong>MNAR (Missing Not at Random):</strong> Missingness depends directly on the unobserved variable itself: <span class="arithmatex">\(P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) \ne P(R \mid Y_{\text{obs}})\)</span>. Example: High-income individuals decline to report income on surveys.</p>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li><strong>MCAR (Missing Completely at Random):</strong> Missingness is completely independent of both observed features and the missing value itself: <span class="arithmatex">\(P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(R)\)</span>. Example: A random sensor battery fails due to physical shock. Complete-case analysis is inefficient but unbiased.</li>
+<li><strong>MAR (Missing at Random):</strong> Missingness depends systematically on observed covariates, but not on the unobserved value itself: <span class="arithmatex">\(P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) = P(R \mid Y_{\text{obs}})\)</span>. Example: Elderly patients miss blood glucose follow-ups more often; if age is observed, missingness is random within each age bracket. Unbiased imputation is possible by conditioning on observed features (e.g., MICE).</li>
+<li><strong>MNAR (Missing Not at Random):</strong> Missingness depends directly on the unobserved variable itself: <span class="arithmatex">\(P(R \mid Y_{\text{obs}}, Y_{\text{mis}}) \ne P(R \mid Y_{\text{obs}})\)</span>. Example: High-income individuals decline to report income on surveys.</li>
+</ul>
 <p><strong>Why Mean/Median Imputation Fails Under MNAR:</strong>
 If high-income individuals systematically refuse to report income, the observed income values represent a truncated, left-skewed subset of the population. The empirical mean <span class="arithmatex">\(\bar{Y}_{\text{obs}}\)</span> severely underestimates the true population mean: <span class="arithmatex">\(\mathbb{E}[\bar{Y}_{\text{obs}}] \ll \mathbb{E}[Y]\)</span>. Imputing <span class="arithmatex">\(\bar{Y}_{\text{obs}}\)</span> into missing records assigns high-earning individuals artificially low incomes, destroying the model's capacity to assess high-income risk. Under MNAR, one must explicitly add a binary missingness indicator feature or model the selection mechanism.</p>
 <hr />
@@ -4787,42 +4815,52 @@ If a category contains only 1 sample (<span class="arithmatex">\(n_k = 1\)</span
 <p><strong>Bayesian Smoothing Derivation:</strong>
 We place a conjugate prior on the category mean: the prior is the global target mean <span class="arithmatex">\(\bar{y}_{\text{global}}\)</span> with pseudo-count weight <span class="arithmatex">\(m\)</span>.
 The posterior mean combines prior and empirical likelihood:
-$<span class="arithmatex">\(S_k = \frac{n_k \bar{y}_k + m \bar{y}_{\text{global}}}{n_k + m} = \lambda(n_k) \bar{y}_k + (1 - \lambda(n_k)) \bar{y}_{\text{global}}, \quad \text{where } \lambda(n_k) = \frac{n_k}{n_k + m}\)</span>$
-- As <span class="arithmatex">\(n_k \to 0\)</span>, <span class="arithmatex">\(S_k \to \bar{y}_{\text{global}}\)</span> (prevents rare categories from taking extreme values).
-- As <span class="arithmatex">\(n_k \to \infty\)</span>, <span class="arithmatex">\(S_k \to \bar{y}_k\)</span>.</p>
+$<span class="arithmatex">\(S_k = \frac{n_k \bar{y}_k + m \bar{y}_{\text{global}}}{n_k + m} = \lambda(n_k) \bar{y}_k + (1 - \lambda(n_k)) \bar{y}_{\text{global}}, \quad \text{where } \lambda(n_k) = \frac{n_k}{n_k + m}\)</span>$</p>
+<ul>
+<li>As <span class="arithmatex">\(n_k \to 0\)</span>, <span class="arithmatex">\(S_k \to \bar{y}_{\text{global}}\)</span> (prevents rare categories from taking extreme values).</li>
+<li>As <span class="arithmatex">\(n_k \to \infty\)</span>, <span class="arithmatex">\(S_k \to \bar{y}_k\)</span>.</li>
+</ul>
 <p><strong>Out-of-Fold (K-Fold) Resolution:</strong>
 Even with smoothing, sample <span class="arithmatex">\(i\)</span>'s own target <span class="arithmatex">\(y_i\)</span> is included in computing <span class="arithmatex">\(\bar{y}_k\)</span>. In <strong>Out-of-Fold encoding</strong>, data is partitioned into <span class="arithmatex">\(K\)</span> folds. For each sample in fold <span class="arithmatex">\(j\)</span>, its target encoding is computed using data from the remaining <span class="arithmatex">\(K-1\)</span> folds exclusively. The sample's own label never participates in computing its own feature, mathematically eliminating target leakage.</p>
 <hr />
 <h3 id="q3-what-is-mahalanobis-distance-how-does-it-differ-from-euclidean-distance-and-why-is-it-superior-for-multivariate-outlier-detection-in-correlated-feature-spaces">Q3: What is Mahalanobis distance, how does it differ from Euclidean distance, and why is it superior for multivariate outlier detection in correlated feature spaces?<a class="headerlink" href="#q3-what-is-mahalanobis-distance-how-does-it-differ-from-euclidean-distance-and-why-is-it-superior-for-multivariate-outlier-detection-in-correlated-feature-spaces" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-Euclidean distance <span class="arithmatex">\(\|\mathbf{x} - \boldsymbol{\mu}\|_2 = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T (\mathbf{x} - \boldsymbol{\mu})}\)</span> measures spherical distance in unweighted Cartesian space. It assumes:
-1. Features have identical variance (<span class="arithmatex">\(\sigma_1 = \sigma_2 = \dots = \sigma_d\)</span>).
-2. Features are completely uncorrelated (<span class="arithmatex">\(\text{Cov}(X_i, X_j) = 0\)</span>).</p>
+Euclidean distance <span class="arithmatex">\(\|\mathbf{x} - \boldsymbol{\mu}\|_2 = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T (\mathbf{x} - \boldsymbol{\mu})}\)</span> measures spherical distance in unweighted Cartesian space. It assumes:</p>
+<ol>
+<li>Features have identical variance (<span class="arithmatex">\(\sigma_1 = \sigma_2 = \dots = \sigma_d\)</span>).</li>
+<li>Features are completely uncorrelated (<span class="arithmatex">\(\text{Cov}(X_i, X_j) = 0\)</span>).</li>
+</ol>
 <p><strong>Mahalanobis Distance:</strong>
 $<span class="arithmatex">\(D_M(\mathbf{x}) = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu})}\)</span>$
 where <span class="arithmatex">\(\Sigma\)</span> is the empirical covariance matrix.
 By decomposing <span class="arithmatex">\(\Sigma = Q \Lambda Q^T\)</span> via the Spectral Theorem:
 $<span class="arithmatex">\(D_M(\mathbf{x}) = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T Q \Lambda^{-1} Q^T (\mathbf{x} - \boldsymbol{\mu})}\)</span>$
-Geometrically, Mahalanobis distance:
-1. Multiplies by <span class="arithmatex">\(Q^T\)</span> to <strong>rotate</strong> the coordinate system into the orthogonal principal eigenbasis of the data.
-2. Scales each coordinate by <span class="arithmatex">\(\Lambda^{-1/2}\)</span> (<span class="arithmatex">\(\frac{1}{\sqrt{\lambda_i}}\)</span>), <strong>normalizing each axis by its standard deviation</strong>.
-3. Computes Euclidean distance in this standardized, decorrelated space.</p>
+Geometrically, Mahalanobis distance:</p>
+<ol>
+<li>Multiplies by <span class="arithmatex">\(Q^T\)</span> to <strong>rotate</strong> the coordinate system into the orthogonal principal eigenbasis of the data.</li>
+<li>Scales each coordinate by <span class="arithmatex">\(\Lambda^{-1/2}\)</span> (<span class="arithmatex">\(\frac{1}{\sqrt{\lambda_i}}\)</span>), <strong>normalizing each axis by its standard deviation</strong>.</li>
+<li>Computes Euclidean distance in this standardized, decorrelated space.</li>
+</ol>
 <p><strong>Superiority:</strong>
 In correlated data (e.g., salary vs. years of experience), points that violate the correlation structure (e.g., 0 years experience with a $500,000 salary) lie well within univariate normal bounds, but have massive Mahalanobis distance because they lie orthogonal to the principal variance axis.</p>
 <hr />
 <h3 id="q4-explain-the-mice-algorithm-how-does-it-handle-mixed-categorical-and-numerical-missing-features-iteratively">Q4: Explain the MICE algorithm. How does it handle mixed categorical and numerical missing features iteratively?<a class="headerlink" href="#q4-explain-the-mice-algorithm-how-does-it-handle-mixed-categorical-and-numerical-missing-features-iteratively" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-MICE (Multivariate Imputation by Chained Equations) operates on the Fully Conditional Specification (FCS) principle:
-1. <strong>Initialization:</strong> Fill all missing values in all features with simple median/mode placeholders.
-2. <strong>Cycle Iteration (<span class="arithmatex">\(t = 1 \dots M\)</span>):</strong> For each feature <span class="arithmatex">\(j \in \{1, \dots, p\}\)</span> with missing values:
-   - Reset feature <span class="arithmatex">\(j\)</span>'s missing values back to NaN.
-   - Separate data into observed rows <span class="arithmatex">\(X_{\text{obs}, j}\)</span> and missing rows <span class="arithmatex">\(X_{\text{mis}, j}\)</span>.
-   - Train a regression model <span class="arithmatex">\(f_j\)</span> using all other features as predictors:
-     $<span class="arithmatex">\(X_j \sim f_j(X_{-j})\)</span>$
-     - If <span class="arithmatex">\(X_j\)</span> is continuous: train a linear regression or gradient boosted tree.
-     - If <span class="arithmatex">\(X_j\)</span> is binary/categorical: train a logistic regression or classification tree.
-   - Predict missing values for <span class="arithmatex">\(X_{\text{mis}, j}\)</span> using the trained model <span class="arithmatex">\(f_j(X_{\text{mis}, -j})\)</span> and update the column.
-3. <strong>Convergence:</strong> Repeat the cycle across all features for 10–20 iterations until imputed values stabilize.</p>
+MICE (Multivariate Imputation by Chained Equations) operates on the Fully Conditional Specification (FCS) principle:</p>
+<ol>
+<li><strong>Initialization:</strong> Fill all missing values in all features with simple median/mode placeholders.</li>
+<li><strong>Cycle Iteration (<span class="arithmatex">\(t = 1 \dots M\)</span>):</strong> For each feature <span class="arithmatex">\(j \in \{1, \dots, p\}\)</span> with missing values:</li>
+<li>Reset feature <span class="arithmatex">\(j\)</span>'s missing values back to NaN.</li>
+<li>Separate data into observed rows <span class="arithmatex">\(X_{\text{obs}, j}\)</span> and missing rows <span class="arithmatex">\(X_{\text{mis}, j}\)</span>.</li>
+<li>Train a regression model <span class="arithmatex">\(f_j\)</span> using all other features as predictors:
+     $<span class="arithmatex">\(X_j \sim f_j(X_{-j})\)</span>$<ul>
+<li>If <span class="arithmatex">\(X_j\)</span> is continuous: train a linear regression or gradient boosted tree.</li>
+<li>If <span class="arithmatex">\(X_j\)</span> is binary/categorical: train a logistic regression or classification tree.</li>
+</ul>
+</li>
+<li>Predict missing values for <span class="arithmatex">\(X_{\text{mis}, j}\)</span> using the trained model <span class="arithmatex">\(f_j(X_{\text{mis}, -j})\)</span> and update the column.</li>
+<li><strong>Convergence:</strong> Repeat the cycle across all features for 10–20 iterations until imputed values stabilize.</li>
+</ol>
 <p>By modeling each variable conditioned on all other variables iteratively, MICE preserves both linear and non-linear interactions across mixed data types without requiring an intractable analytical joint distribution.</p>
 <hr />
 <h3 id="q5-why-must-feature-scaling-parameters-be-computed-strictly-on-the-training-set-and-applied-to-the-testproduction-set-what-errors-occur-if-fit-on-the-full-dataset">Q5: Why must feature scaling parameters be computed strictly on the training set and applied to the test/production set? What errors occur if fit on the full dataset?<a class="headerlink" href="#q5-why-must-feature-scaling-parameters-be-computed-strictly-on-the-training-set-and-applied-to-the-testproduction-set-what-errors-occur-if-fit-on-the-full-dataset" title="Permanent link">&para;</a></h3>
@@ -4831,51 +4869,63 @@ In machine learning, the test set simulates unseen future production data.
 If a preprocessing transformer (e.g., <code>StandardScaler</code>) calls <code>.fit(X)</code> on the concatenated train and test data:
 $<span class="arithmatex">\(\mu_{\text{global}} = \frac{1}{N_{\text{train}} + N_{\text{test}}} \left(\sum x_{\text{train}} + \sum x_{\text{test}}\right)\)</span>$
 $<span class="arithmatex">\(\sigma_{\text{global}} = \sqrt{\frac{1}{N_{\text{train}} + N_{\text{test}}} \sum (x_i - \mu_{\text{global}})^2}\)</span>$</p>
-<p><strong>Consequences of this Data Leakage:</strong>
-1. <strong>Information Leakage:</strong> Information from the test set (its mean, variance, and extreme values) leaks into the training pipeline.
-2. <strong>Over-Optimistic Cross-Validation:</strong> Metrics computed during validation are artificially inflated because the model was trained on features normalized using knowledge of test set distribution bounds.
-3. <strong>Production Deployment Failure:</strong> In real-time production inference, inputs arrive as single rows (<span class="arithmatex">\(N = 1\)</span>). Computing a batch mean on a single sample is mathematically impossible. If the pipeline was architected assuming access to test distributions, serving code crashes or generates distribution shifts.
-The rule is absolute: <strong><code>fit</code> only on <code>X_train</code>, and <code>transform</code> on <code>X_test</code> and production payloads.</strong></p>
+<p><strong>Consequences of this Data Leakage:</strong></p>
+<ol>
+<li><strong>Information Leakage:</strong> Information from the test set (its mean, variance, and extreme values) leaks into the training pipeline.</li>
+<li><strong>Over-Optimistic Cross-Validation:</strong> Metrics computed during validation are artificially inflated because the model was trained on features normalized using knowledge of test set distribution bounds.</li>
+<li><strong>Production Deployment Failure:</strong> In real-time production inference, inputs arrive as single rows (<span class="arithmatex">\(N = 1\)</span>). Computing a batch mean on a single sample is mathematically impossible. If the pipeline was architected assuming access to test distributions, serving code crashes or generates distribution shifts.
+The rule is absolute: <strong><code>fit</code> only on <code>X_train</code>, and <code>transform</code> on <code>X_test</code> and production payloads.</strong></li>
+</ol>
 <hr />
 <h3 id="q6-compare-standardscaler-robustscaler-and-quantiletransformer-when-would-you-strictly-choose-robustscaler-or-quantiletransformer">Q6: Compare StandardScaler, RobustScaler, and QuantileTransformer. When would you strictly choose RobustScaler or QuantileTransformer?<a class="headerlink" href="#q6-compare-standardscaler-robustscaler-and-quantiletransformer-when-would-you-strictly-choose-robustscaler-or-quantiletransformer" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>StandardScaler (<span class="arithmatex">\(z = \frac{x - \mu}{\sigma}\)</span>):</strong>
-  Centers data at 0 with unit variance. Assumes features follow an approximately Gaussian distribution. Highly sensitive to outliers because sample mean <span class="arithmatex">\(\mu\)</span> and variance <span class="arithmatex">\(\sigma^2\)</span> are heavily distorted by extreme values, squashing inliers into near-zero intervals.
-- <strong>RobustScaler (<span class="arithmatex">\(x' = \frac{x - \text{median}}{\text{IQR}}\)</span>):</strong>
-  Uses median and Interquartile Range (<span class="arithmatex">\(Q_3 - Q_1\)</span>). Because percentiles are order statistics, RobustScaler is <strong>strictly immune to extreme outliers</strong>. Choose RobustScaler when features contain genuine heavy-tailed outliers that must be preserved for detection (e.g., fraud amounts, network packet spikes) without distorting normal feature ranges.
-- <strong>QuantileTransformer (<span class="arithmatex">\(x' = G^{-1}(F_X(x))\)</span>):</strong>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li>
+<p><strong>StandardScaler (<span class="arithmatex">\(z = \frac{x - \mu}{\sigma}\)</span>):</strong>
+  Centers data at 0 with unit variance. Assumes features follow an approximately Gaussian distribution. Highly sensitive to outliers because sample mean <span class="arithmatex">\(\mu\)</span> and variance <span class="arithmatex">\(\sigma^2\)</span> are heavily distorted by extreme values, squashing inliers into near-zero intervals.</p>
+</li>
+<li>
+<p><strong>RobustScaler (<span class="arithmatex">\(x' = \frac{x - \text{median}}{\text{IQR}}\)</span>):</strong>
+  Uses median and Interquartile Range (<span class="arithmatex">\(Q_3 - Q_1\)</span>). Because percentiles are order statistics, RobustScaler is <strong>strictly immune to extreme outliers</strong>. Choose RobustScaler when features contain genuine heavy-tailed outliers that must be preserved for detection (e.g., fraud amounts, network packet spikes) without distorting normal feature ranges.</p>
+</li>
+<li>
+<p><strong>QuantileTransformer (<span class="arithmatex">\(x' = G^{-1}(F_X(x))\)</span>):</strong>
   Computes empirical cumulative distribution function (CDF) <span class="arithmatex">\(F_X(x)\)</span> and maps values to a Uniform <span class="arithmatex">\([0, 1]\)</span> or standard Gaussian distribution. Completely removes linear scaling relationships, transforming arbitrary multi-modal distributions into smooth bell curves. Choose QuantileTransformer when using linear or distance models on heavily non-linear, skewed, or multimodal data, provided you do not need to preserve exact linear ratio relationships.</p>
+</li>
+</ul>
 <hr />
 <h3 id="q7-what-are-data-integrity-contracts-and-how-do-tools-like-pydantic-and-great-expectations-protect-production-ml-inference-pipelines">Q7: What are Data Integrity Contracts, and how do tools like Pydantic and Great Expectations protect production ML inference pipelines?<a class="headerlink" href="#q7-what-are-data-integrity-contracts-and-how-do-tools-like-pydantic-and-great-expectations-protect-production-ml-inference-pipelines" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
 In production ML systems, upstream APIs, microservices, and databases frequently undergo schema changes: columns are renamed, optional fields start returning <code>None</code>, types change from <code>int</code> to <code>string</code>, or numerical scales change (e.g., currency reported in cents instead of dollars). Without validation, models fail silently, producing erroneous predictions.</p>
-<p><strong>Data Integrity Contracts</strong> define programmatic, enforceable guarantees on data schemas:
-1. <strong>Row-Level Structural Validation (Pydantic):</strong>
-   Validates incoming payloads at API boundaries in sub-millisecond runtime:
-   - Type validation and strict coercion.
-   - Value range bounds (<code>age: int = Field(ge=18, le=120)</code>).
-   - Regex patterns and enumerated categorical memberships.
-   - Throws immediate 422 Unprocessable Entity exceptions before garbage inputs reach inference models.
-2. <strong>Batch-Level Statistical Validation (Great Expectations):</strong>
-   Validates macro properties of batch feature pipelines:
-   - Asserting column presence and ordering.
-   - Asserting maximum allowed missingness thresholds (<code>expect_column_values_to_not_be_null(mostly=0.95)</code>).
-   - Asserting statistical distribution bounds (e.g., <code>expect_column_mean_to_be_between(45.0, 55.0)</code>).
-   - Prevents retraining pipelines from executing on corrupted upstream ETL data.</p>
+<p><strong>Data Integrity Contracts</strong> define programmatic, enforceable guarantees on data schemas:</p>
+<ol>
+<li><strong>Row-Level Structural Validation (Pydantic):</strong>
+   Validates incoming payloads at API boundaries in sub-millisecond runtime:</li>
+<li>Type validation and strict coercion.</li>
+<li>Value range bounds (<code>age: int = Field(ge=18, le=120)</code>).</li>
+<li>Regex patterns and enumerated categorical memberships.</li>
+<li>Throws immediate 422 Unprocessable Entity exceptions before garbage inputs reach inference models.</li>
+<li><strong>Batch-Level Statistical Validation (Great Expectations):</strong>
+   Validates macro properties of batch feature pipelines:</li>
+<li>Asserting column presence and ordering.</li>
+<li>Asserting maximum allowed missingness thresholds (<code>expect_column_values_to_not_be_null(mostly=0.95)</code>).</li>
+<li>Asserting statistical distribution bounds (e.g., <code>expect_column_mean_to_be_between(45.0, 55.0)</code>).</li>
+<li>Prevents retraining pipelines from executing on corrupted upstream ETL data.</li>
+</ol>
 <hr />
 <h2 id="12-mastery-ladder">12. Mastery Ladder<a class="headerlink" href="#12-mastery-ladder" title="Permanent link">&para;</a></h2>
 <p>Complete this checklist to verify your depth in data cleaning and preprocessing:</p>
-<ul>
-<li>[ ] <strong>L1:</strong> You can classify any missing data scenario into Rubin's taxonomy (MCAR, MAR, MNAR).</li>
-<li>[ ] <strong>L2:</strong> You can explain why mean/median imputation compresses feature variance and dilutes covariance.</li>
-<li>[ ] <strong>L3:</strong> You can explain how the MICE algorithm iteratively imputes mixed numerical and categorical features.</li>
-<li>[ ] <strong>L4:</strong> You can compute univariate outlier bounds using Tukey's IQR rule (<span class="arithmatex">\(Q_1 - 1.5 \cdot \text{IQR}, Q_3 + 1.5 \cdot \text{IQR}\)</span>).</li>
-<li>[ ] <strong>L5:</strong> You can derive the Mahalanobis distance formula <span class="arithmatex">\(D_M(\mathbf{x}) = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu})}\)</span> and explain its geometric rotation and scaling.</li>
-<li>[ ] <strong>L6:</strong> You can derive the Bayesian smoothed target encoding formula and explain why Out-of-Fold (K-Fold) partitioning is required.</li>
-<li>[ ] <strong>L7:</strong> You can write a custom scikit-learn compatible transformer implementing leak-free target encoding with smoothing.</li>
-<li>[ ] <strong>L8:</strong> You can state the mathematical transformations for StandardScaler, MinMaxScaler, RobustScaler, and QuantileTransformer.</li>
-<li>[ ] <strong>L9:</strong> You can explain why fitting feature scalers on the full dataset constitutes data leakage and diagnose its symptoms.</li>
-<li>[ ] <strong>L10:</strong> You can construct production Data Integrity Contracts using Pydantic v2 to validate feature types and range constraints.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can classify any missing data scenario into Rubin's taxonomy (MCAR, MAR, MNAR).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can explain why mean/median imputation compresses feature variance and dilutes covariance.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can explain how the MICE algorithm iteratively imputes mixed numerical and categorical features.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can compute univariate outlier bounds using Tukey's IQR rule (<span class="arithmatex">\(Q_1 - 1.5 \cdot \text{IQR}, Q_3 + 1.5 \cdot \text{IQR}\)</span>).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can derive the Mahalanobis distance formula <span class="arithmatex">\(D_M(\mathbf{x}) = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu})}\)</span> and explain its geometric rotation and scaling.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can derive the Bayesian smoothed target encoding formula and explain why Out-of-Fold (K-Fold) partitioning is required.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can write a custom scikit-learn compatible transformer implementing leak-free target encoding with smoothing.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can state the mathematical transformations for StandardScaler, MinMaxScaler, RobustScaler, and QuantileTransformer.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can explain why fitting feature scalers on the full dataset constitutes data leakage and diagnose its symptoms.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can construct production Data Integrity Contracts using Pydantic v2 to validate feature types and range constraints.</li>
 </ul>
 
 

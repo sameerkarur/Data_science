@@ -4259,11 +4259,13 @@
 <hr />
 <h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
 <p>Human language is intrinsically sequential, temporal, and hierarchical: the semantic meaning of a word depends on preceding words, following words, and distant syntactic structures.</p>
-<p>The architecture of sequence modeling evolved through three foundational eras:
-1. <strong>Recurrent Neural Networks (RNNs)</strong>: Processing sequences step-by-step using a shared hidden recurrence <span class="arithmatex">\(h_t = f(h_{t-1}, x_t)\)</span>. While theoretically Turing-complete, RNNs suffer from <strong>vanishing and exploding gradients</strong>, preventing them from learning dependencies spanning more than <span class="arithmatex">\(10-20\)</span> steps.
-2. <strong>Gated Architectures (LSTM &amp; GRU)</strong>: Introducing additive cell states and multiplicative gating mechanisms (forget, input, output gates) that create an <strong>additive gradient highway</strong>, expanding temporal memory to several hundred steps.
-3. <strong>Seq2Seq &amp; Attention</strong>: Resolving the fixed-length vector bottleneck of encoder-decoder architectures by computing dynamic alignment weights over all source encoder states.
-4. <strong>The Transformer Revolution (Vaswani et al., 2017)</strong>: Eliminating sequential recurrence entirely. By relying purely on <strong>Self-Attention</strong>, Transformers compute pairwise token interactions in <span class="arithmatex">\(\mathcal{O}(1)\)</span> sequential operations, unlocking massive parallelization across modern GPU hardware.</p>
+<p>The architecture of sequence modeling evolved through three foundational eras:</p>
+<ol>
+<li><strong>Recurrent Neural Networks (RNNs)</strong>: Processing sequences step-by-step using a shared hidden recurrence <span class="arithmatex">\(h_t = f(h_{t-1}, x_t)\)</span>. While theoretically Turing-complete, RNNs suffer from <strong>vanishing and exploding gradients</strong>, preventing them from learning dependencies spanning more than <span class="arithmatex">\(10-20\)</span> steps.</li>
+<li><strong>Gated Architectures (LSTM &amp; GRU)</strong>: Introducing additive cell states and multiplicative gating mechanisms (forget, input, output gates) that create an <strong>additive gradient highway</strong>, expanding temporal memory to several hundred steps.</li>
+<li><strong>Seq2Seq &amp; Attention</strong>: Resolving the fixed-length vector bottleneck of encoder-decoder architectures by computing dynamic alignment weights over all source encoder states.</li>
+<li><strong>The Transformer Revolution (Vaswani et al., 2017)</strong>: Eliminating sequential recurrence entirely. By relying purely on <strong>Self-Attention</strong>, Transformers compute pairwise token interactions in <span class="arithmatex">\(\mathcal{O}(1)\)</span> sequential operations, unlocking massive parallelization across modern GPU hardware.</li>
+</ol>
 <pre class="mermaid"><code>flowchart TD
     subgraph "Recurrent Paradigm (O(T) Sequential Steps)"
         RNN["Vanilla RNN: h_t = tanh(W_hh h_{t-1} + W_xh x_t)"] -. "Vanishing / Exploding Gradients" .-&gt; LSTM["LSTM / GRU: Gated Additive Highway C_t = f_t ⊙ C_{t-1} + i_t ⊙ C̃_t"]
@@ -4328,17 +4330,25 @@ The intermediate Jacobian matrix is:</p>
 \left\| \frac{\partial \mathbf{h}_t}{\partial \mathbf{h}_k} \right\|_2 \le \prod_{j=k+1}^t \|D_j\|_2 \cdot \|W_{hh}^T\|_2
 \]</div>
 <p>Because the derivative of <span class="arithmatex">\(\tanh\)</span> is bounded by <span class="arithmatex">\(1\)</span> (<span class="arithmatex">\(0 &lt; 1 - \tanh^2(z) \le 1\)</span>), <span class="arithmatex">\(\|D_j\|_2 \le 1\)</span>.<br />
-Let <span class="arithmatex">\(\lambda_{\max}\)</span> be the largest eigenvalue (spectral radius) of <span class="arithmatex">\(W_{hh}\)</span>:
-1. <strong>Vanishing Gradients</strong>: If <span class="arithmatex">\(\|W_{hh}\|_2 &lt; 1\)</span> (or <span class="arithmatex">\(\lambda_{\max} &lt; 1\)</span>), then:
+Let <span class="arithmatex">\(\lambda_{\max}\)</span> be the largest eigenvalue (spectral radius) of <span class="arithmatex">\(W_{hh}\)</span>:</p>
+<ol>
+<li>
+<p><strong>Vanishing Gradients</strong>: If <span class="arithmatex">\(\|W_{hh}\|_2 &lt; 1\)</span> (or <span class="arithmatex">\(\lambda_{\max} &lt; 1\)</span>), then:
    $<span class="arithmatex">\(\left\| \frac{\partial \mathbf{h}_t}{\partial \mathbf{h}_k} \right\|_2 \le (\lambda_{\max})^{t - k} \xrightarrow{t - k \to \infty} 0\)</span>$
-   The error gradient decays exponentially to zero. The network cannot learn long-term dependencies.
-2. <strong>Exploding Gradients</strong>: If <span class="arithmatex">\(\lambda_{\max} &gt; 1\)</span>, then in un-saturated regions the norm grows exponentially as <span class="arithmatex">\((\lambda_{\max})^{t-k} \to \infty\)</span>, causing numeric overflow (<code>NaN</code>) and optimizer divergence.</p>
+   The error gradient decays exponentially to zero. The network cannot learn long-term dependencies.</p>
+</li>
+<li>
+<p><strong>Exploding Gradients</strong>: If <span class="arithmatex">\(\lambda_{\max} &gt; 1\)</span>, then in un-saturated regions the norm grows exponentially as <span class="arithmatex">\((\lambda_{\max})^{t-k} \to \infty\)</span>, causing numeric overflow (<code>NaN</code>) and optimizer divergence.</p>
+</li>
+</ol>
 <hr />
 <h2 id="4-long-short-term-memory-lstm-gated-recurrent-units-gru">4. Long Short-Term Memory (LSTM) &amp; Gated Recurrent Units (GRU)<a class="headerlink" href="#4-long-short-term-memory-lstm-gated-recurrent-units-gru" title="Permanent link">&para;</a></h2>
 <h3 id="41-lstm-architecture-hochreiter-schmidhuber-1997">4.1 LSTM Architecture (Hochreiter &amp; Schmidhuber, 1997)<a class="headerlink" href="#41-lstm-architecture-hochreiter-schmidhuber-1997" title="Permanent link">&para;</a></h3>
-<p>Sepp Hochreiter and Jürgen Schmidhuber solved vanishing gradients by separating memory into two distinct vectors:
-- <strong>Hidden State <span class="arithmatex">\(\mathbf{h}_t \in \mathbb{R}^h\)</span></strong>: Short-term working memory exposed to downstream layers.
-- <strong>Cell State <span class="arithmatex">\(\mathbf{C}_t \in \mathbb{R}^h\)</span></strong>: Long-term memory flowing through a linear <strong>Constant Error Carousel (CEC)</strong> with additive updates.</p>
+<p>Sepp Hochreiter and Jürgen Schmidhuber solved vanishing gradients by separating memory into two distinct vectors:</p>
+<ul>
+<li><strong>Hidden State <span class="arithmatex">\(\mathbf{h}_t \in \mathbb{R}^h\)</span></strong>: Short-term working memory exposed to downstream layers.</li>
+<li><strong>Cell State <span class="arithmatex">\(\mathbf{C}_t \in \mathbb{R}^h\)</span></strong>: Long-term memory flowing through a linear <strong>Constant Error Carousel (CEC)</strong> with additive updates.</li>
+</ul>
 <pre class="mermaid"><code>flowchart TD
     subgraph LSTM Cell at time t
         IN["x_t, h_{t-1}"] --&gt; F["Forget Gate: f_t = σ(W_f · [h_{t-1}, x_t] + b_f)"]
@@ -4358,19 +4368,33 @@ Let <span class="arithmatex">\(\lambda_{\max}\)</span> be the largest eigenvalue
         MULT3 --&gt; H_CURR["h_t = o_t ⊙ tanh(C_t)"]
     end</code></pre>
 <h3 id="42-the-mathematical-recurrences-of-lstm">4.2 The Mathematical Recurrences of LSTM<a class="headerlink" href="#42-the-mathematical-recurrences-of-lstm" title="Permanent link">&para;</a></h3>
-<p>At each time step <span class="arithmatex">\(t\)</span>, concatenate <span class="arithmatex">\([\mathbf{h}_{t-1}, \mathbf{x}_t] \in \mathbb{R}^{h + d}\)</span>:
-1. <strong>Forget Gate <span class="arithmatex">\(\mathbf{f}_t\)</span></strong>: Decides what fraction of old memory <span class="arithmatex">\(\mathbf{C}_{t-1}\)</span> to retain:
-   $<span class="arithmatex">\(\mathbf{f}_t = \sigma(W_f [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_f) \in (0, 1)^h\)</span>$
-2. <strong>Input Gate <span class="arithmatex">\(\mathbf{i}_t\)</span></strong>: Decides which coordinates of candidate memory to write:
-   $<span class="arithmatex">\(\mathbf{i}_t = \sigma(W_i [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_i) \in (0, 1)^h\)</span>$
-3. <strong>Candidate Cell State <span class="arithmatex">\(\widetilde{\mathbf{C}}_t\)</span></strong>: New information created at step <span class="arithmatex">\(t\)</span>:
-   $<span class="arithmatex">\(\widetilde{\mathbf{C}}_t = \tanh(W_c [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_c) \in (-1, 1)^h\)</span>$
-4. <strong>Cell State Update <span class="arithmatex">\(\mathbf{C}_t\)</span> (The Additive Highway)</strong>:
-   $<span class="arithmatex">\(\mathbf{C}_t = \mathbf{f}_t \odot \mathbf{C}_{t-1} + \mathbf{i}_t \odot \widetilde{\mathbf{C}}_t\)</span>$
-5. <strong>Output Gate <span class="arithmatex">\(\mathbf{o}_t\)</span></strong>: Filters which cell states are exposed as hidden state:
-   $<span class="arithmatex">\(\mathbf{o}_t = \sigma(W_o [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_o) \in (0, 1)^h\)</span>$
-6. <strong>Hidden State <span class="arithmatex">\(\mathbf{h}_t\)</span></strong>:
+<p>At each time step <span class="arithmatex">\(t\)</span>, concatenate <span class="arithmatex">\([\mathbf{h}_{t-1}, \mathbf{x}_t] \in \mathbb{R}^{h + d}\)</span>:</p>
+<ol>
+<li>
+<p><strong>Forget Gate <span class="arithmatex">\(\mathbf{f}_t\)</span></strong>: Decides what fraction of old memory <span class="arithmatex">\(\mathbf{C}_{t-1}\)</span> to retain:
+   $<span class="arithmatex">\(\mathbf{f}_t = \sigma(W_f [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_f) \in (0, 1)^h\)</span>$</p>
+</li>
+<li>
+<p><strong>Input Gate <span class="arithmatex">\(\mathbf{i}_t\)</span></strong>: Decides which coordinates of candidate memory to write:
+   $<span class="arithmatex">\(\mathbf{i}_t = \sigma(W_i [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_i) \in (0, 1)^h\)</span>$</p>
+</li>
+<li>
+<p><strong>Candidate Cell State <span class="arithmatex">\(\widetilde{\mathbf{C}}_t\)</span></strong>: New information created at step <span class="arithmatex">\(t\)</span>:
+   $<span class="arithmatex">\(\widetilde{\mathbf{C}}_t = \tanh(W_c [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_c) \in (-1, 1)^h\)</span>$</p>
+</li>
+<li>
+<p><strong>Cell State Update <span class="arithmatex">\(\mathbf{C}_t\)</span> (The Additive Highway)</strong>:
+   $<span class="arithmatex">\(\mathbf{C}_t = \mathbf{f}_t \odot \mathbf{C}_{t-1} + \mathbf{i}_t \odot \widetilde{\mathbf{C}}_t\)</span>$</p>
+</li>
+<li>
+<p><strong>Output Gate <span class="arithmatex">\(\mathbf{o}_t\)</span></strong>: Filters which cell states are exposed as hidden state:
+   $<span class="arithmatex">\(\mathbf{o}_t = \sigma(W_o [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_o) \in (0, 1)^h\)</span>$</p>
+</li>
+<li>
+<p><strong>Hidden State <span class="arithmatex">\(\mathbf{h}_t\)</span></strong>:
    $<span class="arithmatex">\(\mathbf{h}_t = \mathbf{o}_t \odot \tanh(\mathbf{C}_t)\)</span>$</p>
+</li>
+</ol>
 <h3 id="43-why-lstm-solves-vanishing-gradients">4.3 Why LSTM Solves Vanishing Gradients<a class="headerlink" href="#43-why-lstm-solves-vanishing-gradients" title="Permanent link">&para;</a></h3>
 <p>Examine the derivative of cell state <span class="arithmatex">\(\mathbf{C}_t\)</span> with respect to prior cell state <span class="arithmatex">\(\mathbf{C}_{t-1}\)</span>:</p>
 <div class="arithmatex">\[
@@ -4383,23 +4407,35 @@ The Jacobian error product across <span class="arithmatex">\(T\)</span> steps be
 \]</div>
 <p>The gradient flows backward <strong>linearly and additively without exponential decay</strong>, allowing LSTMs to preserve signals across hundreds of steps.</p>
 <h3 id="44-gated-recurrent-unit-gru-cho-et-al-2014">4.4 Gated Recurrent Unit (GRU, Cho et al., 2014)<a class="headerlink" href="#44-gated-recurrent-unit-gru-cho-et-al-2014" title="Permanent link">&para;</a></h3>
-<p>Kyunghyun Cho et al. streamlined the LSTM by merging the cell state and hidden state, and combining forget and input gates into a single update gate:
-- <strong>Reset Gate <span class="arithmatex">\(\mathbf{r}_t\)</span></strong>: Controls how much of past state to ignore:
-  $<span class="arithmatex">\(\mathbf{r}_t = \sigma(W_r [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_r)\)</span>$
-- <strong>Update Gate <span class="arithmatex">\(\mathbf{z}_t\)</span></strong>: Acts simultaneously as forget gate (<span class="arithmatex">\(1 - \mathbf{z}_t\)</span>) and input gate (<span class="arithmatex">\(\mathbf{z}_t\)</span>):
-  $<span class="arithmatex">\(\mathbf{z}_t = \sigma(W_z [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_z)\)</span>$
-- <strong>Candidate Hidden State <span class="arithmatex">\(\widetilde{\mathbf{h}}_t\)</span></strong>:
-  $<span class="arithmatex">\(\widetilde{\mathbf{h}}_t = \tanh(W_h [\mathbf{r}_t \odot \mathbf{h}_{t-1}, \, \mathbf{x}_t] + \mathbf{b}_h)\)</span>$
-- <strong>Hidden State Update</strong>:
+<p>Kyunghyun Cho et al. streamlined the LSTM by merging the cell state and hidden state, and combining forget and input gates into a single update gate:</p>
+<ul>
+<li>
+<p><strong>Reset Gate <span class="arithmatex">\(\mathbf{r}_t\)</span></strong>: Controls how much of past state to ignore:
+  $<span class="arithmatex">\(\mathbf{r}_t = \sigma(W_r [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_r)\)</span>$</p>
+</li>
+<li>
+<p><strong>Update Gate <span class="arithmatex">\(\mathbf{z}_t\)</span></strong>: Acts simultaneously as forget gate (<span class="arithmatex">\(1 - \mathbf{z}_t\)</span>) and input gate (<span class="arithmatex">\(\mathbf{z}_t\)</span>):
+  $<span class="arithmatex">\(\mathbf{z}_t = \sigma(W_z [\mathbf{h}_{t-1}, \mathbf{x}_t] + \mathbf{b}_z)\)</span>$</p>
+</li>
+<li>
+<p><strong>Candidate Hidden State <span class="arithmatex">\(\widetilde{\mathbf{h}}_t\)</span></strong>:
+  $<span class="arithmatex">\(\widetilde{\mathbf{h}}_t = \tanh(W_h [\mathbf{r}_t \odot \mathbf{h}_{t-1}, \, \mathbf{x}_t] + \mathbf{b}_h)\)</span>$</p>
+</li>
+<li>
+<p><strong>Hidden State Update</strong>:
   $<span class="arithmatex">\(\mathbf{h}_t = (1 - \mathbf{z}_t) \odot \mathbf{h}_{t-1} + \mathbf{z}_t \odot \widetilde{\mathbf{h}}_t\)</span>$</p>
+</li>
+</ul>
 <p>GRUs have <span class="arithmatex">\(\approx 25\%\)</span> fewer parameters than LSTMs and converge faster on small-to-moderate datasets while achieving comparable expressive capacity.</p>
 <hr />
 <h2 id="5-sequence-to-sequence-seq2seq-the-attention-mechanism">5. Sequence-to-Sequence (Seq2Seq) &amp; The Attention Mechanism<a class="headerlink" href="#5-sequence-to-sequence-seq2seq-the-attention-mechanism" title="Permanent link">&para;</a></h2>
 <h3 id="51-the-fixed-context-vector-bottleneck-sutskever-et-al-2014">5.1 The Fixed Context Vector Bottleneck (Sutskever et al., 2014)<a class="headerlink" href="#51-the-fixed-context-vector-bottleneck-sutskever-et-al-2014" title="Permanent link">&para;</a></h3>
 <p>In machine translation (e.g. English <span class="arithmatex">\(\to\)</span> German), input and output sequences have different lengths (<span class="arithmatex">\(T_{\text{in}} \ne T_{\text{out}}\)</span>).<br />
-The standard Seq2Seq model employs an <strong>Encoder-Decoder</strong> architecture:
-- <strong>Encoder</strong>: Reads source sequence <span class="arithmatex">\((\mathbf{x}_1, \dots, \mathbf{x}_{T_x})\)</span> and compresses it into a single final hidden vector <span class="arithmatex">\(\mathbf{c} = \mathbf{h}_{T_x}\)</span>.
-- <strong>Decoder</strong>: Unrolls target tokens autoregressively conditioned on this single fixed vector <span class="arithmatex">\(\mathbf{c}\)</span>.</p>
+The standard Seq2Seq model employs an <strong>Encoder-Decoder</strong> architecture:</p>
+<ul>
+<li><strong>Encoder</strong>: Reads source sequence <span class="arithmatex">\((\mathbf{x}_1, \dots, \mathbf{x}_{T_x})\)</span> and compresses it into a single final hidden vector <span class="arithmatex">\(\mathbf{c} = \mathbf{h}_{T_x}\)</span>.</li>
+<li><strong>Decoder</strong>: Unrolls target tokens autoregressively conditioned on this single fixed vector <span class="arithmatex">\(\mathbf{c}\)</span>.</li>
+</ul>
 <p><strong>The Information Bottleneck</strong>: Compressing a 50-word sentence containing multiple clauses into a single 512-dimensional vector <span class="arithmatex">\(\mathbf{c}\)</span> causes catastrophic information loss for sentences longer than <span class="arithmatex">\(\approx 15-20\)</span> words.</p>
 <pre class="mermaid"><code>flowchart LR
     subgraph Encoder
@@ -4433,17 +4469,25 @@ The standard Seq2Seq model employs an <strong>Encoder-Decoder</strong> architect
 <li><strong>Bahdanau Additive (1914)</strong>:
      $<span class="arithmatex">\(e_{ij} = \mathbf{v}_a^T \tanh(W_a \mathbf{s}_{i-1} + U_a \mathbf{h}_j)\)</span>$
      where <span class="arithmatex">\(W_a, U_a, \mathbf{v}_a\)</span> are learnable projection matrices and vectors.</li>
-<li><strong>Luong Multiplicative / Dot-Product (2015)</strong>:
-     $<span class="arithmatex">\(e_{ij} = \mathbf{s}_i^T W_a \mathbf{h}_j \quad \text{or} \quad e_{ij} = \mathbf{s}_i^T \mathbf{h}_j \quad (\text{if dimensions match})\)</span>$</li>
-<li><strong>Attention Weights (Softmax Normalization)</strong>:
+<li>
+<p><strong>Luong Multiplicative / Dot-Product (2015)</strong>:
+     $<span class="arithmatex">\(e_{ij} = \mathbf{s}_i^T W_a \mathbf{h}_j \quad \text{or} \quad e_{ij} = \mathbf{s}_i^T \mathbf{h}_j \quad (\text{if dimensions match})\)</span>$</p>
+</li>
+<li>
+<p><strong>Attention Weights (Softmax Normalization)</strong>:
    $<span class="arithmatex">\(\alpha_{ij} = \frac{\exp(e_{ij})}{\sum_{k=1}^{T_x} \exp(e_{ik})}\)</span>$
-   The scalar <span class="arithmatex">\(\alpha_{ij} \in [0, 1]\)</span> represents the probability that the decoder should focus on source word <span class="arithmatex">\(j\)</span> when generating target word <span class="arithmatex">\(i\)</span>.</li>
-<li><strong>Dynamic Context Vector <span class="arithmatex">\(\mathbf{c}_i\)</span></strong>:
-   $<span class="arithmatex">\(\mathbf{c}_i = \sum_{j=1}^{T_x} \alpha_{ij} \mathbf{h}_j\)</span>$</li>
-<li><strong>Decoder Update</strong>:
+   The scalar <span class="arithmatex">\(\alpha_{ij} \in [0, 1]\)</span> represents the probability that the decoder should focus on source word <span class="arithmatex">\(j\)</span> when generating target word <span class="arithmatex">\(i\)</span>.</p>
+</li>
+<li>
+<p><strong>Dynamic Context Vector <span class="arithmatex">\(\mathbf{c}_i\)</span></strong>:
+   $<span class="arithmatex">\(\mathbf{c}_i = \sum_{j=1}^{T_x} \alpha_{ij} \mathbf{h}_j\)</span>$</p>
+</li>
+<li>
+<p><strong>Decoder Update</strong>:
    Combine context vector <span class="arithmatex">\(\mathbf{c}_i\)</span> with decoder state <span class="arithmatex">\(\mathbf{s}_i\)</span> to predict output token:
    $<span class="arithmatex">\(\widetilde{\mathbf{s}}_i = \tanh(W_c [\mathbf{c}_i, \mathbf{s}_i])\)</span>$
-   $<span class="arithmatex">\(P(y_i \mid y_{&lt;i}, \mathbf{x}) = \text{softmax}(W_s \widetilde{\mathbf{s}}_i)\)</span>$</li>
+   $<span class="arithmatex">\(P(y_i \mid y_{&lt;i}, \mathbf{x}) = \text{softmax}(W_s \widetilde{\mathbf{s}}_i)\)</span>$</p>
+</li>
 </ol>
 <hr />
 <h2 id="6-the-transformer-revolution-vaswani-et-al-2017">6. The Transformer Revolution (Vaswani et al., 2017)<a class="headerlink" href="#6-the-transformer-revolution-vaswani-et-al-2017" title="Permanent link">&para;</a></h2>
@@ -4521,9 +4565,11 @@ A single attention head can only attend to a single weighted average of context.
 </tr>
 </tbody>
 </table>
-<p>where <span class="arithmatex">\(n\)</span> is sequence length and <span class="arithmatex">\(d\)</span> is representation dimension.
-- In RNNs, maximum path length between token 1 and token <span class="arithmatex">\(n\)</span> is <span class="arithmatex">\(\mathcal{O}(n)\)</span> sequential hops, making long-range credit assignment fragile.
-- In Self-Attention, any token connects to any other token in <strong><span class="arithmatex">\(\mathcal{O}(1)\)</span> steps</strong>, and the entire sequence is computed in a single GPU matrix multiply.</p>
+<p>where <span class="arithmatex">\(n\)</span> is sequence length and <span class="arithmatex">\(d\)</span> is representation dimension.</p>
+<ul>
+<li>In RNNs, maximum path length between token 1 and token <span class="arithmatex">\(n\)</span> is <span class="arithmatex">\(\mathcal{O}(n)\)</span> sequential hops, making long-range credit assignment fragile.</li>
+<li>In Self-Attention, any token connects to any other token in <strong><span class="arithmatex">\(\mathcal{O}(1)\)</span> steps</strong>, and the entire sequence is computed in a single GPU matrix multiply.</li>
+</ul>
 <hr />
 <h2 id="7-implementation-1-vectorized-lstm-cell-from-scratch-pure-numpy">7. Implementation 1 — Vectorized LSTM Cell from Scratch (Pure NumPy)<a class="headerlink" href="#7-implementation-1-vectorized-lstm-cell-from-scratch-pure-numpy" title="Permanent link">&para;</a></h2>
 <p>The following complete Python implementation builds an LSTM cell from first principles with full analytical forward and backward passes in NumPy.</p>
@@ -4836,24 +4882,28 @@ Dividing by <span class="arithmatex">\(\sqrt{d_k}\)</span> rescales the variance
 <p>This stabilizes softmax inputs in the active gradient region.</p>
 <hr />
 <h3 id="q3-contrast-teacher-forcing-with-free-running-generation-during-seq2seq-training-and-explain-scheduled-sampling">Q3: Contrast Teacher Forcing with Free-Running Generation during Seq2Seq training, and explain Scheduled Sampling.<a class="headerlink" href="#q3-contrast-teacher-forcing-with-free-running-generation-during-seq2seq-training-and-explain-scheduled-sampling" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Teacher Forcing</strong>: During training, at decoding step <span class="arithmatex">\(t\)</span>, the decoder is fed the <strong>ground truth target token</strong> <span class="arithmatex">\(y_{t-1}^*\)</span> as its input, regardless of whether the model's prediction <span class="arithmatex">\(\hat{y}_{t-1}\)</span> at the previous step was correct.
-  - <em>Advantage</em>: Prevents compounding error drift; stabilizes and accelerates early training convergence.
-  - <em>Disadvantage (Exposure Bias)</em>: At test time, ground truth target tokens are absent; the decoder must feed its own (potentially erroneous) prior output <span class="arithmatex">\(\hat{y}_{t-1}\)</span>. Because the model was never trained to recover from its own mistakes, a single early mistake sends the generation trajectory completely off track.
-- <strong>Free-Running Generation</strong>: Feeds the model's own sampled prediction <span class="arithmatex">\(\hat{y}_{t-1}\)</span> during training. Extremely noisy and slow to converge early on.
-- <strong>Scheduled Sampling (Bengio et al., 2015)</strong>: A curriculum learning bridge. At training step <span class="arithmatex">\(t\)</span>, the decoder input is sampled from ground truth with probability <span class="arithmatex">\(\epsilon_t\)</span> and from the model's prediction with probability <span class="arithmatex">\(1 - \epsilon_t\)</span>, with <span class="arithmatex">\(\epsilon_t\)</span> decaying smoothly from <span class="arithmatex">\(1.0 \to 0.0\)</span> over training epochs.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Teacher Forcing</strong>: During training, at decoding step <span class="arithmatex">\(t\)</span>, the decoder is fed the <strong>ground truth target token</strong> <span class="arithmatex">\(y_{t-1}^*\)</span> as its input, regardless of whether the model's prediction <span class="arithmatex">\(\hat{y}_{t-1}\)</span> at the previous step was correct.</li>
+<li><em>Advantage</em>: Prevents compounding error drift; stabilizes and accelerates early training convergence.</li>
+<li><em>Disadvantage (Exposure Bias)</em>: At test time, ground truth target tokens are absent; the decoder must feed its own (potentially erroneous) prior output <span class="arithmatex">\(\hat{y}_{t-1}\)</span>. Because the model was never trained to recover from its own mistakes, a single early mistake sends the generation trajectory completely off track.</li>
+<li><strong>Free-Running Generation</strong>: Feeds the model's own sampled prediction <span class="arithmatex">\(\hat{y}_{t-1}\)</span> during training. Extremely noisy and slow to converge early on.</li>
+<li><strong>Scheduled Sampling (Bengio et al., 2015)</strong>: A curriculum learning bridge. At training step <span class="arithmatex">\(t\)</span>, the decoder input is sampled from ground truth with probability <span class="arithmatex">\(\epsilon_t\)</span> and from the model's prediction with probability <span class="arithmatex">\(1 - \epsilon_t\)</span>, with <span class="arithmatex">\(\epsilon_t\)</span> decaying smoothly from <span class="arithmatex">\(1.0 \to 0.0\)</span> over training epochs.</li>
+</ul>
 <hr />
 <h3 id="q4-compare-the-computational-complexity-and-memory-footprint-of-self-attention-vs-recurrent-layers-as-sequence-length-n-scales">Q4: Compare the computational complexity and memory footprint of Self-Attention vs. Recurrent Layers as sequence length <span class="arithmatex">\(N\)</span> scales.<a class="headerlink" href="#q4-compare-the-computational-complexity-and-memory-footprint-of-self-attention-vs-recurrent-layers-as-sequence-length-n-scales" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
-Let <span class="arithmatex">\(N\)</span> be sequence length and <span class="arithmatex">\(D\)</span> be hidden dimension.
-- <strong>Recurrent Layer (LSTM / GRU)</strong>:
-  - <em>Time Complexity</em>: <span class="arithmatex">\(\mathcal{O}(N \cdot D^2)\)</span> matrix multiplications. Computation is strictly sequential (<span class="arithmatex">\(N\)</span> steps).
-  - <em>Memory Complexity</em>: Stores activations for BPTT: <span class="arithmatex">\(\mathcal{O}(N \cdot D)\)</span>.
-  - <em>Scaling</em>: Scales linearly with <span class="arithmatex">\(N\)</span>. Handles very long sequences smoothly with constant per-step memory during inference.
-- <strong>Self-Attention (Transformer)</strong>:
-  - <em>Time Complexity</em>: Computing <span class="arithmatex">\(Q K^T\)</span> and <span class="arithmatex">\((QK^T)V\)</span> costs <span class="arithmatex">\(\mathcal{O}(N^2 \cdot D)\)</span>.
-  - <em>Memory Complexity</em>: Materializing the full attention matrix <span class="arithmatex">\(\frac{QK^T}{\sqrt{d}}\)</span> requires storing an <span class="arithmatex">\((N \times N)\)</span> tensor per head per layer: <span class="arithmatex">\(\mathcal{O}(H \cdot N^2)\)</span>.
-  - <em>Scaling</em>: Scales <strong>quadratically</strong> with sequence length <span class="arithmatex">\(N^2\)</span>. For <span class="arithmatex">\(N = 1,000\)</span>, <span class="arithmatex">\(N^2 = 10^6\)</span>. For <span class="arithmatex">\(N = 100,000\)</span>, <span class="arithmatex">\(N^2 = 10^{10}\)</span>, causing out-of-memory (OOM) GPU crashes unless using FlashAttention (tiled online softmax) or sparse attention mechanisms.</p>
+Let <span class="arithmatex">\(N\)</span> be sequence length and <span class="arithmatex">\(D\)</span> be hidden dimension.</p>
+<ul>
+<li><strong>Recurrent Layer (LSTM / GRU)</strong>:</li>
+<li><em>Time Complexity</em>: <span class="arithmatex">\(\mathcal{O}(N \cdot D^2)\)</span> matrix multiplications. Computation is strictly sequential (<span class="arithmatex">\(N\)</span> steps).</li>
+<li><em>Memory Complexity</em>: Stores activations for BPTT: <span class="arithmatex">\(\mathcal{O}(N \cdot D)\)</span>.</li>
+<li><em>Scaling</em>: Scales linearly with <span class="arithmatex">\(N\)</span>. Handles very long sequences smoothly with constant per-step memory during inference.</li>
+<li><strong>Self-Attention (Transformer)</strong>:</li>
+<li><em>Time Complexity</em>: Computing <span class="arithmatex">\(Q K^T\)</span> and <span class="arithmatex">\((QK^T)V\)</span> costs <span class="arithmatex">\(\mathcal{O}(N^2 \cdot D)\)</span>.</li>
+<li><em>Memory Complexity</em>: Materializing the full attention matrix <span class="arithmatex">\(\frac{QK^T}{\sqrt{d}}\)</span> requires storing an <span class="arithmatex">\((N \times N)\)</span> tensor per head per layer: <span class="arithmatex">\(\mathcal{O}(H \cdot N^2)\)</span>.</li>
+<li><em>Scaling</em>: Scales <strong>quadratically</strong> with sequence length <span class="arithmatex">\(N^2\)</span>. For <span class="arithmatex">\(N = 1,000\)</span>, <span class="arithmatex">\(N^2 = 10^6\)</span>. For <span class="arithmatex">\(N = 100,000\)</span>, <span class="arithmatex">\(N^2 = 10^{10}\)</span>, causing out-of-memory (OOM) GPU crashes unless using FlashAttention (tiled online softmax) or sparse attention mechanisms.</li>
+</ul>
 <hr />
 <h3 id="q5-why-is-the-constant-error-carousel-cec-in-lstms-called-constant-and-how-does-it-prevent-gradient-decay">Q5: Why is the Constant Error Carousel (CEC) in LSTMs called "constant", and how does it prevent gradient decay?<a class="headerlink" href="#q5-why-is-the-constant-error-carousel-cec-in-lstms-called-constant-and-how-does-it-prevent-gradient-decay" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
@@ -4867,17 +4917,17 @@ In LSTM, the cell state recurrence without gating is:</p>
 <p>Because the error gradient neither shrinks nor expands as it circulates through time, Hochreiter &amp; Schmidhuber termed this closed loop the <strong>Constant Error Carousel (CEC)</strong>. The forget gate <span class="arithmatex">\(f_t\)</span> and input gate <span class="arithmatex">\(i_t\)</span> act as learnable analog switches modulating when the carousel retains, updates, or releases memory.</p>
 <hr />
 <h2 id="11-mastery-ladder">11. Mastery Ladder<a class="headerlink" href="#11-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Write the autoregressive factorization of joint sequence probability <span class="arithmatex">\(P(x_1, \dots, x_T)\)</span>.</li>
-<li>[ ] <strong>L2:</strong> Formulate the forward pass of a vanilla RNN and explain Backpropagation Through Time (BPTT).</li>
-<li>[ ] <strong>L3:</strong> Prove mathematically why the spectral radius <span class="arithmatex">\(\rho(W_{hh})\)</span> governs vanishing and exploding gradients.</li>
-<li>[ ] <strong>L4:</strong> Write the 6 equations defining the forward pass of an LSTM cell and identify the role of each gate.</li>
-<li>[ ] <strong>L5:</strong> Explain the Constant Error Carousel (CEC) and derive why LSTMs prevent vanishing gradients.</li>
-<li>[ ] <strong>L6:</strong> Compare LSTMs and GRUs regarding parameter count and architectural differences.</li>
-<li>[ ] <strong>L7:</strong> Explain the fixed context vector bottleneck in Seq2Seq models and how Attention eliminates it.</li>
-<li>[ ] <strong>L8:</strong> Compare Bahdanau (Additive) Attention and Luong (Multiplicative) Attention mathematically.</li>
-<li>[ ] <strong>L9:</strong> Derive why Scaled Dot-Product Attention divides by <span class="arithmatex">\(\sqrt{d_k}\)</span> using the variance of independent products.</li>
-<li>[ ] <strong>L10:</strong> Implement a complete LSTM cell with forward and backward passes from scratch in pure NumPy, and an end-to-end Seq2Seq with Luong Attention in PyTorch.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Write the autoregressive factorization of joint sequence probability <span class="arithmatex">\(P(x_1, \dots, x_T)\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Formulate the forward pass of a vanilla RNN and explain Backpropagation Through Time (BPTT).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Prove mathematically why the spectral radius <span class="arithmatex">\(\rho(W_{hh})\)</span> governs vanishing and exploding gradients.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Write the 6 equations defining the forward pass of an LSTM cell and identify the role of each gate.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Explain the Constant Error Carousel (CEC) and derive why LSTMs prevent vanishing gradients.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Compare LSTMs and GRUs regarding parameter count and architectural differences.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Explain the fixed context vector bottleneck in Seq2Seq models and how Attention eliminates it.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Compare Bahdanau (Additive) Attention and Luong (Multiplicative) Attention mathematically.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Derive why Scaled Dot-Product Attention divides by <span class="arithmatex">\(\sqrt{d_k}\)</span> using the variance of independent products.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Implement a complete LSTM cell with forward and backward passes from scratch in pure NumPy, and an end-to-end Seq2Seq with Luong Attention in PyTorch.</li>
 </ul>
 
 

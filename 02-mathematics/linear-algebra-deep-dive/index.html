@@ -4358,10 +4358,12 @@
         ED --&gt; PCA1["Principal Component Analysis (Covariance Eigendecomposition)"]
         SVD --&gt; PCA2["Stable Truncated SVD, Matrix Factorization, Latent Semantics"]
     end</code></pre>
-<p>Mastering linear algebra in machine learning is not merely about executing row reductions by hand; it is about developing <strong>geometric intuition</strong> for transformations:
-- How does a linear operator rotate, stretch, or collapse geometric space?
-- Which directions preserve the maximum variance of high-dimensional data?
-- How do we project high-dimensional signals onto lower-dimensional subspaces while minimizing reconstruction error?</p>
+<p>Mastering linear algebra in machine learning is not merely about executing row reductions by hand; it is about developing <strong>geometric intuition</strong> for transformations:</p>
+<ul>
+<li>How does a linear operator rotate, stretch, or collapse geometric space?</li>
+<li>Which directions preserve the maximum variance of high-dimensional data?</li>
+<li>How do we project high-dimensional signals onto lower-dimensional subspaces while minimizing reconstruction error?</li>
+</ul>
 <hr />
 <h2 id="2-intuition-real-world-framing">2. Intuition &amp; Real-World Framing<a class="headerlink" href="#2-intuition-real-world-framing" title="Permanent link">&para;</a></h2>
 <h3 id="matrix-multiplication-as-dynamic-coordinate-warping">Matrix Multiplication as Dynamic Coordinate Warping<a class="headerlink" href="#matrix-multiplication-as-dynamic-coordinate-warping" title="Permanent link">&para;</a></h3>
@@ -4450,19 +4452,29 @@ A\mathbf{x} = x_1 \begin{bmatrix} 2 \\ 0 \end{bmatrix} + x_2 \begin{bmatrix} 1 \
 \]</div>
 <p>where <span class="arithmatex">\(\theta\)</span> is the angle between the vectors.</p>
 <ul>
-<li><strong>Cosine Similarity</strong>:
+<li>
+<p><strong>Cosine Similarity</strong>:
   $<span class="arithmatex">\(\text{cosine\_sim}(\mathbf{u}, \mathbf{v}) = \frac{\mathbf{u}^T \mathbf{v}}{\|\mathbf{u}\|_2 \|\mathbf{v}\|_2} = \cos \theta \in [-1, 1]\)</span>$
-  This is the foundation of dense vector retrieval, semantic search, and self-attention in Transformers.</li>
-<li><strong>Orthogonality</strong>: Two non-zero vectors are orthogonal (<span class="arithmatex">\(\mathbf{u} \perp \mathbf{v}\)</span>) if and only if <span class="arithmatex">\(\mathbf{u}^T \mathbf{v} = 0\)</span> (<span class="arithmatex">\(\theta = 90^\circ\)</span>).</li>
+  This is the foundation of dense vector retrieval, semantic search, and self-attention in Transformers.</p>
+</li>
+<li>
+<p><strong>Orthogonality</strong>: Two non-zero vectors are orthogonal (<span class="arithmatex">\(\mathbf{u} \perp \mathbf{v}\)</span>) if and only if <span class="arithmatex">\(\mathbf{u}^T \mathbf{v} = 0\)</span> (<span class="arithmatex">\(\theta = 90^\circ\)</span>).</p>
+</li>
 </ul>
 <h3 id="33-linear-independence-span-basis-and-rank">3.3 Linear Independence, Span, Basis, and Rank<a class="headerlink" href="#33-linear-independence-span-basis-and-rank" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Span</strong>: The set of all possible linear combinations of a collection of vectors <span class="arithmatex">\(\{\mathbf{v}_1, \dots, \mathbf{v}_k\}\)</span>:
-  $<span class="arithmatex">\(\text{span}(\mathbf{v}_1, \dots, \mathbf{v}_k) = \left\{ \sum_{i=1}^k c_i \mathbf{v}_i \;\middle|\; c_i \in \mathbb{R} \right\}\)</span>$</li>
-<li><strong>Linear Independence</strong>: Vectors <span class="arithmatex">\(\{\mathbf{v}_1, \dots, \mathbf{v}_k\}\)</span> are linearly independent if:
+<li>
+<p><strong>Span</strong>: The set of all possible linear combinations of a collection of vectors <span class="arithmatex">\(\{\mathbf{v}_1, \dots, \mathbf{v}_k\}\)</span>:
+  $<span class="arithmatex">\(\text{span}(\mathbf{v}_1, \dots, \mathbf{v}_k) = \left\{ \sum_{i=1}^k c_i \mathbf{v}_i \;\middle|\; c_i \in \mathbb{R} \right\}\)</span>$</p>
+</li>
+<li>
+<p><strong>Linear Independence</strong>: Vectors <span class="arithmatex">\(\{\mathbf{v}_1, \dots, \mathbf{v}_k\}\)</span> are linearly independent if:
   $<span class="arithmatex">\(\sum_{i=1}^k c_i \mathbf{v}_i = \mathbf{0} \implies c_1 = c_2 = \dots = c_k = 0\)</span>$
-  If any non-zero coefficients satisfy the equation, at least one vector is redundant and lies within the span of the others (multicollinearity).</li>
-<li><strong>Basis</strong>: A linearly independent set of vectors that spans vector space <span class="arithmatex">\(\mathcal{V}\)</span>. The number of vectors in any basis for <span class="arithmatex">\(\mathcal{V}\)</span> defines the <strong>dimension</strong> of <span class="arithmatex">\(\mathcal{V}\)</span>.</li>
+  If any non-zero coefficients satisfy the equation, at least one vector is redundant and lies within the span of the others (multicollinearity).</p>
+</li>
+<li>
+<p><strong>Basis</strong>: A linearly independent set of vectors that spans vector space <span class="arithmatex">\(\mathcal{V}\)</span>. The number of vectors in any basis for <span class="arithmatex">\(\mathcal{V}\)</span> defines the <strong>dimension</strong> of <span class="arithmatex">\(\mathcal{V}\)</span>.</p>
+</li>
 <li><strong>Matrix Rank</strong>:</li>
 <li>The <strong>column rank</strong> of <span class="arithmatex">\(A\)</span> is the dimension of the span of its columns (the column space <span class="arithmatex">\(\mathcal{C}(A)\)</span>).</li>
 <li>The <strong>row rank</strong> of <span class="arithmatex">\(A\)</span> is the dimension of the span of its rows.</li>
@@ -4511,15 +4523,23 @@ A\mathbf{x} = x_1 \begin{bmatrix} 2 \\ 0 \end{bmatrix} + x_2 \begin{bmatrix} 1 \
     L1["L1 Unit Ball: Diamond (Sharp vertices on axes)"] --&gt; S["Sparsity: Contour tangency hits vertices at w_i = 0"]
     L2["L2 Unit Ball: Smooth Sphere"] --&gt; W["Weight Decay: Uniform weight shrinkage towards origin"]</code></pre>
 <h3 id="42-matrix-norms">4.2 Matrix Norms<a class="headerlink" href="#42-matrix-norms" title="Permanent link">&para;</a></h3>
-<p>For matrix <span class="arithmatex">\(A \in \mathbb{R}^{m \times n}\)</span>:
-- <strong>Frobenius Norm</strong>: Entrywise <span class="arithmatex">\(L_2\)</span> norm:
-  $<span class="arithmatex">\(\|A\|_F = \sqrt{\sum_{i=1}^m \sum_{j=1}^n A_{ij}^2} = \sqrt{\text{Tr}(A^T A)} = \sqrt{\sum_{i=1}^{\min(m, n)} \sigma_i^2}\)</span>$
-- <strong>Spectral Norm (<span class="arithmatex">\(L_2\)</span> Operator Norm)</strong>: Maximum amplification factor:
+<p>For matrix <span class="arithmatex">\(A \in \mathbb{R}^{m \times n}\)</span>:</p>
+<ul>
+<li>
+<p><strong>Frobenius Norm</strong>: Entrywise <span class="arithmatex">\(L_2\)</span> norm:
+  $<span class="arithmatex">\(\|A\|_F = \sqrt{\sum_{i=1}^m \sum_{j=1}^n A_{ij}^2} = \sqrt{\text{Tr}(A^T A)} = \sqrt{\sum_{i=1}^{\min(m, n)} \sigma_i^2}\)</span>$</p>
+</li>
+<li>
+<p><strong>Spectral Norm (<span class="arithmatex">\(L_2\)</span> Operator Norm)</strong>: Maximum amplification factor:
   $<span class="arithmatex">\(\|A\|_2 = \max_{\mathbf{x} \ne \mathbf{0}} \frac{\|A\mathbf{x}\|_2}{\|\mathbf{x}\|_2} = \sigma_{\max}(A)\)</span>$
-  Used in Spectral Normalization for GANs to enforce Lipschitz continuity.
-- <strong>Nuclear Norm (Trace Norm)</strong>: Sum of singular values:
+  Used in Spectral Normalization for GANs to enforce Lipschitz continuity.</p>
+</li>
+<li>
+<p><strong>Nuclear Norm (Trace Norm)</strong>: Sum of singular values:
   $<span class="arithmatex">\(\|A\|_* = \sum_{i=1}^{\min(m,n)} \sigma_i(A)\)</span>$
   The convex relaxation of matrix rank, widely used in matrix completion and collaborative filtering.</p>
+</li>
+</ul>
 <hr />
 <h2 id="5-orthogonality-projections-and-the-normal-equations">5. Orthogonality, Projections, and the Normal Equations<a class="headerlink" href="#5-orthogonality-projections-and-the-normal-equations" title="Permanent link">&para;</a></h2>
 <h3 id="51-orthogonal-projection-onto-a-subspace">5.1 Orthogonal Projection onto a Subspace<a class="headerlink" href="#51-orthogonal-projection-onto-a-subspace" title="Permanent link">&para;</a></h3>
@@ -4570,16 +4590,20 @@ A\mathbf{v} = \lambda \mathbf{v} \iff (A - \lambda I)\mathbf{v} = \mathbf{0}
 \det(A - \lambda I) = 0
 \]</div>
 <h3 id="62-spectral-theorem-for-real-symmetric-matrices">6.2 Spectral Theorem for Real Symmetric Matrices<a class="headerlink" href="#62-spectral-theorem-for-real-symmetric-matrices" title="Permanent link">&para;</a></h3>
-<p>If <span class="arithmatex">\(A \in \mathbb{R}^{n \times n}\)</span> is real and symmetric (<span class="arithmatex">\(A = A^T\)</span>):
-1. All <span class="arithmatex">\(n\)</span> eigenvalues <span class="arithmatex">\(\lambda_1, \dots, \lambda_n\)</span> are strictly <strong>real numbers</strong> (<span class="arithmatex">\(\lambda_i \in \mathbb{R}\)</span>).
-2. Eigenvectors corresponding to distinct eigenvalues are <strong>mutually orthogonal</strong>.
-3. <span class="arithmatex">\(A\)</span> can be orthogonally diagonalized:
+<p>If <span class="arithmatex">\(A \in \mathbb{R}^{n \times n}\)</span> is real and symmetric (<span class="arithmatex">\(A = A^T\)</span>):</p>
+<ol>
+<li>All <span class="arithmatex">\(n\)</span> eigenvalues <span class="arithmatex">\(\lambda_1, \dots, \lambda_n\)</span> are strictly <strong>real numbers</strong> (<span class="arithmatex">\(\lambda_i \in \mathbb{R}\)</span>).</li>
+<li>Eigenvectors corresponding to distinct eigenvalues are <strong>mutually orthogonal</strong>.</li>
+<li><span class="arithmatex">\(A\)</span> can be orthogonally diagonalized:
    $<span class="arithmatex">\(A = Q \Lambda Q^T = \sum_{i=1}^n \lambda_i \mathbf{q}_i \mathbf{q}_i^T\)</span>$
-   where <span class="arithmatex">\(Q = [\mathbf{q}_1, \dots, \mathbf{q}_n]\)</span> is an orthonormal matrix (<span class="arithmatex">\(Q^T Q = Q Q^T = I\)</span>), and <span class="arithmatex">\(\Lambda = \text{diag}(\lambda_1, \dots, \lambda_n)\)</span>.</p>
+   where <span class="arithmatex">\(Q = [\mathbf{q}_1, \dots, \mathbf{q}_n]\)</span> is an orthonormal matrix (<span class="arithmatex">\(Q^T Q = Q Q^T = I\)</span>), and <span class="arithmatex">\(\Lambda = \text{diag}(\lambda_1, \dots, \lambda_n)\)</span>.</li>
+</ol>
 <h3 id="63-positive-semi-definite-psd-matrices">6.3 Positive Semi-Definite (PSD) Matrices<a class="headerlink" href="#63-positive-semi-definite-psd-matrices" title="Permanent link">&para;</a></h3>
-<p>A symmetric matrix <span class="arithmatex">\(M \in \mathbb{R}^{n \times n}\)</span> is:
-- <strong>Positive Semi-Definite (<span class="arithmatex">\(M \succeq 0\)</span>)</strong> if for all non-zero <span class="arithmatex">\(\mathbf{x} \in \mathbb{R}^n\)</span>, <span class="arithmatex">\(\mathbf{x}^T M \mathbf{x} \ge 0\)</span>. Equivalent to: all <span class="arithmatex">\(\lambda_i \ge 0\)</span>.
-- <strong>Positive Definite (<span class="arithmatex">\(M \succ 0\)</span>)</strong> if for all non-zero <span class="arithmatex">\(\mathbf{x} \in \mathbb{R}^n\)</span>, <span class="arithmatex">\(\mathbf{x}^T M \mathbf{x} &gt; 0\)</span>. Equivalent to: all <span class="arithmatex">\(\lambda_i &gt; 0\)</span>.</p>
+<p>A symmetric matrix <span class="arithmatex">\(M \in \mathbb{R}^{n \times n}\)</span> is:</p>
+<ul>
+<li><strong>Positive Semi-Definite (<span class="arithmatex">\(M \succeq 0\)</span>)</strong> if for all non-zero <span class="arithmatex">\(\mathbf{x} \in \mathbb{R}^n\)</span>, <span class="arithmatex">\(\mathbf{x}^T M \mathbf{x} \ge 0\)</span>. Equivalent to: all <span class="arithmatex">\(\lambda_i \ge 0\)</span>.</li>
+<li><strong>Positive Definite (<span class="arithmatex">\(M \succ 0\)</span>)</strong> if for all non-zero <span class="arithmatex">\(\mathbf{x} \in \mathbb{R}^n\)</span>, <span class="arithmatex">\(\mathbf{x}^T M \mathbf{x} &gt; 0\)</span>. Equivalent to: all <span class="arithmatex">\(\lambda_i &gt; 0\)</span>.</li>
+</ul>
 <p>In ML, every empirical covariance matrix <span class="arithmatex">\(\Sigma = \frac{1}{N} X^T X\)</span> and every Gram/Kernel matrix <span class="arithmatex">\(K_{ij} = k(\mathbf{x}_i, \mathbf{x}_j)\)</span> is inherently positive semi-definite.</p>
 <pre class="mermaid"><code>flowchart LR
     A["Matrix A = Q Λ Q^T"] --&gt; R1["Q^T: Rotate to Eigenbasis"]
@@ -4593,10 +4617,12 @@ A\mathbf{v} = \lambda \mathbf{v} \iff (A - \lambda I)\mathbf{v} = \mathbf{0}
 <div class="arithmatex">\[
 A = U \Sigma V^T
 \]</div>
-<p>where:
-- <span class="arithmatex">\(U \in \mathbb{R}^{m \times m}\)</span> is an orthonormal matrix whose columns <span class="arithmatex">\(\mathbf{u}_i\)</span> are the <strong>left singular vectors</strong> of <span class="arithmatex">\(A\)</span> (the eigenvectors of <span class="arithmatex">\(A A^T\)</span>).
-- <span class="arithmatex">\(\Sigma \in \mathbb{R}^{m \times n}\)</span> is a rectangular diagonal matrix with non-negative entries <span class="arithmatex">\(\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r &gt; 0\)</span> along the main diagonal, called the <strong>singular values</strong> of <span class="arithmatex">\(A\)</span> (<span class="arithmatex">\(r = \text{rank}(A)\)</span>).
-- <span class="arithmatex">\(V \in \mathbb{R}^{n \times n}\)</span> is an orthonormal matrix whose columns <span class="arithmatex">\(\mathbf{v}_i\)</span> are the <strong>right singular vectors</strong> of <span class="arithmatex">\(A\)</span> (the eigenvectors of <span class="arithmatex">\(A^T A\)</span>).</p>
+<p>where:</p>
+<ul>
+<li><span class="arithmatex">\(U \in \mathbb{R}^{m \times m}\)</span> is an orthonormal matrix whose columns <span class="arithmatex">\(\mathbf{u}_i\)</span> are the <strong>left singular vectors</strong> of <span class="arithmatex">\(A\)</span> (the eigenvectors of <span class="arithmatex">\(A A^T\)</span>).</li>
+<li><span class="arithmatex">\(\Sigma \in \mathbb{R}^{m \times n}\)</span> is a rectangular diagonal matrix with non-negative entries <span class="arithmatex">\(\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r &gt; 0\)</span> along the main diagonal, called the <strong>singular values</strong> of <span class="arithmatex">\(A\)</span> (<span class="arithmatex">\(r = \text{rank}(A)\)</span>).</li>
+<li><span class="arithmatex">\(V \in \mathbb{R}^{n \times n}\)</span> is an orthonormal matrix whose columns <span class="arithmatex">\(\mathbf{v}_i\)</span> are the <strong>right singular vectors</strong> of <span class="arithmatex">\(A\)</span> (the eigenvectors of <span class="arithmatex">\(A^T A\)</span>).</li>
+</ul>
 <pre class="mermaid"><code>flowchart LR
     X["Input Vector x"] --&gt; V["V^T: Rotate/Reflect in R^n"]
     V --&gt; S["Σ: Stretch along coordinates by σ_i"]
@@ -4671,12 +4697,18 @@ X = U \Sigma_{\text{svd}} V^T
 <div class="arithmatex">\[
 \Sigma = V \left( \frac{\Sigma_{\text{svd}}^2}{N} \right) V^T
 \]</div>
-<p>Notice that:
-1. The right singular vectors <span class="arithmatex">\(V\)</span> of <span class="arithmatex">\(X\)</span> are <strong>identical</strong> to the principal component eigenvectors of <span class="arithmatex">\(\Sigma\)</span>.
-2. The eigenvalues of <span class="arithmatex">\(\Sigma\)</span> relate directly to the singular values of <span class="arithmatex">\(X\)</span>:
-   $<span class="arithmatex">\(\lambda_i = \frac{\sigma_i^2}{N}\)</span>$
-3. The projected principal coordinates are simply:
+<p>Notice that:</p>
+<ol>
+<li>The right singular vectors <span class="arithmatex">\(V\)</span> of <span class="arithmatex">\(X\)</span> are <strong>identical</strong> to the principal component eigenvectors of <span class="arithmatex">\(\Sigma\)</span>.</li>
+<li>
+<p>The eigenvalues of <span class="arithmatex">\(\Sigma\)</span> relate directly to the singular values of <span class="arithmatex">\(X\)</span>:
+   $<span class="arithmatex">\(\lambda_i = \frac{\sigma_i^2}{N}\)</span>$</p>
+</li>
+<li>
+<p>The projected principal coordinates are simply:
    $<span class="arithmatex">\(X V = U \Sigma_{\text{svd}} V^T V = U \Sigma_{\text{svd}}\)</span>$</p>
+</li>
+</ol>
 <p>Computing SVD directly on <span class="arithmatex">\(X\)</span> avoids forming <span class="arithmatex">\(X^T X\)</span>, preserving dynamic range and preventing squaring of condition numbers.</p>
 <pre class="mermaid"><code>flowchart TD
     D["Raw Data Matrix X (N x d)"] --&gt; C["Mean Center: X_c = X - μ"]
@@ -4689,11 +4721,13 @@ X = U \Sigma_{\text{svd}} V^T
     SVD --&gt; PROJ2["Projected Data: Z = X_c V_k = U_k S_k"]</code></pre>
 <hr />
 <h2 id="9-python-implementation-from-scratch-numerical-algorithms">9. Python Implementation: From Scratch &amp; Numerical Algorithms<a class="headerlink" href="#9-python-implementation-from-scratch-numerical-algorithms" title="Permanent link">&para;</a></h2>
-<p>Below is a complete, runnable suite containing:
-1. <strong>Power Iteration</strong> for computing dominant eigenvalues/eigenvectors.
-2. <strong>Gram-Schmidt QR Orthogonalization</strong>.
-3. <strong>PCA from scratch</strong> using both Covariance Eigendecomposition and SVD.
-4. <strong>Low-rank Matrix Approximation</strong>.</p>
+<p>Below is a complete, runnable suite containing:</p>
+<ol>
+<li><strong>Power Iteration</strong> for computing dominant eigenvalues/eigenvectors.</li>
+<li><strong>Gram-Schmidt QR Orthogonalization</strong>.</li>
+<li><strong>PCA from scratch</strong> using both Covariance Eigendecomposition and SVD.</li>
+<li><strong>Low-rank Matrix Approximation</strong>.</li>
+</ol>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="sd">"""</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="sd">linear_algebra_deep_dive.py</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="sd">Production-grade linear algebra algorithms from scratch using NumPy.</span>
@@ -4908,8 +4942,10 @@ X = U \Sigma_{\text{svd}} V^T
 <h2 id="11-staff-level-technical-interview-questions">11. Staff-Level Technical Interview Questions<a class="headerlink" href="#11-staff-level-technical-interview-questions" title="Permanent link">&para;</a></h2>
 <h3 id="q1-prove-that-the-eigenvalues-of-a-real-symmetric-matrix-are-strictly-real-and-eigenvectors-corresponding-to-distinct-eigenvalues-are-mutually-orthogonal">Q1: Prove that the eigenvalues of a real symmetric matrix are strictly real, and eigenvectors corresponding to distinct eigenvalues are mutually orthogonal.<a class="headerlink" href="#q1-prove-that-the-eigenvalues-of-a-real-symmetric-matrix-are-strictly-real-and-eigenvectors-corresponding-to-distinct-eigenvalues-are-mutually-orthogonal" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-Let <span class="arithmatex">\(A \in \mathbb{R}^{n \times n}\)</span> with <span class="arithmatex">\(A = A^T\)</span>.
-1. <strong>Eigenvalues are real:</strong>
+Let <span class="arithmatex">\(A \in \mathbb{R}^{n \times n}\)</span> with <span class="arithmatex">\(A = A^T\)</span>.</p>
+<ol>
+<li>
+<p><strong>Eigenvalues are real:</strong>
    Let <span class="arithmatex">\(\lambda \in \mathbb{C}\)</span> be an eigenvalue with non-zero eigenvector <span class="arithmatex">\(\mathbf{v} \in \mathbb{C}^n\)</span>:
    $<span class="arithmatex">\(A\mathbf{v} = \lambda \mathbf{v}\)</span>$
    Take the conjugate transpose (Hermitian) on both sides:
@@ -4921,13 +4957,15 @@ Let <span class="arithmatex">\(A \in \mathbb{R}^{n \times n}\)</span> with <span
    Subtracting the two equations:
    $<span class="arithmatex">\((\lambda - \bar{\lambda}) \|\mathbf{v}\|_2^2 = 0\)</span>$
    Since <span class="arithmatex">\(\mathbf{v} \ne \mathbf{0}\)</span>, <span class="arithmatex">\(\|\mathbf{v}\|_2^2 &gt; 0\)</span>, forcing <span class="arithmatex">\(\lambda - \bar{\lambda} = 0 \implies \lambda = \bar{\lambda}\)</span>. Therefore, <span class="arithmatex">\(\lambda \in \mathbb{R}\)</span>.</p>
-<ol>
-<li><strong>Orthogonality of eigenvectors:</strong>
+</li>
+<li>
+<p><strong>Orthogonality of eigenvectors:</strong>
    Let <span class="arithmatex">\(A\mathbf{v}_1 = \lambda_1 \mathbf{v}_1\)</span> and <span class="arithmatex">\(A\mathbf{v}_2 = \lambda_2 \mathbf{v}_2\)</span> with <span class="arithmatex">\(\lambda_1 \ne \lambda_2\)</span>:
    $<span class="arithmatex">\(\lambda_1 (\mathbf{v}_1^T \mathbf{v}_2) = (\lambda_1 \mathbf{v}_1)^T \mathbf{v}_2 = (A\mathbf{v}_1)^T \mathbf{v}_2 = \mathbf{v}_1^T A^T \mathbf{v}_2 = \mathbf{v}_1^T (A\mathbf{v}_2) = \mathbf{v}_1^T (\lambda_2 \mathbf{v}_2) = \lambda_2 (\mathbf{v}_1^T \mathbf{v}_2)\)</span>$
    Rearranging:
    $<span class="arithmatex">\((\lambda_1 - \lambda_2) (\mathbf{v}_1^T \mathbf{v}_2) = 0\)</span>$
-   Since <span class="arithmatex">\(\lambda_1 \ne \lambda_2\)</span>, it follows that <span class="arithmatex">\(\mathbf{v}_1^T \mathbf{v}_2 = 0\)</span>. Hence, <span class="arithmatex">\(\mathbf{v}_1 \perp \mathbf{v}_2\)</span>.</li>
+   Since <span class="arithmatex">\(\lambda_1 \ne \lambda_2\)</span>, it follows that <span class="arithmatex">\(\mathbf{v}_1^T \mathbf{v}_2 = 0\)</span>. Hence, <span class="arithmatex">\(\mathbf{v}_1 \perp \mathbf{v}_2\)</span>.</p>
+</li>
 </ol>
 <hr />
 <h3 id="q2-derive-the-closed-form-orthogonal-projection-matrix-p-aat-a-1-at-onto-the-column-space-of-a-prove-it-is-idempotent-and-symmetric">Q2: Derive the closed-form orthogonal projection matrix <span class="arithmatex">\(P = A(A^T A)^{-1} A^T\)</span> onto the column space of <span class="arithmatex">\(A\)</span>. Prove it is idempotent and symmetric.<a class="headerlink" href="#q2-derive-the-closed-form-orthogonal-projection-matrix-p-aat-a-1-at-onto-the-column-space-of-a-prove-it-is-idempotent-and-symmetric" title="Permanent link">&para;</a></h3>
@@ -4950,9 +4988,11 @@ $<span class="arithmatex">\(P^2 = \left(A (A^T A)^{-1} A^T\right) \left(A (A^T A
 <p><strong>Model Answer:</strong>
 The <strong>Eckart-Young-Mirsky Theorem</strong> states that if <span class="arithmatex">\(A \in \mathbb{R}^{m \times n}\)</span> has SVD <span class="arithmatex">\(A = \sum_{i=1}^r \sigma_i \mathbf{u}_i \mathbf{v}_i^T\)</span> with <span class="arithmatex">\(\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r &gt; 0\)</span>, then for any integer <span class="arithmatex">\(k &lt; r\)</span>, the truncated SVD matrix:
 $<span class="arithmatex">\(A_k = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T\)</span>$
-is the best rank-<span class="arithmatex">\(k\)</span> approximation of <span class="arithmatex">\(A\)</span> under both the <strong>Frobenius norm</strong> and the <strong>Spectral (<span class="arithmatex">\(L_2\)</span>) operator norm</strong>:
-1. <strong>Frobenius error:</strong> <span class="arithmatex">\(\min_{\text{rank}(B) \le k} \|A - B\|_F = \|A - A_k\|_F = \sqrt{\sum_{i=k+1}^r \sigma_i^2}\)</span>
-2. <strong>Spectral error:</strong> <span class="arithmatex">\(\min_{\text{rank}(B) \le k} \|A - B\|_2 = \|A - A_k\|_2 = \sigma_{k+1}\)</span></p>
+is the best rank-<span class="arithmatex">\(k\)</span> approximation of <span class="arithmatex">\(A\)</span> under both the <strong>Frobenius norm</strong> and the <strong>Spectral (<span class="arithmatex">\(L_2\)</span>) operator norm</strong>:</p>
+<ol>
+<li><strong>Frobenius error:</strong> <span class="arithmatex">\(\min_{\text{rank}(B) \le k} \|A - B\|_F = \|A - A_k\|_F = \sqrt{\sum_{i=k+1}^r \sigma_i^2}\)</span></li>
+<li><strong>Spectral error:</strong> <span class="arithmatex">\(\min_{\text{rank}(B) \le k} \|A - B\|_2 = \|A - A_k\|_2 = \sigma_{k+1}\)</span></li>
+</ol>
 <p><strong>Intuition:</strong>
 Singular values decompose total matrix energy into orthogonal rank-1 components sorted by variance / magnitude. Any other rank-<span class="arithmatex">\(k\)</span> matrix subspace fails to align with the dominant orthogonal axes, necessarily leaking more residual energy into discarded dimensions.</p>
 <hr />
@@ -4982,39 +5022,45 @@ In Ordinary Least Squares, the estimated weights are <span class="arithmatex">\(
 $<span class="arithmatex">\(\text{Cov}(\mathbf{w}^*) = \sigma^2 (X^T X)^{-1}\)</span>$
 If <span class="arithmatex">\(X\)</span> has an ill-conditioned geometry (<span class="arithmatex">\(\kappa(X) \gg 1\)</span>), <span class="arithmatex">\(\sigma_{\min}(X) \approx 0\)</span>, which means <span class="arithmatex">\(X^T X\)</span> has an eigenvalue <span class="arithmatex">\(\lambda_{\min} = \sigma_{\min}^2 \approx 0\)</span>.
 The inverse <span class="arithmatex">\((X^T X)^{-1}\)</span> has an eigenvalue <span class="arithmatex">\(\frac{1}{\lambda_{\min}} = \frac{1}{\sigma_{\min}^2} \to \infty\)</span>.</p>
-<p><strong>Impact on estimation:</strong>
-1. <strong>Variance Explosion:</strong> The variance of the estimated parameter along the direction of the corresponding right singular vector explodes. Tiny changes in the training data cause massive swings in learned weights.
-2. <strong>Loss of Interpretability:</strong> Weight coefficients take on huge positive and negative values that cancel each other out, making individual feature attributions meaningless.
-3. <strong>Remedy:</strong> Ridge regression adds a regularization penalty <span class="arithmatex">\(\lambda I\)</span>, shifting all eigenvalues upward: <span class="arithmatex">\(\frac{1}{\sigma_i^2 + \lambda}\)</span>, bounding parameter variance.</p>
+<p><strong>Impact on estimation:</strong></p>
+<ol>
+<li><strong>Variance Explosion:</strong> The variance of the estimated parameter along the direction of the corresponding right singular vector explodes. Tiny changes in the training data cause massive swings in learned weights.</li>
+<li><strong>Loss of Interpretability:</strong> Weight coefficients take on huge positive and negative values that cancel each other out, making individual feature attributions meaningless.</li>
+<li><strong>Remedy:</strong> Ridge regression adds a regularization penalty <span class="arithmatex">\(\lambda I\)</span>, shifting all eigenvalues upward: <span class="arithmatex">\(\frac{1}{\sigma_i^2 + \lambda}\)</span>, bounding parameter variance.</li>
+</ol>
 <hr />
 <h3 id="q6-compare-vector-norms-l_1-l_2-l_infty-and-matrix-norms-frobenius-spectral-nuclear-explain-geometrically-why-l_1-induces-sparsity-in-optimization">Q6: Compare vector norms (<span class="arithmatex">\(L_1, L_2, L_\infty\)</span>) and matrix norms (Frobenius, Spectral, Nuclear). Explain geometrically why <span class="arithmatex">\(L_1\)</span> induces sparsity in optimization.<a class="headerlink" href="#q6-compare-vector-norms-l_1-l_2-l_infty-and-matrix-norms-frobenius-spectral-nuclear-explain-geometrically-why-l_1-induces-sparsity-in-optimization" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>Vector Norms:</strong>
-  - <span class="arithmatex">\(L_1\)</span>: <span class="arithmatex">\(\|\mathbf{x}\|_1 = \sum |x_i|\)</span>. The unit ball is a cross-polytope (diamond in 2D) with sharp vertices positioned precisely on the coordinate axes.
-  - <span class="arithmatex">\(L_2\)</span>: <span class="arithmatex">\(\|\mathbf{x}\|_2 = \sqrt{\sum x_i^2}\)</span>. The unit ball is a smooth hypersphere with no corners.
-  - <span class="arithmatex">\(L_\infty\)</span>: <span class="arithmatex">\(\|\mathbf{x}\|_\infty = \max |x_i|\)</span>. The unit ball is a hypercube.
-- <strong>Matrix Norms:</strong>
-  - Frobenius <span class="arithmatex">\(\|A\|_F = \sqrt{\sum \sigma_i^2}\)</span>: Euclidean entrywise norm.
-  - Spectral <span class="arithmatex">\(\|A\|_2 = \sigma_{\max}\)</span>: Maximum stretch factor.
-  - Nuclear <span class="arithmatex">\(\|A\|_* = \sum \sigma_i\)</span>: <span class="arithmatex">\(L_1\)</span> norm of the singular values; induces low-rank sparsity in matrix recovery.</p>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li><strong>Vector Norms:</strong></li>
+<li><span class="arithmatex">\(L_1\)</span>: <span class="arithmatex">\(\|\mathbf{x}\|_1 = \sum |x_i|\)</span>. The unit ball is a cross-polytope (diamond in 2D) with sharp vertices positioned precisely on the coordinate axes.</li>
+<li><span class="arithmatex">\(L_2\)</span>: <span class="arithmatex">\(\|\mathbf{x}\|_2 = \sqrt{\sum x_i^2}\)</span>. The unit ball is a smooth hypersphere with no corners.</li>
+<li><span class="arithmatex">\(L_\infty\)</span>: <span class="arithmatex">\(\|\mathbf{x}\|_\infty = \max |x_i|\)</span>. The unit ball is a hypercube.</li>
+<li><strong>Matrix Norms:</strong></li>
+<li>Frobenius <span class="arithmatex">\(\|A\|_F = \sqrt{\sum \sigma_i^2}\)</span>: Euclidean entrywise norm.</li>
+<li>Spectral <span class="arithmatex">\(\|A\|_2 = \sigma_{\max}\)</span>: Maximum stretch factor.</li>
+<li>Nuclear <span class="arithmatex">\(\|A\|_* = \sum \sigma_i\)</span>: <span class="arithmatex">\(L_1\)</span> norm of the singular values; induces low-rank sparsity in matrix recovery.</li>
+</ul>
 <p><strong>Geometric Sparsity Mechanism:</strong>
-In constrained optimization (<span class="arithmatex">\(\min L(\mathbf{w})\)</span> subject to <span class="arithmatex">\(\|\mathbf{w}\| \le C\)</span>), the optimal solution occurs where the elliptical level curves of the objective function <span class="arithmatex">\(L(\mathbf{w})\)</span> first touch the constraint boundary.
-- For <span class="arithmatex">\(L_2\)</span>, the constraint boundary is a smooth sphere. The tangent point between an arbitrary ellipse and a sphere can occur at any continuous angle; the probability of touching exactly on an axis (<span class="arithmatex">\(w_i = 0\)</span>) is measure zero.
-- For <span class="arithmatex">\(L_1\)</span>, the boundary possesses sharp corners situated exactly on the coordinate axes (<span class="arithmatex">\(w_1 = 0, w_2 = \pm C\)</span>, etc.). As the loss contours expand outwards from the unconstrained minimum, they are statistically far more likely to first hit one of these protruding corners, forcing non-essential weights to be exactly zero.</p>
+In constrained optimization (<span class="arithmatex">\(\min L(\mathbf{w})\)</span> subject to <span class="arithmatex">\(\|\mathbf{w}\| \le C\)</span>), the optimal solution occurs where the elliptical level curves of the objective function <span class="arithmatex">\(L(\mathbf{w})\)</span> first touch the constraint boundary.</p>
+<ul>
+<li>For <span class="arithmatex">\(L_2\)</span>, the constraint boundary is a smooth sphere. The tangent point between an arbitrary ellipse and a sphere can occur at any continuous angle; the probability of touching exactly on an axis (<span class="arithmatex">\(w_i = 0\)</span>) is measure zero.</li>
+<li>For <span class="arithmatex">\(L_1\)</span>, the boundary possesses sharp corners situated exactly on the coordinate axes (<span class="arithmatex">\(w_1 = 0, w_2 = \pm C\)</span>, etc.). As the loss contours expand outwards from the unconstrained minimum, they are statistically far more likely to first hit one of these protruding corners, forcing non-essential weights to be exactly zero.</li>
+</ul>
 <hr />
 <h2 id="12-mastery-ladder">12. Mastery Ladder<a class="headerlink" href="#12-mastery-ladder" title="Permanent link">&para;</a></h2>
 <p>Complete this checklist to verify your depth in linear algebra for machine learning:</p>
-<ul>
-<li>[ ] <strong>L1:</strong> You can compute dot products, outer products, matrix products, and trace identities by hand.</li>
-<li>[ ] <strong>L2:</strong> You can determine the rank, column space, and null space of a given rectangular matrix.</li>
-<li>[ ] <strong>L3:</strong> You can state the geometric definition of <span class="arithmatex">\(L_1, L_2,\)</span> and <span class="arithmatex">\(L_\infty\)</span> norms and draw their 2D unit balls.</li>
-<li>[ ] <strong>L4:</strong> You can prove why the orthogonal projection matrix <span class="arithmatex">\(P = A(A^T A)^{-1} A^T\)</span> is symmetric and idempotent (<span class="arithmatex">\(P^2 = P\)</span>).</li>
-<li>[ ] <strong>L5:</strong> You can state the Spectral Theorem for real symmetric matrices and prove all eigenvalues are real.</li>
-<li>[ ] <strong>L6:</strong> You can implement the Power Iteration algorithm from scratch to find the dominant eigenvalue and eigenvector.</li>
-<li>[ ] <strong>L7:</strong> You can derive the SVD formulation <span class="arithmatex">\(A = U \Sigma V^T\)</span> and connect <span class="arithmatex">\(U\)</span> and <span class="arithmatex">\(V\)</span> to the eigenvectors of <span class="arithmatex">\(A A^T\)</span> and <span class="arithmatex">\(A^T A\)</span>.</li>
-<li>[ ] <strong>L8:</strong> You can state the Eckart-Young-Mirsky Theorem and calculate the Frobenius approximation error of a truncated SVD.</li>
-<li>[ ] <strong>L9:</strong> You can derive PCA as a constrained variance maximization problem using Lagrange multipliers.</li>
-<li>[ ] <strong>L10:</strong> You can mathematically explain why production PCA packages compute the SVD of <span class="arithmatex">\(X\)</span> rather than the eigendecomposition of <span class="arithmatex">\(X^T X\)</span>, citing condition number squaring.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can compute dot products, outer products, matrix products, and trace identities by hand.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can determine the rank, column space, and null space of a given rectangular matrix.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can state the geometric definition of <span class="arithmatex">\(L_1, L_2,\)</span> and <span class="arithmatex">\(L_\infty\)</span> norms and draw their 2D unit balls.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can prove why the orthogonal projection matrix <span class="arithmatex">\(P = A(A^T A)^{-1} A^T\)</span> is symmetric and idempotent (<span class="arithmatex">\(P^2 = P\)</span>).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can state the Spectral Theorem for real symmetric matrices and prove all eigenvalues are real.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can implement the Power Iteration algorithm from scratch to find the dominant eigenvalue and eigenvector.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can derive the SVD formulation <span class="arithmatex">\(A = U \Sigma V^T\)</span> and connect <span class="arithmatex">\(U\)</span> and <span class="arithmatex">\(V\)</span> to the eigenvectors of <span class="arithmatex">\(A A^T\)</span> and <span class="arithmatex">\(A^T A\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can state the Eckart-Young-Mirsky Theorem and calculate the Frobenius approximation error of a truncated SVD.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can derive PCA as a constrained variance maximization problem using Lagrange multipliers.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can mathematically explain why production PCA packages compute the SVD of <span class="arithmatex">\(X\)</span> rather than the eigendecomposition of <span class="arithmatex">\(X^T X\)</span>, citing condition number squaring.</li>
 </ul>
 
 

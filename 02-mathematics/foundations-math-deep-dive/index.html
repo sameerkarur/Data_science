@@ -4436,9 +4436,11 @@ e^{z_j} \to \infty \quad (\text{Overflow to } \texttt{+inf})
 <div class="arithmatex">\[
 z_i - \max_k(z_k) \le 0 \quad \implies \quad 0 &lt; e^{z_i - \max_k(z_k)} \le 1
 \]</div>
-<p>This guarantees that:
-1. No exponent ever exceeds <span class="arithmatex">\(e^0 = 1\)</span> (overflow is physically impossible).
-2. At least one term in the denominator is <span class="arithmatex">\(e^0 = 1\)</span>, ensuring <span class="arithmatex">\(\sum_{j=1}^K e^{z_j - c} \ge 1 &gt; 0\)</span> (division by zero is physically impossible).</p>
+<p>This guarantees that:</p>
+<ol>
+<li>No exponent ever exceeds <span class="arithmatex">\(e^0 = 1\)</span> (overflow is physically impossible).</li>
+<li>At least one term in the denominator is <span class="arithmatex">\(e^0 = 1\)</span>, ensuring <span class="arithmatex">\(\sum_{j=1}^K e^{z_j - c} \ge 1 &gt; 0\)</span> (division by zero is physically impossible).</li>
+</ol>
 <pre class="mermaid"><code>flowchart TD
     Z["Raw Logits: z = [1000, 1001, 1002]"] --&gt; MAX["Compute c = max(z) = 1002"]
     MAX --&gt; SHIFT["Shift Logits: z - c = [-2, -1, 0]"]
@@ -4631,13 +4633,19 @@ z_i - \max_k(z_k) \le 0 \quad \implies \quad 0 &lt; e^{z_i - \max_k(z_k)} \le 1
 <h2 id="9-staff-level-technical-interview-questions">9. Staff-Level Technical Interview Questions<a class="headerlink" href="#9-staff-level-technical-interview-questions" title="Permanent link">&para;</a></h2>
 <h3 id="q1-why-do-machine-learning-models-optimize-log-likelihood-instead-of-raw-likelihood">Q1: Why do machine learning models optimize log-likelihood instead of raw likelihood?<a class="headerlink" href="#q1-why-do-machine-learning-models-optimize-log-likelihood-instead-of-raw-likelihood" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-There are four primary mathematical and computational reasons:
-1. <strong>Numerical Stability (Underflow Prevention):</strong> For an i.i.d. dataset of size <span class="arithmatex">\(N\)</span>, the joint likelihood is a product of probabilities <span class="arithmatex">\(\prod_{i=1}^N p(x_i \mid \theta)\)</span>. As <span class="arithmatex">\(N\)</span> grows, this product approaches zero exponentially, easily breaching the IEEE 754 float32 underflow limit (<span class="arithmatex">\(\approx 1.18 \times 10^{-38}\)</span>). The logarithm converts products into sums <span class="arithmatex">\(\sum_{i=1}^N \log p(x_i \mid \theta)\)</span>, keeping values within standard precision ranges.
-2. <strong>Computational Tractability of Derivatives:</strong> The derivative of a sum is simply the sum of derivatives (<span class="arithmatex">\(\frac{d}{d\theta} \sum f_i = \sum \frac{d}{d\theta} f_i\)</span>), whereas differentiating a product of <span class="arithmatex">\(N\)</span> terms requires the multi-term product rule, creating an <span class="arithmatex">\(O(N^2)\)</span> computational graph.
-3. <strong>Strict Monotonicity Preserves Extrema:</strong> The natural logarithm is a strictly monotonically increasing function on <span class="arithmatex">\(\mathbb{R}^+\)</span>. Therefore:
+There are four primary mathematical and computational reasons:</p>
+<ol>
+<li><strong>Numerical Stability (Underflow Prevention):</strong> For an i.i.d. dataset of size <span class="arithmatex">\(N\)</span>, the joint likelihood is a product of probabilities <span class="arithmatex">\(\prod_{i=1}^N p(x_i \mid \theta)\)</span>. As <span class="arithmatex">\(N\)</span> grows, this product approaches zero exponentially, easily breaching the IEEE 754 float32 underflow limit (<span class="arithmatex">\(\approx 1.18 \times 10^{-38}\)</span>). The logarithm converts products into sums <span class="arithmatex">\(\sum_{i=1}^N \log p(x_i \mid \theta)\)</span>, keeping values within standard precision ranges.</li>
+<li><strong>Computational Tractability of Derivatives:</strong> The derivative of a sum is simply the sum of derivatives (<span class="arithmatex">\(\frac{d}{d\theta} \sum f_i = \sum \frac{d}{d\theta} f_i\)</span>), whereas differentiating a product of <span class="arithmatex">\(N\)</span> terms requires the multi-term product rule, creating an <span class="arithmatex">\(O(N^2)\)</span> computational graph.</li>
+<li>
+<p><strong>Strict Monotonicity Preserves Extrema:</strong> The natural logarithm is a strictly monotonically increasing function on <span class="arithmatex">\(\mathbb{R}^+\)</span>. Therefore:
    $<span class="arithmatex">\(\arg\max_\theta \prod_{i=1}^N p(x_i \mid \theta) = \arg\max_\theta \sum_{i=1}^N \log p(x_i \mid \theta)\)</span>$
-   The exact location of the optimal parameter set <span class="arithmatex">\(\boldsymbol{\theta}^*\)</span> remains unchanged.
-4. <strong>Exponential Family Compatibility:</strong> Many probability distributions (Gaussian, Bernoulli, Poisson, Exponential) belong to the exponential family <span class="arithmatex">\(p(x \mid \eta) = h(x) \exp(\eta^T T(x) - A(\eta))\)</span>. Taking the logarithm cancels the exponential operator, transforming the log-likelihood into a linear or concave function of natural parameters, greatly simplifying optimization.</p>
+   The exact location of the optimal parameter set <span class="arithmatex">\(\boldsymbol{\theta}^*\)</span> remains unchanged.</p>
+</li>
+<li>
+<p><strong>Exponential Family Compatibility:</strong> Many probability distributions (Gaussian, Bernoulli, Poisson, Exponential) belong to the exponential family <span class="arithmatex">\(p(x \mid \eta) = h(x) \exp(\eta^T T(x) - A(\eta))\)</span>. Taking the logarithm cancels the exponential operator, transforming the log-likelihood into a linear or concave function of natural parameters, greatly simplifying optimization.</p>
+</li>
+</ol>
 <hr />
 <h3 id="q2-derive-the-exact-mathematical-identity-that-stabilizes-softmax-against-floating-point-overflow-and-underflow">Q2: Derive the exact mathematical identity that stabilizes Softmax against floating-point overflow and underflow.<a class="headerlink" href="#q2-derive-the-exact-mathematical-identity-that-stabilizes-softmax-against-floating-point-overflow-and-underflow" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4645,19 +4653,29 @@ Given logit vector <span class="arithmatex">\(\mathbf{z} \in \mathbb{R}^K\)</spa
 $<span class="arithmatex">\(p_i = \frac{e^{z_i}}{\sum_{j=1}^K e^{z_j}}\)</span>$
 Let <span class="arithmatex">\(c = \max_{j} z_j\)</span>. We multiply both numerator and denominator by <span class="arithmatex">\(e^{-c}\)</span>:
 $<span class="arithmatex">\(p_i = \frac{e^{z_i} e^{-c}}{\left(\sum_{j=1}^K e^{z_j}\right) e^{-c}} = \frac{e^{z_i - c}}{\sum_{j=1}^K e^{z_j - c}}\)</span>$
-Because <span class="arithmatex">\(c = \max_j z_j\)</span>:
-1. <span class="arithmatex">\(z_i - c \le 0\)</span> for all <span class="arithmatex">\(i \in \{1, \dots, K\}\)</span>, which guarantees <span class="arithmatex">\(e^{z_i - c} \in (0, 1]\)</span>. Hence, intermediate terms cannot overflow past <span class="arithmatex">\(1.0\)</span> (overflow ceiling eliminated).
-2. For the maximum index <span class="arithmatex">\(k^* = \arg\max_j z_j\)</span>, <span class="arithmatex">\(z_{k^*} - c = 0\)</span>, so <span class="arithmatex">\(e^0 = 1\)</span>. This guarantees the denominator <span class="arithmatex">\(\sum_{j=1}^K e^{z_j - c} \ge 1.0 &gt; 0\)</span>, making division by zero impossible even if all other terms underflow to zero.</p>
+Because <span class="arithmatex">\(c = \max_j z_j\)</span>:</p>
+<ol>
+<li><span class="arithmatex">\(z_i - c \le 0\)</span> for all <span class="arithmatex">\(i \in \{1, \dots, K\}\)</span>, which guarantees <span class="arithmatex">\(e^{z_i - c} \in (0, 1]\)</span>. Hence, intermediate terms cannot overflow past <span class="arithmatex">\(1.0\)</span> (overflow ceiling eliminated).</li>
+<li>For the maximum index <span class="arithmatex">\(k^* = \arg\max_j z_j\)</span>, <span class="arithmatex">\(z_{k^*} - c = 0\)</span>, so <span class="arithmatex">\(e^0 = 1\)</span>. This guarantees the denominator <span class="arithmatex">\(\sum_{j=1}^K e^{z_j - c} \ge 1.0 &gt; 0\)</span>, making division by zero impossible even if all other terms underflow to zero.</li>
+</ol>
 <hr />
 <h3 id="q3-derive-the-relationship-between-shannon-entropy-cross-entropy-and-kullback-leibler-kl-divergence">Q3: Derive the relationship between Shannon Entropy, Cross-Entropy, and Kullback-Leibler (KL) Divergence.<a class="headerlink" href="#q3-derive-the-relationship-between-shannon-entropy-cross-entropy-and-kullback-leibler-kl-divergence" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-Let <span class="arithmatex">\(P\)</span> be the true data distribution and <span class="arithmatex">\(Q\)</span> be the model distribution over discrete support <span class="arithmatex">\(\mathcal{X}\)</span>.
-1. <strong>Shannon Entropy</strong> measures the intrinsic uncertainty/information content of the true distribution:
-   $<span class="arithmatex">\(H(P) = -\sum_{x \in \mathcal{X}} P(x) \log P(x) = \mathbb{E}_{x \sim P}[-\log P(x)]\)</span>$
-2. <strong>Cross-Entropy</strong> measures the expected number of bits required to encode events drawn from <span class="arithmatex">\(P\)</span> using an optimal code designed for <span class="arithmatex">\(Q\)</span>:
-   $<span class="arithmatex">\(H(P, Q) = -\sum_{x \in \mathcal{X}} P(x) \log Q(x) = \mathbb{E}_{x \sim P}[-\log Q(x)]\)</span>$
-3. <strong>KL Divergence (Relative Entropy)</strong> measures the statistical inefficiency or information lost by approximating <span class="arithmatex">\(P\)</span> with <span class="arithmatex">\(Q\)</span>:
+Let <span class="arithmatex">\(P\)</span> be the true data distribution and <span class="arithmatex">\(Q\)</span> be the model distribution over discrete support <span class="arithmatex">\(\mathcal{X}\)</span>.</p>
+<ol>
+<li>
+<p><strong>Shannon Entropy</strong> measures the intrinsic uncertainty/information content of the true distribution:
+   $<span class="arithmatex">\(H(P) = -\sum_{x \in \mathcal{X}} P(x) \log P(x) = \mathbb{E}_{x \sim P}[-\log P(x)]\)</span>$</p>
+</li>
+<li>
+<p><strong>Cross-Entropy</strong> measures the expected number of bits required to encode events drawn from <span class="arithmatex">\(P\)</span> using an optimal code designed for <span class="arithmatex">\(Q\)</span>:
+   $<span class="arithmatex">\(H(P, Q) = -\sum_{x \in \mathcal{X}} P(x) \log Q(x) = \mathbb{E}_{x \sim P}[-\log Q(x)]\)</span>$</p>
+</li>
+<li>
+<p><strong>KL Divergence (Relative Entropy)</strong> measures the statistical inefficiency or information lost by approximating <span class="arithmatex">\(P\)</span> with <span class="arithmatex">\(Q\)</span>:
    $<span class="arithmatex">\(D_{\text{KL}}(P \parallel Q) = \sum_{x \in \mathcal{X}} P(x) \log \frac{P(x)}{Q(x)}\)</span>$</p>
+</li>
+</ol>
 <p>Expanding the KL Divergence logarithm:
 $<span class="arithmatex">\(D_{\text{KL}}(P \parallel Q) = \sum_{x \in \mathcal{X}} P(x) \log P(x) - \sum_{x \in \mathcal{X}} P(x) \log Q(x) = -H(P) + H(P, Q)\)</span>$
 Rearranging yields:
@@ -4670,19 +4688,23 @@ Minimizing cross-entropy is mathematically equivalent to minimizing the KL diver
 <p><strong>Model Answer:</strong>
 The Huber loss is defined as:
 $<span class="arithmatex">\(L_\delta(r) = \begin{cases} \frac{1}{2} r^2 &amp; \text{for } |r| \le \delta \\ \delta \left(|r| - \frac{1}{2}\delta\right) &amp; \text{for } |r| &gt; \delta \end{cases}\)</span>$
-where <span class="arithmatex">\(r = y - \hat{y}\)</span> is the residual.
-- <strong>Comparison to MSE (<span class="arithmatex">\(L_2\)</span>):</strong> For large residuals (<span class="arithmatex">\(|r| &gt; \delta\)</span>), MSE scales quadratically (<span class="arithmatex">\(r^2\)</span>), which causes gradients to grow linearly (<span class="arithmatex">\(\nabla L = r\)</span>). A single outlier with an error of <span class="arithmatex">\(1000\)</span> exerts a gradient of <span class="arithmatex">\(1000\)</span>, dominating the batch update and destabilizing weights. Huber transitions to linear error for large residuals, bounding the gradient magnitude to <span class="arithmatex">\(\pm\delta\)</span>, making it robust against outliers.
-- <strong>Comparison to MAE (<span class="arithmatex">\(L_1\)</span>):</strong> MAE has a constant gradient magnitude <span class="arithmatex">\(\pm 1\)</span> everywhere except <span class="arithmatex">\(r = 0\)</span>, where its derivative is undefined (a subdifferential discontinuity). Near zero, MAE oscillates or requires decaying learning rates to settle. Huber loss is quadratic near zero (<span class="arithmatex">\(|r| \le \delta\)</span>), providing smooth, continuous first derivatives (<span class="arithmatex">\(\nabla L = r\)</span>) that diminish smoothly to zero, enabling stable convergence under gradient descent.
-- At the transition point <span class="arithmatex">\(|r| = \delta\)</span>:
+where <span class="arithmatex">\(r = y - \hat{y}\)</span> is the residual.</p>
+<ul>
+<li><strong>Comparison to MSE (<span class="arithmatex">\(L_2\)</span>):</strong> For large residuals (<span class="arithmatex">\(|r| &gt; \delta\)</span>), MSE scales quadratically (<span class="arithmatex">\(r^2\)</span>), which causes gradients to grow linearly (<span class="arithmatex">\(\nabla L = r\)</span>). A single outlier with an error of <span class="arithmatex">\(1000\)</span> exerts a gradient of <span class="arithmatex">\(1000\)</span>, dominating the batch update and destabilizing weights. Huber transitions to linear error for large residuals, bounding the gradient magnitude to <span class="arithmatex">\(\pm\delta\)</span>, making it robust against outliers.</li>
+<li><strong>Comparison to MAE (<span class="arithmatex">\(L_1\)</span>):</strong> MAE has a constant gradient magnitude <span class="arithmatex">\(\pm 1\)</span> everywhere except <span class="arithmatex">\(r = 0\)</span>, where its derivative is undefined (a subdifferential discontinuity). Near zero, MAE oscillates or requires decaying learning rates to settle. Huber loss is quadratic near zero (<span class="arithmatex">\(|r| \le \delta\)</span>), providing smooth, continuous first derivatives (<span class="arithmatex">\(\nabla L = r\)</span>) that diminish smoothly to zero, enabling stable convergence under gradient descent.</li>
+<li>At the transition point <span class="arithmatex">\(|r| = \delta\)</span>:
   $<span class="arithmatex">\(\lim_{|r| \to \delta^-} L_\delta(r) = \frac{1}{2}\delta^2, \quad \lim_{|r| \to \delta^+} L_\delta(r) = \delta\left(\delta - \frac{1}{2}\delta\right) = \frac{1}{2}\delta^2\)</span>$
-  The function and its derivative (<span class="arithmatex">\(\pm\delta\)</span>) are <span class="arithmatex">\(C^1\)</span> continuous.</p>
+  The function and its derivative (<span class="arithmatex">\(\pm\delta\)</span>) are <span class="arithmatex">\(C^1\)</span> continuous.</li>
+</ul>
 <hr />
 <h3 id="q5-what-is-catastrophic-cancellation-in-floating-point-arithmetic-and-how-does-it-manifest-in-common-ml-formulas">Q5: What is catastrophic cancellation in floating-point arithmetic, and how does it manifest in common ML formulas?<a class="headerlink" href="#q5-what-is-catastrophic-cancellation-in-floating-point-arithmetic-and-how-does-it-manifest-in-common-ml-formulas" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
 Catastrophic cancellation occurs in finite-precision IEEE 754 arithmetic when subtracting two nearly equal floating-point numbers (<span class="arithmatex">\(x \approx y\)</span>). Because both numbers share their leading significant bits, subtraction cancels those leading bits, leaving only the trailing bits, which are dominated by rounding noise and truncation error.</p>
-<p><strong>Manifestation in ML:</strong>
-1. <strong>Variance calculation:</strong> The textbook formula <span class="arithmatex">\(\text{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2\)</span> computes two large numbers and subtracts them. If data has high mean <span class="arithmatex">\(\mu = 10^8\)</span> and low variance <span class="arithmatex">\(\sigma^2 = 1\)</span>, <span class="arithmatex">\(\mathbb{E}[X^2] \approx 10^{16}\)</span> and <span class="arithmatex">\((\mathbb{E}[X])^2 \approx 10^{16}\)</span>. In 32-bit float (24 bits of mantissa, <span class="arithmatex">\(\approx 7\)</span> decimal digits), both round to identical representations, producing <span class="arithmatex">\(\text{Var}(X) = 0.0\)</span> or even negative variance! Production libraries use <strong>Welford's algorithm</strong>, which computes variance online via incremental differences <span class="arithmatex">\((x_k - \bar{x}_{k-1})(x_k - \bar{x}_k)\)</span>.
-2. <strong>Log-prob near 1:</strong> Evaluating <span class="arithmatex">\(\log(1 + x)\)</span> for <span class="arithmatex">\(|x| \ll 1\)</span>. Floating point adds <span class="arithmatex">\(1 + x\)</span>, immediately rounding small <span class="arithmatex">\(x\)</span> into the least significant bits of 1. Calling <code>log1p(x)</code> uses a Taylor expansion avoiding the explicit <span class="arithmatex">\(+1\)</span>.</p>
+<p><strong>Manifestation in ML:</strong></p>
+<ol>
+<li><strong>Variance calculation:</strong> The textbook formula <span class="arithmatex">\(\text{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2\)</span> computes two large numbers and subtracts them. If data has high mean <span class="arithmatex">\(\mu = 10^8\)</span> and low variance <span class="arithmatex">\(\sigma^2 = 1\)</span>, <span class="arithmatex">\(\mathbb{E}[X^2] \approx 10^{16}\)</span> and <span class="arithmatex">\((\mathbb{E}[X])^2 \approx 10^{16}\)</span>. In 32-bit float (24 bits of mantissa, <span class="arithmatex">\(\approx 7\)</span> decimal digits), both round to identical representations, producing <span class="arithmatex">\(\text{Var}(X) = 0.0\)</span> or even negative variance! Production libraries use <strong>Welford's algorithm</strong>, which computes variance online via incremental differences <span class="arithmatex">\((x_k - \bar{x}_{k-1})(x_k - \bar{x}_k)\)</span>.</li>
+<li><strong>Log-prob near 1:</strong> Evaluating <span class="arithmatex">\(\log(1 + x)\)</span> for <span class="arithmatex">\(|x| \ll 1\)</span>. Floating point adds <span class="arithmatex">\(1 + x\)</span>, immediately rounding small <span class="arithmatex">\(x\)</span> into the least significant bits of 1. Calling <code>log1p(x)</code> uses a Taylor expansion avoiding the explicit <span class="arithmatex">\(+1\)</span>.</li>
+</ol>
 <hr />
 <h3 id="q6-prove-jensens-inequality-for-a-convex-function-of-two-points-and-explain-how-it-bounds-the-log-marginal-likelihood-in-variational-autoencoders">Q6: Prove Jensen's inequality for a convex function of two points, and explain how it bounds the log-marginal likelihood in Variational Autoencoders.<a class="headerlink" href="#q6-prove-jensens-inequality-for-a-convex-function-of-two-points-and-explain-how-it-bounds-the-log-marginal-likelihood-in-variational-autoencoders" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4703,17 +4725,17 @@ The Evidence Lower Bound (ELBO) provides a computationally tractable objective w
 <hr />
 <h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
 <p>Complete this checklist to verify your depth in mathematical foundations:</p>
-<ul>
-<li>[ ] <strong>L1:</strong> You can calculate multi-index summations, products, and factorizations by hand.</li>
-<li>[ ] <strong>L2:</strong> You understand the difference between IEEE 754 float16, bfloat16, float32, and float64 dynamic ranges and precision limits.</li>
-<li>[ ] <strong>L3:</strong> You can derive the first derivative of the logistic sigmoid <span class="arithmatex">\(\sigma'(z) = \sigma(z)(1-\sigma(z))\)</span> and hyperbolic tangent <span class="arithmatex">\(\tanh'(z) = 1 - \tanh^2(z)\)</span>.</li>
-<li>[ ] <strong>L4:</strong> You can explain how vanishing gradients manifest when inputs to saturating activation functions exceed <span class="arithmatex">\(|z| &gt; 5\)</span>.</li>
-<li>[ ] <strong>L5:</strong> You can state Jensen's inequality for both convex and concave functions and sketch its geometric proof.</li>
-<li>[ ] <strong>L6:</strong> You can mathematically prove why Softmax is invariant to constant additive shifts (<span class="arithmatex">\(z_i \to z_i - c\)</span>).</li>
-<li>[ ] <strong>L7:</strong> You can write a vectorized, numerically stabilized Softmax and LogSumExp from scratch in NumPy without using pre-built library helpers.</li>
-<li>[ ] <strong>L8:</strong> You can derive Categorical Cross-Entropy from the maximum likelihood estimation of a categorical distribution.</li>
-<li>[ ] <strong>L9:</strong> You can explain catastrophic cancellation in floating-point operations and describe Welford's algorithm for numerically stable variance calculation.</li>
-<li>[ ] <strong>L10:</strong> You can derive the relationship between KL Divergence, Shannon Entropy, and Cross-Entropy and explain why optimizing Cross-Entropy optimizes KL Divergence.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can calculate multi-index summations, products, and factorizations by hand.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You understand the difference between IEEE 754 float16, bfloat16, float32, and float64 dynamic ranges and precision limits.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can derive the first derivative of the logistic sigmoid <span class="arithmatex">\(\sigma'(z) = \sigma(z)(1-\sigma(z))\)</span> and hyperbolic tangent <span class="arithmatex">\(\tanh'(z) = 1 - \tanh^2(z)\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can explain how vanishing gradients manifest when inputs to saturating activation functions exceed <span class="arithmatex">\(|z| &gt; 5\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can state Jensen's inequality for both convex and concave functions and sketch its geometric proof.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can mathematically prove why Softmax is invariant to constant additive shifts (<span class="arithmatex">\(z_i \to z_i - c\)</span>).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can write a vectorized, numerically stabilized Softmax and LogSumExp from scratch in NumPy without using pre-built library helpers.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can derive Categorical Cross-Entropy from the maximum likelihood estimation of a categorical distribution.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can explain catastrophic cancellation in floating-point operations and describe Welford's algorithm for numerically stable variance calculation.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can derive the relationship between KL Divergence, Shannon Entropy, and Cross-Entropy and explain why optimizing Cross-Entropy optimizes KL Divergence.</li>
 </ul>
 
 

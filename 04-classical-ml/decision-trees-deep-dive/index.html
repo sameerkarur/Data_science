@@ -4220,9 +4220,11 @@ G(S) = \sum_{k=1}^K p_k (1 - p_k) = \sum_{k=1}^K (p_k - p_k^2) = \sum_{k=1}^K p_
 <li>Maximum impurity across <span class="arithmatex">\(K\)</span> classes: <span class="arithmatex">\(1 - \frac{1}{K}\)</span>.</li>
 </ul>
 <p><strong>Gini vs. Entropy Comparison</strong>:
-In binary classification with <span class="arithmatex">\(p\)</span> as positive class probability:
-- <span class="arithmatex">\(G(p) = 2p(1 - p)\)</span>
-- <span class="arithmatex">\(H(p) = -p \log_2 p - (1-p) \log_2(1-p)\)</span></p>
+In binary classification with <span class="arithmatex">\(p\)</span> as positive class probability:</p>
+<ul>
+<li><span class="arithmatex">\(G(p) = 2p(1 - p)\)</span></li>
+<li><span class="arithmatex">\(H(p) = -p \log_2 p - (1-p) \log_2(1-p)\)</span></li>
+</ul>
 <p>Using Taylor series expansion <span class="arithmatex">\(\ln(1 - x) \approx -x\)</span>:
 $<span class="arithmatex">\(H(S) = \frac{1}{\ln 2} \sum_{k} p_k \ln \frac{1}{p_k} \approx \frac{1}{\ln 2} \sum_k p_k (1 - p_k) = \frac{1}{\ln 2} G(S) \approx 1.4427 \cdot G(S)\)</span>$
 Gini impurity is a first-order quadratic approximation of entropy. It behaves virtually identically in ranking splits, but executes significantly faster because it avoids expensive <span class="arithmatex">\(\log_2\)</span> transcendental function evaluations.</p>
@@ -4244,10 +4246,14 @@ Gini impurity is a first-order quadratic approximation of entropy. It behaves vi
 <h3 id="41-candidate-threshold-evaluation">4.1 Candidate Threshold Evaluation<a class="headerlink" href="#41-candidate-threshold-evaluation" title="Permanent link">&para;</a></h3>
 <p>For a continuous feature <span class="arithmatex">\(x_j\)</span>, there are uncountably many real values <span class="arithmatex">\(\theta\)</span>. However, the classification or regression loss can only change when <span class="arithmatex">\(\theta\)</span> crosses a distinct training value.</p>
 <ol>
-<li>Sort the unique values of feature <span class="arithmatex">\(j\)</span> across the <span class="arithmatex">\(N\)</span> node samples:
-   $<span class="arithmatex">\(x_{(1), j} &lt; x_{(2), j} &lt; \dots &lt; x_{(m), j}\)</span>$</li>
-<li>The candidate thresholds are the midpoints between adjacent sorted values:
-   $<span class="arithmatex">\(\theta_i = \frac{x_{(i), j} + x_{(i+1), j}}{2}, \quad i \in \{1, \dots, m-1\}\)</span>$</li>
+<li>
+<p>Sort the unique values of feature <span class="arithmatex">\(j\)</span> across the <span class="arithmatex">\(N\)</span> node samples:
+   $<span class="arithmatex">\(x_{(1), j} &lt; x_{(2), j} &lt; \dots &lt; x_{(m), j}\)</span>$</p>
+</li>
+<li>
+<p>The candidate thresholds are the midpoints between adjacent sorted values:
+   $<span class="arithmatex">\(\theta_i = \frac{x_{(i), j} + x_{(i+1), j}}{2}, \quad i \in \{1, \dots, m-1\}\)</span>$</p>
+</li>
 </ol>
 <pre class="mermaid"><code>flowchart LR
     A["Sort feature values: [1.2, 2.4, 3.8, 5.1]"] --&gt; B["Compute midpoints: [1.8, 3.1, 4.45]"]
@@ -4256,19 +4262,23 @@ Gini impurity is a first-order quadratic approximation of entropy. It behaves vi
     D --&gt; E["Select split threshold maximizing impurity reduction"]</code></pre>
 <h3 id="42-incremental-prefix-sums-optimization">4.2 Incremental Prefix Sums Optimization<a class="headerlink" href="#42-incremental-prefix-sums-optimization" title="Permanent link">&para;</a></h3>
 <p>Evaluating a candidate threshold from scratch takes <span class="arithmatex">\(\mathcal{O}(N)\)</span> operations, which would make scanning all <span class="arithmatex">\(N-1\)</span> thresholds cost <span class="arithmatex">\(\mathcal{O}(N^2)\)</span> per feature.</p>
-<p>Instead, we sort once in <span class="arithmatex">\(\mathcal{O}(N \log N)\)</span> time, and then <strong>sweep a pointer from left to right</strong>:
-- Maintain running counts of class frequencies: <span class="arithmatex">\(C_{L, k}\)</span> and <span class="arithmatex">\(C_{R, k} = \text{Total}_k - C_{L, k}\)</span>.
-- When the threshold moves past sample <span class="arithmatex">\(i\)</span>, simply update <span class="arithmatex">\(C_{L, y_i} \leftarrow C_{L, y_i} + 1\)</span> in <span class="arithmatex">\(\mathcal{O}(1)\)</span> time.
-- The overall complexity to find the optimal split across <span class="arithmatex">\(p\)</span> features at a node of size <span class="arithmatex">\(N\)</span> is <span class="arithmatex">\(\mathcal{O}(p \cdot N \log N)\)</span>.</p>
+<p>Instead, we sort once in <span class="arithmatex">\(\mathcal{O}(N \log N)\)</span> time, and then <strong>sweep a pointer from left to right</strong>:</p>
+<ul>
+<li>Maintain running counts of class frequencies: <span class="arithmatex">\(C_{L, k}\)</span> and <span class="arithmatex">\(C_{R, k} = \text{Total}_k - C_{L, k}\)</span>.</li>
+<li>When the threshold moves past sample <span class="arithmatex">\(i\)</span>, simply update <span class="arithmatex">\(C_{L, y_i} \leftarrow C_{L, y_i} + 1\)</span> in <span class="arithmatex">\(\mathcal{O}(1)\)</span> time.</li>
+<li>The overall complexity to find the optimal split across <span class="arithmatex">\(p\)</span> features at a node of size <span class="arithmatex">\(N\)</span> is <span class="arithmatex">\(\mathcal{O}(p \cdot N \log N)\)</span>.</li>
+</ul>
 <hr />
 <h2 id="5-overfitting-control-pre-pruning-cost-complexity-pruning">5. Overfitting Control: Pre-Pruning &amp; Cost-Complexity Pruning<a class="headerlink" href="#5-overfitting-control-pre-pruning-cost-complexity-pruning" title="Permanent link">&para;</a></h2>
 <p>An unconstrained decision tree will grow until every leaf contains a single sample (<span class="arithmatex">\(N_{\text{leaf}} = 1\)</span>) or is completely pure (<span class="arithmatex">\(G = 0\)</span>). Such a tree memorizes noise, creating hundreds of tiny axis-aligned boxes around individual training points (high variance, severe overfitting).</p>
 <h3 id="51-pre-pruning-early-stopping-hyperparameters">5.1 Pre-Pruning (Early Stopping Hyperparameters)<a class="headerlink" href="#51-pre-pruning-early-stopping-hyperparameters" title="Permanent link">&para;</a></h3>
-<p>Halts tree expansion before full memorization occurs:
-- <code>max_depth</code>: Limits the maximum distance from root to any leaf.
-- <code>min_samples_split</code>: The minimum number of samples required to split an internal node.
-- <code>min_samples_leaf</code>: The minimum number of samples required to form a valid leaf node.
-- <code>max_leaf_nodes</code>: Limits total leaves using best-first expansion.</p>
+<p>Halts tree expansion before full memorization occurs:</p>
+<ul>
+<li><code>max_depth</code>: Limits the maximum distance from root to any leaf.</li>
+<li><code>min_samples_split</code>: The minimum number of samples required to split an internal node.</li>
+<li><code>min_samples_leaf</code>: The minimum number of samples required to form a valid leaf node.</li>
+<li><code>max_leaf_nodes</code>: Limits total leaves using best-first expansion.</li>
+</ul>
 <p><em>Limitation</em>: Greedy early stopping can miss valuable splits. A split that yields near-zero impurity drop might unlock a subsequent deep split that separates the classes perfectly (the XOR problem).</p>
 <h3 id="52-post-pruning-minimal-cost-complexity-pruning-cart">5.2 Post-Pruning: Minimal Cost-Complexity Pruning (CART)<a class="headerlink" href="#52-post-pruning-minimal-cost-complexity-pruning-cart" title="Permanent link">&para;</a></h3>
 <p>Breiman et al. (1984) developed <strong>Minimal Cost-Complexity Pruning</strong>, which grows a full unconstrained tree <span class="arithmatex">\(T_{\max}\)</span> and then prunes it back systematically.</p>
@@ -4277,16 +4287,20 @@ Gini impurity is a first-order quadratic approximation of entropy. It behaves vi
 <div class="arithmatex">\[
 R_\alpha(T) = R(T) + \alpha |T|
 \]</div>
-<p>where:
-- <span class="arithmatex">\(R(T) = \sum_{t \in \text{leaves}(T)} \frac{N_t}{N} I(t)\)</span> is the total empirical training impurity (misclassification rate, Gini, or MSE).
-- <span class="arithmatex">\(|T|\)</span> is the number of terminal leaf nodes in <span class="arithmatex">\(T\)</span>.
-- <span class="arithmatex">\(\alpha \ge 0\)</span> is the regularization penalty governing the trade-off between tree size and fit to training data:
-  - <span class="arithmatex">\(\alpha = 0 \implies\)</span> full unpruned tree <span class="arithmatex">\(T_{\max}\)</span>.
-  - <span class="arithmatex">\(\alpha \to \infty \implies\)</span> trivial single-node tree consisting only of the root.</p>
+<p>where:</p>
+<ul>
+<li><span class="arithmatex">\(R(T) = \sum_{t \in \text{leaves}(T)} \frac{N_t}{N} I(t)\)</span> is the total empirical training impurity (misclassification rate, Gini, or MSE).</li>
+<li><span class="arithmatex">\(|T|\)</span> is the number of terminal leaf nodes in <span class="arithmatex">\(T\)</span>.</li>
+<li><span class="arithmatex">\(\alpha \ge 0\)</span> is the regularization penalty governing the trade-off between tree size and fit to training data:</li>
+<li><span class="arithmatex">\(\alpha = 0 \implies\)</span> full unpruned tree <span class="arithmatex">\(T_{\max}\)</span>.</li>
+<li><span class="arithmatex">\(\alpha \to \infty \implies\)</span> trivial single-node tree consisting only of the root.</li>
+</ul>
 <h4 id="weakest-link-pruning">Weakest-Link Pruning:<a class="headerlink" href="#weakest-link-pruning" title="Permanent link">&para;</a></h4>
-<p>For each internal node <span class="arithmatex">\(t\)</span>:
-- If node <span class="arithmatex">\(t\)</span> is collapsed into a single leaf, its empirical risk is <span class="arithmatex">\(R(t)\)</span>.
-- If subtree <span class="arithmatex">\(T_t\)</span> rooted at <span class="arithmatex">\(t\)</span> is retained, its cost-complexity is <span class="arithmatex">\(R_\alpha(T_t) = R(T_t) + \alpha |T_t|\)</span>.</p>
+<p>For each internal node <span class="arithmatex">\(t\)</span>:</p>
+<ul>
+<li>If node <span class="arithmatex">\(t\)</span> is collapsed into a single leaf, its empirical risk is <span class="arithmatex">\(R(t)\)</span>.</li>
+<li>If subtree <span class="arithmatex">\(T_t\)</span> rooted at <span class="arithmatex">\(t\)</span> is retained, its cost-complexity is <span class="arithmatex">\(R_\alpha(T_t) = R(T_t) + \alpha |T_t|\)</span>.</li>
+</ul>
 <p>The subtree <span class="arithmatex">\(T_t\)</span> yields a strictly better cost-complexity than collapsing node <span class="arithmatex">\(t\)</span> as long as:</p>
 <div class="arithmatex">\[
 R(T_t) + \alpha |T_t| &lt; R(t) + \alpha \cdot 1 \iff \alpha (|T_t| - 1) &gt; R(t) - R(T_t)
@@ -4299,9 +4313,13 @@ R(T_t) + \alpha |T_t| &lt; R(t) + \alpha \cdot 1 \iff \alpha (|T_t| - 1) &gt; R(
 <ul>
 <li><span class="arithmatex">\(\alpha_{\text{eff}}(t)\)</span> represents the rate of increase in training error per leaf pruned from subtree <span class="arithmatex">\(T_t\)</span>.</li>
 <li>CART finds the internal node <span class="arithmatex">\(t^*\)</span> that minimizes <span class="arithmatex">\(\alpha_{\text{eff}}(t)\)</span>, collapses <span class="arithmatex">\(T_{t^*}\)</span> into a leaf, and records <span class="arithmatex">\(\alpha_1 = \alpha_{\text{eff}}(t^*)\)</span>.</li>
-<li>Repeating this recursively produces a finite nested sequence of pruned subtrees:
-  $<span class="arithmatex">\(T_0 \supset T_1 \supset T_2 \dots \supset T_{\text{root}}\)</span>$</li>
-<li>The optimal <span class="arithmatex">\(\alpha\)</span> is chosen via K-Fold Cross-Validation.</li>
+<li>
+<p>Repeating this recursively produces a finite nested sequence of pruned subtrees:
+  $<span class="arithmatex">\(T_0 \supset T_1 \supset T_2 \dots \supset T_{\text{root}}\)</span>$</p>
+</li>
+<li>
+<p>The optimal <span class="arithmatex">\(\alpha\)</span> is chosen via K-Fold Cross-Validation.</p>
+</li>
 </ul>
 <hr />
 <h2 id="6-implementation-1-vectorized-cart-classifier-regressor-pure-python-numpy">6. Implementation 1 — Vectorized CART Classifier &amp; Regressor (Pure Python &amp; NumPy)<a class="headerlink" href="#6-implementation-1-vectorized-cart-classifier-regressor-pure-python-numpy" title="Permanent link">&para;</a></h2>
@@ -4507,9 +4525,11 @@ R(T_t) + \alpha |T_t| &lt; R(t) + \alpha \cdot 1 \iff \alpha (|T_t| - 1) &gt; R(
 <h2 id="9-staff-level-interview-questions-model-answers">9. Staff-Level Interview Questions &amp; Model Answers<a class="headerlink" href="#9-staff-level-interview-questions-model-answers" title="Permanent link">&para;</a></h2>
 <h3 id="q1-compare-gini-impurity-vs-shannon-entropy-why-does-cart-default-to-gini-and-does-the-choice-of-metric-materially-impact-classification-accuracy">Q1: Compare Gini Impurity vs. Shannon Entropy. Why does CART default to Gini, and does the choice of metric materially impact classification accuracy?<a class="headerlink" href="#q1-compare-gini-impurity-vs-shannon-entropy-why-does-cart-default-to-gini-and-does-the-choice-of-metric-materially-impact-classification-accuracy" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-For a node with class probabilities <span class="arithmatex">\(\mathbf{p} = [p_1, \dots, p_K]\)</span>:
-- <strong>Gini Impurity</strong>: <span class="arithmatex">\(G = 1 - \sum_{k=1}^K p_k^2\)</span>
-- <strong>Shannon Entropy</strong>: <span class="arithmatex">\(H = -\sum_{k=1}^K p_k \log_2 p_k\)</span></p>
+For a node with class probabilities <span class="arithmatex">\(\mathbf{p} = [p_1, \dots, p_K]\)</span>:</p>
+<ul>
+<li><strong>Gini Impurity</strong>: <span class="arithmatex">\(G = 1 - \sum_{k=1}^K p_k^2\)</span></li>
+<li><strong>Shannon Entropy</strong>: <span class="arithmatex">\(H = -\sum_{k=1}^K p_k \log_2 p_k\)</span></li>
+</ul>
 <p><strong>Mathematical Connection:</strong>
 Using the first-order Taylor series expansion of the natural logarithm around <span class="arithmatex">\(x = 1\)</span>: <span class="arithmatex">\(\ln(x) \approx x - 1\)</span>.
 Substituting <span class="arithmatex">\(x = p_k\)</span>: <span class="arithmatex">\(\ln(p_k) \approx p_k - 1\)</span>.
@@ -4524,39 +4544,57 @@ CART defaults to Gini Impurity strictly for <strong>computational efficiency</st
 Let <span class="arithmatex">\(T_{\max}\)</span> be the full unpruned tree. The cost-complexity criterion is:
 $<span class="arithmatex">\(R_\alpha(T) = R(T) + \alpha |T|\)</span>$
 where <span class="arithmatex">\(R(T) = \sum_{t \in \tilde{T}} R(t)\)</span> is total training error/impurity across leaves <span class="arithmatex">\(\tilde{T}\)</span>, and <span class="arithmatex">\(|T| = |\tilde{T}|\)</span> is the number of terminal leaves.
-Consider any single internal node <span class="arithmatex">\(t\)</span>. If we collapse the entire subtree <span class="arithmatex">\(T_t\)</span> rooted at <span class="arithmatex">\(t\)</span> into a single leaf node <span class="arithmatex">\(\{t\}\)</span>:
-- The single collapsed leaf has cost-complexity: <span class="arithmatex">\(R_\alpha(\{t\}) = R(t) + \alpha \cdot 1\)</span>.
-- The unpruned subtree <span class="arithmatex">\(T_t\)</span> has cost-complexity: <span class="arithmatex">\(R_\alpha(T_t) = R(T_t) + \alpha |T_t|\)</span>.</p>
+Consider any single internal node <span class="arithmatex">\(t\)</span>. If we collapse the entire subtree <span class="arithmatex">\(T_t\)</span> rooted at <span class="arithmatex">\(t\)</span> into a single leaf node <span class="arithmatex">\(\{t\}\)</span>:</p>
+<ul>
+<li>The single collapsed leaf has cost-complexity: <span class="arithmatex">\(R_\alpha(\{t\}) = R(t) + \alpha \cdot 1\)</span>.</li>
+<li>The unpruned subtree <span class="arithmatex">\(T_t\)</span> has cost-complexity: <span class="arithmatex">\(R_\alpha(T_t) = R(T_t) + \alpha |T_t|\)</span>.</li>
+</ul>
 <p>Because <span class="arithmatex">\(T_t\)</span> was grown by minimizing impurity, <span class="arithmatex">\(R(T_t) &lt; R(t)\)</span>, but it uses <span class="arithmatex">\(|T_t| &gt; 1\)</span> leaves.
 For very small <span class="arithmatex">\(\alpha\)</span>, <span class="arithmatex">\(R_\alpha(T_t) &lt; R_\alpha(\{t\})\)</span>, meaning the subtree is preferred.
 As <span class="arithmatex">\(\alpha\)</span> increases, the penalty for complexity grows until a critical threshold is reached where collapsing <span class="arithmatex">\(T_t\)</span> yields equal or lower cost-complexity:
 $<span class="arithmatex">\(R(t) + \alpha \le R(T_t) + \alpha |T_t| \iff R(t) - R(T_t) \le \alpha (|T_t| - 1)\)</span>$
 Solving for <span class="arithmatex">\(\alpha\)</span> gives the <strong>effective alpha</strong> for node <span class="arithmatex">\(t\)</span>:
 $<span class="arithmatex">\(\alpha_{\text{eff}}(t) = \frac{R(t) - R(T_t)}{|T_t| - 1}\)</span>$
-<strong>Algorithmic Sequence (Weakest-Link Pruning):</strong>
-1. Compute <span class="arithmatex">\(\alpha_{\text{eff}}(t)\)</span> for every internal node in the current tree.
-2. The node with the smallest <span class="arithmatex">\(\alpha_{\text{eff}}\)</span> is the <strong>weakest link</strong>—it provides the smallest impurity reduction per leaf.
-3. Collapse this subtree to create <span class="arithmatex">\(T_1\)</span>, recording <span class="arithmatex">\(\alpha_1 = \min_t \alpha_{\text{eff}}(t)\)</span>.
-4. Repeat this process until only the root node remains, producing a strictly nested sequence of subtrees:
-   $<span class="arithmatex">\(T_0 \supset T_1 \supset T_2 \dots \supset T_m = \{ \text{root} \}\)</span>$
-5. Use K-Fold Cross-Validation on the training folds to evaluate the validation score of each subtree in the sequence, selecting <span class="arithmatex">\(\alpha^*\)</span>.</p>
+<strong>Algorithmic Sequence (Weakest-Link Pruning):</strong></p>
+<ol>
+<li>Compute <span class="arithmatex">\(\alpha_{\text{eff}}(t)\)</span> for every internal node in the current tree.</li>
+<li>The node with the smallest <span class="arithmatex">\(\alpha_{\text{eff}}\)</span> is the <strong>weakest link</strong>—it provides the smallest impurity reduction per leaf.</li>
+<li>Collapse this subtree to create <span class="arithmatex">\(T_1\)</span>, recording <span class="arithmatex">\(\alpha_1 = \min_t \alpha_{\text{eff}}(t)\)</span>.</li>
+<li>
+<p>Repeat this process until only the root node remains, producing a strictly nested sequence of subtrees:
+   $<span class="arithmatex">\(T_0 \supset T_1 \supset T_2 \dots \supset T_m = \{ \text{root} \}\)</span>$</p>
+</li>
+<li>
+<p>Use K-Fold Cross-Validation on the training folds to evaluate the validation score of each subtree in the sequence, selecting <span class="arithmatex">\(\alpha^*\)</span>.</p>
+</li>
+</ol>
 <hr />
 <h3 id="q3-what-is-the-computational-complexity-of-finding-the-optimal-split-across-continuous-features-and-how-do-modern-libraries-optimize-it">Q3: What is the computational complexity of finding the optimal split across continuous features, and how do modern libraries optimize it?<a class="headerlink" href="#q3-what-is-the-computational-complexity-of-finding-the-optimal-split-across-continuous-features-and-how-do-modern-libraries-optimize-it" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-Consider an internal node with <span class="arithmatex">\(N\)</span> samples and <span class="arithmatex">\(p\)</span> features:
-1. <strong>Sorting Candidate Thresholds:</strong>
-   For a continuous feature <span class="arithmatex">\(j\)</span>, sorting the <span class="arithmatex">\(N\)</span> sample values requires <span class="arithmatex">\(\mathcal{O}(N \log N)\)</span> operations.
-2. <strong>Impurity Evaluation:</strong>
+Consider an internal node with <span class="arithmatex">\(N\)</span> samples and <span class="arithmatex">\(p\)</span> features:</p>
+<ol>
+<li>
+<p><strong>Sorting Candidate Thresholds:</strong>
+   For a continuous feature <span class="arithmatex">\(j\)</span>, sorting the <span class="arithmatex">\(N\)</span> sample values requires <span class="arithmatex">\(\mathcal{O}(N \log N)\)</span> operations.</p>
+</li>
+<li>
+<p><strong>Impurity Evaluation:</strong>
    Evaluating each of the <span class="arithmatex">\(N-1\)</span> candidate midpoints naively takes <span class="arithmatex">\(\mathcal{O}(N)\)</span> time. However, by maintaining running cumulative sums (prefix sums) of target values (or class frequencies), each threshold evaluation requires only <span class="arithmatex">\(\mathcal{O}(1)\)</span> updates:
    $<span class="arithmatex">\(\text{SSE}_{\text{left}} = \sum_{i=1}^k y_i^2 - \frac{(\sum_{i=1}^k y_i)^2}{k}, \qquad \text{SSE}_{\text{right}} = \text{SSE}_{\text{total}} - \text{SSE}_{\text{left}}\)</span>$
-   Thus, scanning all thresholds for one sorted feature takes <span class="arithmatex">\(\mathcal{O}(N)\)</span> time.
-3. <strong>Total Node Cost:</strong>
+   Thus, scanning all thresholds for one sorted feature takes <span class="arithmatex">\(\mathcal{O}(N)\)</span> time.</p>
+</li>
+<li>
+<p><strong>Total Node Cost:</strong>
    Across all <span class="arithmatex">\(p\)</span> features:
    $<span class="arithmatex">\(\text{Cost}_{\text{node}} = \mathcal{O}(p \cdot N \log N)\)</span>$</p>
+</li>
+</ol>
 <p><strong>Modern Optimizations (XGBoost, LightGBM):</strong>
-For massive datasets (<span class="arithmatex">\(N = 10^7\)</span>), sorting every feature at every tree node is computationally prohibitive.
-- <strong>Histogram-based Binning (LightGBM / Scikit-learn HistGradientBoosting):</strong> Discretizes continuous features into <span class="arithmatex">\(B = 256\)</span> discrete integer bins upfront before tree construction. Finding optimal splits scans 256 bin boundaries in <span class="arithmatex">\(\mathcal{O}(B)\)</span> time, reducing complexity to <span class="arithmatex">\(\mathcal{O}(p \cdot N + p \cdot B)\)</span> independent of sorting!
-- <strong>Histogram Subtraction:</strong> When node <span class="arithmatex">\(S\)</span> splits into <span class="arithmatex">\(S_L\)</span> and <span class="arithmatex">\(S_R\)</span>, we build the histogram for the smaller child (e.g., <span class="arithmatex">\(S_L\)</span>) in <span class="arithmatex">\(\mathcal{O}(N_L)\)</span> time, and obtain the histogram for <span class="arithmatex">\(S_R\)</span> by simple subtraction: <span class="arithmatex">\(\text{Hist}(S_R) = \text{Hist}(S) - \text{Hist}(S_L)\)</span> in <span class="arithmatex">\(\mathcal{O}(B)\)</span> operations.</p>
+For massive datasets (<span class="arithmatex">\(N = 10^7\)</span>), sorting every feature at every tree node is computationally prohibitive.</p>
+<ul>
+<li><strong>Histogram-based Binning (LightGBM / Scikit-learn HistGradientBoosting):</strong> Discretizes continuous features into <span class="arithmatex">\(B = 256\)</span> discrete integer bins upfront before tree construction. Finding optimal splits scans 256 bin boundaries in <span class="arithmatex">\(\mathcal{O}(B)\)</span> time, reducing complexity to <span class="arithmatex">\(\mathcal{O}(p \cdot N + p \cdot B)\)</span> independent of sorting!</li>
+<li><strong>Histogram Subtraction:</strong> When node <span class="arithmatex">\(S\)</span> splits into <span class="arithmatex">\(S_L\)</span> and <span class="arithmatex">\(S_R\)</span>, we build the histogram for the smaller child (e.g., <span class="arithmatex">\(S_L\)</span>) in <span class="arithmatex">\(\mathcal{O}(N_L)\)</span> time, and obtain the histogram for <span class="arithmatex">\(S_R\)</span> by simple subtraction: <span class="arithmatex">\(\text{Hist}(S_R) = \text{Hist}(S) - \text{Hist}(S_L)\)</span> in <span class="arithmatex">\(\mathcal{O}(B)\)</span> operations.</li>
+</ul>
 <hr />
 <h3 id="q4-why-are-decision-trees-incapable-of-extrapolation-in-regression-tasks-and-how-does-this-differ-from-linear-regression">Q4: Why are decision trees incapable of extrapolation in regression tasks, and how does this differ from linear regression?<a class="headerlink" href="#q4-why-are-decision-trees-incapable-of-extrapolation-in-regression-tasks-and-how-does-this-differ-from-linear-regression" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4569,30 +4607,36 @@ In contrast, Linear Regression estimates a continuous gradient <span class="arit
 <hr />
 <h3 id="q5-how-do-surrogate-splits-handle-missing-feature-values-during-inference-in-cart">Q5: How do surrogate splits handle missing feature values during inference in CART?<a class="headerlink" href="#q5-how-do-surrogate-splits-handle-missing-feature-values-during-inference-in-cart" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-Breiman's CART handles missing values gracefully without imputation via <strong>Surrogate Splits</strong>:
-1. <strong>Primary Split Selection:</strong> When evaluating an internal node, the optimal split <span class="arithmatex">\((j^*, \theta^*)\)</span> is found using only the subset of training samples that have non-missing values for feature <span class="arithmatex">\(j^*\)</span>.
-2. <strong>Surrogate Split Ranking:</strong> Once the primary split is established (which sends some non-missing points to the left child and others to the right child), the algorithm searches through all other features to find an alternative split <span class="arithmatex">\((k, \theta_k)\)</span> that mimics the primary split as closely as possible.
-3. The quality of a surrogate split is measured by its <strong>predictive agreement</strong> with the primary split:
-   $<span class="arithmatex">\(\lambda(j^*, k) = \frac{\text{Number of points sent to same child by both } j^* \text{ and } k}{\text{Total non-missing points}}\)</span>$
-4. A ranked list of primary and secondary surrogate splits is stored inside the node.
-5. <strong>Inference Handling:</strong> When evaluating an unseen test sample at runtime:
-   - If feature <span class="arithmatex">\(j^*\)</span> is present, use the primary split.
-   - If feature <span class="arithmatex">\(j^*\)</span> is missing, use the first surrogate split.
-   - If the first surrogate is also missing, fall back to the second surrogate, and so on.
-   - If all surrogates are missing, default to sending the sample down the branch that received the majority of training instances.</p>
+Breiman's CART handles missing values gracefully without imputation via <strong>Surrogate Splits</strong>:</p>
+<ol>
+<li><strong>Primary Split Selection:</strong> When evaluating an internal node, the optimal split <span class="arithmatex">\((j^*, \theta^*)\)</span> is found using only the subset of training samples that have non-missing values for feature <span class="arithmatex">\(j^*\)</span>.</li>
+<li><strong>Surrogate Split Ranking:</strong> Once the primary split is established (which sends some non-missing points to the left child and others to the right child), the algorithm searches through all other features to find an alternative split <span class="arithmatex">\((k, \theta_k)\)</span> that mimics the primary split as closely as possible.</li>
+<li>
+<p>The quality of a surrogate split is measured by its <strong>predictive agreement</strong> with the primary split:
+   $<span class="arithmatex">\(\lambda(j^*, k) = \frac{\text{Number of points sent to same child by both } j^* \text{ and } k}{\text{Total non-missing points}}\)</span>$</p>
+</li>
+<li>
+<p>A ranked list of primary and secondary surrogate splits is stored inside the node.</p>
+</li>
+<li><strong>Inference Handling:</strong> When evaluating an unseen test sample at runtime:</li>
+<li>If feature <span class="arithmatex">\(j^*\)</span> is present, use the primary split.</li>
+<li>If feature <span class="arithmatex">\(j^*\)</span> is missing, use the first surrogate split.</li>
+<li>If the first surrogate is also missing, fall back to the second surrogate, and so on.</li>
+<li>If all surrogates are missing, default to sending the sample down the branch that received the majority of training instances.</li>
+</ol>
 <hr />
 <h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> You can draw a decision tree topology and explain how it partitions feature space into hyper-rectangles.</li>
-<li>[ ] <strong>L2:</strong> You can state the formulas for Shannon Entropy, Information Gain, and Gini Impurity.</li>
-<li>[ ] <strong>L3:</strong> You can prove why Gini Impurity is a first-order Taylor approximation of Shannon Entropy.</li>
-<li>[ ] <strong>L4:</strong> You can explain why Variance Reduction in regression trees is mathematically equivalent to minimizing SSE.</li>
-<li>[ ] <strong>L5:</strong> You can explain how continuous thresholds are generated from midpoints and scanned in <span class="arithmatex">\(\mathcal{O}(N)\)</span> using prefix sums.</li>
-<li>[ ] <strong>L6:</strong> You can list pre-pruning hyperparameters (<code>max_depth</code>, <code>min_samples_split</code>, <code>min_samples_leaf</code>).</li>
-<li>[ ] <strong>L7:</strong> You can derive the effective alpha formula <span class="arithmatex">\(\alpha_{\text{eff}}(t) = \frac{R(t) - R(T_t)}{|T_t| - 1}\)</span> for Cost-Complexity Pruning.</li>
-<li>[ ] <strong>L8:</strong> You can explain why decision trees cannot extrapolate in regression tasks.</li>
-<li>[ ] <strong>L9:</strong> You can explain surrogate splits and how CART handles missing data at runtime.</li>
-<li>[ ] <strong>L10:</strong> You can implement a CART classifier and regressor from scratch in NumPy and benchmark against scikit-learn.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can draw a decision tree topology and explain how it partitions feature space into hyper-rectangles.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can state the formulas for Shannon Entropy, Information Gain, and Gini Impurity.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can prove why Gini Impurity is a first-order Taylor approximation of Shannon Entropy.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can explain why Variance Reduction in regression trees is mathematically equivalent to minimizing SSE.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can explain how continuous thresholds are generated from midpoints and scanned in <span class="arithmatex">\(\mathcal{O}(N)\)</span> using prefix sums.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can list pre-pruning hyperparameters (<code>max_depth</code>, <code>min_samples_split</code>, <code>min_samples_leaf</code>).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can derive the effective alpha formula <span class="arithmatex">\(\alpha_{\text{eff}}(t) = \frac{R(t) - R(T_t)}{|T_t| - 1}\)</span> for Cost-Complexity Pruning.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can explain why decision trees cannot extrapolate in regression tasks.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can explain surrogate splits and how CART handles missing data at runtime.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can implement a CART classifier and regressor from scratch in NumPy and benchmark against scikit-learn.</li>
 </ul>
 
 

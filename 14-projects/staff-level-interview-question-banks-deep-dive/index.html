@@ -4086,42 +4086,50 @@
     CPythonArchitecture --&gt; FrameObjects["Evaluation Loop\n(PyEval_EvalFrameDefault, Value Stack)"]</code></pre>
 <h3 id="q11-describe-the-internal-memory-architecture-of-cpythons-pymalloc-how-does-it-mitigate-memory-fragmentation-and-what-happens-when-an-object-exceeds-512-bytes">Q1.1: Describe the internal memory architecture of CPython's <code>PyMalloc</code>. How does it mitigate memory fragmentation, and what happens when an object exceeds 512 bytes?<a class="headerlink" href="#q11-describe-the-internal-memory-architecture-of-cpythons-pymalloc-how-does-it-mitigate-memory-fragmentation-and-what-happens-when-an-object-exceeds-512-bytes" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
-CPython bypasses the operating system's standard <code>malloc()</code> for small object allocations (<span class="arithmatex">\(\le 512\text{ bytes}\)</span>) via <strong>PyMalloc</strong>, a specialized three-tier hierarchical slab allocator designed to eliminate heap fragmentation and minimize syscall overhead:
-1. <strong>Arenas (<span class="arithmatex">\(256\text{ KB}\)</span>)</strong>:
-   - PyMalloc requests large <span class="arithmatex">\(256\text{ KB}\)</span> contiguous chunks of virtual memory directly from the OS kernel using <code>mmap()</code> (or <code>VirtualAlloc()</code> on Windows).
-   - Arenas track their constituent pools via a doubly linked list. An arena is freed back to the OS kernel <em>only</em> when all of its 64 pools become completely empty.
-2. <strong>Pools (<span class="arithmatex">\(4\text{ KB}\)</span>)</strong>:
-   - Each arena is partitioned into 64 pools of <span class="arithmatex">\(4\text{ KB}\)</span> each (matching the hardware MMU virtual memory page size).
-   - Every pool is dedicated to a single <strong>size class</strong>. Size classes span <span class="arithmatex">\(8\text{ bytes}\)</span> to <span class="arithmatex">\(512\text{ bytes}\)</span> in steps of <span class="arithmatex">\(8\text{ bytes}\)</span> (64 distinct size classes: <span class="arithmatex">\(8, 16, 24, \dots, 512\text{ bytes}\)</span>).
-   - A pool maintains a singly linked free-list of available blocks.
-3. <strong>Blocks (<span class="arithmatex">\(8 - 512\text{ bytes}\)</span>)</strong>:
-   - When an object of size <span class="arithmatex">\(S\)</span> is allocated (e.g. a small tuple or float), PyMalloc rounds <span class="arithmatex">\(S\)</span> up to the nearest multiple of 8, locates an active pool matching that size class, and pops the head block off the pool's free list in <span class="arithmatex">\(\mathcal{O}(1)\)</span> time with zero kernel context switches.
-- <strong>Objects Exceeding 512 Bytes</strong>:
-  - Any allocation <span class="arithmatex">\(&gt; 512\text{ bytes}\)</span> bypasses PyMalloc entirely and is delegated directly to the system allocator (<code>malloc()</code>). Large memory blocks (such as NumPy multidimensional array buffers or PyTorch tensor storages) are allocated on the unmanaged system heap.</p>
+CPython bypasses the operating system's standard <code>malloc()</code> for small object allocations (<span class="arithmatex">\(\le 512\text{ bytes}\)</span>) via <strong>PyMalloc</strong>, a specialized three-tier hierarchical slab allocator designed to eliminate heap fragmentation and minimize syscall overhead:</p>
+<ol>
+<li><strong>Arenas (<span class="arithmatex">\(256\text{ KB}\)</span>)</strong>:</li>
+<li>PyMalloc requests large <span class="arithmatex">\(256\text{ KB}\)</span> contiguous chunks of virtual memory directly from the OS kernel using <code>mmap()</code> (or <code>VirtualAlloc()</code> on Windows).</li>
+<li>Arenas track their constituent pools via a doubly linked list. An arena is freed back to the OS kernel <em>only</em> when all of its 64 pools become completely empty.</li>
+<li><strong>Pools (<span class="arithmatex">\(4\text{ KB}\)</span>)</strong>:</li>
+<li>Each arena is partitioned into 64 pools of <span class="arithmatex">\(4\text{ KB}\)</span> each (matching the hardware MMU virtual memory page size).</li>
+<li>Every pool is dedicated to a single <strong>size class</strong>. Size classes span <span class="arithmatex">\(8\text{ bytes}\)</span> to <span class="arithmatex">\(512\text{ bytes}\)</span> in steps of <span class="arithmatex">\(8\text{ bytes}\)</span> (64 distinct size classes: <span class="arithmatex">\(8, 16, 24, \dots, 512\text{ bytes}\)</span>).</li>
+<li>A pool maintains a singly linked free-list of available blocks.</li>
+<li><strong>Blocks (<span class="arithmatex">\(8 - 512\text{ bytes}\)</span>)</strong>:</li>
+<li>When an object of size <span class="arithmatex">\(S\)</span> is allocated (e.g. a small tuple or float), PyMalloc rounds <span class="arithmatex">\(S\)</span> up to the nearest multiple of 8, locates an active pool matching that size class, and pops the head block off the pool's free list in <span class="arithmatex">\(\mathcal{O}(1)\)</span> time with zero kernel context switches.</li>
+<li><strong>Objects Exceeding 512 Bytes</strong>:</li>
+<li>Any allocation <span class="arithmatex">\(&gt; 512\text{ bytes}\)</span> bypasses PyMalloc entirely and is delegated directly to the system allocator (<code>malloc()</code>). Large memory blocks (such as NumPy multidimensional array buffers or PyTorch tensor storages) are allocated on the unmanaged system heap.</li>
+</ol>
 <hr />
 <h3 id="q12-how-does-the-global-interpreter-lock-gil-function-at-the-c-level-and-how-does-pep-703-python-313-free-threading-remove-it-safely">Q1.2: How does the Global Interpreter Lock (GIL) function at the C level, and how does PEP 703 (Python 3.13 free-threading) remove it safely?<a class="headerlink" href="#q12-how-does-the-global-interpreter-lock-gil-function-at-the-c-level-and-how-does-pep-703-python-313-free-threading-remove-it-safely" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>CPython GIL Mechanics</strong>:
-  - The GIL is an OS-level mutual exclusion lock (<code>PyMutex</code> or <code>pthread_mutex_t</code>) guarding CPython’s global interpreter state.
-  - In <code>ceval.c</code>, the main execution loop (<code>_PyEval_EvalFrameDefault</code>) executes bytecode instructions. To prevent race conditions in reference counting (<code>Py_INCREF</code>/<code>Py_DECREF</code>) and mutable runtime dicts, an OS thread must hold the GIL to execute bytecode.
-  - Periodic thread switching is governed by <code>sys.getswitchinterval()</code> (default <span class="arithmatex">\(5\text{ ms}\)</span>). Every 5 milliseconds, the active thread is forced to release the GIL, signaling waiting threads via a condition variable. Under CPU-bound multi-threading, threads experience high lock contention ("GIL convoy effect"), degrading multi-core performance.
-- <strong>PEP 703 (Free-Threaded CPython)</strong>:
-  - PEP 703 removes the GIL by replacing global locking with three fine-grained concurrency primitives:
-    1. <em>Biased Reference Counting</em>: Objects are biased toward the thread that allocated them. Local increments/decrements require no atomic instructions. Cross-thread modifications use atomic CAS (Compare-And-Swap) operations.
-    2. <em>Immortal Objects</em>: Core singletons (<code>None</code>, <code>True</code>, <code>False</code>, small integers) have their reference count flag set to immortal, eliminating cache-line bouncing across CPU cores.
-    3. <em>Thread-Safe Allocator (mimalloc)</em>: Replaces PyMalloc with Microsoft’s lock-free <code>mimalloc</code> memory allocator.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>CPython GIL Mechanics</strong>:</li>
+<li>The GIL is an OS-level mutual exclusion lock (<code>PyMutex</code> or <code>pthread_mutex_t</code>) guarding CPython’s global interpreter state.</li>
+<li>In <code>ceval.c</code>, the main execution loop (<code>_PyEval_EvalFrameDefault</code>) executes bytecode instructions. To prevent race conditions in reference counting (<code>Py_INCREF</code>/<code>Py_DECREF</code>) and mutable runtime dicts, an OS thread must hold the GIL to execute bytecode.</li>
+<li>Periodic thread switching is governed by <code>sys.getswitchinterval()</code> (default <span class="arithmatex">\(5\text{ ms}\)</span>). Every 5 milliseconds, the active thread is forced to release the GIL, signaling waiting threads via a condition variable. Under CPU-bound multi-threading, threads experience high lock contention ("GIL convoy effect"), degrading multi-core performance.</li>
+<li><strong>PEP 703 (Free-Threaded CPython)</strong>:</li>
+<li>PEP 703 removes the GIL by replacing global locking with three fine-grained concurrency primitives:<ol>
+<li><em>Biased Reference Counting</em>: Objects are biased toward the thread that allocated them. Local increments/decrements require no atomic instructions. Cross-thread modifications use atomic CAS (Compare-And-Swap) operations.</li>
+<li><em>Immortal Objects</em>: Core singletons (<code>None</code>, <code>True</code>, <code>False</code>, small integers) have their reference count flag set to immortal, eliminating cache-line bouncing across CPU cores.</li>
+<li><em>Thread-Safe Allocator (mimalloc)</em>: Replaces PyMalloc with Microsoft’s lock-free <code>mimalloc</code> memory allocator.</li>
+</ol>
+</li>
+</ul>
 <hr />
 <h3 id="q13-explain-the-python-descriptor-protocol-how-do-property-classmethod-and-regular-bound-methods-utilize-it-under-the-hood">Q1.3: Explain the Python Descriptor Protocol. How do <code>@property</code>, <code>classmethod</code>, and regular bound methods utilize it under the hood?<a class="headerlink" href="#q13-explain-the-python-descriptor-protocol-how-do-property-classmethod-and-regular-bound-methods-utilize-it-under-the-hood" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
-A descriptor is any Python object defining at least one of the protocol methods: <code>__get__(self, obj, type=None)</code>, <code>__set__(self, obj, value)</code>, or <code>__delete__(self, obj)</code>.
-- <strong>Attribute Lookup Precedence</strong>: When evaluating <code>obj.attr</code>:
-  1. If <code>attr</code> is a <strong>Data Descriptor</strong> (defines <code>__set__</code> or <code>__delete__</code>), the descriptor's <code>__get__</code> is invoked, overriding <code>obj.__dict__</code>.
-  2. If <code>attr</code> exists in instance dictionary <code>obj.__dict__</code>, the instance value is returned.
-  3. If <code>attr</code> is a <strong>Non-Data Descriptor</strong> (defines only <code>__get__</code>), the descriptor's <code>__get__</code> is invoked.
-  4. Finally, standard class dictionary <code>type(obj).__dict__</code> lookup occurs before raising <code>AttributeError</code>.
-- <strong>Mechanisms Under the Hood</strong>:
-  - <strong>Bound Methods</strong>: In Python, functions are non-data descriptors. When function <code>foo</code> is accessed via <code>instance.foo</code>, <code>FunctionType.__get__(foo, instance, Class)</code> is called. It returns a <code>MethodType</code> closure object that binds <code>instance</code> to the first argument (<code>self</code>).
-  - <strong><code>@property</code></strong>: A data descriptor wrapping getter, setter, and deleter callables. Because it implements <code>__set__</code>, it takes precedence over the instance dictionary.</p>
+A descriptor is any Python object defining at least one of the protocol methods: <code>__get__(self, obj, type=None)</code>, <code>__set__(self, obj, value)</code>, or <code>__delete__(self, obj)</code>.</p>
+<ul>
+<li><strong>Attribute Lookup Precedence</strong>: When evaluating <code>obj.attr</code>:</li>
+<li>If <code>attr</code> is a <strong>Data Descriptor</strong> (defines <code>__set__</code> or <code>__delete__</code>), the descriptor's <code>__get__</code> is invoked, overriding <code>obj.__dict__</code>.</li>
+<li>If <code>attr</code> exists in instance dictionary <code>obj.__dict__</code>, the instance value is returned.</li>
+<li>If <code>attr</code> is a <strong>Non-Data Descriptor</strong> (defines only <code>__get__</code>), the descriptor's <code>__get__</code> is invoked.</li>
+<li>Finally, standard class dictionary <code>type(obj).__dict__</code> lookup occurs before raising <code>AttributeError</code>.</li>
+<li><strong>Mechanisms Under the Hood</strong>:</li>
+<li><strong>Bound Methods</strong>: In Python, functions are non-data descriptors. When function <code>foo</code> is accessed via <code>instance.foo</code>, <code>FunctionType.__get__(foo, instance, Class)</code> is called. It returns a <code>MethodType</code> closure object that binds <code>instance</code> to the first argument (<code>self</code>).</li>
+<li><strong><code>@property</code></strong>: A data descriptor wrapping getter, setter, and deleter callables. Because it implements <code>__set__</code>, it takes precedence over the instance dictionary.</li>
+</ul>
 <hr />
 <h2 id="3-domain-2-mathematics-numerical-optimization">3. Domain 2: Mathematics &amp; Numerical Optimization<a class="headerlink" href="#3-domain-2-mathematics-numerical-optimization" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
@@ -4153,13 +4161,17 @@ Consider a composite function <span class="arithmatex">\(f: \mathbb{R}^n \to \ma
 </ul>
 <hr />
 <h3 id="q22-state-the-singular-value-decomposition-svd-theorem-and-the-eckart-young-mirsky-theorem-how-does-svd-enable-low-rank-adaptation-lora-in-llms">Q2.2: State the Singular Value Decomposition (SVD) theorem and the Eckart-Young-Mirsky theorem. How does SVD enable low-rank adaptation (LoRA) in LLMs?<a class="headerlink" href="#q22-state-the-singular-value-decomposition-svd-theorem-and-the-eckart-young-mirsky-theorem-how-does-svd-enable-low-rank-adaptation-lora-in-llms" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>SVD Theorem</strong>:
-  Any real matrix <span class="arithmatex">\(\mathbf{A} \in \mathbb{R}^{m \times n}\)</span> can be factored as:</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>SVD Theorem</strong>:
+  Any real matrix <span class="arithmatex">\(\mathbf{A} \in \mathbb{R}^{m \times n}\)</span> can be factored as:</li>
+</ul>
 <p>$<span class="arithmatex">\(\mathbf{A} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^T = \sum_{i=1}^r \sigma_i \mathbf{u}_i \mathbf{v}_i^T\)</span>$</p>
-<p>Where <span class="arithmatex">\(\mathbf{U} \in \mathbb{R}^{m \times m}\)</span> and <span class="arithmatex">\(\mathbf{V} \in \mathbb{R}^{n \times n}\)</span> are orthogonal matrices (<span class="arithmatex">\(\mathbf{U}^T \mathbf{U} = \mathbf{I}\)</span>, <span class="arithmatex">\(\mathbf{V}^T \mathbf{V} = \mathbf{I}\)</span>), and <span class="arithmatex">\(\mathbf{\Sigma} \in \mathbb{R}^{m \times n}\)</span> contains singular values <span class="arithmatex">\(\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r &gt; 0\)</span>.
-- <strong>Eckart-Young-Mirsky Theorem</strong>:
-  The optimal rank-<span class="arithmatex">\(k\)</span> approximation <span class="arithmatex">\(\mathbf{A}_k\)</span> minimizing the Frobenius norm error <span class="arithmatex">\(\|\mathbf{A} - \mathbf{A}_k\|_F\)</span> is obtained by truncating the SVD at the top-<span class="arithmatex">\(k\)</span> singular components:</p>
+<p>Where <span class="arithmatex">\(\mathbf{U} \in \mathbb{R}^{m \times m}\)</span> and <span class="arithmatex">\(\mathbf{V} \in \mathbb{R}^{n \times n}\)</span> are orthogonal matrices (<span class="arithmatex">\(\mathbf{U}^T \mathbf{U} = \mathbf{I}\)</span>, <span class="arithmatex">\(\mathbf{V}^T \mathbf{V} = \mathbf{I}\)</span>), and <span class="arithmatex">\(\mathbf{\Sigma} \in \mathbb{R}^{m \times n}\)</span> contains singular values <span class="arithmatex">\(\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r &gt; 0\)</span>.</p>
+<ul>
+<li><strong>Eckart-Young-Mirsky Theorem</strong>:
+  The optimal rank-<span class="arithmatex">\(k\)</span> approximation <span class="arithmatex">\(\mathbf{A}_k\)</span> minimizing the Frobenius norm error <span class="arithmatex">\(\|\mathbf{A} - \mathbf{A}_k\|_F\)</span> is obtained by truncating the SVD at the top-<span class="arithmatex">\(k\)</span> singular components:</li>
+</ul>
 <p>$<span class="arithmatex">\(\mathbf{A}_k = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T \quad \text{with error} \quad \|\mathbf{A} - \mathbf{A}_k\|_F = \sqrt{\sum_{i=k+1}^r \sigma_i^2}\)</span>$</p>
 <ul>
 <li><strong>Connection to LoRA</strong>:</li>
@@ -4174,16 +4186,18 @@ For general optimization problem:</p>
 <div class="arithmatex">\[\min_{\mathbf{x}} f(\mathbf{x}) \quad \text{s.t.} \quad g_i(\mathbf{x}) \le 0 \; (i=1,\dots,m), \quad h_j(\mathbf{x}) = 0 \; (j=1,\dots,p)\]</div>
 <p>The Lagrangian is:</p>
 <div class="arithmatex">\[\mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}, \boldsymbol{\nu}) = f(\mathbf{x}) + \sum_{i=1}^m \lambda_i g_i(\mathbf{x}) + \sum_{j=1}^p \nu_j h_j(\mathbf{x})\]</div>
-<p>The KKT first-order conditions necessary for optimality <span class="arithmatex">\(\mathbf{x}^*\)</span>:
-1. <strong>Stationarity</strong>: <span class="arithmatex">\(\nabla_{\mathbf{x}} \mathcal{L}(\mathbf{x}^*, \boldsymbol{\lambda}^*, \boldsymbol{\nu}^*) = \mathbf{0}\)</span>.
-2. <strong>Primal Feasibility</strong>: <span class="arithmatex">\(g_i(\mathbf{x}^*) \le 0\)</span> and <span class="arithmatex">\(h_j(\mathbf{x}^*) = 0\)</span>.
-3. <strong>Dual Feasibility</strong>: <span class="arithmatex">\(\lambda_i^* \ge 0\)</span>.
-4. <strong>Complementary Slackness</strong>: <span class="arithmatex">\(\lambda_i^* g_i(\mathbf{x}^*) = 0 \quad \forall i \in \{1, \dots, m\}\)</span>.
-- <strong>SVM Interpretation</strong>:
+<p>The KKT first-order conditions necessary for optimality <span class="arithmatex">\(\mathbf{x}^*\)</span>:</p>
+<ol>
+<li><strong>Stationarity</strong>: <span class="arithmatex">\(\nabla_{\mathbf{x}} \mathcal{L}(\mathbf{x}^*, \boldsymbol{\lambda}^*, \boldsymbol{\nu}^*) = \mathbf{0}\)</span>.</li>
+<li><strong>Primal Feasibility</strong>: <span class="arithmatex">\(g_i(\mathbf{x}^*) \le 0\)</span> and <span class="arithmatex">\(h_j(\mathbf{x}^*) = 0\)</span>.</li>
+<li><strong>Dual Feasibility</strong>: <span class="arithmatex">\(\lambda_i^* \ge 0\)</span>.</li>
+<li><strong>Complementary Slackness</strong>: <span class="arithmatex">\(\lambda_i^* g_i(\mathbf{x}^*) = 0 \quad \forall i \in \{1, \dots, m\}\)</span>.</li>
+<li><strong>SVM Interpretation</strong>:
   In a hard-margin SVM, constraints are <span class="arithmatex">\(g_i(\mathbf{w}, b) = 1 - y_i(\mathbf{w}^T \mathbf{x}_i + b) \le 0\)</span>.
-  By complementary slackness: <span class="arithmatex">\(\alpha_i [1 - y_i(\mathbf{w}^T \mathbf{x}_i + b)] = 0\)</span>:
-  - For data points strictly outside the margin, <span class="arithmatex">\(1 - y_i(\mathbf{w}^T \mathbf{x}_i + b) &lt; 0 \implies \alpha_i = 0\)</span>. These points exert zero influence on the decision boundary.
-  - Only points lying directly on the margin boundary satisfy <span class="arithmatex">\(1 - y_i(\mathbf{w}^T \mathbf{x}_i + b) = 0\)</span>, yielding <span class="arithmatex">\(\alpha_i &gt; 0\)</span>. These points are the <strong>Support Vectors</strong>, proving that the SVM solution is sparse and determined solely by boundary instances.</p>
+  By complementary slackness: <span class="arithmatex">\(\alpha_i [1 - y_i(\mathbf{w}^T \mathbf{x}_i + b)] = 0\)</span>:</li>
+<li>For data points strictly outside the margin, <span class="arithmatex">\(1 - y_i(\mathbf{w}^T \mathbf{x}_i + b) &lt; 0 \implies \alpha_i = 0\)</span>. These points exert zero influence on the decision boundary.</li>
+<li>Only points lying directly on the margin boundary satisfy <span class="arithmatex">\(1 - y_i(\mathbf{w}^T \mathbf{x}_i + b) = 0\)</span>, yielding <span class="arithmatex">\(\alpha_i &gt; 0\)</span>. These points are the <strong>Support Vectors</strong>, proving that the SVM solution is sparse and determined solely by boundary instances.</li>
+</ol>
 <hr />
 <h2 id="4-domain-3-classical-machine-learning-tree-algorithms">4. Domain 3: Classical Machine Learning &amp; Tree Algorithms<a class="headerlink" href="#4-domain-3-classical-machine-learning-tree-algorithms" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
@@ -4239,8 +4253,10 @@ Let <span class="arithmatex">\(f_m(\mathbf{x})\)</span> be the prediction of the
 <p><strong>Model Answer:</strong><br />
 For a mini-batch <span class="arithmatex">\(\mathcal{B} = \{x_1, \dots, x_m\}\)</span>, Batch Normalization computes:</p>
 <div class="arithmatex">\[\mu_{\mathcal{B}} = \frac{1}{m} \sum_{i=1}^m x_i, \quad \sigma_{\mathcal{B}}^2 = \frac{1}{m} \sum_{i=1}^m (x_i - \mu_{\mathcal{B}})^2, \quad \hat{x}_i = \frac{x_i - \mu_{\mathcal{B}}}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}}, \quad y_i = \gamma \hat{x}_i + \beta\]</div>
-<p>Let downstream gradient be <span class="arithmatex">\(\frac{\partial \mathcal{L}}{\partial y_i}\)</span>.
-1. Gradients with respect to scale and shift parameters:</p>
+<p>Let downstream gradient be <span class="arithmatex">\(\frac{\partial \mathcal{L}}{\partial y_i}\)</span>.</p>
+<ol>
+<li>Gradients with respect to scale and shift parameters:</li>
+</ol>
 <p>$<span class="arithmatex">\(\frac{\partial \mathcal{L}}{\partial \gamma} = \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial y_i} \hat{x}_i, \quad \frac{\partial \mathcal{L}}{\partial \beta} = \sum_{i=1}^m \frac{\partial \mathcal{L}}{\partial y_i}\)</span>$</p>
 <ol>
 <li>Let downstream gradient through normalized activations be <span class="arithmatex">\(\frac{\partial \mathcal{L}}{\partial \hat{x}_i} = \frac{\partial \mathcal{L}}{\partial y_i} \gamma\)</span>.</li>
@@ -4277,8 +4293,10 @@ By the chain rule, the gradient between layer <span class="arithmatex">\(l\)</sp
 <p><strong>Model Answer:</strong><br />
 Let components of query vector <span class="arithmatex">\(\mathbf{q}\)</span> and key vector <span class="arithmatex">\(\mathbf{k}\)</span> be independent and identically distributed (i.i.d.) random variables with mean zero and unit variance:</p>
 <div class="arithmatex">\[\mathbb{E}[q_i] = \mathbb{E}[k_i] = 0, \quad \text{Var}(q_i) = \text{Var}(k_i) = 1 \quad \forall i \in \{1, \dots, d_k\}\]</div>
-<p>The dot product is <span class="arithmatex">\(S = \mathbf{q} \cdot \mathbf{k} = \sum_{i=1}^{d_k} q_i k_i\)</span>.
-1. <strong>Expectation of <span class="arithmatex">\(S\)</span></strong>:</p>
+<p>The dot product is <span class="arithmatex">\(S = \mathbf{q} \cdot \mathbf{k} = \sum_{i=1}^{d_k} q_i k_i\)</span>.</p>
+<ol>
+<li><strong>Expectation of <span class="arithmatex">\(S\)</span></strong>:</li>
+</ol>
 <p>$<span class="arithmatex">\(\mathbb{E}[S] = \sum_{i=1}^{d_k} \mathbb{E}[q_i k_i] = \sum_{i=1}^{d_k} \mathbb{E}[q_i] \mathbb{E}[k_i] = 0\)</span>$</p>
 <ol>
 <li><strong>Variance of <span class="arithmatex">\(S\)</span></strong>:
@@ -4293,9 +4311,11 @@ Let components of query vector <span class="arithmatex">\(\mathbf{q}\)</span> an
   The derivative of softmax is:</li>
 </ul>
 <p>$<span class="arithmatex">\(\frac{\partial \text{softmax}(z_i)}{\partial z_j} = \text{softmax}(z_i)(\delta_{ij} - \text{softmax}(z_j))\)</span>$</p>
-<p>When <span class="arithmatex">\(\text{softmax}(z_i) \to 1\)</span> and all other elements <span class="arithmatex">\(\to 0\)</span>, these derivatives vanish to zero (<span class="arithmatex">\(\sim 0\)</span>), completely halting backpropagation learning.
-- <strong>Scaling Solution</strong>:
-  Dividing by <span class="arithmatex">\(\sqrt{d_k}\)</span> normalizes variance back to unity:</p>
+<p>When <span class="arithmatex">\(\text{softmax}(z_i) \to 1\)</span> and all other elements <span class="arithmatex">\(\to 0\)</span>, these derivatives vanish to zero (<span class="arithmatex">\(\sim 0\)</span>), completely halting backpropagation learning.</p>
+<ul>
+<li><strong>Scaling Solution</strong>:
+  Dividing by <span class="arithmatex">\(\sqrt{d_k}\)</span> normalizes variance back to unity:</li>
+</ul>
 <p>$<span class="arithmatex">\(\text{Var}\left( \frac{\mathbf{q} \cdot \mathbf{k}}{\sqrt{d_k}} \right) = \frac{1}{d_k} \text{Var}(\mathbf{q} \cdot \mathbf{k}) = \frac{d_k}{d_k} = 1\)</span>$</p>
 <p>Preserving gradient flow regardless of head dimension.</p>
 <hr />
@@ -4323,32 +4343,41 @@ Under the <strong>Bradley-Terry (BT)</strong> preference framework, the probabil
     MLOpsSystem --&gt; ContinuousBatch["Continuous Batching\nToken-level iteration scheduling evicts completed sequences instantly"]
     MLOpsSystem --&gt; StatisticalDrift["Mathematical Drift Detection\nK-S test sup|F1 - F2| vs PSI sum (A - E) * ln(A/E) with Bonferroni correction"]</code></pre>
 <h3 id="q61-detail-how-pagedattention-solves-the-internal-and-external-gpu-memory-fragmentation-problem-in-llm-serving">Q6.1: Detail how PagedAttention solves the internal and external GPU memory fragmentation problem in LLM serving.<a class="headerlink" href="#q61-detail-how-pagedattention-solves-the-internal-and-external-gpu-memory-fragmentation-problem-in-llm-serving" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>The Classical Serving Problem</strong>:
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>The Classical Serving Problem</strong>:
   In standard Transformer serving frameworks, the KV cache for a sequence is allocated as a contiguous memory tensor sized to the maximum possible sequence length (<span class="arithmatex">\(L_{\max} = 4,096\)</span> tokens).
-  This causes three catastrophic inefficiencies:
-  1. <em>Internal Fragmentation</em>: A request generating only 50 tokens reserves memory for 4,096 tokens (<span class="arithmatex">\(&gt;98\%\)</span> allocated memory sits completely unused).
-  2. <em>External Fragmentation</em>: Variable request lengths leave fragmented memory holes between allocations that cannot satisfy new incoming requests.
-  3. <em>Zero Memory Sharing</em>: Parallel sampling beams or shared system prompt prefixes must duplicate identical KV cache activations.
-  In production, these issues limit effective GPU memory utilization to <span class="arithmatex">\(20\% - 40\%\)</span>.
-- <strong>PagedAttention Solution</strong>:
-  Inspired by operating system virtual memory paging:
-  1. <em>Physical Memory Blocks</em>: The GPU KV cache pool is partitioned into fixed-size physical blocks (e.g. 16 tokens per block).
-  2. <em>Block Tables (Logical to Physical Mapping)</em>: The serving engine maintains a block table mapping a sequence’s logical token positions to non-contiguous physical memory blocks.
-  3. <em>On-Demand Allocation</em>: Blocks are allocated dynamically only when newly generated tokens cross block boundaries.
-  4. <em>Copy-on-Write Memory Sharing</em>: Prompts sharing common prefixes (e.g., system prompts or parallel generation branches) point to identical physical blocks. A new block is allocated only when a branch writes a distinct token.
-- <em>Outcome</em>: Memory fragmentation drops from <span class="arithmatex">\(&gt;60\%\)</span> to <span class="arithmatex">\(&lt;4\%\)</span>, enabling <span class="arithmatex">\(2\times - 4\times\)</span> larger concurrent batch sizes on identical GPU hardware.</p>
+  This causes three catastrophic inefficiencies:</li>
+<li><em>Internal Fragmentation</em>: A request generating only 50 tokens reserves memory for 4,096 tokens (<span class="arithmatex">\(&gt;98\%\)</span> allocated memory sits completely unused).</li>
+<li><em>External Fragmentation</em>: Variable request lengths leave fragmented memory holes between allocations that cannot satisfy new incoming requests.</li>
+<li>
+<p><em>Zero Memory Sharing</em>: Parallel sampling beams or shared system prompt prefixes must duplicate identical KV cache activations.
+  In production, these issues limit effective GPU memory utilization to <span class="arithmatex">\(20\% - 40\%\)</span>.</p>
+</li>
+<li>
+<p><strong>PagedAttention Solution</strong>:
+  Inspired by operating system virtual memory paging:</p>
+</li>
+<li><em>Physical Memory Blocks</em>: The GPU KV cache pool is partitioned into fixed-size physical blocks (e.g. 16 tokens per block).</li>
+<li><em>Block Tables (Logical to Physical Mapping)</em>: The serving engine maintains a block table mapping a sequence’s logical token positions to non-contiguous physical memory blocks.</li>
+<li><em>On-Demand Allocation</em>: Blocks are allocated dynamically only when newly generated tokens cross block boundaries.</li>
+<li><em>Copy-on-Write Memory Sharing</em>: Prompts sharing common prefixes (e.g., system prompts or parallel generation branches) point to identical physical blocks. A new block is allocated only when a branch writes a distinct token.</li>
+<li><em>Outcome</em>: Memory fragmentation drops from <span class="arithmatex">\(&gt;60\%\)</span> to <span class="arithmatex">\(&lt;4\%\)</span>, enabling <span class="arithmatex">\(2\times - 4\times\)</span> larger concurrent batch sizes on identical GPU hardware.</li>
+</ul>
 <hr />
 <h3 id="q62-walk-through-the-complete-capacity-estimation-for-a-global-multi-tenant-vector-database-hosting-1-billion-1536-dimensional-vectors-calculate-memory-disk-and-index-search-latency">Q6.2: Walk through the complete capacity estimation for a global multi-tenant vector database hosting 1 billion 1536-dimensional vectors. Calculate memory, disk, and index search latency.<a class="headerlink" href="#q62-walk-through-the-complete-capacity-estimation-for-a-global-multi-tenant-vector-database-hosting-1-billion-1536-dimensional-vectors-calculate-memory-disk-and-index-search-latency" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-1. <strong>Raw Vector Dimension &amp; Memory</strong>:
-   - Total vectors <span class="arithmatex">\(N = 10^9\)</span>.
-   - Dimension <span class="arithmatex">\(d = 1,536\)</span>.
-   - At FP32 precision (<span class="arithmatex">\(4\text{ bytes/float}\)</span>):</p>
-<div class="language-text highlight"><pre><span></span><code> $$\text{Raw Vector Storage} = 10^9 \times 1,536 \times 4\text{ bytes} = 6.144\text{ TB}$$
-</code></pre></div>
-<ul>
-<li>At FP16 precision (<span class="arithmatex">\(2\text{ bytes/float}\)</span>): <span class="arithmatex">\(3.072\text{ TB}\)</span>.</li>
+<p><strong>Model Answer:</strong>  </p>
+<ol>
+<li><strong>Raw Vector Dimension &amp; Memory</strong>:</li>
+<li>Total vectors <span class="arithmatex">\(N = 10^9\)</span>.</li>
+<li>Dimension <span class="arithmatex">\(d = 1,536\)</span>.</li>
+<li>
+<p>At FP32 precision (<span class="arithmatex">\(4\text{ bytes/float}\)</span>):</p>
+<p>$<span class="arithmatex">\(\text{Raw Vector Storage} = 10^9 \times 1,536 \times 4\text{ bytes} = 6.144\text{ TB}\)</span>$</p>
+</li>
+<li>
+<p>At FP16 precision (<span class="arithmatex">\(2\text{ bytes/float}\)</span>): <span class="arithmatex">\(3.072\text{ TB}\)</span>.</p>
+</li>
 <li><strong>HNSW Graph Index Overhead</strong>:</li>
 <li>HNSW constructs multi-layer proximity graphs.</li>
 <li>
@@ -4368,7 +4397,7 @@ Under the <strong>Bradley-Terry (BT)</strong> preference framework, the probabil
 <li><strong>Latency Sizing</strong>:</li>
 <li>HNSW graph traversal complexity scales logarithmically: <span class="arithmatex">\(\mathcal{O}(\log N) \approx \log_2(10^9) \approx 30\text{ hops}\)</span>.</li>
 <li>With SSD NVMe vector offloading (using Product Quantization - PQ with <span class="arithmatex">\(64\times\)</span> compression): In-memory compressed vector index prunes search space in <span class="arithmatex">\(&lt;10\text{ ms}\)</span>, fetching full uncompressed vectors from NVMe disk in <span class="arithmatex">\(&lt;15\text{ ms}\)</span>.</li>
-</ul>
+</ol>
 <hr />
 <h2 id="8-common-pitfalls-interview-strategies">8. Common Pitfalls &amp; Interview Strategies<a class="headerlink" href="#8-common-pitfalls-interview-strategies" title="Permanent link">&para;</a></h2>
 <ol>
@@ -4378,17 +4407,17 @@ Under the <strong>Bradley-Terry (BT)</strong> preference framework, the probabil
 </ol>
 <hr />
 <h2 id="9-mastery-ladder">9. Mastery Ladder<a class="headerlink" href="#9-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Detail PyMalloc memory hierarchy (arenas, pools, blocks) and size class allocations.</li>
-<li>[ ] <strong>L2:</strong> Explain the GIL C-level implementation and the PEP 703 free-threading architecture.</li>
-<li>[ ] <strong>L3:</strong> Formulate reverse-mode vs forward-mode automatic differentiation using Vector-Jacobian Products.</li>
-<li>[ ] <strong>L4:</strong> Derive the optimal leaf weight and split gain equation for XGBoost second-order Taylor expansion.</li>
-<li>[ ] <strong>L5:</strong> Prove the Bias-Variance-Covariance ensemble decomposition and why Bagging reduces variance.</li>
-<li>[ ] <strong>L6:</strong> Derive the analytic backward pass of Batch Normalization.</li>
-<li>[ ] <strong>L7:</strong> Prove why residual connections prevent vanishing gradients in arbitrarily deep neural networks.</li>
-<li>[ ] <strong>L8:</strong> Prove why scaled dot-product attention scales by <span class="arithmatex">\(\frac{1}{\sqrt{d_k}}\)</span> using random variable variance.</li>
-<li>[ ] <strong>L9:</strong> Derive the Direct Preference Optimization (DPO) objective from the Bradley-Terry preference model.</li>
-<li>[ ] <strong>L10:</strong> Formulate PagedAttention virtual block memory management and calculate multi-node hardware sizing for LLM serving.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Detail PyMalloc memory hierarchy (arenas, pools, blocks) and size class allocations.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Explain the GIL C-level implementation and the PEP 703 free-threading architecture.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Formulate reverse-mode vs forward-mode automatic differentiation using Vector-Jacobian Products.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Derive the optimal leaf weight and split gain equation for XGBoost second-order Taylor expansion.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Prove the Bias-Variance-Covariance ensemble decomposition and why Bagging reduces variance.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Derive the analytic backward pass of Batch Normalization.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Prove why residual connections prevent vanishing gradients in arbitrarily deep neural networks.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Prove why scaled dot-product attention scales by <span class="arithmatex">\(\frac{1}{\sqrt{d_k}}\)</span> using random variable variance.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Derive the Direct Preference Optimization (DPO) objective from the Bradley-Terry preference model.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Formulate PagedAttention virtual block memory management and calculate multi-node hardware sizing for LLM serving.</li>
 </ul>
 
 

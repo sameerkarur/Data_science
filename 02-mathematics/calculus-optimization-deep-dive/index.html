@@ -4386,10 +4386,14 @@ H = Q \Lambda Q^T = \sum_{i=1}^d \lambda_i \mathbf{q}_i \mathbf{q}_i^T
 f(\mathbf{x}_0 + \Delta \mathbf{x}) = \underbrace{f(\mathbf{x}_0)}_{\text{0th-Order}} + \underbrace{\nabla f(\mathbf{x}_0)^T \Delta \mathbf{x}}_{\text{1st-Order (Linear)}} + \underbrace{\frac{1}{2} \Delta \mathbf{x}^T H(\mathbf{x}_0) \Delta \mathbf{x}}_{\text{2nd-Order (Quadratic)}} + \mathcal{O}(\|\Delta \mathbf{x}\|^3)
 \]</div>
 <ul>
-<li><strong>First-Order Methods (Gradient Descent)</strong> use the linear approximation:
-  $<span class="arithmatex">\(f(\mathbf{x}_0 + \Delta \mathbf{x}) \approx f(\mathbf{x}_0) + \nabla f(\mathbf{x}_0)^T \Delta \mathbf{x}\)</span>$</li>
-<li><strong>Second-Order Methods (Newton's Method)</strong> use the full quadratic model including the Hessian:
-  $<span class="arithmatex">\(m(\Delta \mathbf{x}) = f(\mathbf{x}_0) + \nabla f(\mathbf{x}_0)^T \Delta \mathbf{x} + \frac{1}{2} \Delta \mathbf{x}^T H(\mathbf{x}_0) \Delta \mathbf{x}\)</span>$</li>
+<li>
+<p><strong>First-Order Methods (Gradient Descent)</strong> use the linear approximation:
+  $<span class="arithmatex">\(f(\mathbf{x}_0 + \Delta \mathbf{x}) \approx f(\mathbf{x}_0) + \nabla f(\mathbf{x}_0)^T \Delta \mathbf{x}\)</span>$</p>
+</li>
+<li>
+<p><strong>Second-Order Methods (Newton's Method)</strong> use the full quadratic model including the Hessian:
+  $<span class="arithmatex">\(m(\Delta \mathbf{x}) = f(\mathbf{x}_0) + \nabla f(\mathbf{x}_0)^T \Delta \mathbf{x} + \frac{1}{2} \Delta \mathbf{x}^T H(\mathbf{x}_0) \Delta \mathbf{x}\)</span>$</p>
+</li>
 </ul>
 <h3 id="42-mathematical-convexity">4.2 Mathematical Convexity<a class="headerlink" href="#42-mathematical-convexity" title="Permanent link">&para;</a></h3>
 <p>A set <span class="arithmatex">\(\mathcal{C} \subseteq \mathbb{R}^d\)</span> is convex if for all <span class="arithmatex">\(\mathbf{x}, \mathbf{y} \in \mathcal{C}\)</span> and <span class="arithmatex">\(\theta \in [0, 1]\)</span>:</p>
@@ -4402,10 +4406,14 @@ f(\theta \mathbf{x} + (1 - \theta)\mathbf{y}) \le \theta f(\mathbf{x}) + (1 - \t
 \]</div>
 <h4 id="equivalent-first-and-second-order-characterizations">Equivalent First- and Second-Order Characterizations:<a class="headerlink" href="#equivalent-first-and-second-order-characterizations" title="Permanent link">&para;</a></h4>
 <ol>
-<li><strong>First-Order Condition</strong>: <span class="arithmatex">\(f\)</span> is convex if and only if the tangent hyperplane always lies below the function:
-   $<span class="arithmatex">\(f(\mathbf{y}) \ge f(\mathbf{x}) + \nabla f(\mathbf{x})^T (\mathbf{y} - \mathbf{x}) \quad \forall \mathbf{x}, \mathbf{y}\)</span>$</li>
-<li><strong>Second-Order Condition</strong>: A twice-differentiable function is convex if and only if its Hessian is positive semi-definite everywhere:
-   $<span class="arithmatex">\(\nabla^2 f(\mathbf{x}) \succeq 0 \quad \forall \mathbf{x} \in \mathcal{C}\)</span>$</li>
+<li>
+<p><strong>First-Order Condition</strong>: <span class="arithmatex">\(f\)</span> is convex if and only if the tangent hyperplane always lies below the function:
+   $<span class="arithmatex">\(f(\mathbf{y}) \ge f(\mathbf{x}) + \nabla f(\mathbf{x})^T (\mathbf{y} - \mathbf{x}) \quad \forall \mathbf{x}, \mathbf{y}\)</span>$</p>
+</li>
+<li>
+<p><strong>Second-Order Condition</strong>: A twice-differentiable function is convex if and only if its Hessian is positive semi-definite everywhere:
+   $<span class="arithmatex">\(\nabla^2 f(\mathbf{x}) \succeq 0 \quad \forall \mathbf{x} \in \mathcal{C}\)</span>$</p>
+</li>
 </ol>
 <p><strong>Fundamental Property of Convex Functions:</strong> Any local minimum of a convex function is guaranteed to be a <strong>global minimum</strong>.</p>
 <hr />
@@ -4421,12 +4429,16 @@ f(\theta \mathbf{x} + (1 - \theta)\mathbf{y}) \le \theta f(\mathbf{x}) + (1 - \t
 \frac{\partial \mathbf{y}}{\partial \mathbf{x}} = \frac{\partial \mathbf{y}}{\partial \mathbf{u}} \frac{\partial \mathbf{u}}{\partial \mathbf{x}} = J_{\mathbf{f}} J_{\mathbf{g}}
 \]</div>
 <h3 id="52-forward-mode-vs-reverse-mode-autodiff">5.2 Forward-Mode vs. Reverse-Mode Autodiff<a class="headerlink" href="#52-forward-mode-vs-reverse-mode-autodiff" title="Permanent link">&para;</a></h3>
-<p>Consider a function <span class="arithmatex">\(\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m\)</span>:
-- <strong>Forward-Mode (Jacobian-Vector Products - JVPs)</strong>: Propagates derivatives <span class="arithmatex">\(\frac{\partial v}{\partial x_{\text{in}}}\)</span> forward from inputs to outputs alongside function evaluation. Computing the full Jacobian requires <span class="arithmatex">\(n\)</span> forward passes (one per input dimension).
-- <strong>Reverse-Mode (Vector-Jacobian Products - VJPs)</strong>: First evaluates all operations forward (recording the DAG and intermediate values), then sweeps <strong>backward</strong> from the scalar loss <span class="arithmatex">\(L \in \mathbb{R}\)</span> to all inputs.</p>
-<p>In machine learning, we optimize a <strong>single scalar loss</strong> <span class="arithmatex">\(L \in \mathbb{R}\)</span> with respect to <span class="arithmatex">\(P = 10^9\)</span> parameters (<span class="arithmatex">\(n = 10^9, m = 1\)</span>).
-- Forward mode requires <span class="arithmatex">\(10^9\)</span> forward passes.
-- Reverse mode requires <strong>exactly ONE backward pass</strong>!</p>
+<p>Consider a function <span class="arithmatex">\(\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m\)</span>:</p>
+<ul>
+<li><strong>Forward-Mode (Jacobian-Vector Products - JVPs)</strong>: Propagates derivatives <span class="arithmatex">\(\frac{\partial v}{\partial x_{\text{in}}}\)</span> forward from inputs to outputs alongside function evaluation. Computing the full Jacobian requires <span class="arithmatex">\(n\)</span> forward passes (one per input dimension).</li>
+<li><strong>Reverse-Mode (Vector-Jacobian Products - VJPs)</strong>: First evaluates all operations forward (recording the DAG and intermediate values), then sweeps <strong>backward</strong> from the scalar loss <span class="arithmatex">\(L \in \mathbb{R}\)</span> to all inputs.</li>
+</ul>
+<p>In machine learning, we optimize a <strong>single scalar loss</strong> <span class="arithmatex">\(L \in \mathbb{R}\)</span> with respect to <span class="arithmatex">\(P = 10^9\)</span> parameters (<span class="arithmatex">\(n = 10^9, m = 1\)</span>).</p>
+<ul>
+<li>Forward mode requires <span class="arithmatex">\(10^9\)</span> forward passes.</li>
+<li>Reverse mode requires <strong>exactly ONE backward pass</strong>!</li>
+</ul>
 <pre class="mermaid"><code>flowchart LR
     subgraph "Forward Pass (Evaluation)"
         X["Inputs: x1, x2"] --&gt; N1["Node v1 = x1 * x2"]
@@ -4479,16 +4491,26 @@ f(\theta \mathbf{x} + (1 - \theta)\mathbf{y}) \le \theta f(\mathbf{x}) + (1 - \t
 <p>Adam combines the advantages of Momentum (first moment <span class="arithmatex">\(\mathbf{m}_t\)</span>) and RMSprop (second moment <span class="arithmatex">\(\mathbf{v}_t\)</span>).</p>
 <h4 id="algorithm-equations">Algorithm Equations:<a class="headerlink" href="#algorithm-equations" title="Permanent link">&para;</a></h4>
 <ol>
-<li>Update biased first moment estimate:
-   $<span class="arithmatex">\(\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1 - \beta_1) \mathbf{g}_t\)</span>$</li>
-<li>Update biased second raw moment estimate:
-   $<span class="arithmatex">\(\mathbf{v}_t = \beta_2 \mathbf{v}_{t-1} + (1 - \beta_2) \mathbf{g}_t^2\)</span>$</li>
-<li>Compute bias-corrected first moment:
-   $<span class="arithmatex">\(\hat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1 - \beta_1^t}\)</span>$</li>
-<li>Compute bias-corrected second moment:
-   $<span class="arithmatex">\(\hat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1 - \beta_2^t}\)</span>$</li>
-<li>Apply parameter update:
-   $<span class="arithmatex">\(\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \frac{\eta}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon} \odot \hat{\mathbf{m}}_t\)</span>$</li>
+<li>
+<p>Update biased first moment estimate:
+   $<span class="arithmatex">\(\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1 - \beta_1) \mathbf{g}_t\)</span>$</p>
+</li>
+<li>
+<p>Update biased second raw moment estimate:
+   $<span class="arithmatex">\(\mathbf{v}_t = \beta_2 \mathbf{v}_{t-1} + (1 - \beta_2) \mathbf{g}_t^2\)</span>$</p>
+</li>
+<li>
+<p>Compute bias-corrected first moment:
+   $<span class="arithmatex">\(\hat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1 - \beta_1^t}\)</span>$</p>
+</li>
+<li>
+<p>Compute bias-corrected second moment:
+   $<span class="arithmatex">\(\hat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1 - \beta_2^t}\)</span>$</p>
+</li>
+<li>
+<p>Apply parameter update:
+   $<span class="arithmatex">\(\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \frac{\eta}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon} \odot \hat{\mathbf{m}}_t\)</span>$</p>
+</li>
 </ol>
 <p>Standard default hyperparameters: <span class="arithmatex">\(\eta = 0.001\)</span>, <span class="arithmatex">\(\beta_1 = 0.9\)</span>, <span class="arithmatex">\(\beta_2 = 0.999\)</span>, <span class="arithmatex">\(\epsilon = 10^{-8}\)</span>.</p>
 <pre class="mermaid"><code>flowchart TD
@@ -4553,10 +4575,12 @@ m(\Delta \mathbf{x}) = f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^T \Delta \mathbf
 </ol>
 <hr />
 <h2 id="7-python-implementation-autodiff-engine-2d-optimizer-suite">7. Python Implementation: Autodiff Engine &amp; 2D Optimizer Suite<a class="headerlink" href="#7-python-implementation-autodiff-engine-2d-optimizer-suite" title="Permanent link">&para;</a></h2>
-<p>Below is a complete, runnable script featuring:
-1. A micro <strong>Scalar Autodiff Engine</strong> (<code>Value</code>) building dynamic computational DAGs.
-2. From-scratch optimizers: <strong>SGD</strong>, <strong>Momentum</strong>, <strong>RMSprop</strong>, and <strong>Adam</strong>.
-3. Benchmark optimization on the notorious non-convex <strong>Beale Function</strong> (<span class="arithmatex">\(f(x, y) = (1.5 - x + xy)^2 + (2.25 - x + xy^2)^2 + (2.625 - x + xy^3)^2\)</span>, global minimum at <span class="arithmatex">\((3.0, 0.5)\)</span>).</p>
+<p>Below is a complete, runnable script featuring:</p>
+<ol>
+<li>A micro <strong>Scalar Autodiff Engine</strong> (<code>Value</code>) building dynamic computational DAGs.</li>
+<li>From-scratch optimizers: <strong>SGD</strong>, <strong>Momentum</strong>, <strong>RMSprop</strong>, and <strong>Adam</strong>.</li>
+<li>Benchmark optimization on the notorious non-convex <strong>Beale Function</strong> (<span class="arithmatex">\(f(x, y) = (1.5 - x + xy)^2 + (2.25 - x + xy^2)^2 + (2.625 - x + xy^3)^2\)</span>, global minimum at <span class="arithmatex">\((3.0, 0.5)\)</span>).</li>
+</ol>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="sd">"""</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="sd">calculus_optimization_deep_dive.py</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="sd">Reverse-mode automatic differentiation engine and 2D optimizer suite.</span>
@@ -4808,13 +4832,17 @@ The second moment follows the identical recurrence <span class="arithmatex">\(\m
 <hr />
 <h3 id="q2-explain-the-fundamental-difference-between-forward-mode-and-reverse-mode-automatic-differentiation-when-is-reverse-mode-computationally-superior">Q2: Explain the fundamental difference between forward-mode and reverse-mode automatic differentiation. When is reverse-mode computationally superior?<a class="headerlink" href="#q2-explain-the-fundamental-difference-between-forward-mode-and-reverse-mode-automatic-differentiation-when-is-reverse-mode-computationally-superior" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-Consider a function <span class="arithmatex">\(\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m\)</span>.
-- <strong>Forward-Mode AD</strong> applies the chain rule from the inside out (from inputs to outputs). It computes <strong>Jacobian-Vector Products (JVPs)</strong>, evaluating <span class="arithmatex">\(\nabla_{\mathbf{x}} v_i\)</span> concurrently with the primal value <span class="arithmatex">\(v_i\)</span>. To obtain the full <span class="arithmatex">\(m \times n\)</span> Jacobian, forward mode must be evaluated <span class="arithmatex">\(n\)</span> times (once per unit basis vector <span class="arithmatex">\(\mathbf{e}_j \in \mathbb{R}^n\)</span>).
-- <strong>Reverse-Mode AD</strong> evaluates the function forward, records the execution graph (tape/DAG), and then propagates derivatives from the outside in (from outputs back to inputs) using <strong>Vector-Jacobian Products (VJPs)</strong>. Computing gradients with respect to all <span class="arithmatex">\(n\)</span> inputs requires <span class="arithmatex">\(m\)</span> backward sweeps.</p>
+Consider a function <span class="arithmatex">\(\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m\)</span>.</p>
+<ul>
+<li><strong>Forward-Mode AD</strong> applies the chain rule from the inside out (from inputs to outputs). It computes <strong>Jacobian-Vector Products (JVPs)</strong>, evaluating <span class="arithmatex">\(\nabla_{\mathbf{x}} v_i\)</span> concurrently with the primal value <span class="arithmatex">\(v_i\)</span>. To obtain the full <span class="arithmatex">\(m \times n\)</span> Jacobian, forward mode must be evaluated <span class="arithmatex">\(n\)</span> times (once per unit basis vector <span class="arithmatex">\(\mathbf{e}_j \in \mathbb{R}^n\)</span>).</li>
+<li><strong>Reverse-Mode AD</strong> evaluates the function forward, records the execution graph (tape/DAG), and then propagates derivatives from the outside in (from outputs back to inputs) using <strong>Vector-Jacobian Products (VJPs)</strong>. Computing gradients with respect to all <span class="arithmatex">\(n\)</span> inputs requires <span class="arithmatex">\(m\)</span> backward sweeps.</li>
+</ul>
 <p><strong>ML Superiority:</strong>
-In deep learning, the loss function maps millions of parameters to a single scalar objective (<span class="arithmatex">\(n \approx 10^7 \text{ to } 10^{11}\)</span>, <span class="arithmatex">\(m = 1\)</span>).
-- Forward mode would require <span class="arithmatex">\(10^{11}\)</span> full network evaluations to get the gradient vector!
-- Reverse mode requires <strong>a single forward pass and a single backward pass</strong>, running in <span class="arithmatex">\(\mathcal{O}(1)\)</span> relative to parameter count <span class="arithmatex">\(n\)</span>. Hence, reverse-mode autodiff is fundamentally necessary for training modern deep models.</p>
+In deep learning, the loss function maps millions of parameters to a single scalar objective (<span class="arithmatex">\(n \approx 10^7 \text{ to } 10^{11}\)</span>, <span class="arithmatex">\(m = 1\)</span>).</p>
+<ul>
+<li>Forward mode would require <span class="arithmatex">\(10^{11}\)</span> full network evaluations to get the gradient vector!</li>
+<li>Reverse mode requires <strong>a single forward pass and a single backward pass</strong>, running in <span class="arithmatex">\(\mathcal{O}(1)\)</span> relative to parameter count <span class="arithmatex">\(n\)</span>. Hence, reverse-mode autodiff is fundamentally necessary for training modern deep models.</li>
+</ul>
 <hr />
 <h3 id="q3-what-is-a-saddle-point-why-are-saddle-points-vastly-more-prevalent-than-local-minima-in-high-dimensional-deep-learning-loss-surfaces-and-how-do-second-order-methods-behave-near-them">Q3: What is a saddle point, why are saddle points vastly more prevalent than local minima in high-dimensional deep learning loss surfaces, and how do second-order methods behave near them?<a class="headerlink" href="#q3-what-is-a-saddle-point-why-are-saddle-points-vastly-more-prevalent-than-local-minima-in-high-dimensional-deep-learning-loss-surfaces-and-how-do-second-order-methods-behave-near-them" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4831,19 +4859,23 @@ $<span class="arithmatex">\(f(\mathbf{x}_t + \Delta \mathbf{x}) \approx m(\Delta
 Differentiating <span class="arithmatex">\(m(\Delta \mathbf{x})\)</span> with respect to <span class="arithmatex">\(\Delta \mathbf{x}\)</span> and setting the derivative to zero:
 $<span class="arithmatex">\(\nabla_{\Delta \mathbf{x}} m(\Delta \mathbf{x}) = \nabla f(\mathbf{x}_t) + H(\mathbf{x}_t) \Delta \mathbf{x} = \mathbf{0} \implies H(\mathbf{x}_t) \Delta \mathbf{x} = -\nabla f(\mathbf{x}_t)\)</span>$
 If <span class="arithmatex">\(H\)</span> is invertible, the optimal step is <span class="arithmatex">\(\Delta \mathbf{x}^* = - [H(\mathbf{x}_t)]^{-1} \nabla f(\mathbf{x}_t)\)</span>.</p>
-<p><strong>Why Impractical in Deep Learning:</strong>
-1. <strong>Memory Complexity:</strong> For <span class="arithmatex">\(P\)</span> parameters, <span class="arithmatex">\(H \in \mathbb{R}^{P \times P}\)</span>. For <span class="arithmatex">\(P = 10^8\)</span>, storing <span class="arithmatex">\(H\)</span> in float32 requires <span class="arithmatex">\(4 \times 10^{16}\)</span> bytes (<span class="arithmatex">\(40\)</span> Petabytes).
-2. <strong>Computational Inversion Cost:</strong> Solving <span class="arithmatex">\(H \Delta \mathbf{x} = -\mathbf{g}\)</span> via Cholesky or LU decomposition requires <span class="arithmatex">\(\mathcal{O}(P^3)\)</span> operations per step.
-3. <strong>Non-Convexity Instability:</strong> In deep nets, <span class="arithmatex">\(H\)</span> is rarely positive definite. Inverting an indefinite Hessian leads directly to saddle points or local maxima.</p>
+<p><strong>Why Impractical in Deep Learning:</strong></p>
+<ol>
+<li><strong>Memory Complexity:</strong> For <span class="arithmatex">\(P\)</span> parameters, <span class="arithmatex">\(H \in \mathbb{R}^{P \times P}\)</span>. For <span class="arithmatex">\(P = 10^8\)</span>, storing <span class="arithmatex">\(H\)</span> in float32 requires <span class="arithmatex">\(4 \times 10^{16}\)</span> bytes (<span class="arithmatex">\(40\)</span> Petabytes).</li>
+<li><strong>Computational Inversion Cost:</strong> Solving <span class="arithmatex">\(H \Delta \mathbf{x} = -\mathbf{g}\)</span> via Cholesky or LU decomposition requires <span class="arithmatex">\(\mathcal{O}(P^3)\)</span> operations per step.</li>
+<li><strong>Non-Convexity Instability:</strong> In deep nets, <span class="arithmatex">\(H\)</span> is rarely positive definite. Inverting an indefinite Hessian leads directly to saddle points or local maxima.</li>
+</ol>
 <hr />
 <h3 id="q5-what-is-the-condition-number-of-the-hessian-matrix-at-a-local-minimum-and-how-does-it-affect-the-convergence-rate-of-first-order-gradient-descent">Q5: What is the condition number of the Hessian matrix at a local minimum, and how does it affect the convergence rate of first-order Gradient Descent?<a class="headerlink" href="#q5-what-is-the-condition-number-of-the-hessian-matrix-at-a-local-minimum-and-how-does-it-affect-the-convergence-rate-of-first-order-gradient-descent" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
 At a local minimum <span class="arithmatex">\(\mathbf{x}^*\)</span> with strictly positive definite Hessian <span class="arithmatex">\(H \succ 0\)</span>, the condition number is:
 $<span class="arithmatex">\(\kappa(H) = \frac{\lambda_{\max}(H)}{\lambda_{\min}(H)} \ge 1\)</span>$
 For a quadratic objective <span class="arithmatex">\(f(\mathbf{x}) = \frac{1}{2} \mathbf{x}^T H \mathbf{x}\)</span>, standard Gradient Descent with optimal learning rate <span class="arithmatex">\(\eta = \frac{2}{\lambda_{\max} + \lambda_{\min}}\)</span> exhibits the linear convergence bound:
-$<span class="arithmatex">\(\|\mathbf{x}_k - \mathbf{x}^*\|_H \le \left( \frac{\kappa(H) - 1}{\kappa(H) + 1} \right)^k \|\mathbf{x}_0 - \mathbf{x}^*\|_H\)</span>$
-- When <span class="arithmatex">\(\kappa(H) \approx 1\)</span> (isotropic, circular contours), <span class="arithmatex">\(\frac{\kappa - 1}{\kappa + 1} \approx 0\)</span>, converging in a single step.
-- When <span class="arithmatex">\(\kappa(H) \gg 1\)</span> (e.g., <span class="arithmatex">\(\kappa = 10^4\)</span>, highly ill-conditioned ravine), <span class="arithmatex">\(\frac{\kappa - 1}{\kappa + 1} \approx 1 - \frac{2}{\kappa} = 0.9998\)</span>. Gradient descent crawls, oscillating violently along the eigenvector of <span class="arithmatex">\(\lambda_{\max}\)</span> while making virtually zero progress along the eigenvector of <span class="arithmatex">\(\lambda_{\min}\)</span>. This necessitates adaptive optimizers (Adam) or batch normalization to condition the landscape.</p>
+$<span class="arithmatex">\(\|\mathbf{x}_k - \mathbf{x}^*\|_H \le \left( \frac{\kappa(H) - 1}{\kappa(H) + 1} \right)^k \|\mathbf{x}_0 - \mathbf{x}^*\|_H\)</span>$</p>
+<ul>
+<li>When <span class="arithmatex">\(\kappa(H) \approx 1\)</span> (isotropic, circular contours), <span class="arithmatex">\(\frac{\kappa - 1}{\kappa + 1} \approx 0\)</span>, converging in a single step.</li>
+<li>When <span class="arithmatex">\(\kappa(H) \gg 1\)</span> (e.g., <span class="arithmatex">\(\kappa = 10^4\)</span>, highly ill-conditioned ravine), <span class="arithmatex">\(\frac{\kappa - 1}{\kappa + 1} \approx 1 - \frac{2}{\kappa} = 0.9998\)</span>. Gradient descent crawls, oscillating violently along the eigenvector of <span class="arithmatex">\(\lambda_{\max}\)</span> while making virtually zero progress along the eigenvector of <span class="arithmatex">\(\lambda_{\min}\)</span>. This necessitates adaptive optimizers (Adam) or batch normalization to condition the landscape.</li>
+</ul>
 <hr />
 <h3 id="q6-derive-the-matrix-calculus-backpropagation-equations-for-a-dense-linear-layer-y-xw-b">Q6: Derive the matrix calculus backpropagation equations for a dense linear layer <span class="arithmatex">\(Y = XW + b\)</span>.<a class="headerlink" href="#q6-derive-the-matrix-calculus-backpropagation-equations-for-a-dense-linear-layer-y-xw-b" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4886,17 +4918,17 @@ This ensures uniform weight decay rate <span class="arithmatex">\(\eta \lambda\)
 <hr />
 <h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
 <p>Complete this checklist to verify your depth in calculus and optimization for ML:</p>
-<ul>
-<li>[ ] <strong>L1:</strong> You can compute partial derivatives, gradients, and directional derivatives by hand.</li>
-<li>[ ] <strong>L2:</strong> You can write out the Jacobian matrix for arbitrary vector-valued functions <span class="arithmatex">\(\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m\)</span>.</li>
-<li>[ ] <strong>L3:</strong> You can construct the Hessian matrix and classify stationary points as local minima, maxima, or saddle points using eigenvalue signs.</li>
-<li>[ ] <strong>L4:</strong> You can state the mathematical definition of convexity and verify it via the second-order Hessian condition (<span class="arithmatex">\(\nabla^2 f \succeq 0\)</span>).</li>
-<li>[ ] <strong>L5:</strong> You can explain the algorithmic difference between forward-mode (JVPs) and reverse-mode (VJPs) automatic differentiation.</li>
-<li>[ ] <strong>L6:</strong> You can derive matrix backpropagation equations for a fully connected dense layer (<span class="arithmatex">\(\frac{\partial L}{\partial W} = X^T G, \frac{\partial L}{\partial X} = G W^T\)</span>).</li>
-<li>[ ] <strong>L7:</strong> You can implement a working scalar automatic differentiation engine (<code>Value</code>) with topological sort DAG evaluation from scratch.</li>
-<li>[ ] <strong>L8:</strong> You can derive the exact bias correction formulas <span class="arithmatex">\(\frac{1}{1-\beta_1^t}\)</span> and <span class="arithmatex">\(\frac{1}{1-\beta_2^t}\)</span> in the Adam optimizer.</li>
-<li>[ ] <strong>L9:</strong> You can explain how the condition number of the Hessian <span class="arithmatex">\(\kappa(H)\)</span> bounds the linear convergence rate of first-order gradient descent.</li>
-<li>[ ] <strong>L10:</strong> You can mathematically explain the distinction between L2 regularization and decoupled weight decay in AdamW.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can compute partial derivatives, gradients, and directional derivatives by hand.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can write out the Jacobian matrix for arbitrary vector-valued functions <span class="arithmatex">\(\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can construct the Hessian matrix and classify stationary points as local minima, maxima, or saddle points using eigenvalue signs.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can state the mathematical definition of convexity and verify it via the second-order Hessian condition (<span class="arithmatex">\(\nabla^2 f \succeq 0\)</span>).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can explain the algorithmic difference between forward-mode (JVPs) and reverse-mode (VJPs) automatic differentiation.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can derive matrix backpropagation equations for a fully connected dense layer (<span class="arithmatex">\(\frac{\partial L}{\partial W} = X^T G, \frac{\partial L}{\partial X} = G W^T\)</span>).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can implement a working scalar automatic differentiation engine (<code>Value</code>) with topological sort DAG evaluation from scratch.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can derive the exact bias correction formulas <span class="arithmatex">\(\frac{1}{1-\beta_1^t}\)</span> and <span class="arithmatex">\(\frac{1}{1-\beta_2^t}\)</span> in the Adam optimizer.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can explain how the condition number of the Hessian <span class="arithmatex">\(\kappa(H)\)</span> bounds the linear convergence rate of first-order gradient descent.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can mathematically explain the distinction between L2 regularization and decoupled weight decay in AdamW.</li>
 </ul>
 
 

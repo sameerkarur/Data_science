@@ -4176,10 +4176,12 @@ V_i = \left\{ \mathbf{x} \in \mathbb{R}^p \;\Big|\; d(\mathbf{x}, \mathbf{x}^{(i
 <div class="arithmatex">\[
 s^p = r \implies s = r^{1/p}
 \]</div>
-<p>For <span class="arithmatex">\(r = 0.01\)</span> (capturing just 1% of the data):
-- In <span class="arithmatex">\(p = 1\)</span>: <span class="arithmatex">\(s = 0.01^1 = 0.01\)</span> (a tight local neighborhood).
-- In <span class="arithmatex">\(p = 10\)</span>: <span class="arithmatex">\(s = 0.01^{1/10} \approx 0.63\)</span> (requires covering 63% of each feature axis!).
-- In <span class="arithmatex">\(p = 100\)</span>: <span class="arithmatex">\(s = 0.01^{1/100} \approx 0.955\)</span> (requires spanning 95.5% of the entire domain).</p>
+<p>For <span class="arithmatex">\(r = 0.01\)</span> (capturing just 1% of the data):</p>
+<ul>
+<li>In <span class="arithmatex">\(p = 1\)</span>: <span class="arithmatex">\(s = 0.01^1 = 0.01\)</span> (a tight local neighborhood).</li>
+<li>In <span class="arithmatex">\(p = 10\)</span>: <span class="arithmatex">\(s = 0.01^{1/10} \approx 0.63\)</span> (requires covering 63% of each feature axis!).</li>
+<li>In <span class="arithmatex">\(p = 100\)</span>: <span class="arithmatex">\(s = 0.01^{1/100} \approx 0.955\)</span> (requires spanning 95.5% of the entire domain).</li>
+</ul>
 <p><strong>Conclusion</strong>: In high dimensions, there are no "local" neighbors! Any neighborhood large enough to contain even a few points must span almost the entire range of every feature.</p>
 <h4 id="b-distance-metric-degeneration">B. Distance Metric Degeneration:<a class="headerlink" href="#b-distance-metric-degeneration" title="Permanent link">&para;</a></h4>
 <p>Beyer et al. (1999) proved that under broad distributional assumptions, the difference in distance between the nearest neighbor and farthest neighbor vanishes relative to the distance to the nearest neighbor:</p>
@@ -4201,10 +4203,14 @@ s^p = r \implies s = r^{1/p}
 <li><strong>KD-Tree (<span class="arithmatex">\(k\)</span>-dimensional Tree)</strong>:</li>
 <li>Recursively partitions space along coordinate axes rotating cycling through dimensions <span class="arithmatex">\(j = \text{depth} \pmod p\)</span>.</li>
 <li>Splits at the median value of feature <span class="arithmatex">\(j\)</span>.</li>
-<li>Query Pruning: During search, if the distance from <span class="arithmatex">\(\mathbf{x}_{\text{query}}\)</span> to the bounding splitting hyperplane is greater than the current <span class="arithmatex">\(k\)</span>-th best distance, the entire opposite branch is pruned.
-  <em>Limitation</em>: When <span class="arithmatex">\(p \ge 20\)</span>, the curse of dimensionality forces the search algorithm to inspect nearly every leaf, degrading to <span class="arithmatex">\(\mathcal{O}(n)\)</span>.</li>
-<li><strong>Ball-Tree</strong>:
-  Partitions space into nested hyperspheres (balls). Better suited for higher dimensions and arbitrary metric spaces where coordinate-aligned splitting is ineffective.</li>
+<li>
+<p>Query Pruning: During search, if the distance from <span class="arithmatex">\(\mathbf{x}_{\text{query}}\)</span> to the bounding splitting hyperplane is greater than the current <span class="arithmatex">\(k\)</span>-th best distance, the entire opposite branch is pruned.
+  <em>Limitation</em>: When <span class="arithmatex">\(p \ge 20\)</span>, the curse of dimensionality forces the search algorithm to inspect nearly every leaf, degrading to <span class="arithmatex">\(\mathcal{O}(n)\)</span>.</p>
+</li>
+<li>
+<p><strong>Ball-Tree</strong>:
+  Partitions space into nested hyperspheres (balls). Better suited for higher dimensions and arbitrary metric spaces where coordinate-aligned splitting is ineffective.</p>
+</li>
 </ul>
 <hr />
 <h2 id="3-naive-bayes-classifiers">3. Naive Bayes Classifiers<a class="headerlink" href="#3-naive-bayes-classifiers" title="Permanent link">&para;</a></h2>
@@ -4558,13 +4564,19 @@ Expanding the sum:
 $<span class="arithmatex">\(\ln \frac{P(y=1|\mathbf{x})}{P(y=0|\mathbf{x})} = \ln \frac{P(y=1)}{P(y=0)} + \sum_{j=1}^p \ln \frac{\sigma_{0j}}{\sigma_{1j}} + \sum_{j=1}^p \left[ \frac{(x_j - \mu_{0j})^2}{2\sigma_{0j}^2} - \frac{(x_j - \mu_{1j})^2}{2\sigma_{1j}^2} \right]\)</span>$
 Expanding the quadratic terms inside the bracket:
 $<span class="arithmatex">\(\frac{x_j^2 - 2x_j\mu_{0j} + \mu_{0j}^2}{2\sigma_{0j}^2} - \frac{x_j^2 - 2x_j\mu_{1j} + \mu_{1j}^2}{2\sigma_{1j}^2} = x_j^2 \left( \frac{1}{2\sigma_{0j}^2} - \frac{1}{2\sigma_{1j}^2} \right) + x_j \left( \frac{\mu_{1j}}{\sigma_{1j}^2} - \frac{\mu_{0j}}{\sigma_{0j}^2} \right) + \text{const}\)</span>$</p>
-<p><strong>Two Distinct Cases:</strong>
-1. <strong>Equal Feature Variances (<span class="arithmatex">\(\sigma_{0j}^2 = \sigma_{1j}^2 = \sigma_j^2\)</span> for all <span class="arithmatex">\(j\)</span>):</strong>
+<p><strong>Two Distinct Cases:</strong></p>
+<ol>
+<li>
+<p><strong>Equal Feature Variances (<span class="arithmatex">\(\sigma_{0j}^2 = \sigma_{1j}^2 = \sigma_j^2\)</span> for all <span class="arithmatex">\(j\)</span>):</strong>
    The quadratic coefficient <span class="arithmatex">\(\left( \frac{1}{2\sigma_{0j}^2} - \frac{1}{2\sigma_{1j}^2} \right) = 0\)</span>. The squared terms <span class="arithmatex">\(x_j^2\)</span> cancel out completely! The log-odds becomes a strictly affine function:
    $<span class="arithmatex">\(\ln \frac{P(y=1|\mathbf{x})}{P(y=0|\mathbf{x})} = \mathbf{w}^T \mathbf{x} + b\)</span>$
-   where <span class="arithmatex">\(w_j = \frac{\mu_{1j} - \mu_{0j}}{\sigma_j^2}\)</span>. The decision boundary is a <strong>strictly linear hyperplane</strong>, mathematically equivalent to Linear Discriminant Analysis (LDA) with a diagonal covariance matrix.
-2. <strong>Unequal Feature Variances (<span class="arithmatex">\(\sigma_{0j}^2 \ne \sigma_{1j}^2\)</span>):</strong>
+   where <span class="arithmatex">\(w_j = \frac{\mu_{1j} - \mu_{0j}}{\sigma_j^2}\)</span>. The decision boundary is a <strong>strictly linear hyperplane</strong>, mathematically equivalent to Linear Discriminant Analysis (LDA) with a diagonal covariance matrix.</p>
+</li>
+<li>
+<p><strong>Unequal Feature Variances (<span class="arithmatex">\(\sigma_{0j}^2 \ne \sigma_{1j}^2\)</span>):</strong>
    The quadratic terms do not cancel out. The decision boundary is a <strong>quadratic hypersurface</strong> (ellipsoid, paraboloid, or hyperboloid), equivalent to Quadratic Discriminant Analysis (QDA) with diagonal covariance matrices.</p>
+</li>
+</ol>
 <hr />
 <h3 id="q4-derive-laplace-and-lidstone-smoothing-from-a-bayesian-perspective-using-dirichlet-conjugate-priors">Q4: Derive Laplace and Lidstone smoothing from a Bayesian perspective using Dirichlet conjugate priors.<a class="headerlink" href="#q4-derive-laplace-and-lidstone-smoothing-from-a-bayesian-perspective-using-dirichlet-conjugate-priors" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4579,43 +4591,59 @@ This is another Dirichlet distribution: <span class="arithmatex">\(\text{Dir}(\m
 The Bayes estimator under squared error loss is the posterior mean:
 $<span class="arithmatex">\(\hat{\theta}_j = \mathbb{E}[\theta_j | \mathbf{c}] = \frac{c_j + \alpha_j}{\sum_{k=1}^d (c_k + \alpha_k)}\)</span>$
 Under a symmetric prior where <span class="arithmatex">\(\alpha_j = \alpha\)</span> for all <span class="arithmatex">\(j\)</span>:
-$<span class="arithmatex">\(\hat{\theta}_j = \frac{c_j + \alpha}{\sum_{k=1}^d c_k + \alpha \cdot d} = \frac{N_{yj} + \alpha}{N_y + \alpha \cdot d}\)</span>$
-- Setting <span class="arithmatex">\(\alpha = 1\)</span> yields <strong>Laplace smoothing</strong>, equivalent to a uniform prior where every outcome was observed once before training.
-- Setting <span class="arithmatex">\(0 &lt; \alpha &lt; 1\)</span> yields <strong>Lidstone smoothing</strong>, representing weaker prior pseudo-evidence.</p>
+$<span class="arithmatex">\(\hat{\theta}_j = \frac{c_j + \alpha}{\sum_{k=1}^d c_k + \alpha \cdot d} = \frac{N_{yj} + \alpha}{N_y + \alpha \cdot d}\)</span>$</p>
+<ul>
+<li>Setting <span class="arithmatex">\(\alpha = 1\)</span> yields <strong>Laplace smoothing</strong>, equivalent to a uniform prior where every outcome was observed once before training.</li>
+<li>Setting <span class="arithmatex">\(0 &lt; \alpha &lt; 1\)</span> yields <strong>Lidstone smoothing</strong>, representing weaker prior pseudo-evidence.</li>
+</ul>
 <hr />
 <h3 id="q5-compare-multinomial-naive-bayes-and-bernoulli-naive-bayes-for-text-classification-when-does-each-fail">Q5: Compare Multinomial Naive Bayes and Bernoulli Naive Bayes for text classification. When does each fail?<a class="headerlink" href="#q5-compare-multinomial-naive-bayes-and-bernoulli-naive-bayes-for-text-classification-when-does-each-fail" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>Multinomial Naive Bayes (MNB):</strong>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li>
+<p><strong>Multinomial Naive Bayes (MNB):</strong>
   Takes word count vectors <span class="arithmatex">\(\mathbf{x} = [x_1, \dots, x_d]^T\)</span> where <span class="arithmatex">\(x_j \in \{0, 1, 2, \dots\}\)</span>. The likelihood is <span class="arithmatex">\(P(\mathbf{x}|y) \propto \prod_j \theta_{yj}^{x_j}\)</span>.
   <em>Characteristics:</em> Models document length and word repetition. A word appearing 10 times contributes 10 times to the log-likelihood (<span class="arithmatex">\(\sum x_j \ln \theta_{yj}\)</span>).
-  <em>Failure Mode:</em> Severely influenced by document length variations. Long documents accumulate much larger negative log-likelihoods than short ones unless normalized.
-- <strong>Bernoulli Naive Bayes (BNB):</strong>
+  <em>Failure Mode:</em> Severely influenced by document length variations. Long documents accumulate much larger negative log-likelihoods than short ones unless normalized.</p>
+</li>
+<li>
+<p><strong>Bernoulli Naive Bayes (BNB):</strong>
   Takes binary occurrence indicators <span class="arithmatex">\(\mathbf{x} = [b_1, \dots, b_d]^T\)</span> where <span class="arithmatex">\(b_j \in \{0, 1\}\)</span>. The likelihood is <span class="arithmatex">\(P(\mathbf{x}|y) = \prod_j \theta_{yj}^{b_j} (1 - \theta_{yj})^{1 - b_j}\)</span>.
   <em>Characteristics:</em> Evaluates both presence AND absence of words. If a document does not contain word <span class="arithmatex">\(j\)</span>, BNB penalizes the class by <span class="arithmatex">\(\ln(1 - \theta_{yj})\)</span>.
   <em>Failure Mode:</em> Highly sensitive to vocabulary size and short queries. If vocabulary <span class="arithmatex">\(d = 50,000\)</span> and a test tweet contains 10 words, BNB evaluates 49,990 "absence" terms (<span class="arithmatex">\(1 - \theta_{yj}\)</span>), which can easily overwhelm the signal from the words that actually appeared.</p>
+</li>
+</ul>
 <hr />
 <h3 id="q6-how-does-the-choice-of-k-in-knn-govern-the-bias-variance-tradeoff-what-happens-at-k1-and-kn">Q6: How does the choice of <span class="arithmatex">\(k\)</span> in KNN govern the bias-variance tradeoff? What happens at <span class="arithmatex">\(k=1\)</span> and <span class="arithmatex">\(k=n\)</span>?<a class="headerlink" href="#q6-how-does-the-choice-of-k-in-knn-govern-the-bias-variance-tradeoff-what-happens-at-k1-and-kn" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-The parameter <span class="arithmatex">\(k\)</span> controls model flexibility and hypothesis capacity:
-- <strong>At <span class="arithmatex">\(k = 1\)</span> (Maximum Variance, Minimum Bias):</strong>
-  The model memorizes every training sample. Every training point lies in its own Voronoi cell with training error identically <span class="arithmatex">\(0\)</span>. The decision boundary is highly irregular, jagged, and sensitive to individual noisy labels or outliers. The model has maximum degrees of freedom (<span class="arithmatex">\(\text{effective df} = n\)</span>) and high variance.
-- <strong>At <span class="arithmatex">\(k = n\)</span> (Minimum Variance, Maximum Bias):</strong>
-  The model pools all <span class="arithmatex">\(n\)</span> training instances for every query. It predicts the majority class of the entire training dataset regardless of the input feature <span class="arithmatex">\(\mathbf{x}\)</span>. The decision boundary vanishes entirely. The model has minimum capacity (<span class="arithmatex">\(\text{effective df} = 1\)</span>), zero variance, and extreme bias (underfitting).
-- <strong>Optimal <span class="arithmatex">\(k\)</span> Selection:</strong>
+The parameter <span class="arithmatex">\(k\)</span> controls model flexibility and hypothesis capacity:</p>
+<ul>
+<li>
+<p><strong>At <span class="arithmatex">\(k = 1\)</span> (Maximum Variance, Minimum Bias):</strong>
+  The model memorizes every training sample. Every training point lies in its own Voronoi cell with training error identically <span class="arithmatex">\(0\)</span>. The decision boundary is highly irregular, jagged, and sensitive to individual noisy labels or outliers. The model has maximum degrees of freedom (<span class="arithmatex">\(\text{effective df} = n\)</span>) and high variance.</p>
+</li>
+<li>
+<p><strong>At <span class="arithmatex">\(k = n\)</span> (Minimum Variance, Maximum Bias):</strong>
+  The model pools all <span class="arithmatex">\(n\)</span> training instances for every query. It predicts the majority class of the entire training dataset regardless of the input feature <span class="arithmatex">\(\mathbf{x}\)</span>. The decision boundary vanishes entirely. The model has minimum capacity (<span class="arithmatex">\(\text{effective df} = 1\)</span>), zero variance, and extreme bias (underfitting).</p>
+</li>
+<li>
+<p><strong>Optimal <span class="arithmatex">\(k\)</span> Selection:</strong>
   Typically chosen via Stratified K-Fold Cross-Validation. A common heuristic starting point is <span class="arithmatex">\(k = \lfloor\sqrt{n}\rfloor\)</span> (often odd to avoid ties in binary voting). As <span class="arithmatex">\(n \to \infty\)</span>, Cover &amp; Hart (1967) proved that if <span class="arithmatex">\(k(n) \to \infty\)</span> and <span class="arithmatex">\(k(n)/n \to 0\)</span>, the <span class="arithmatex">\(k\)</span>-NN error rate asymptotically approaches the optimal Bayes risk <span class="arithmatex">\(\mathcal{R}^*\)</span>.</p>
+</li>
+</ul>
 <hr />
 <h2 id="9-mastery-ladder">9. Mastery Ladder<a class="headerlink" href="#9-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> You can state the difference between parametric (Naive Bayes) and non-parametric (KNN) classifiers.</li>
-<li>[ ] <strong>L2:</strong> You can write formulas for Euclidean, Manhattan, Minkowski, and Cosine distance metrics.</li>
-<li>[ ] <strong>L3:</strong> You can explain Voronoi tessellation and how <span class="arithmatex">\(k=1\)</span> yields zero training error.</li>
-<li>[ ] <strong>L4:</strong> You can prove the Curse of Dimensionality via hypercube volume shrinkage <span class="arithmatex">\(s = r^{1/p}\)</span>.</li>
-<li>[ ] <strong>L5:</strong> You can explain the KD-tree recursive partitioning algorithm and its pruning condition.</li>
-<li>[ ] <strong>L6:</strong> You can write Bayes' rule and state the conditional independence assumption.</li>
-<li>[ ] <strong>L7:</strong> You can derive Laplace/Lidstone smoothing as Bayesian MAP with a Dirichlet conjugate prior.</li>
-<li>[ ] <strong>L8:</strong> You can prove that Gaussian Naive Bayes produces a linear boundary when class feature variances are equal.</li>
-<li>[ ] <strong>L9:</strong> You can explain why Naive Bayes classifies accurately even when probabilities are badly miscalibrated.</li>
-<li>[ ] <strong>L10:</strong> You can implement a KD-Tree KNN classifier and Gaussian/Multinomial Naive Bayes from scratch in NumPy.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can state the difference between parametric (Naive Bayes) and non-parametric (KNN) classifiers.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can write formulas for Euclidean, Manhattan, Minkowski, and Cosine distance metrics.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can explain Voronoi tessellation and how <span class="arithmatex">\(k=1\)</span> yields zero training error.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can prove the Curse of Dimensionality via hypercube volume shrinkage <span class="arithmatex">\(s = r^{1/p}\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can explain the KD-tree recursive partitioning algorithm and its pruning condition.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can write Bayes' rule and state the conditional independence assumption.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can derive Laplace/Lidstone smoothing as Bayesian MAP with a Dirichlet conjugate prior.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can prove that Gaussian Naive Bayes produces a linear boundary when class feature variances are equal.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can explain why Naive Bayes classifies accurately even when probabilities are badly miscalibrated.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can implement a KD-Tree KNN classifier and Gaussian/Multinomial Naive Bayes from scratch in NumPy.</li>
 </ul>
 
 

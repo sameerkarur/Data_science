@@ -4291,11 +4291,13 @@
         InferenceEngines --&gt; FeedbackSink
         FeedbackSink --&gt; OfflinePath
     end</code></pre>
-<p>The fundamental challenges unique to AI system design include:
-1. <strong>The Dual Serving/Training Path</strong>: Unifying low-latency online inference (scoring live users in <span class="arithmatex">\(&lt;50\text{ ms}\)</span>) with massive offline distributed training (processing terabytes of historical logs over hundreds of GPUs).
-2. <strong>Hardware Sizing &amp; Memory-Bandwidth Bottlenecks</strong>: Deep neural networks and Large Language Models are heavily bound by GPU High-Bandwidth Memory (HBM) throughput, demanding exact hardware sizing calculations.
-3. <strong>Multi-Stage Funnels</strong>: Balancing candidate generation (filtering millions of items to hundreds in <span class="arithmatex">\(&lt;15\text{ ms}\)</span>) with complex heavy ranking (evaluating thousands of features in <span class="arithmatex">\(&lt;35\text{ ms}\)</span>).
-4. <strong>Non-Deterministic Failure Modes</strong>: Degraded calibration, cold-start sparsity, feedback loops, and cascading failures across sequential neural stages.</p>
+<p>The fundamental challenges unique to AI system design include:</p>
+<ol>
+<li><strong>The Dual Serving/Training Path</strong>: Unifying low-latency online inference (scoring live users in <span class="arithmatex">\(&lt;50\text{ ms}\)</span>) with massive offline distributed training (processing terabytes of historical logs over hundreds of GPUs).</li>
+<li><strong>Hardware Sizing &amp; Memory-Bandwidth Bottlenecks</strong>: Deep neural networks and Large Language Models are heavily bound by GPU High-Bandwidth Memory (HBM) throughput, demanding exact hardware sizing calculations.</li>
+<li><strong>Multi-Stage Funnels</strong>: Balancing candidate generation (filtering millions of items to hundreds in <span class="arithmatex">\(&lt;15\text{ ms}\)</span>) with complex heavy ranking (evaluating thousands of features in <span class="arithmatex">\(&lt;35\text{ ms}\)</span>).</li>
+<li><strong>Non-Deterministic Failure Modes</strong>: Degraded calibration, cold-start sparsity, feedback loops, and cascading failures across sequential neural stages.</li>
+</ol>
 <hr />
 <h2 id="2-the-standard-7-step-ai-system-design-framework">2. The Standard 7-Step AI System Design Framework<a class="headerlink" href="#2-the-standard-7-step-ai-system-design-framework" title="Permanent link">&para;</a></h2>
 <p>To design complex, staff-level AI systems under interview and real-world conditions, follow this structured 7-step blueprint:</p>
@@ -4348,10 +4350,12 @@
     ClientReq -.-&gt;|Telemetry Event Stream| DataLake</code></pre>
 <hr />
 <h3 id="step-3-data-engineering-feature-store-architecture">Step 3: Data Engineering &amp; Feature Store Architecture<a class="headerlink" href="#step-3-data-engineering-feature-store-architecture" title="Permanent link">&para;</a></h3>
-<p>Design the feature pipeline to avoid online/offline skew and temporal feature leakage:
-- <strong>Streaming Pipeline</strong>: Apache Kafka / Flink ingests clickstream events to compute sliding-window real-time aggregates (e.g., <code>user_clicks_last_10_minutes</code>).
-- <strong>Batch Pipeline</strong>: Daily Spark/Airflow workflows process heavy historical aggregations (e.g., <code>user_30_day_average_spend</code>).
-- <strong>Dual Storage</strong>: Write streaming aggregates directly to an in-memory key-value store (Redis) for <span class="arithmatex">\(&lt;5\text{ ms}\)</span> point lookup, while archiving historical snapshots to columnar Parquet tables for point-in-time correct training joins.</p>
+<p>Design the feature pipeline to avoid online/offline skew and temporal feature leakage:</p>
+<ul>
+<li><strong>Streaming Pipeline</strong>: Apache Kafka / Flink ingests clickstream events to compute sliding-window real-time aggregates (e.g., <code>user_clicks_last_10_minutes</code>).</li>
+<li><strong>Batch Pipeline</strong>: Daily Spark/Airflow workflows process heavy historical aggregations (e.g., <code>user_30_day_average_spend</code>).</li>
+<li><strong>Dual Storage</strong>: Write streaming aggregates directly to an in-memory key-value store (Redis) for <span class="arithmatex">\(&lt;5\text{ ms}\)</span> point lookup, while archiving historical snapshots to columnar Parquet tables for point-in-time correct training joins.</li>
+</ul>
 <hr />
 <h3 id="step-4-modeling-algorithmic-strategy">Step 4: Modeling &amp; Algorithmic Strategy<a class="headerlink" href="#step-4-modeling-algorithmic-strategy" title="Permanent link">&para;</a></h3>
 <p>Avoid jumping immediately to the most complex neural network. Define a multi-tier modeling roadmap:</p>
@@ -4371,16 +4375,20 @@
 <p>Map model architectures to target hardware infrastructure, accounting for memory footprints, compute intensity, and auto-scaling topologies.</p>
 <hr />
 <h3 id="step-6-evaluation-monitoring-safety-guardrails">Step 6: Evaluation, Monitoring &amp; Safety Guardrails<a class="headerlink" href="#step-6-evaluation-monitoring-safety-guardrails" title="Permanent link">&para;</a></h3>
-<p>Evaluate both offline algorithmic benchmarks and online business KPIs:
-- <strong>Offline Metrics</strong>: ROC-AUC, PR-AUC, Normalized Discounted Cumulative Gain (<span class="arithmatex">\(\text{NDCG}@K\)</span>), Mean Reciprocal Rank (MRR), Hit Rate.
-- <strong>Online Business Metrics</strong>: Click-Through Rate (CTR), Conversion Rate (CVR), Average Order Value (AOV), Revenue per Mille (RPM).
-- <strong>Safety &amp; Moderation</strong>: Pre-retrieval query sanitation, embedding toxicity filters, and post-generation LLM output guardrails (e.g., Llama-Guard).</p>
+<p>Evaluate both offline algorithmic benchmarks and online business KPIs:</p>
+<ul>
+<li><strong>Offline Metrics</strong>: ROC-AUC, PR-AUC, Normalized Discounted Cumulative Gain (<span class="arithmatex">\(\text{NDCG}@K\)</span>), Mean Reciprocal Rank (MRR), Hit Rate.</li>
+<li><strong>Online Business Metrics</strong>: Click-Through Rate (CTR), Conversion Rate (CVR), Average Order Value (AOV), Revenue per Mille (RPM).</li>
+<li><strong>Safety &amp; Moderation</strong>: Pre-retrieval query sanitation, embedding toxicity filters, and post-generation LLM output guardrails (e.g., Llama-Guard).</li>
+</ul>
 <hr />
 <h3 id="step-7-failure-modes-edge-cases-operational-resiliency">Step 7: Failure Modes, Edge Cases &amp; Operational Resiliency<a class="headerlink" href="#step-7-failure-modes-edge-cases-operational-resiliency" title="Permanent link">&para;</a></h3>
-<p>Design fail-safes for unpredictable production anomalies:
-- <strong>Graceful Degradation &amp; Fallbacks</strong>: If the deep ranking service times out (<span class="arithmatex">\(&gt;35\text{ ms}\)</span>), a circuit breaker trips, instantly falling back to an in-memory cached heuristic or popularity-ranked list.
-- <strong>Cold-Start Handling</strong>: Multi-armed bandits (LinUCB, Thompson Sampling) dynamically balance exploration of unindexed/new items against exploitation of proven hits.
-- <strong>Feedback Loop Mitigation</strong>: Counterfactual learning and negative down-sampling prevent the system from repeatedly showing the same items and narrowing user diversity.</p>
+<p>Design fail-safes for unpredictable production anomalies:</p>
+<ul>
+<li><strong>Graceful Degradation &amp; Fallbacks</strong>: If the deep ranking service times out (<span class="arithmatex">\(&gt;35\text{ ms}\)</span>), a circuit breaker trips, instantly falling back to an in-memory cached heuristic or popularity-ranked list.</li>
+<li><strong>Cold-Start Handling</strong>: Multi-armed bandits (LinUCB, Thompson Sampling) dynamically balance exploration of unindexed/new items against exploitation of proven hits.</li>
+<li><strong>Feedback Loop Mitigation</strong>: Counterfactual learning and negative down-sampling prevent the system from repeatedly showing the same items and narrowing user diversity.</li>
+</ul>
 <hr />
 <h2 id="3-capacity-estimation-hardware-sizing-mathematics">3. Capacity Estimation &amp; Hardware Sizing Mathematics<a class="headerlink" href="#3-capacity-estimation-hardware-sizing-mathematics" title="Permanent link">&para;</a></h2>
 <p>Staff-level system designers do not guess hardware requirements—they derive them using first-principles physics and memory-bandwidth equations.</p>
@@ -4425,14 +4433,16 @@
     end</code></pre>
 <p>The memory footprint of the KV cache is given by:</p>
 <div class="arithmatex">\[\text{Memory}_{\text{KV}} = 2 \times B \times L \times n_{\text{layers}} \times n_{\text{heads}} \times d_{\text{head}} \times b_{\text{bytes}}\]</div>
-<p>Where:
-- The factor of <span class="arithmatex">\(2\)</span> accounts for the two matrices: Key (<span class="arithmatex">\(K\)</span>) and Value (<span class="arithmatex">\(V\)</span>).
-- <span class="arithmatex">\(B\)</span> is the concurrent batch size.
-- <span class="arithmatex">\(L\)</span> is the context sequence length (prompt tokens <span class="arithmatex">\(+\)</span> generated tokens).
-- <span class="arithmatex">\(n_{\text{layers}}\)</span> is the number of transformer layers.
-- <span class="arithmatex">\(n_{\text{heads}}\)</span> is the number of key-value attention heads (under Multi-Query Attention or Grouped-Query Attention, this is <span class="arithmatex">\(n_{\text{kv\_heads}} \ll n_{\text{attn\_heads}}\)</span>).
-- <span class="arithmatex">\(d_{\text{head}}\)</span> is the dimension per head (<span class="arithmatex">\(d_{\text{model}} / n_{\text{attn\_heads}}\)</span>).
-- <span class="arithmatex">\(b_{\text{bytes}}\)</span> is byte width (<span class="arithmatex">\(2\)</span> for FP16, <span class="arithmatex">\(1\)</span> for FP8).</p>
+<p>Where:</p>
+<ul>
+<li>The factor of <span class="arithmatex">\(2\)</span> accounts for the two matrices: Key (<span class="arithmatex">\(K\)</span>) and Value (<span class="arithmatex">\(V\)</span>).</li>
+<li><span class="arithmatex">\(B\)</span> is the concurrent batch size.</li>
+<li><span class="arithmatex">\(L\)</span> is the context sequence length (prompt tokens <span class="arithmatex">\(+\)</span> generated tokens).</li>
+<li><span class="arithmatex">\(n_{\text{layers}}\)</span> is the number of transformer layers.</li>
+<li><span class="arithmatex">\(n_{\text{heads}}\)</span> is the number of key-value attention heads (under Multi-Query Attention or Grouped-Query Attention, this is <span class="arithmatex">\(n_{\text{kv\_heads}} \ll n_{\text{attn\_heads}}\)</span>).</li>
+<li><span class="arithmatex">\(d_{\text{head}}\)</span> is the dimension per head (<span class="arithmatex">\(d_{\text{model}} / n_{\text{attn\_heads}}\)</span>).</li>
+<li><span class="arithmatex">\(b_{\text{bytes}}\)</span> is byte width (<span class="arithmatex">\(2\)</span> for FP16, <span class="arithmatex">\(1\)</span> for FP8).</li>
+</ul>
 <h4 id="concrete-calculation-table-kv-cache-footprint-at-batch-size-b-64-l-4096-tokens-fp16">Concrete Calculation Table: KV Cache Footprint at Batch Size <span class="arithmatex">\(B = 64\)</span> (<span class="arithmatex">\(L = 4,096\)</span> tokens, FP16)<a class="headerlink" href="#concrete-calculation-table-kv-cache-footprint-at-batch-size-b-64-l-4096-tokens-fp16" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -4476,10 +4486,12 @@
 <h3 id="34-total-gpu-vram-allocation-budget">3.4 Total GPU VRAM Allocation Budget<a class="headerlink" href="#34-total-gpu-vram-allocation-budget" title="Permanent link">&para;</a></h3>
 <p>The total GPU memory required to host an inference deployment is:</p>
 <div class="arithmatex">\[\text{Memory}_{\text{total}} = \text{Memory}_{\text{weights}} + \text{Memory}_{\text{KV\_cache}} + \text{Memory}_{\text{activations}} + \text{Memory}_{\text{CUDA\_overhead}}\]</div>
-<p>Where:
-- <span class="arithmatex">\(\text{Memory}_{\text{weights}} = P \times b_{\text{bytes}}\)</span> (e.g. <span class="arithmatex">\(70\text{B} \times 2\text{ bytes} = 140\text{ GB}\)</span>).
-- <span class="arithmatex">\(\text{Memory}_{\text{activations}} \approx \mathcal{O}(B \times S \times d_{\text{model}})\)</span>.
-- <span class="arithmatex">\(\text{Memory}_{\text{CUDA\_overhead}} \approx 1 - 2\text{ GB}\)</span> reserved for CUDA runtime contexts and NCCL communication buffers.</p>
+<p>Where:</p>
+<ul>
+<li><span class="arithmatex">\(\text{Memory}_{\text{weights}} = P \times b_{\text{bytes}}\)</span> (e.g. <span class="arithmatex">\(70\text{B} \times 2\text{ bytes} = 140\text{ GB}\)</span>).</li>
+<li><span class="arithmatex">\(\text{Memory}_{\text{activations}} \approx \mathcal{O}(B \times S \times d_{\text{model}})\)</span>.</li>
+<li><span class="arithmatex">\(\text{Memory}_{\text{CUDA\_overhead}} \approx 1 - 2\text{ GB}\)</span> reserved for CUDA runtime contexts and NCCL communication buffers.</li>
+</ul>
 <hr />
 <h2 id="4-latency-vs-throughput-trade-offs">4. Latency vs. Throughput Trade-Offs<a class="headerlink" href="#4-latency-vs-throughput-trade-offs" title="Permanent link">&para;</a></h2>
 <p>Production serving architectures represent a continuous optimization between <strong>Time to First Token (TTFT)</strong>, <strong>Inter-Token Latency (ITL)</strong>, and <strong>Aggregate Throughput</strong>.</p>
@@ -4566,16 +4578,19 @@
 <hr />
 <h2 id="7-staff-level-technical-interview-questions">7. Staff-Level Technical Interview Questions<a class="headerlink" href="#7-staff-level-technical-interview-questions" title="Permanent link">&para;</a></h2>
 <h3 id="q1-walk-through-the-complete-capacity-estimation-for-serving-a-70b-parameter-llm-at-1000-concurrent-streaming-requests-with-an-average-context-length-of-2000-tokens-how-many-gpus-are-required">Q1: Walk through the complete capacity estimation for serving a 70B parameter LLM at 1,000 concurrent streaming requests with an average context length of 2,000 tokens. How many GPUs are required?<a class="headerlink" href="#q1-walk-through-the-complete-capacity-estimation-for-serving-a-70b-parameter-llm-at-1000-concurrent-streaming-requests-with-an-average-context-length-of-2000-tokens-how-many-gpus-are-required" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-1. <strong>Weight Memory</strong>:
-   - At FP16 precision (<span class="arithmatex">\(2\text{ bytes/parameter}\)</span>): <span class="arithmatex">\(70\text{B} \times 2 = 140\text{ GB}\)</span>.
-2. <strong>KV Cache Memory</strong>:
-   - Assuming LLaMA-3-70B architecture (<span class="arithmatex">\(n_{\text{layers}} = 80\)</span>, <span class="arithmatex">\(n_{\text{kv\_heads}} = 8\)</span>, <span class="arithmatex">\(d_{\text{head}} = 128\)</span>, Grouped-Query Attention).
-   - KV cache per token per sequence:</p>
-<div class="language-text highlight"><pre><span></span><code> $$\text{Bytes/token} = 2 \times 80 \times 8 \times 128 \times 2 = 327,680\text{ bytes} \approx 320\text{ KB}$$
-</code></pre></div>
-<ul>
-<li>For <span class="arithmatex">\(L = 2,000\)</span> tokens: <span class="arithmatex">\(2,000 \times 320\text{ KB} = 640\text{ MB per active sequence}\)</span>.</li>
+<p><strong>Model Answer:</strong>  </p>
+<ol>
+<li><strong>Weight Memory</strong>:</li>
+<li>At FP16 precision (<span class="arithmatex">\(2\text{ bytes/parameter}\)</span>): <span class="arithmatex">\(70\text{B} \times 2 = 140\text{ GB}\)</span>.</li>
+<li><strong>KV Cache Memory</strong>:</li>
+<li>Assuming LLaMA-3-70B architecture (<span class="arithmatex">\(n_{\text{layers}} = 80\)</span>, <span class="arithmatex">\(n_{\text{kv\_heads}} = 8\)</span>, <span class="arithmatex">\(d_{\text{head}} = 128\)</span>, Grouped-Query Attention).</li>
+<li>
+<p>KV cache per token per sequence:</p>
+<p>$<span class="arithmatex">\(\text{Bytes/token} = 2 \times 80 \times 8 \times 128 \times 2 = 327,680\text{ bytes} \approx 320\text{ KB}\)</span>$</p>
+</li>
+<li>
+<p>For <span class="arithmatex">\(L = 2,000\)</span> tokens: <span class="arithmatex">\(2,000 \times 320\text{ KB} = 640\text{ MB per active sequence}\)</span>.</p>
+</li>
 <li>
 <p>For <span class="arithmatex">\(B = 1,000\)</span> concurrent active streams:</p>
 <p>$<span class="arithmatex">\(\text{Total KV Cache} = 1,000 \times 640\text{ MB} = 640\text{ GB}\)</span>$</p>
@@ -4592,85 +4607,95 @@
 <li>
 <p>Because tensor parallelism requires power-of-two partitions (<span class="arithmatex">\(TP \in \{1, 2, 4, 8\}\)</span>), we deploy <strong>two 8-GPU nodes</strong> (16x A100 <span class="arithmatex">\(80\text{ GB}\)</span> GPUs total), providing <span class="arithmatex">\(1,280\text{ GB}\)</span> total VRAM, comfortably handling peak KV cache demand with headroom for traffic surges.</p>
 </li>
-</ul>
+</ol>
 <hr />
 <h3 id="q2-why-is-the-two-stage-retrieval-to-ranking-funnel-universally-adopted-in-web-scale-recommendation-systems-why-not-score-all-items-directly-with-the-ranker">Q2: Why is the two-stage Retrieval <span class="arithmatex">\(\to\)</span> Ranking funnel universally adopted in web-scale recommendation systems? Why not score all items directly with the ranker?<a class="headerlink" href="#q2-why-is-the-two-stage-retrieval-to-ranking-funnel-universally-adopted-in-web-scale-recommendation-systems-why-not-score-all-items-directly-with-the-ranker" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
-The two-stage funnel resolves the fundamental trade-off between <strong>candidate catalog scale</strong> (<span class="arithmatex">\(N = 10^7 - 10^9\)</span> items) and <strong>scoring model complexity</strong> under strict latency constraints (<span class="arithmatex">\(P_{99} \le 50\text{ ms}\)</span>):
-1. <strong>Computational Feasibility</strong>:
-   - A deep ranking model (DLRM / Transformer) evaluates thousands of sparse cross-features and dense interactions, requiring <span class="arithmatex">\(\sim 10^7\text{ FLOPs}\)</span> per item scoring pass.
-   - Scoring <span class="arithmatex">\(10^7\)</span> items would demand <span class="arithmatex">\(10^{14}\text{ FLOPs}\)</span> per user request. At <span class="arithmatex">\(50,000\text{ QPS}\)</span>, the serving cluster would require millions of GPU cores, incurring billions in cloud costs and exceeding latency budgets by multiple orders of magnitude.
-2. <strong>The Funnel Solution</strong>:
-   - <strong>Stage 1 (Retrieval)</strong>: Uses low-complexity representations (Two-Tower dot product <span class="arithmatex">\(\langle \mathbf{u}, \mathbf{v} \rangle\)</span>) and Approximate Nearest Neighbor (ANN) vector indices (HNSW). It prunes <span class="arithmatex">\(99.99\%\)</span> of the catalog down to <span class="arithmatex">\(500\)</span> candidates in <span class="arithmatex">\(&lt;15\text{ ms}\)</span> with sub-linear search complexity <span class="arithmatex">\(\mathcal{O}(\log N)\)</span>.
-   - <strong>Stage 2 (Heavy Ranking)</strong>: Executes the compute-intensive neural ranking model exclusively over the filtered 500 candidates, consuming only <span class="arithmatex">\(500 \times 10^7 = 5 \times 10^9\text{ FLOPs}\)</span> (<span class="arithmatex">\(&lt;20\text{ ms}\)</span> on a GPU).
-   - This architectural decoupling achieves optimal ranking quality at web scale.</p>
+The two-stage funnel resolves the fundamental trade-off between <strong>candidate catalog scale</strong> (<span class="arithmatex">\(N = 10^7 - 10^9\)</span> items) and <strong>scoring model complexity</strong> under strict latency constraints (<span class="arithmatex">\(P_{99} \le 50\text{ ms}\)</span>):</p>
+<ol>
+<li><strong>Computational Feasibility</strong>:</li>
+<li>A deep ranking model (DLRM / Transformer) evaluates thousands of sparse cross-features and dense interactions, requiring <span class="arithmatex">\(\sim 10^7\text{ FLOPs}\)</span> per item scoring pass.</li>
+<li>Scoring <span class="arithmatex">\(10^7\)</span> items would demand <span class="arithmatex">\(10^{14}\text{ FLOPs}\)</span> per user request. At <span class="arithmatex">\(50,000\text{ QPS}\)</span>, the serving cluster would require millions of GPU cores, incurring billions in cloud costs and exceeding latency budgets by multiple orders of magnitude.</li>
+<li><strong>The Funnel Solution</strong>:</li>
+<li><strong>Stage 1 (Retrieval)</strong>: Uses low-complexity representations (Two-Tower dot product <span class="arithmatex">\(\langle \mathbf{u}, \mathbf{v} \rangle\)</span>) and Approximate Nearest Neighbor (ANN) vector indices (HNSW). It prunes <span class="arithmatex">\(99.99\%\)</span> of the catalog down to <span class="arithmatex">\(500\)</span> candidates in <span class="arithmatex">\(&lt;15\text{ ms}\)</span> with sub-linear search complexity <span class="arithmatex">\(\mathcal{O}(\log N)\)</span>.</li>
+<li><strong>Stage 2 (Heavy Ranking)</strong>: Executes the compute-intensive neural ranking model exclusively over the filtered 500 candidates, consuming only <span class="arithmatex">\(500 \times 10^7 = 5 \times 10^9\text{ FLOPs}\)</span> (<span class="arithmatex">\(&lt;20\text{ ms}\)</span> on a GPU).</li>
+<li>This architectural decoupling achieves optimal ranking quality at web scale.</li>
+</ol>
 <hr />
 <h3 id="q3-explain-how-speculative-decoding-achieves-lower-latency-without-altering-model-output-probabilities-prove-that-the-target-models-output-distribution-is-preserved">Q3: Explain how Speculative Decoding achieves lower latency without altering model output probabilities. Prove that the target model's output distribution is preserved.<a class="headerlink" href="#q3-explain-how-speculative-decoding-achieves-lower-latency-without-altering-model-output-probabilities-prove-that-the-target-models-output-distribution-is-preserved" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Operational Mechanism</strong>:
-  1. A small, fast draft model autoregressively generates <span class="arithmatex">\(K\)</span> candidate tokens: <span class="arithmatex">\(\tilde{x}_1, \dots, \tilde{x}_K\)</span>.
-  2. The large target model processes the prompt and all <span class="arithmatex">\(K\)</span> candidates in a <strong>single parallel forward pass</strong>, obtaining logits and probability distributions <span class="arithmatex">\(p(x)\)</span> for each position.
-  3. Tokens are evaluated sequentially using modified rejection sampling:
-     - Candidate token <span class="arithmatex">\(\tilde{x}_i\)</span> is accepted with probability:</p>
-<div class="language-text highlight"><pre><span></span><code>   $$\alpha = \min\left(1, \frac{p(\tilde{x}_i)}{q(\tilde{x}_i)}\right)$$
-
-   where $p(x)$ is the target model distribution and $q(x)$ is the draft model distribution.
- - If accepted, the token is kept.
- - If rejected, the token is resampled from the residual distribution:
-
-   $$p'(x) = \max(0, p(x) - q(x)) / \sum_{x'} \max(0, p(x') - q(x'))$$
-
-   and all subsequent draft tokens are discarded.
-</code></pre></div>
+<p><strong>Model Answer:</strong>  </p>
 <ul>
-<li><strong>Proof of Equivalence</strong>:
-  The probability of emitting token <span class="arithmatex">\(x\)</span> under speculative sampling is:</li>
+<li><strong>Operational Mechanism</strong>:</li>
+<li>A small, fast draft model autoregressively generates <span class="arithmatex">\(K\)</span> candidate tokens: <span class="arithmatex">\(\tilde{x}_1, \dots, \tilde{x}_K\)</span>.</li>
+<li>The large target model processes the prompt and all <span class="arithmatex">\(K\)</span> candidates in a <strong>single parallel forward pass</strong>, obtaining logits and probability distributions <span class="arithmatex">\(p(x)\)</span> for each position.</li>
+<li>
+<p>Tokens are evaluated sequentially using modified rejection sampling:</p>
+<ul>
+<li>Candidate token <span class="arithmatex">\(\tilde{x}_i\)</span> is accepted with probability:</li>
+</ul>
+<p>$<span class="arithmatex">\(\alpha = \min\left(1, \frac{p(\tilde{x}_i)}{q(\tilde{x}_i)}\right)\)</span>$</p>
+<p>where <span class="arithmatex">\(p(x)\)</span> is the target model distribution and <span class="arithmatex">\(q(x)\)</span> is the draft model distribution.</p>
+<ul>
+<li>If accepted, the token is kept.</li>
+<li>If rejected, the token is resampled from the residual distribution:</li>
+</ul>
+<p>$<span class="arithmatex">\(p'(x) = \max(0, p(x) - q(x)) / \sum_{x'} \max(0, p(x') - q(x'))\)</span>$</p>
+<p>and all subsequent draft tokens are discarded.</p>
+</li>
+<li>
+<p><strong>Proof of Equivalence</strong>:
+  The probability of emitting token <span class="arithmatex">\(x\)</span> under speculative sampling is:</p>
+</li>
 </ul>
 <p>$<span class="arithmatex">\(P(x) = q(x) \times \min\left(1, \frac{p(x)}{q(x)}\right) + (1 - \text{Acceptance Rate}) \times p'(x)\)</span>$</p>
 <p>$<span class="arithmatex">\(= \min(q(x), p(x)) + \max(0, p(x) - q(x)) \equiv p(x)\)</span>$</p>
 <p>Because the emitted token distribution identically equals <span class="arithmatex">\(p(x)\)</span>, speculative decoding is mathematically lossless.</p>
 <hr />
 <h3 id="q4-in-recommendation-systems-what-is-the-cold-start-problem-for-new-items-and-how-does-the-linucb-contextual-bandit-algorithm-resolve-it">Q4: In recommendation systems, what is the cold-start problem for new items, and how does the LinUCB contextual bandit algorithm resolve it?<a class="headerlink" href="#q4-in-recommendation-systems-what-is-the-cold-start-problem-for-new-items-and-how-does-the-linucb-contextual-bandit-algorithm-resolve-it" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>The Problem</strong>: Collaborative filtering models rely on historical user-item interaction matrices. When a new item is added, it has zero interaction history, resulting in uninformative embeddings and zero impressions.
-- <strong>LinUCB Algorithm</strong>:
-  - Treats recommendation as a contextual multi-armed bandit problem. For each user context vector <span class="arithmatex">\(\mathbf{x}_{t}\)</span>, the expected reward (click/conversion) for arm <span class="arithmatex">\(a\)</span> is modeled as a linear payoff: <span class="arithmatex">\(\mathbb{E}[r_{t, a} \mid \mathbf{x}_{t}] = \mathbf{x}_{t}^T \boldsymbol{\theta}_a\)</span>.
-  - To balance exploration (learning new item quality) and exploitation (showing proven items), LinUCB selects the arm maximizing the <strong>Upper Confidence Bound</strong>:</p>
-<div class="language-text highlight"><pre><span></span><code>$$a_t = \arg\max_{a} \left( \mathbf{x}_t^T \hat{\boldsymbol{\theta}}_a + \alpha \sqrt{\mathbf{x}_t^T \mathbf{A}_a^{-1} \mathbf{x}_t} \right)$$
-
-Where:
-- $\mathbf{A}_a = \mathbf{D}_a^T \mathbf{D}_a + \mathbf{I}_d$ is the covariance matrix of past contexts observed for arm $a$.
-- The first term represents expected reward (exploitation).
-- The second term represents the statistical variance / uncertainty (exploration), scaled by hyperparameter $\alpha$.
-</code></pre></div>
+<p><strong>Model Answer:</strong>  </p>
 <ul>
+<li><strong>The Problem</strong>: Collaborative filtering models rely on historical user-item interaction matrices. When a new item is added, it has zero interaction history, resulting in uninformative embeddings and zero impressions.</li>
+<li><strong>LinUCB Algorithm</strong>:</li>
+<li>Treats recommendation as a contextual multi-armed bandit problem. For each user context vector <span class="arithmatex">\(\mathbf{x}_{t}\)</span>, the expected reward (click/conversion) for arm <span class="arithmatex">\(a\)</span> is modeled as a linear payoff: <span class="arithmatex">\(\mathbb{E}[r_{t, a} \mid \mathbf{x}_{t}] = \mathbf{x}_{t}^T \boldsymbol{\theta}_a\)</span>.</li>
+<li>
+<p>To balance exploration (learning new item quality) and exploitation (showing proven items), LinUCB selects the arm maximizing the <strong>Upper Confidence Bound</strong>:</p>
+<div class="arithmatex">\[a_t = \arg\max_{a} \left( \mathbf{x}_t^T \hat{\boldsymbol{\theta}}_a + \alpha \sqrt{\mathbf{x}_t^T \mathbf{A}_a^{-1} \mathbf{x}_t} \right)\]</div>
+<p>Where:</p>
+<ul>
+<li><span class="arithmatex">\(\mathbf{A}_a = \mathbf{D}_a^T \mathbf{D}_a + \mathbf{I}_d\)</span> is the covariance matrix of past contexts observed for arm <span class="arithmatex">\(a\)</span>.</li>
+<li>The first term represents expected reward (exploitation).</li>
+<li>The second term represents the statistical variance / uncertainty (exploration), scaled by hyperparameter <span class="arithmatex">\(\alpha\)</span>.</li>
 <li>When an item is new, its covariance matrix <span class="arithmatex">\(\mathbf{A}_a\)</span> has small eigenvalues, driving the uncertainty term high. This temporarily boosts the item's ranking score, granting it exploratory impressions until confidence intervals shrink.</li>
+</ul>
+</li>
 </ul>
 <hr />
 <h3 id="q5-how-do-you-design-an-ai-serving-system-to-handle-catastrophic-cascading-failures-when-a-downstream-database-or-feature-store-becomes-unreachable">Q5: How do you design an AI serving system to handle catastrophic cascading failures when a downstream database or feature store becomes unreachable?<a class="headerlink" href="#q5-how-do-you-design-an-ai-serving-system-to-handle-catastrophic-cascading-failures-when-a-downstream-database-or-feature-store-becomes-unreachable" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-1. <strong>Circuit Breakers (Fail Fast)</strong>:
-   - Wrap feature store calls with a circuit breaker (e.g. Netflix Resilience4j / Envoy circuit breakers). If error rate exceeds <span class="arithmatex">\(50\%\)</span> or latency exceeds <span class="arithmatex">\(20\text{ ms}\)</span> over a 10-second rolling window, open the circuit immediately.
-   - Subsequent requests fail fast within <span class="arithmatex">\(&lt;1\text{ ms}\)</span> rather than hanging until connection timeouts expire, preventing threadpool exhaustion in the serving gateway.
-2. <strong>Hierarchical Fallback Strategy</strong>:
-   - <em>Tier 1 Fallback (Local Cache)</em>: Query a local in-memory LRU cache on the serving pod containing recently fetched feature vectors.
-   - <em>Tier 2 Fallback (Default Feature Imputation)</em>: If absent from cache, impute feature defaults (e.g. median population feature values) and score with the model.
-   - <em>Tier 3 Fallback (Static Heuristic Model)</em>: If the model server itself is degraded, bypass the neural pipeline entirely and return a pre-computed static JSON list of Top-50 trending/popular items stored in a high-availability CDN or edge bucket.
-3. <strong>Graceful Degradation Logging</strong>:
-   - Tag responses with header <code>X-Serving-Mode: degraded-fallback</code> to alert observability dashboards and exclude degraded inference events from production training sets.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ol>
+<li><strong>Circuit Breakers (Fail Fast)</strong>:</li>
+<li>Wrap feature store calls with a circuit breaker (e.g. Netflix Resilience4j / Envoy circuit breakers). If error rate exceeds <span class="arithmatex">\(50\%\)</span> or latency exceeds <span class="arithmatex">\(20\text{ ms}\)</span> over a 10-second rolling window, open the circuit immediately.</li>
+<li>Subsequent requests fail fast within <span class="arithmatex">\(&lt;1\text{ ms}\)</span> rather than hanging until connection timeouts expire, preventing threadpool exhaustion in the serving gateway.</li>
+<li><strong>Hierarchical Fallback Strategy</strong>:</li>
+<li><em>Tier 1 Fallback (Local Cache)</em>: Query a local in-memory LRU cache on the serving pod containing recently fetched feature vectors.</li>
+<li><em>Tier 2 Fallback (Default Feature Imputation)</em>: If absent from cache, impute feature defaults (e.g. median population feature values) and score with the model.</li>
+<li><em>Tier 3 Fallback (Static Heuristic Model)</em>: If the model server itself is degraded, bypass the neural pipeline entirely and return a pre-computed static JSON list of Top-50 trending/popular items stored in a high-availability CDN or edge bucket.</li>
+<li><strong>Graceful Degradation Logging</strong>:</li>
+<li>Tag responses with header <code>X-Serving-Mode: degraded-fallback</code> to alert observability dashboards and exclude degraded inference events from production training sets.</li>
+</ol>
 <hr />
 <h2 id="8-mastery-ladder">8. Mastery Ladder<a class="headerlink" href="#8-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Articulate the standard 7-step AI system design interview framework.</li>
-<li>[ ] <strong>L2:</strong> Formulate latency budgets and throughput QPS constraints for a sub-50ms inference SLA.</li>
-<li>[ ] <strong>L3:</strong> Explain the architectural separation between the online serving path and the offline analytical path.</li>
-<li>[ ] <strong>L4:</strong> Apply the Roofline model and arithmetic intensity to diagnose compute vs. memory-bandwidth bottlenecks.</li>
-<li>[ ] <strong>L5:</strong> Calculate the generation latency of an LLM given parameter count and GPU memory bandwidth.</li>
-<li>[ ] <strong>L6:</strong> Derive the exact memory formula for the Transformer Key-Value (KV) cache under Multi-Head vs Grouped-Query Attention.</li>
-<li>[ ] <strong>L7:</strong> Explain the mathematical proof showing why Speculative Decoding preserves target model output distribution.</li>
-<li>[ ] <strong>L8:</strong> Design a Two-Stage Retrieval and Ranking architecture balancing sub-linear vector search with heavy neural scoring.</li>
-<li>[ ] <strong>L9:</strong> Formulate the LinUCB bandit equation to solve cold-start exploration in recommendation systems.</li>
-<li>[ ] <strong>L10:</strong> Architect an end-to-end multi-tier fallback and circuit breaker strategy guaranteeing <span class="arithmatex">\(99.99\%\)</span> availability under catastrophic downstream outages.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Articulate the standard 7-step AI system design interview framework.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Formulate latency budgets and throughput QPS constraints for a sub-50ms inference SLA.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Explain the architectural separation between the online serving path and the offline analytical path.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Apply the Roofline model and arithmetic intensity to diagnose compute vs. memory-bandwidth bottlenecks.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Calculate the generation latency of an LLM given parameter count and GPU memory bandwidth.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Derive the exact memory formula for the Transformer Key-Value (KV) cache under Multi-Head vs Grouped-Query Attention.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Explain the mathematical proof showing why Speculative Decoding preserves target model output distribution.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Design a Two-Stage Retrieval and Ranking architecture balancing sub-linear vector search with heavy neural scoring.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Formulate the LinUCB bandit equation to solve cold-start exploration in recommendation systems.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Architect an end-to-end multi-tier fallback and circuit breaker strategy guaranteeing <span class="arithmatex">\(99.99\%\)</span> availability under catastrophic downstream outages.</li>
 </ul>
 
 

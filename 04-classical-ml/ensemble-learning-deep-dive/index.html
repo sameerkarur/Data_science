@@ -4321,18 +4321,24 @@ The variance of the ensemble average <span class="arithmatex">\(\bar{f}(\mathbf{
 <div class="arithmatex">\[\text{Var}(\bar{f}(\mathbf{x})) = \rho \sigma^2 + \frac{1 - \rho}{B} \sigma^2\]</div>
 <h4 id="crucial-insights-from-the-formula">Crucial Insights from the Formula:<a class="headerlink" href="#crucial-insights-from-the-formula" title="Permanent link">&para;</a></h4>
 <ol>
-<li>As the number of trees <span class="arithmatex">\(B \to \infty\)</span>:
+<li>
+<p>As the number of trees <span class="arithmatex">\(B \to \infty\)</span>:
    $<span class="arithmatex">\(\lim_{B \to \infty} \text{Var}(\bar{f}) = \rho \sigma^2\)</span>$
-   The second term <span class="arithmatex">\(\frac{1 - \rho}{B} \sigma^2\)</span> vanishes, but the first term <span class="arithmatex">\(\rho \sigma^2\)</span> acts as an <strong>irreducible variance floor</strong> dictated entirely by the correlation <span class="arithmatex">\(\rho\)</span> between trees!</li>
-<li>If trees are identical (<span class="arithmatex">\(\rho = 1\)</span>), averaging does nothing: <span class="arithmatex">\(\text{Var} = \sigma^2\)</span>.</li>
+   The second term <span class="arithmatex">\(\frac{1 - \rho}{B} \sigma^2\)</span> vanishes, but the first term <span class="arithmatex">\(\rho \sigma^2\)</span> acts as an <strong>irreducible variance floor</strong> dictated entirely by the correlation <span class="arithmatex">\(\rho\)</span> between trees!</p>
+</li>
+<li>
+<p>If trees are identical (<span class="arithmatex">\(\rho = 1\)</span>), averaging does nothing: <span class="arithmatex">\(\text{Var} = \sigma^2\)</span>.</p>
+</li>
 <li>If trees are completely uncorrelated (<span class="arithmatex">\(\rho = 0\)</span>), variance drops linearly: <span class="arithmatex">\(\text{Var} = \sigma^2 / B\)</span>.</li>
 </ol>
 <h3 id="22-random-forest-decorrelation-feature-subsampling">2.2 Random Forest Decorrelation: Feature Subsampling<a class="headerlink" href="#22-random-forest-decorrelation-feature-subsampling" title="Permanent link">&para;</a></h3>
 <p>Standard Bagging builds trees using bootstrap samples of rows. However, if the dataset contains one dominant, highly predictive feature (e.g., <span class="arithmatex">\(x_1\)</span>), every tree will split on <span class="arithmatex">\(x_1\)</span> at the root node. The resulting trees look very similar, yielding a high correlation <span class="arithmatex">\(\rho \approx 0.8\)</span>.</p>
 <p>Breiman's <strong>Random Forest</strong> introduces a second source of randomization: <strong>Feature Subsampling</strong>.
-At every candidate split in every tree, the algorithm considers only a random subset of <span class="arithmatex">\(m\)</span> features out of all <span class="arithmatex">\(p\)</span> features:
-- For <strong>Classification</strong>: <span class="arithmatex">\(m = \lfloor\sqrt{p}\rfloor\)</span>
-- For <strong>Regression</strong>: <span class="arithmatex">\(m = \lfloor p / 3 \rfloor\)</span></p>
+At every candidate split in every tree, the algorithm considers only a random subset of <span class="arithmatex">\(m\)</span> features out of all <span class="arithmatex">\(p\)</span> features:</p>
+<ul>
+<li>For <strong>Classification</strong>: <span class="arithmatex">\(m = \lfloor\sqrt{p}\rfloor\)</span></li>
+<li>For <strong>Regression</strong>: <span class="arithmatex">\(m = \lfloor p / 3 \rfloor\)</span></li>
+</ul>
 <p>By forcing trees to split on suboptimal alternative features, Random Forests artificially suppress pairwise correlation <span class="arithmatex">\(\rho \downarrow\)</span>, pushing the variance floor <span class="arithmatex">\(\rho \sigma^2\)</span> significantly lower.</p>
 <h3 id="23-out-of-bag-oob-error-estimation">2.3 Out-of-Bag (OOB) Error Estimation<a class="headerlink" href="#23-out-of-bag-oob-error-estimation" title="Permanent link">&para;</a></h3>
 <p>In bootstrap sampling with replacement, we draw <span class="arithmatex">\(n\)</span> samples from a dataset of size <span class="arithmatex">\(n\)</span>.
@@ -4435,22 +4441,26 @@ g_i = \frac{\partial L(y_i, \hat{y}_i^{(t-1)})}{\partial \hat{y}_i^{(t-1)}}, \qq
     D -- Yes --&gt; E["Accept Split"]
     D -- No --&gt; F["Prune Split (Do not split node)"]</code></pre>
 <h3 id="44-sparsity-aware-split-finding">4.4 Sparsity-Aware Split Finding<a class="headerlink" href="#44-sparsity-aware-split-finding" title="Permanent link">&para;</a></h3>
-<p>In real datasets, features often contain missing values (<code>NaN</code>). XGBoost handles missingness natively:
-1. For a split candidate, all samples with non-missing values are partitioned into <span class="arithmatex">\(I_L\)</span> and <span class="arithmatex">\(I_R\)</span>.
-2. All missing samples are tentatively placed entirely in <span class="arithmatex">\(I_L\)</span>, and the Gain is calculated.
-3. Then all missing samples are placed entirely in <span class="arithmatex">\(I_R\)</span>, and the Gain is calculated.
-4. The direction that yields the highest Gain is retained as the <strong>default branch</strong>. At inference time, any sample with a missing value is automatically routed down this default branch.</p>
+<p>In real datasets, features often contain missing values (<code>NaN</code>). XGBoost handles missingness natively:</p>
+<ol>
+<li>For a split candidate, all samples with non-missing values are partitioned into <span class="arithmatex">\(I_L\)</span> and <span class="arithmatex">\(I_R\)</span>.</li>
+<li>All missing samples are tentatively placed entirely in <span class="arithmatex">\(I_L\)</span>, and the Gain is calculated.</li>
+<li>Then all missing samples are placed entirely in <span class="arithmatex">\(I_R\)</span>, and the Gain is calculated.</li>
+<li>The direction that yields the highest Gain is retained as the <strong>default branch</strong>. At inference time, any sample with a missing value is automatically routed down this default branch.</li>
+</ol>
 <hr />
 <h2 id="5-lightgbm-architectural-innovations">5. LightGBM: Architectural Innovations<a class="headerlink" href="#5-lightgbm-architectural-innovations" title="Permanent link">&para;</a></h2>
 <p>Microsoft's <strong>LightGBM</strong> (Ke et al., 2017) was designed to train orders of magnitude faster on massive web-scale datasets using three core algorithmic innovations.</p>
 <h3 id="51-gradient-based-one-side-sampling-goss">5.1 Gradient-Based One-Side Sampling (GOSS)<a class="headerlink" href="#51-gradient-based-one-side-sampling-goss" title="Permanent link">&para;</a></h3>
 <p>In gradient boosting, instances with large gradients <span class="arithmatex">\(|g_i|\)</span> contribute much more to the split gain than instances with small gradients (which are already well-trained).
-GOSS balances sample size reduction with statistical unbiasedness:
-1. Rank all <span class="arithmatex">\(n\)</span> training instances by absolute gradient <span class="arithmatex">\(|g_i|\)</span>.
-2. Keep the top <span class="arithmatex">\(a \times 100\%\)</span> instances with the largest gradients (e.g., <span class="arithmatex">\(a = 0.2\)</span>).
-3. Randomly sample a fraction <span class="arithmatex">\(b \times 100\%\)</span> from the remaining <span class="arithmatex">\((1 - a)\)</span> small-gradient instances (e.g., <span class="arithmatex">\(b = 0.1\)</span>).
-4. To prevent skewing the gradient sum distribution, amplify the small-gradient samples by weight <span class="arithmatex">\(\frac{1 - a}{b}\)</span>:
-   $<span class="arithmatex">\(\tilde{g}_i = g_i \cdot \frac{1 - a}{b} \quad \text{for sampled small-gradient points}\)</span>$</p>
+GOSS balances sample size reduction with statistical unbiasedness:</p>
+<ol>
+<li>Rank all <span class="arithmatex">\(n\)</span> training instances by absolute gradient <span class="arithmatex">\(|g_i|\)</span>.</li>
+<li>Keep the top <span class="arithmatex">\(a \times 100\%\)</span> instances with the largest gradients (e.g., <span class="arithmatex">\(a = 0.2\)</span>).</li>
+<li>Randomly sample a fraction <span class="arithmatex">\(b \times 100\%\)</span> from the remaining <span class="arithmatex">\((1 - a)\)</span> small-gradient instances (e.g., <span class="arithmatex">\(b = 0.1\)</span>).</li>
+<li>To prevent skewing the gradient sum distribution, amplify the small-gradient samples by weight <span class="arithmatex">\(\frac{1 - a}{b}\)</span>:
+   $<span class="arithmatex">\(\tilde{g}_i = g_i \cdot \frac{1 - a}{b} \quad \text{for sampled small-gradient points}\)</span>$</li>
+</ol>
 <p>GOSS reduces sample size by 70–80% while provably preserving split gain accuracy!</p>
 <h3 id="52-exclusive-feature-bundling-efb">5.2 Exclusive Feature Bundling (EFB)<a class="headerlink" href="#52-exclusive-feature-bundling-efb" title="Permanent link">&para;</a></h3>
 <p>High-dimensional tabular data is often highly sparse (e.g., one-hot encodings). Sparse features are rarely non-zero simultaneously (mutually exclusive).
@@ -4475,12 +4485,14 @@ LightGBM grows trees <strong>leaf-wise</strong> (best-first): it always splits t
 <h3 id="61-ordered-target-encoding-preventing-target-leakage">6.1 Ordered Target Encoding (Preventing Target Leakage)<a class="headerlink" href="#61-ordered-target-encoding-preventing-target-leakage" title="Permanent link">&para;</a></h3>
 <p>Standard target encoding replaces a categorical level <span class="arithmatex">\(c\)</span> with the target mean: <span class="arithmatex">\(\bar{y}_c = \frac{\sum_{i: x_i = c} y_i}{N_c}\)</span>.
 However, because sample <span class="arithmatex">\(i\)</span>'s own target <span class="arithmatex">\(y_i\)</span> is included in the mean, this introduces catastrophic <strong>conditional shift / target leakage</strong>, causing trees to overfit immediately.</p>
-<p>CatBoost introduces <strong>Ordered Target Encoding</strong>:
-1. Generate an online random permutation <span class="arithmatex">\(\sigma = (\sigma_1, \dots, \sigma_n)\)</span> of the training instances.
-2. For sample <span class="arithmatex">\(i\)</span>, calculate the target encoding using strictly the historical instances preceding it in the permutation:
+<p>CatBoost introduces <strong>Ordered Target Encoding</strong>:</p>
+<ol>
+<li>Generate an online random permutation <span class="arithmatex">\(\sigma = (\sigma_1, \dots, \sigma_n)\)</span> of the training instances.</li>
+<li>For sample <span class="arithmatex">\(i\)</span>, calculate the target encoding using strictly the historical instances preceding it in the permutation:
    $<span class="arithmatex">\(\hat{x}_{\sigma_k} = \frac{\sum_{j=1}^{k-1} \mathbb{I}(x_{\sigma_j} = x_{\sigma_k}) y_{\sigma_j} + a \cdot P}{\sum_{j=1}^{k-1} \mathbb{I}(x_{\sigma_j} = x_{\sigma_k}) + a}\)</span>$
    where <span class="arithmatex">\(P\)</span> is the global target prior and <span class="arithmatex">\(a &gt; 0\)</span> is a smoothing parameter.
-Because sample <span class="arithmatex">\(\sigma_k\)</span> never sees its own label or labels from the "future," target leakage is mathematically eliminated.</p>
+Because sample <span class="arithmatex">\(\sigma_k\)</span> never sees its own label or labels from the "future," target leakage is mathematically eliminated.</li>
+</ol>
 <h3 id="62-symmetric-oblivious-trees">6.2 Symmetric Oblivious Trees<a class="headerlink" href="#62-symmetric-oblivious-trees" title="Permanent link">&para;</a></h3>
 <p>Standard trees grow asymmetric split structures. In contrast, CatBoost builds <strong>Oblivious Trees</strong>:
 At any given depth <span class="arithmatex">\(d\)</span>, <strong>all nodes across that entire level share the exact same splitting feature and threshold</strong>.</p>
@@ -4675,28 +4687,75 @@ The <strong>Split Gain</strong> is the reduction in loss:
 $<span class="arithmatex">\(\text{Gain} = \mathcal{L}_{\text{before}} - \mathcal{L}_{\text{after}} = \frac{1}{2} \left[ \frac{G_L^2}{H_L + \lambda} + \frac{G_R^2}{H_R + \lambda} - \frac{(G_L + G_R)^2}{H_L + H_R + \lambda} \right] - \gamma\)</span>$</p>
 <hr />
 <h3 id="q3-compare-the-core-algorithmic-innovations-of-xgboost-lightgbm-and-catboost">Q3: Compare the core algorithmic innovations of XGBoost, LightGBM, and CatBoost.<a class="headerlink" href="#q3-compare-the-core-algorithmic-innovations-of-xgboost-lightgbm-and-catboost" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-| Dimension | XGBoost | LightGBM | CatBoost |
-|---|---|---|---|
-| <strong>Tree Growth Policy</strong> | Level-wise (depth-first) | Leaf-wise (best-first) | Symmetric Oblivious Trees |
-| <strong>Optimization</strong> | Second-order Taylor (<span class="arithmatex">\(g_i, h_i\)</span>) | Second-order Taylor (<span class="arithmatex">\(g_i, h_i\)</span>) | Second-order + Ordered Boosting |
-| <strong>Split Finding</strong> | Exact greedy or Weighted Quantile Sketch | Histogram-based Binning | Quantized numerical features |
-| <strong>Sample Subsampling</strong> | Uniform row subsampling | GOSS (Gradient-based One-Side Sampling) | Minimal variance sampling / Bernoulli |
-| <strong>Sparse Features</strong> | Sparsity-aware default routing | EFB (Exclusive Feature Bundling) | Native one-hot / combinations |
-| <strong>Categorical Data</strong> | Requires pre-encoding (one-hot / target) | Optimal subset bin sorting (<span class="arithmatex">\(2^k\)</span>) | Ordered Target Encoding (no leakage) |
-| <strong>Inference Engine</strong> | Pointer chasing across asymmetric nodes | Pointer chasing across asymmetric nodes | Bitwise boolean evaluation + lookup table |</p>
+<p><strong>Model Answer:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>XGBoost</th>
+<th>LightGBM</th>
+<th>CatBoost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tree Growth Policy</strong></td>
+<td>Level-wise (depth-first)</td>
+<td>Leaf-wise (best-first)</td>
+<td>Symmetric Oblivious Trees</td>
+</tr>
+<tr>
+<td><strong>Optimization</strong></td>
+<td>Second-order Taylor (<span class="arithmatex">\(g_i, h_i\)</span>)</td>
+<td>Second-order Taylor (<span class="arithmatex">\(g_i, h_i\)</span>)</td>
+<td>Second-order + Ordered Boosting</td>
+</tr>
+<tr>
+<td><strong>Split Finding</strong></td>
+<td>Exact greedy or Weighted Quantile Sketch</td>
+<td>Histogram-based Binning</td>
+<td>Quantized numerical features</td>
+</tr>
+<tr>
+<td><strong>Sample Subsampling</strong></td>
+<td>Uniform row subsampling</td>
+<td>GOSS (Gradient-based One-Side Sampling)</td>
+<td>Minimal variance sampling / Bernoulli</td>
+</tr>
+<tr>
+<td><strong>Sparse Features</strong></td>
+<td>Sparsity-aware default routing</td>
+<td>EFB (Exclusive Feature Bundling)</td>
+<td>Native one-hot / combinations</td>
+</tr>
+<tr>
+<td><strong>Categorical Data</strong></td>
+<td>Requires pre-encoding (one-hot / target)</td>
+<td>Optimal subset bin sorting (<span class="arithmatex">\(2^k\)</span>)</td>
+<td>Ordered Target Encoding (no leakage)</td>
+</tr>
+<tr>
+<td><strong>Inference Engine</strong></td>
+<td>Pointer chasing across asymmetric nodes</td>
+<td>Pointer chasing across asymmetric nodes</td>
+<td>Bitwise boolean evaluation + lookup table</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h3 id="q4-explain-goss-gradient-based-one-side-sampling-in-lightgbm-and-how-it-preserves-gradient-variance">Q4: Explain GOSS (Gradient-based One-Side Sampling) in LightGBM and how it preserves gradient variance.<a class="headerlink" href="#q4-explain-goss-gradient-based-one-side-sampling-in-lightgbm-and-how-it-preserves-gradient-variance" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
 In GBDT, sample <span class="arithmatex">\(i\)</span> with a small gradient has already been well-fitted (low residual error), contributing minimal gain to split criteria.
 However, simply discarding all small-gradient samples skews the underlying data distribution, inducing severe bias.
-<strong>GOSS Algorithm:</strong>
-1. Sort all training samples by absolute gradient <span class="arithmatex">\(|g_i|\)</span>.
-2. Retain the top <span class="arithmatex">\(a \times 100\%\)</span> instances with the largest gradients: subset <span class="arithmatex">\(A\)</span>.
-3. Draw a random subsample of size <span class="arithmatex">\(b \times 100\%\)</span> from the remaining small-gradient pool <span class="arithmatex">\(A^c\)</span>: subset <span class="arithmatex">\(B\)</span>.
-4. When calculating split gain, calculate the gradient sum over <span class="arithmatex">\(A \cup B\)</span> by weighting samples in <span class="arithmatex">\(B\)</span> by factor <span class="arithmatex">\(\frac{1 - a}{b}\)</span>:
+<strong>GOSS Algorithm:</strong></p>
+<ol>
+<li>Sort all training samples by absolute gradient <span class="arithmatex">\(|g_i|\)</span>.</li>
+<li>Retain the top <span class="arithmatex">\(a \times 100\%\)</span> instances with the largest gradients: subset <span class="arithmatex">\(A\)</span>.</li>
+<li>Draw a random subsample of size <span class="arithmatex">\(b \times 100\%\)</span> from the remaining small-gradient pool <span class="arithmatex">\(A^c\)</span>: subset <span class="arithmatex">\(B\)</span>.</li>
+<li>When calculating split gain, calculate the gradient sum over <span class="arithmatex">\(A \cup B\)</span> by weighting samples in <span class="arithmatex">\(B\)</span> by factor <span class="arithmatex">\(\frac{1 - a}{b}\)</span>:
    $<span class="arithmatex">\(\tilde{G}_j = \sum_{i \in A \cap I_j} g_i + \frac{1 - a}{b} \sum_{i \in B \cap I_j} g_i\)</span>$
-Ke et al. proved that <span class="arithmatex">\(\mathbb{E}[\tilde{G}_j] = G_j\)</span>, meaning the estimated gradient is strictly unbiased. The variance increase introduced by subsampling is bounded by <span class="arithmatex">\(\mathcal{O}\left(\frac{1 - a}{\sqrt{b \cdot n}}\right)\)</span>, which is negligible compared to the 80% reduction in training computation.</p>
+Ke et al. proved that <span class="arithmatex">\(\mathbb{E}[\tilde{G}_j] = G_j\)</span>, meaning the estimated gradient is strictly unbiased. The variance increase introduced by subsampling is bounded by <span class="arithmatex">\(\mathcal{O}\left(\frac{1 - a}{\sqrt{b \cdot n}}\right)\)</span>, which is negligible compared to the 80% reduction in training computation.</li>
+</ol>
 <hr />
 <h3 id="q5-what-is-target-leakage-in-naive-target-encoding-and-how-does-catboosts-ordered-target-encoding-mathematically-eliminate-it">Q5: What is target leakage in naive target encoding, and how does CatBoost's Ordered Target Encoding mathematically eliminate it?<a class="headerlink" href="#q5-what-is-target-leakage-in-naive-target-encoding-and-how-does-catboosts-ordered-target-encoding-mathematically-eliminate-it" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4706,39 +4765,51 @@ $<span class="arithmatex">\(\hat{x}_i = \frac{\sum_{k=1}^n \mathbb{I}(x_k = c) y
 Notice that <span class="arithmatex">\(y_i\)</span> is included directly in the numerator!
 If a rare category appears only twice with targets <span class="arithmatex">\(y_1 = 1, y_2 = 1\)</span>, then <span class="arithmatex">\(\hat{x}_1 = 1.0\)</span>. The tree creates a split <span class="arithmatex">\(\hat{x}_i &gt; 0.9\)</span>, achieving a perfect training split. At test time, an unseen sample with that category receives an encoding that does not correlate with its true label. This is <strong>target leakage</strong> (or target shift).</p>
 <p><strong>CatBoost Ordered Target Encoding Solution:</strong>
-CatBoost enforces a strict causal ordering to simulate historical online inference:
-1. Generate an online random permutation <span class="arithmatex">\(\boldsymbol{\sigma} = (\sigma_1, \dots, \sigma_n)\)</span> of the training dataset.
-2. For any sample <span class="arithmatex">\(\sigma_k\)</span>, the encoding is computed <strong>strictly using samples that precede it in the permutation</strong>:
+CatBoost enforces a strict causal ordering to simulate historical online inference:</p>
+<ol>
+<li>Generate an online random permutation <span class="arithmatex">\(\boldsymbol{\sigma} = (\sigma_1, \dots, \sigma_n)\)</span> of the training dataset.</li>
+<li>For any sample <span class="arithmatex">\(\sigma_k\)</span>, the encoding is computed <strong>strictly using samples that precede it in the permutation</strong>:
    $<span class="arithmatex">\(\hat{x}_{\sigma_k} = \frac{\sum_{j=1}^{k-1} \mathbb{I}(x_{\sigma_j} = x_{\sigma_k}) y_{\sigma_j} + a \cdot P}{\sum_{j=1}^{k-1} \mathbb{I}(x_{\sigma_j} = x_{\sigma_k}) + a}\)</span>$
    where <span class="arithmatex">\(P = \frac{1}{n}\sum_{i=1}^n y_i\)</span> is the global prior and <span class="arithmatex">\(a\)</span> is a prior weight.
-Because sample <span class="arithmatex">\(\sigma_k\)</span>'s own label <span class="arithmatex">\(y_{\sigma_k}\)</span> is strictly excluded from the calculation, the conditional expectation <span class="arithmatex">\(\mathbb{E}[\hat{x}_{\sigma_k} | y_{\sigma_k}]\)</span> is independent of <span class="arithmatex">\(y_{\sigma_k}\)</span>. Target leakage is completely eliminated. Multiple permutations are averaged across trees to stabilize variance.</p>
+Because sample <span class="arithmatex">\(\sigma_k\)</span>'s own label <span class="arithmatex">\(y_{\sigma_k}\)</span> is strictly excluded from the calculation, the conditional expectation <span class="arithmatex">\(\mathbb{E}[\hat{x}_{\sigma_k} | y_{\sigma_k}]\)</span> is independent of <span class="arithmatex">\(y_{\sigma_k}\)</span>. Target leakage is completely eliminated. Multiple permutations are averaged across trees to stabilize variance.</li>
+</ol>
 <hr />
 <h3 id="q6-why-do-oblivious-symmetric-trees-in-catboost-execute-orders-of-magnitude-faster-at-inference-time-than-standard-asymmetric-cart-trees">Q6: Why do oblivious (symmetric) trees in CatBoost execute orders of magnitude faster at inference time than standard asymmetric CART trees?<a class="headerlink" href="#q6-why-do-oblivious-symmetric-trees-in-catboost-execute-orders-of-magnitude-faster-at-inference-time-than-standard-asymmetric-cart-trees" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-In standard asymmetric CART/XGBoost trees:
-- Evaluating an input <span class="arithmatex">\(\mathbf{x}\)</span> requires traversing a branching graph of pointer-linked nodes.
-- At each node, the CPU fetches the node struct, evaluates a conditional branch (<code>if x[feat] &lt;= thr goto left else goto right</code>), incurring frequent <strong>CPU branch mispredictions</strong> and non-contiguous memory pointer dereferences.</p>
-<p>In CatBoost Oblivious Trees:
-- At depth <span class="arithmatex">\(d\)</span>, all nodes across that entire horizontal level share the <strong>identical feature and threshold</strong> <span class="arithmatex">\((j_d, \theta_d)\)</span>.
-- For a tree of depth <span class="arithmatex">\(D\)</span> (typically <span class="arithmatex">\(D = 6\)</span>), we evaluate <span class="arithmatex">\(D\)</span> binary boolean comparisons independently:
-  $<span class="arithmatex">\(b_0 = \mathbb{I}(x_{j_0} &gt; \theta_0), \quad b_1 = \mathbb{I}(x_{j_1} &gt; \theta_1), \quad \dots, \quad b_{D-1} = \mathbb{I}(x_{j_{D-1}} &gt; \theta_{D-1})\)</span>$
-- The leaf index is computed via a single bitwise shift-or expression:
-  $<span class="arithmatex">\(\text{Leaf Index} = \sum_{k=0}^{D-1} b_k \cdot 2^k = b_0 \,|\, (b_1 \ll 1) \,|\, (b_2 \ll 2) \,|\, \dots \,|\, (b_{D-1} \ll (D - 1))\)</span>$
-- The prediction is fetched directly from a flat array: <code>values[Leaf Index]</code>.
+In standard asymmetric CART/XGBoost trees:</p>
+<ul>
+<li>Evaluating an input <span class="arithmatex">\(\mathbf{x}\)</span> requires traversing a branching graph of pointer-linked nodes.</li>
+<li>At each node, the CPU fetches the node struct, evaluates a conditional branch (<code>if x[feat] &lt;= thr goto left else goto right</code>), incurring frequent <strong>CPU branch mispredictions</strong> and non-contiguous memory pointer dereferences.</li>
+</ul>
+<p>In CatBoost Oblivious Trees:</p>
+<ul>
+<li>At depth <span class="arithmatex">\(d\)</span>, all nodes across that entire horizontal level share the <strong>identical feature and threshold</strong> <span class="arithmatex">\((j_d, \theta_d)\)</span>.</li>
+<li>
+<p>For a tree of depth <span class="arithmatex">\(D\)</span> (typically <span class="arithmatex">\(D = 6\)</span>), we evaluate <span class="arithmatex">\(D\)</span> binary boolean comparisons independently:
+  $<span class="arithmatex">\(b_0 = \mathbb{I}(x_{j_0} &gt; \theta_0), \quad b_1 = \mathbb{I}(x_{j_1} &gt; \theta_1), \quad \dots, \quad b_{D-1} = \mathbb{I}(x_{j_{D-1}} &gt; \theta_{D-1})\)</span>$</p>
+</li>
+<li>
+<p>The leaf index is computed via a single bitwise shift-or expression:
+  $<span class="arithmatex">\(\text{Leaf Index} = \sum_{k=0}^{D-1} b_k \cdot 2^k = b_0 \,|\, (b_1 \ll 1) \,|\, (b_2 \ll 2) \,|\, \dots \,|\, (b_{D-1} \ll (D - 1))\)</span>$</p>
+</li>
+<li>
+<p>The prediction is fetched directly from a flat array: <code>values[Leaf Index]</code>.
 This is completely <strong>branchless</strong>, vectorizes seamlessly via CPU SIMD (AVX2/AVX-512) instructions, and fits entirely inside the L1 CPU instruction cache.</p>
+</li>
+</ul>
 <hr />
 <h2 id="11-mastery-ladder">11. Mastery Ladder<a class="headerlink" href="#11-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> You can state the difference between Bagging (variance reduction) and Boosting (bias &amp; variance reduction).</li>
-<li>[ ] <strong>L2:</strong> You can write the Bagging variance formula <span class="arithmatex">\(\rho\sigma^2 + \frac{1-\rho}{B}\sigma^2\)</span> and explain the correlation floor.</li>
-<li>[ ] <strong>L3:</strong> You can prove why Out-of-Bag (OOB) error leaves approximately <span class="arithmatex">\(36.8\%\)</span> of samples unsampled via <span class="arithmatex">\((1 - 1/n)^n \to e^{-1}\)</span>.</li>
-<li>[ ] <strong>L4:</strong> You can formulate GBDT as functional gradient descent on pseudo-residuals <span class="arithmatex">\(-g_i\)</span>.</li>
-<li>[ ] <strong>L5:</strong> You can derive XGBoost optimal leaf weights <span class="arithmatex">\(w_j^* = -\frac{\sum g_i}{\sum h_i + \lambda}\)</span> via second-order Taylor expansion.</li>
-<li>[ ] <strong>L6:</strong> You can write the XGBoost split gain formula and explain how <span class="arithmatex">\(\gamma\)</span> acts as built-in pruning.</li>
-<li>[ ] <strong>L7:</strong> You can explain GOSS and EFB in LightGBM and contrast level-wise vs. leaf-wise tree growth.</li>
-<li>[ ] <strong>L8:</strong> You can explain target leakage in categorical target encoding and how CatBoost Ordered Target Encoding prevents it.</li>
-<li>[ ] <strong>L9:</strong> You can explain why symmetric oblivious trees enable branchless SIMD evaluation at inference time.</li>
-<li>[ ] <strong>L10:</strong> You can implement a functional GBDT regressor from scratch in NumPy and benchmark against scikit-learn.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can state the difference between Bagging (variance reduction) and Boosting (bias &amp; variance reduction).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can write the Bagging variance formula <span class="arithmatex">\(\rho\sigma^2 + \frac{1-\rho}{B}\sigma^2\)</span> and explain the correlation floor.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can prove why Out-of-Bag (OOB) error leaves approximately <span class="arithmatex">\(36.8\%\)</span> of samples unsampled via <span class="arithmatex">\((1 - 1/n)^n \to e^{-1}\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can formulate GBDT as functional gradient descent on pseudo-residuals <span class="arithmatex">\(-g_i\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can derive XGBoost optimal leaf weights <span class="arithmatex">\(w_j^* = -\frac{\sum g_i}{\sum h_i + \lambda}\)</span> via second-order Taylor expansion.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can write the XGBoost split gain formula and explain how <span class="arithmatex">\(\gamma\)</span> acts as built-in pruning.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can explain GOSS and EFB in LightGBM and contrast level-wise vs. leaf-wise tree growth.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can explain target leakage in categorical target encoding and how CatBoost Ordered Target Encoding prevents it.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can explain why symmetric oblivious trees enable branchless SIMD evaluation at inference time.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can implement a functional GBDT regressor from scratch in NumPy and benchmark against scikit-learn.</li>
 </ul>
 
 

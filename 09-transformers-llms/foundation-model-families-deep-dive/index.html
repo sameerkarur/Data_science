@@ -4212,9 +4212,11 @@
 <div class="arithmatex">\[
 P(x_1, \dots, x_T) = \prod_{t=1}^T P(x_t \mid x_1, \dots, x_{t-1})
 \]</div>
-<p>While necessary for generation, directional conditioning severely handicaps sequence comprehension. In natural language, the identity of an ambiguous word depends equally on subsequent context:
-- <em>"The </em><em>crane</em><em> lifted the five-ton steel beam."</em> (Construction vehicle)
-- <em>"The </em><em>crane</em><em> folded its long wings by the lake."</em> (Bird)</p>
+<p>While necessary for generation, directional conditioning severely handicaps sequence comprehension. In natural language, the identity of an ambiguous word depends equally on subsequent context:</p>
+<ul>
+<li><em>"The <strong>crane</strong> lifted the five-ton steel beam."</em> (Construction vehicle)</li>
+<li><em>"The <strong>crane</strong> folded its long wings by the lake."</em> (Bird)</li>
+</ul>
 <p><a href="https://arxiv.org/abs/1810.04805">Devlin et al. (2018)</a> introduced <strong>BERT (Bidirectional Encoder Representations from Transformers)</strong> to capture non-directional context by masking random tokens and training the model to reconstruct them from deep bidirectional representations.</p>
 <pre class="mermaid"><code>flowchart TD
     Tokens["Input: ['[CLS]', 'The', '[MASK]', 'lifted', 'the', 'beam', '[SEP]']"] --&gt; Embeddings["WordPiece + Position + Segment Embeddings"]
@@ -4226,24 +4228,34 @@ P(x_1, \dots, x_T) = \prod_{t=1}^T P(x_t \mid x_1, \dots, x_{t-1})
 <h3 id="22-pretraining-objectives-mlm-and-nsp">2.2 Pretraining Objectives: MLM and NSP<a class="headerlink" href="#22-pretraining-objectives-mlm-and-nsp" title="Permanent link">&para;</a></h3>
 <h4 id="masked-language-modeling-mlm-and-the-801010-rule">Masked Language Modeling (MLM) and the 80/10/10 Rule<a class="headerlink" href="#masked-language-modeling-mlm-and-the-801010-rule" title="Permanent link">&para;</a></h4>
 <p>BERT randomly selects <span class="arithmatex">\(15\%\)</span> of all input WordPiece tokens as prediction targets. However, if target tokens were always replaced with a special <code>[MASK]</code> token, the model would encounter a severe mismatch during downstream fine-tuning, where <code>[MASK]</code> tokens never appear.</p>
-<p>To mitigate this discrepancy, the <strong>80/10/10 corruption rule</strong> governs the chosen <span class="arithmatex">\(15\%\)</span> targets:
-1. <strong><span class="arithmatex">\(80\%\)</span> of the time</strong>: Replace the token with <code>[MASK]</code><br />
-<em>(e.g., "my dog is hairy" <span class="arithmatex">\(\to\)</span> "my dog is [MASK]")</em>
-2. <strong><span class="arithmatex">\(10\%\)</span> of the time</strong>: Replace the token with a random token from the vocabulary<br />
+<p>To mitigate this discrepancy, the <strong>80/10/10 corruption rule</strong> governs the chosen <span class="arithmatex">\(15\%\)</span> targets:</p>
+<ol>
+<li>
+<p><strong><span class="arithmatex">\(80\%\)</span> of the time</strong>: Replace the token with <code>[MASK]</code><br />
+<em>(e.g., "my dog is hairy" <span class="arithmatex">\(\to\)</span> "my dog is [MASK]")</em></p>
+</li>
+<li>
+<p><strong><span class="arithmatex">\(10\%\)</span> of the time</strong>: Replace the token with a random token from the vocabulary<br />
 <em>(e.g., "my dog is hairy" <span class="arithmatex">\(\to\)</span> "my dog is apple")</em><br />
-<em>Forces the model to maintain contextual representations for every token, since any observed word could be a corrupted intruder.</em>
-3. <strong><span class="arithmatex">\(10\%\)</span> of the time</strong>: Keep the original token unchanged<br />
+<em>Forces the model to maintain contextual representations for every token, since any observed word could be a corrupted intruder.</em></p>
+</li>
+<li>
+<p><strong><span class="arithmatex">\(10\%\)</span> of the time</strong>: Keep the original token unchanged<br />
 <em>(e.g., "my dog is hairy" <span class="arithmatex">\(\to\)</span> "my dog is hairy")</em><br />
 <em>Biases the representation towards the true observed token identity.</em></p>
+</li>
+</ol>
 <p>Let <span class="arithmatex">\(\mathcal{M}\)</span> be the set of masked token positions. The MLM objective minimizes cross-entropy strictly over <span class="arithmatex">\(\mathcal{M}\)</span>:</p>
 <div class="arithmatex">\[
 \mathcal{L}_{\text{MLM}}(\theta) = -\sum_{i \in \mathcal{M}} \log P(x_i \mid \tilde{\mathbf{x}}; \theta) = -\sum_{i \in \mathcal{M}} \log \left( \frac{\exp(\mathbf{h}_i^T \mathbf{w}_{x_i})}{\sum_{v \in \mathcal{V}} \exp(\mathbf{h}_i^T \mathbf{w}_v)} \right)
 \]</div>
 <p>where <span class="arithmatex">\(\mathbf{h}_i \in \mathbb{R}^{d_{\text{model}}}\)</span> is the output hidden state for position <span class="arithmatex">\(i\)</span>, and <span class="arithmatex">\(\mathbf{w}_v\)</span> is the embedding vector for vocabulary word <span class="arithmatex">\(v\)</span>.</p>
 <h4 id="next-sentence-prediction-nsp">Next Sentence Prediction (NSP)<a class="headerlink" href="#next-sentence-prediction-nsp" title="Permanent link">&para;</a></h4>
-<p>To learn discourse relationships between pairs of sentences <span class="arithmatex">\((A, B)\)</span>:
-- <span class="arithmatex">\(50\%\)</span> of training pairs are consecutive sentences from the corpus (<code>IsNext</code>).
-- <span class="arithmatex">\(50\%\)</span> of training pairs pair sentence <span class="arithmatex">\(A\)</span> with a randomly sampled sentence <span class="arithmatex">\(B\)</span> (<code>NotNext</code>).</p>
+<p>To learn discourse relationships between pairs of sentences <span class="arithmatex">\((A, B)\)</span>:</p>
+<ul>
+<li><span class="arithmatex">\(50\%\)</span> of training pairs are consecutive sentences from the corpus (<code>IsNext</code>).</li>
+<li><span class="arithmatex">\(50\%\)</span> of training pairs pair sentence <span class="arithmatex">\(A\)</span> with a randomly sampled sentence <span class="arithmatex">\(B\)</span> (<code>NotNext</code>).</li>
+</ul>
 <p>The representation of the special first token <code>[CLS]</code> is passed through a binary classification layer:</p>
 <div class="arithmatex">\[
 \mathcal{L}_{\text{NSP}}(\theta) = - y \log \sigma(\mathbf{h}_{\text{[CLS]}}^T \mathbf{w}_{\text{NSP}}) - (1 - y) \log (1 - \sigma(\mathbf{h}_{\text{[CLS]}}^T \mathbf{w}_{\text{NSP}}))
@@ -4266,10 +4278,12 @@ P(x_1, \dots, x_T) = \prod_{t=1}^T P(x_t \mid x_1, \dots, x_{t-1})
     Token2["'quick'"] --&gt; L2["Transformer Decoder Layer"] --&gt; P2["Predicts 'brown'"]
     Token3["'brown'"] --&gt; L3["Transformer Decoder Layer"] --&gt; P3["Predicts 'fox'"]
     L1 -.-&gt;|"Causal Mask (no forward flow)"| L2 -.-&gt; L3</code></pre>
-<p>GPT-3 revealed that once model scale crosses a critical threshold (<span class="arithmatex">\(\approx 10\text{B}-100\text{B}\)</span> parameters), models acquire <strong>In-Context Learning (ICL)</strong> without weight updates:
-- <strong>Zero-Shot</strong>: Prompt contains task instructions only.
-- <strong>One-Shot</strong>: Instructions followed by a single demonstration example.
-- <strong>Few-Shot</strong>: Instructions followed by <span class="arithmatex">\(k \in [3, 32]\)</span> demonstration pairs <span class="arithmatex">\(\langle x_i, y_i \rangle\)</span>.</p>
+<p>GPT-3 revealed that once model scale crosses a critical threshold (<span class="arithmatex">\(\approx 10\text{B}-100\text{B}\)</span> parameters), models acquire <strong>In-Context Learning (ICL)</strong> without weight updates:</p>
+<ul>
+<li><strong>Zero-Shot</strong>: Prompt contains task instructions only.</li>
+<li><strong>One-Shot</strong>: Instructions followed by a single demonstration example.</li>
+<li><strong>Few-Shot</strong>: Instructions followed by <span class="arithmatex">\(k \in [3, 32]\)</span> demonstration pairs <span class="arithmatex">\(\langle x_i, y_i \rangle\)</span>.</li>
+</ul>
 <p>Under ICL, the transformer's attention activations dynamically synthesize an internal task algorithm in its forward pass activations, behaving analogously to implicit gradient descent on the prompt's demonstrations (<a href="https://arxiv.org/abs/2212.07677">von Oswald et al., 2023</a>).</p>
 <hr />
 <h3 id="32-scaling-laws-kaplan-vs-chinchilla">3.2 Scaling Laws: Kaplan vs. Chinchilla<a class="headerlink" href="#32-scaling-laws-kaplan-vs-chinchilla" title="Permanent link">&para;</a></h3>
@@ -4338,9 +4352,11 @@ Parameters and tokens should scale in <strong>equal proportion</strong>:</p>
 <p>Offsets from 0 to 8 receive exact individual buckets, while larger offsets up to 128 are mapped logarithmically to 32 discrete buckets, allowing the model to generalize smoothly to longer sequences.</p>
 <hr />
 <h2 id="5-modern-open-llm-architectural-innovations">5. Modern Open LLM Architectural Innovations<a class="headerlink" href="#5-modern-open-llm-architectural-innovations" title="Permanent link">&para;</a></h2>
-<p>Between 2023 and 2026, foundation models evolved beyond vanilla Multi-Head Attention to overcome two primary physical barriers on GPUs:
-1. <strong>The KV Cache Memory Wall</strong> during generation.
-2. <strong>Dense Feed-Forward Compute Costs</strong> when scaling parameters beyond 100B.</p>
+<p>Between 2023 and 2026, foundation models evolved beyond vanilla Multi-Head Attention to overcome two primary physical barriers on GPUs:</p>
+<ol>
+<li><strong>The KV Cache Memory Wall</strong> during generation.</li>
+<li><strong>Dense Feed-Forward Compute Costs</strong> when scaling parameters beyond 100B.</li>
+</ol>
 <pre class="mermaid"><code>flowchart TD
     subgraph AttentionEvolution["Evolution of Attention Mechanisms"]
         MHA["Multi-Head Attention (MHA)\nQueries: H heads\nKeys: H heads\nValues: H heads\n(Massive KV Cache)"]
@@ -4389,14 +4405,20 @@ H_K = H_V = G, \quad \text{where } 1 &lt; G &lt; H_Q
     W_UV --&gt; V_content["Uncompressed V Content"]
     H_t --&gt; RoPE_K["Decoupled Key RoPE k_t^R"]</code></pre>
 <h4 id="mathematical-formulation">Mathematical Formulation<a class="headerlink" href="#mathematical-formulation" title="Permanent link">&para;</a></h4>
-<p>Instead of caching <span class="arithmatex">\(H \cdot d_k\)</span> keys and <span class="arithmatex">\(H \cdot d_v\)</span> values per token:
-1. Down-project the hidden state <span class="arithmatex">\(\mathbf{h}_t \in \mathbb{R}^{d_{\text{model}}}\)</span> to a compressed latent space:
-   $<span class="arithmatex">\(\mathbf{c}_t^{KV} = \mathbf{h}_t \mathbf{W}_{DKV} \in \mathbb{R}^{d_c}, \quad \text{where } d_c \ll H d_k\)</span>$
-2. Because Rotary Position Embedding (RoPE) is position-sensitive, it cannot be baked directly into a cached compressed representation that undergoes downstream linear transformations. MLA solves this by <strong>decoupling RoPE</strong>:
-   - Cache <span class="arithmatex">\(\mathbf{c}_t^{KV}\)</span> (representing position-invariant content).
-   - Cache a separate small positional vector <span class="arithmatex">\(\mathbf{k}_t^R \in \mathbb{R}^{d_R}\)</span> carrying RoPE.
-3. During generation, the query is split into content query <span class="arithmatex">\(\mathbf{q}_{i, c}\)</span> and rotary query <span class="arithmatex">\(\mathbf{q}_{i, r}\)</span>:
-   $<span class="arithmatex">\(\mathbf{S}_{i, j} = \frac{1}{\sqrt{d_k + d_R}} \left( \mathbf{q}_{i, c}^T \mathbf{W}_{UK} \mathbf{c}_j^{KV} + (\mathbf{q}_{i, r}^R)^T \mathbf{k}_{j}^R \right)\)</span>$</p>
+<p>Instead of caching <span class="arithmatex">\(H \cdot d_k\)</span> keys and <span class="arithmatex">\(H \cdot d_v\)</span> values per token:</p>
+<ol>
+<li>
+<p>Down-project the hidden state <span class="arithmatex">\(\mathbf{h}_t \in \mathbb{R}^{d_{\text{model}}}\)</span> to a compressed latent space:
+   $<span class="arithmatex">\(\mathbf{c}_t^{KV} = \mathbf{h}_t \mathbf{W}_{DKV} \in \mathbb{R}^{d_c}, \quad \text{where } d_c \ll H d_k\)</span>$</p>
+</li>
+<li>
+<p>Because Rotary Position Embedding (RoPE) is position-sensitive, it cannot be baked directly into a cached compressed representation that undergoes downstream linear transformations. MLA solves this by <strong>decoupling RoPE</strong>:</p>
+</li>
+<li>Cache <span class="arithmatex">\(\mathbf{c}_t^{KV}\)</span> (representing position-invariant content).</li>
+<li>Cache a separate small positional vector <span class="arithmatex">\(\mathbf{k}_t^R \in \mathbb{R}^{d_R}\)</span> carrying RoPE.</li>
+<li>During generation, the query is split into content query <span class="arithmatex">\(\mathbf{q}_{i, c}\)</span> and rotary query <span class="arithmatex">\(\mathbf{q}_{i, r}\)</span>:
+   $<span class="arithmatex">\(\mathbf{S}_{i, j} = \frac{1}{\sqrt{d_k + d_R}} \left( \mathbf{q}_{i, c}^T \mathbf{W}_{UK} \mathbf{c}_j^{KV} + (\mathbf{q}_{i, r}^R)^T \mathbf{k}_{j}^R \right)\)</span>$</li>
+</ol>
 <p>By absorbing <span class="arithmatex">\(\mathbf{W}_{UK}\)</span> into <span class="arithmatex">\(\mathbf{q}_{i, c}\)</span> via associativity: <span class="arithmatex">\(\tilde{\mathbf{q}}_{i, c} = \mathbf{q}_{i, c}^T \mathbf{W}_{UK}\)</span>, key up-projection is performed once per query rather than materialized across all cached keys!</p>
 <p>This reduces the KV cache footprint per token by up to <strong><span class="arithmatex">\(93\%\)</span></strong> compared to standard MHA, allowing DeepSeek models to serve 128k context windows on standard GPU clusters.</p>
 <hr />
@@ -4682,10 +4704,12 @@ In standard Multi-Head Attention, <span class="arithmatex">\(H\)</span> key and 
 Standard attention caches full keys and values: <span class="arithmatex">\(2 \times H \times d_k\)</span> floats per token. DeepSeek MLA compresses keys and values into a single low-dimensional latent vector <span class="arithmatex">\(\mathbf{c}_t^{KV} \in \mathbb{R}^{d_c}\)</span> via projection <span class="arithmatex">\(\mathbf{W}_{DKV}\)</span> (<span class="arithmatex">\(d_c \ll H d_k\)</span>), so only <span class="arithmatex">\(\mathbf{c}_t^{KV}\)</span> needs to be stored in the KV cache.<br />
 However, standard keys incorporate Rotary Position Embeddings (RoPE), which apply coordinate rotation <span class="arithmatex">\(\mathbf{R}_t \mathbf{k}_t\)</span>. Because <span class="arithmatex">\(\mathbf{R}_t\)</span> is position-dependent and non-commutative with arbitrary linear projections, multiplying a cached compressed vector by an up-projection matrix <span class="arithmatex">\(\mathbf{W}_{UK}\)</span> cannot reconstruct rotated keys after the fact:
 $<span class="arithmatex">\(\mathbf{R}_t (\mathbf{c}_t \mathbf{W}_{UK}) \ne (\mathbf{R}_t \mathbf{c}_t) \mathbf{W}_{UK}\)</span>$
-MLA solves this by <strong>decoupling RoPE</strong>: it splits attention into two parallel streams:
-1. An unrotated content stream where keys <span class="arithmatex">\(\mathbf{k}_t^C\)</span> are reconstructed from cached latent <span class="arithmatex">\(\mathbf{c}_t^{KV}\)</span>.
-2. A small, independent rotary key <span class="arithmatex">\(\mathbf{k}_t^R \in \mathbb{R}^{d_R}\)</span> that carries RoPE and is cached separately.<br />
-Total cached floats per token are <span class="arithmatex">\(d_c + d_R\)</span>, yielding up to <span class="arithmatex">\(93\%\)</span> cache compression while preserving exact relative position sensitivity.</p>
+MLA solves this by <strong>decoupling RoPE</strong>: it splits attention into two parallel streams:</p>
+<ol>
+<li>An unrotated content stream where keys <span class="arithmatex">\(\mathbf{k}_t^C\)</span> are reconstructed from cached latent <span class="arithmatex">\(\mathbf{c}_t^{KV}\)</span>.</li>
+<li>A small, independent rotary key <span class="arithmatex">\(\mathbf{k}_t^R \in \mathbb{R}^{d_R}\)</span> that carries RoPE and is cached separately.<br />
+Total cached floats per token are <span class="arithmatex">\(d_c + d_R\)</span>, yielding up to <span class="arithmatex">\(93\%\)</span> cache compression while preserving exact relative position sensitivity.</li>
+</ol>
 <hr />
 <h3 id="q4-formulate-the-auxiliary-load-balancing-loss-in-sparse-moe-and-explain-why-multiplying-f_i-cdot-p_i-provides-a-differentiable-training-signal">Q4: Formulate the auxiliary load-balancing loss in Sparse MoE and explain why multiplying <span class="arithmatex">\(f_i \cdot P_i\)</span> provides a differentiable training signal.<a class="headerlink" href="#q4-formulate-the-auxiliary-load-balancing-loss-in-sparse-moe-and-explain-why-multiplying-f_i-cdot-p_i-provides-a-differentiable-training-signal" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
@@ -4697,23 +4721,25 @@ $<span class="arithmatex">\(\mathcal{L}_{\text{aux}} = \alpha E \sum_{i=1}^E f_i
 When an expert <span class="arithmatex">\(i\)</span> receives too many tokens, its fraction <span class="arithmatex">\(f_i\)</span> is large. Minimizing <span class="arithmatex">\(\mathcal{L}_{\text{aux}}\)</span> penalizes the gradient <span class="arithmatex">\(\frac{\partial \mathcal{L}_{\text{aux}}}{\partial P_i} \propto f_i\)</span>, pushing the continuous logits for expert <span class="arithmatex">\(i\)</span> downward through <span class="arithmatex">\(\nabla_{\mathbf{W}_g} P_i\)</span>. Conversely, underutilized experts have small <span class="arithmatex">\(f_i\)</span>, easing downward pressure and allowing them to compete for tokens.</p>
 <hr />
 <h3 id="q5-why-did-the-field-transition-from-encoder-only-bert-and-encoder-decoder-t5-architectures-to-decoder-only-models-for-generative-agents-and-foundation-models">Q5: Why did the field transition from Encoder-only (BERT) and Encoder-Decoder (T5) architectures to Decoder-only models for generative agents and foundation models?<a class="headerlink" href="#q5-why-did-the-field-transition-from-encoder-only-bert-and-encoder-decoder-t5-architectures-to-decoder-only-models-for-generative-agents-and-foundation-models" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-1. <strong>Unified Compute Graph</strong>: In decoder-only architectures, prompt processing (prefill) and generation (decoding) share the identical attention and FFN weights without requiring separate encoder-decoder cross-attention layers.
-2. <strong>Key-Value Cache Simplicity</strong>: Encoder-decoders require caching both cross-attention keys/values (fixed size <span class="arithmatex">\(T_{\text{enc}} \times d\)</span>) and causal decoder keys/values. Decoder-only models manage a single homogeneous KV cache.
-3. <strong>In-Context Zero/Few-Shot Generality</strong>: Autoregressive causal language modeling directly matches the sequence conditioning required for prompting. Autoregressive decoders learn next-token distributions conditioned on arbitrary prefix trajectories, enabling multi-turn dialogues, code generation, and chain-of-thought without task-specific architectural heads.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ol>
+<li><strong>Unified Compute Graph</strong>: In decoder-only architectures, prompt processing (prefill) and generation (decoding) share the identical attention and FFN weights without requiring separate encoder-decoder cross-attention layers.</li>
+<li><strong>Key-Value Cache Simplicity</strong>: Encoder-decoders require caching both cross-attention keys/values (fixed size <span class="arithmatex">\(T_{\text{enc}} \times d\)</span>) and causal decoder keys/values. Decoder-only models manage a single homogeneous KV cache.</li>
+<li><strong>In-Context Zero/Few-Shot Generality</strong>: Autoregressive causal language modeling directly matches the sequence conditioning required for prompting. Autoregressive decoders learn next-token distributions conditioned on arbitrary prefix trajectories, enabling multi-turn dialogues, code generation, and chain-of-thought without task-specific architectural heads.</li>
+</ol>
 <hr />
 <h2 id="9-mastery-ladder">9. Mastery Ladder<a class="headerlink" href="#9-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> State the differences in attention mask structure among Encoders, Decoders, and Encoder-Decoder models.</li>
-<li>[ ] <strong>L2:</strong> Formulate the BERT Masked Language Model objective and explain the 80/10/10 token corruption rule.</li>
-<li>[ ] <strong>L3:</strong> Explain why RoBERTa eliminated the Next Sentence Prediction (NSP) task.</li>
-<li>[ ] <strong>L4:</strong> Derive the FLOPs training formula <span class="arithmatex">\(C \approx 6ND\)</span> for Transformer decoders.</li>
-<li>[ ] <strong>L5:</strong> Contrast the scaling exponents of Kaplan et al. (<span class="arithmatex">\(N \propto C^{0.73}\)</span>) with Chinchilla (<span class="arithmatex">\(N \propto C^{0.5}, D \propto C^{0.5}\)</span>).</li>
-<li>[ ] <strong>L6:</strong> Compare Multi-Head Attention (MHA), Multi-Query Attention (MQA), and Grouped-Query Attention (GQA) in terms of KV cache size.</li>
-<li>[ ] <strong>L7:</strong> Explain why RoPE cannot be directly applied to a compressed latent KV vector in DeepSeek MLA.</li>
-<li>[ ] <strong>L8:</strong> Formulate Top-2 MoE routing and implement the load-balancing auxiliary loss <span class="arithmatex">\(\mathcal{L}_{\text{aux}} = \alpha E \sum f_i P_i\)</span>.</li>
-<li>[ ] <strong>L9:</strong> Explain why expert routing collapses without an auxiliary loss.</li>
-<li>[ ] <strong>L10:</strong> Implement a functional Grouped-Query Attention module with KV caching from scratch in PyTorch.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> State the differences in attention mask structure among Encoders, Decoders, and Encoder-Decoder models.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Formulate the BERT Masked Language Model objective and explain the 80/10/10 token corruption rule.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Explain why RoBERTa eliminated the Next Sentence Prediction (NSP) task.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Derive the FLOPs training formula <span class="arithmatex">\(C \approx 6ND\)</span> for Transformer decoders.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Contrast the scaling exponents of Kaplan et al. (<span class="arithmatex">\(N \propto C^{0.73}\)</span>) with Chinchilla (<span class="arithmatex">\(N \propto C^{0.5}, D \propto C^{0.5}\)</span>).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Compare Multi-Head Attention (MHA), Multi-Query Attention (MQA), and Grouped-Query Attention (GQA) in terms of KV cache size.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Explain why RoPE cannot be directly applied to a compressed latent KV vector in DeepSeek MLA.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Formulate Top-2 MoE routing and implement the load-balancing auxiliary loss <span class="arithmatex">\(\mathcal{L}_{\text{aux}} = \alpha E \sum f_i P_i\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Explain why expert routing collapses without an auxiliary loss.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Implement a functional Grouped-Query Attention module with KV caching from scratch in PyTorch.</li>
 </ul>
 
 

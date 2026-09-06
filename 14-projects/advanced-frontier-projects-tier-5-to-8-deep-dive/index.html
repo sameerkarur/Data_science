@@ -4207,17 +4207,21 @@
     Tier5["Tier 5: Foundation Architecture\n(Decoder-Only Transformer LM from Scratch)\n- Causal Multi-Head Attention, Cross-Entropy, Top-K/Top-P Sampling"] --&gt; Tier6["Tier 6: Generative Retrieval Systems\n(Enterprise Hybrid RAG Platform)\n- HNSW Dense + BM25 Sparse, Reciprocal Rank Fusion, SSE Streaming"]
     Tier6 --&gt; Tier7["Tier 7: Autonomous Cognitive Systems\n(Autonomous Research &amp; Verification Agent)\n- ReAct Loop, Sandboxed Tool Execution, Reflexion Memory Buffer"]
     Tier7 --&gt; Tier8["Tier 8: End-to-End Enterprise ML Pipeline\n(Full Lifecycle Production System)\n- Drift Detection -&gt; Training -&gt; MLflow Registry -&gt; K8s Deployment"]</code></pre>
-<p>These four advanced tiers bridge mathematical theory and mission-critical production systems:
-1. <strong>Tier 5 (Transformers)</strong>: Demystifies foundation models by constructing a decoder-only language model in PyTorch from raw tensor operations, enforcing causal masking and temperature-scaled sampling.
-2. <strong>Tier 6 (GenAI)</strong>: Assembles an enterprise retrieval-augmented generation engine that combines dense embeddings with sparse inverted indices to eliminate hallucinations.
-3. <strong>Tier 7 (Agents)</strong>: Implements an autonomous cybernetic loop capable of multi-step planning, tool invocation, observation parsing, and self-reflection without external agent frameworks.
-4. <strong>Tier 8 (Production Pipeline)</strong>: Unifies data contract validation, automated drift detection, model retraining, MLflow registry promotion, containerization, and Kubernetes serving into an automated production pipeline.</p>
+<p>These four advanced tiers bridge mathematical theory and mission-critical production systems:</p>
+<ol>
+<li><strong>Tier 5 (Transformers)</strong>: Demystifies foundation models by constructing a decoder-only language model in PyTorch from raw tensor operations, enforcing causal masking and temperature-scaled sampling.</li>
+<li><strong>Tier 6 (GenAI)</strong>: Assembles an enterprise retrieval-augmented generation engine that combines dense embeddings with sparse inverted indices to eliminate hallucinations.</li>
+<li><strong>Tier 7 (Agents)</strong>: Implements an autonomous cybernetic loop capable of multi-step planning, tool invocation, observation parsing, and self-reflection without external agent frameworks.</li>
+<li><strong>Tier 8 (Production Pipeline)</strong>: Unifies data contract validation, automated drift detection, model retraining, MLflow registry promotion, containerization, and Kubernetes serving into an automated production pipeline.</li>
+</ol>
 <hr />
 <h2 id="2-tier-5-transformers-decoder-only-causal-language-model-from-scratch">2. Tier 5 (Transformers): Decoder-Only Causal Language Model from Scratch<a class="headerlink" href="#2-tier-5-transformers-decoder-only-causal-language-model-from-scratch" title="Permanent link">&para;</a></h2>
 <h3 id="21-project-scope-requirements">2.1 Project Scope &amp; Requirements<a class="headerlink" href="#21-project-scope-requirements" title="Permanent link">&para;</a></h3>
-<p>Covers: <strong>Text classifier</strong>, <strong>Mini language model</strong>, and <strong>Question-answering system</strong>.
-- <strong>Core Objective</strong>: Implement a complete decoder-only causal language model (GPT-style architecture) in pure PyTorch without relying on <code>nn.TransformerDecoder</code> abstractions.
-- <strong>Architectural Primitives</strong>: Multi-Head Causal Self-Attention with lower-triangular causal masking (<span class="arithmatex">\(M_{i, j} = -\infty\)</span> for <span class="arithmatex">\(j &gt; i\)</span>), Pre-Layer Normalization (RMSNorm/LayerNorm), Feed-Forward SwiGLU/GELU networks, residual gradient highways, cross-entropy loss over shifted targets, and temperature/top-<span class="arithmatex">\(k\)</span>/nucleus (top-<span class="arithmatex">\(p\)</span>) text generation.</p>
+<p>Covers: <strong>Text classifier</strong>, <strong>Mini language model</strong>, and <strong>Question-answering system</strong>.</p>
+<ul>
+<li><strong>Core Objective</strong>: Implement a complete decoder-only causal language model (GPT-style architecture) in pure PyTorch without relying on <code>nn.TransformerDecoder</code> abstractions.</li>
+<li><strong>Architectural Primitives</strong>: Multi-Head Causal Self-Attention with lower-triangular causal masking (<span class="arithmatex">\(M_{i, j} = -\infty\)</span> for <span class="arithmatex">\(j &gt; i\)</span>), Pre-Layer Normalization (RMSNorm/LayerNorm), Feed-Forward SwiGLU/GELU networks, residual gradient highways, cross-entropy loss over shifted targets, and temperature/top-<span class="arithmatex">\(k\)</span>/nucleus (top-<span class="arithmatex">\(p\)</span>) text generation.</li>
+</ul>
 <h3 id="22-system-architecture-mathematics">2.2 System Architecture &amp; Mathematics<a class="headerlink" href="#22-system-architecture-mathematics" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart TD
     Tokens["Input Token IDs x_1:T"] --&gt; TokenEmb["Token Embedding Matrix W_e [V, d_model]"]
@@ -4364,9 +4368,11 @@
 <hr />
 <h2 id="3-tier-6-genai-enterprise-multi-document-rag-knowledge-platform">3. Tier 6 (GenAI): Enterprise Multi-Document RAG Knowledge Platform<a class="headerlink" href="#3-tier-6-genai-enterprise-multi-document-rag-knowledge-platform" title="Permanent link">&para;</a></h2>
 <h3 id="31-project-scope-requirements">3.1 Project Scope &amp; Requirements<a class="headerlink" href="#31-project-scope-requirements" title="Permanent link">&para;</a></h3>
-<p>Covers: <strong>RAG chatbot</strong>, <strong>Document intelligence system</strong>, and <strong>Semantic search engine</strong>.
-- <strong>Core Objective</strong>: Construct an enterprise-scale, production-ready Retrieval-Augmented Generation platform capable of parsing complex PDF/Word documents, executing hybrid vector + lexical search, reranking passages with a cross-encoder, and streaming grounded responses with source citations via FastAPI Server-Sent Events (SSE).
-- <strong>Core Capabilities</strong>: Multi-format document chunking with metadata tagging, HNSW vector search (dense) paired with BM25 (sparse), Reciprocal Rank Fusion (RRF), and context window compaction.</p>
+<p>Covers: <strong>RAG chatbot</strong>, <strong>Document intelligence system</strong>, and <strong>Semantic search engine</strong>.</p>
+<ul>
+<li><strong>Core Objective</strong>: Construct an enterprise-scale, production-ready Retrieval-Augmented Generation platform capable of parsing complex PDF/Word documents, executing hybrid vector + lexical search, reranking passages with a cross-encoder, and streaming grounded responses with source citations via FastAPI Server-Sent Events (SSE).</li>
+<li><strong>Core Capabilities</strong>: Multi-format document chunking with metadata tagging, HNSW vector search (dense) paired with BM25 (sparse), Reciprocal Rank Fusion (RRF), and context window compaction.</li>
+</ul>
 <h3 id="32-system-architecture">3.2 System Architecture<a class="headerlink" href="#32-system-architecture" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart TD
     DocFile["Enterprise PDFs / Docs"] --&gt; SemanticChunker["Semantic Chunker (Window: 512, Stride: 128)"]
@@ -4466,9 +4472,11 @@
 <hr />
 <h2 id="4-tier-7-agents-autonomous-research-verification-agent">4. Tier 7 (Agents): Autonomous Research &amp; Verification Agent<a class="headerlink" href="#4-tier-7-agents-autonomous-research-verification-agent" title="Permanent link">&para;</a></h2>
 <h3 id="41-project-scope-requirements">4.1 Project Scope &amp; Requirements<a class="headerlink" href="#41-project-scope-requirements" title="Permanent link">&para;</a></h3>
-<p>Covers: <strong>Research agent</strong>, <strong>Coding agent</strong>, and <strong>Data-analysis agent</strong>.
-- <strong>Core Objective</strong>: Implement an autonomous, tool-using research agent based on the <strong>ReAct (Reasoning + Acting)</strong> paradigm with an explicit <strong>Reflexion memory buffer</strong> for self-correction without framework bloat (e.g. raw Python without LangChain).
-- <strong>Core Capabilities</strong>: Multi-step goal decomposition, tool dispatching registry (web retrieval, Python execution sandbox, calculator), observation parser, loop detection, and verbal post-mortem self-reflection upon failure.</p>
+<p>Covers: <strong>Research agent</strong>, <strong>Coding agent</strong>, and <strong>Data-analysis agent</strong>.</p>
+<ul>
+<li><strong>Core Objective</strong>: Implement an autonomous, tool-using research agent based on the <strong>ReAct (Reasoning + Acting)</strong> paradigm with an explicit <strong>Reflexion memory buffer</strong> for self-correction without framework bloat (e.g. raw Python without LangChain).</li>
+<li><strong>Core Capabilities</strong>: Multi-step goal decomposition, tool dispatching registry (web retrieval, Python execution sandbox, calculator), observation parser, loop detection, and verbal post-mortem self-reflection upon failure.</li>
+</ul>
 <h3 id="42-system-architecture-state-machine">4.2 System Architecture &amp; State Machine<a class="headerlink" href="#42-system-architecture-state-machine" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart TD
     Task["User Objective: 'Calculate YoY growth of Nvidia 2024 datacenter revenue'"] --&gt; Agent["ReAct Cognitive Loop"]
@@ -4569,14 +4577,16 @@
 <hr />
 <h2 id="5-tier-8-production-pipeline-end-to-end-enterprise-ml-pipeline">5. Tier 8 (Production Pipeline): End-to-End Enterprise ML Pipeline<a class="headerlink" href="#5-tier-8-production-pipeline-end-to-end-enterprise-ml-pipeline" title="Permanent link">&para;</a></h2>
 <h3 id="51-project-scope-requirements">5.1 Project Scope &amp; Requirements<a class="headerlink" href="#51-project-scope-requirements" title="Permanent link">&para;</a></h3>
-<p>Covers: <strong>Full pipeline: data <span class="arithmatex">\(\to\)</span> training <span class="arithmatex">\(\to\)</span> tracking <span class="arithmatex">\(\to\)</span> registry <span class="arithmatex">\(\to\)</span> API <span class="arithmatex">\(\to\)</span> Docker <span class="arithmatex">\(\to\)</span> cloud <span class="arithmatex">\(\to\)</span> monitoring <span class="arithmatex">\(\to\)</span> retraining</strong>.
-- <strong>Core Objective</strong>: Unify every architectural pillar from Books 12, 13, and 14 into an automated production pipeline:
-  1. Data Ingestion &amp; Pandera contract validation.
-  2. Automated Data Drift Gate (Population Stability Index <span class="arithmatex">\(&lt; 0.15\)</span>).
-  3. PyTorch Model Training with Mixed-Precision.
-  4. MLflow Model Registry Tracking with Signatures.
-  5. Containerized FastAPI Inference Microservice.
-  6. Docker Compose / Kubernetes multi-container deployment.</p>
+<p>Covers: <strong>Full pipeline: data <span class="arithmatex">\(\to\)</span> training <span class="arithmatex">\(\to\)</span> tracking <span class="arithmatex">\(\to\)</span> registry <span class="arithmatex">\(\to\)</span> API <span class="arithmatex">\(\to\)</span> Docker <span class="arithmatex">\(\to\)</span> cloud <span class="arithmatex">\(\to\)</span> monitoring <span class="arithmatex">\(\to\)</span> retraining</strong>.</p>
+<ul>
+<li><strong>Core Objective</strong>: Unify every architectural pillar from Books 12, 13, and 14 into an automated production pipeline:</li>
+<li>Data Ingestion &amp; Pandera contract validation.</li>
+<li>Automated Data Drift Gate (Population Stability Index <span class="arithmatex">\(&lt; 0.15\)</span>).</li>
+<li>PyTorch Model Training with Mixed-Precision.</li>
+<li>MLflow Model Registry Tracking with Signatures.</li>
+<li>Containerized FastAPI Inference Microservice.</li>
+<li>Docker Compose / Kubernetes multi-container deployment.</li>
+</ul>
 <h3 id="52-system-architecture">5.2 System Architecture<a class="headerlink" href="#52-system-architecture" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart TD
     Ingest["1. Ingestion: New Batch Data (Parquet / S3)"] --&gt; ContractGate["2. Data Contract Gate (Pandera Schema Validation)"]
@@ -4770,53 +4780,65 @@
 <hr />
 <h2 id="7-staff-level-technical-interview-questions">7. Staff-Level Technical Interview Questions<a class="headerlink" href="#7-staff-level-technical-interview-questions" title="Permanent link">&para;</a></h2>
 <h3 id="q1-in-tier-5-why-is-weight-tying-between-the-token-embedding-matrix-and-the-final-language-model-unembedding-projection-layer-beneficial">Q1: In Tier 5, why is weight tying between the token embedding matrix and the final language model unembedding projection layer beneficial?<a class="headerlink" href="#q1-in-tier-5-why-is-weight-tying-between-the-token-embedding-matrix-and-the-final-language-model-unembedding-projection-layer-beneficial" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Mathematical Form</strong>:
-  - Let <span class="arithmatex">\(\mathbf{W}_e \in \mathbb{R}^{V \times d}\)</span> be the token embedding matrix mapping discrete token indices to hidden representations.
-  - Let <span class="arithmatex">\(\mathbf{W}_u \in \mathbb{R}^{d \times V}\)</span> be the linear projection head mapping final layer representations back to vocabulary logits.
-  - <strong>Weight Tying</strong> (<a href="https://arxiv.org/abs/1608.05859">Press &amp; Wolf, 2017</a>) sets <span class="arithmatex">\(\mathbf{W}_u = \mathbf{W}_e^T\)</span>.
-- <strong>Benefits</strong>:
-  1. <em>Parameter Reduction</em>: In models with large vocabularies (e.g. <span class="arithmatex">\(V = 128,000\)</span>, <span class="arithmatex">\(d = 4,096\)</span>), a single embedding matrix requires <span class="arithmatex">\(128,000 \times 4,096 \times 2\text{ bytes} \approx 1.05\text{ GB}\)</span> in FP16. Maintaining separate input and output matrices doubles this to over <span class="arithmatex">\(2.1\text{ GB}\)</span>. Tying eliminates half of all vocabulary parameters.
-  2. <em>Regularization &amp; Representation Alignment</em>: Pulls input token embeddings and output class hyperplanes into the identical geometric metric space, preventing overfitting on rare tokens and improving generalization.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Mathematical Form</strong>:</li>
+<li>Let <span class="arithmatex">\(\mathbf{W}_e \in \mathbb{R}^{V \times d}\)</span> be the token embedding matrix mapping discrete token indices to hidden representations.</li>
+<li>Let <span class="arithmatex">\(\mathbf{W}_u \in \mathbb{R}^{d \times V}\)</span> be the linear projection head mapping final layer representations back to vocabulary logits.</li>
+<li><strong>Weight Tying</strong> (<a href="https://arxiv.org/abs/1608.05859">Press &amp; Wolf, 2017</a>) sets <span class="arithmatex">\(\mathbf{W}_u = \mathbf{W}_e^T\)</span>.</li>
+<li><strong>Benefits</strong>:</li>
+<li><em>Parameter Reduction</em>: In models with large vocabularies (e.g. <span class="arithmatex">\(V = 128,000\)</span>, <span class="arithmatex">\(d = 4,096\)</span>), a single embedding matrix requires <span class="arithmatex">\(128,000 \times 4,096 \times 2\text{ bytes} \approx 1.05\text{ GB}\)</span> in FP16. Maintaining separate input and output matrices doubles this to over <span class="arithmatex">\(2.1\text{ GB}\)</span>. Tying eliminates half of all vocabulary parameters.</li>
+<li><em>Regularization &amp; Representation Alignment</em>: Pulls input token embeddings and output class hyperplanes into the identical geometric metric space, preventing overfitting on rare tokens and improving generalization.</li>
+</ul>
 <hr />
 <h3 id="q2-in-an-enterprise-rag-platform-compare-reciprocal-rank-fusion-rrf-with-learned-cross-encoder-reranking-why-use-both-sequentially-rather-than-just-one">Q2: In an Enterprise RAG platform, compare Reciprocal Rank Fusion (RRF) with Learned Cross-Encoder Reranking. Why use both sequentially rather than just one?<a class="headerlink" href="#q2-in-an-enterprise-rag-platform-compare-reciprocal-rank-fusion-rrf-with-learned-cross-encoder-reranking-why-use-both-sequentially-rather-than-just-one" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>RRF (Algorithmic Properties)</strong>:
-  - Non-parametric, zero GPU compute required. It normalizes disparate score scales across dense vector search (cosine similarities <span class="arithmatex">\(\in [-1, 1]\)</span>) and sparse BM25 scores (unbounded <span class="arithmatex">\(\in [0, \infty)\)</span>) using relative rank positions.
-  - <em>Limitation</em>: Treats document relevance as a function of rank position without reading the combined query-document text syntax.
-- <strong>Cross-Encoder Reranker (Algorithmic Properties)</strong>:
-  - Deep transformer evaluating query and passage simultaneously through all-to-all cross-attention layers. Captures complex semantic interactions, negation, and lexical nuances.
-  - <em>Limitation</em>: Heavy computational complexity <span class="arithmatex">\(\mathcal{O}(L^2)\)</span> per candidate. Scoring 200 candidates with a Cross-Encoder takes <span class="arithmatex">\(&gt;500\text{ ms}\)</span>, violating latency SLAs.
-- <strong>The Two-Stage Synergy</strong>:
-  - RRF acts as a fast, zero-compute coarse ranker, pruning 100 dense + 100 sparse candidates down to the Top-20 candidates in <span class="arithmatex">\(&lt;2\text{ ms}\)</span>.
-  - The Cross-Encoder then scores only those 20 filtered candidates in <span class="arithmatex">\(&lt;40\text{ ms}\)</span>, delivering state-of-the-art ranking precision within latency budgets.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>RRF (Algorithmic Properties)</strong>:</li>
+<li>Non-parametric, zero GPU compute required. It normalizes disparate score scales across dense vector search (cosine similarities <span class="arithmatex">\(\in [-1, 1]\)</span>) and sparse BM25 scores (unbounded <span class="arithmatex">\(\in [0, \infty)\)</span>) using relative rank positions.</li>
+<li><em>Limitation</em>: Treats document relevance as a function of rank position without reading the combined query-document text syntax.</li>
+<li><strong>Cross-Encoder Reranker (Algorithmic Properties)</strong>:</li>
+<li>Deep transformer evaluating query and passage simultaneously through all-to-all cross-attention layers. Captures complex semantic interactions, negation, and lexical nuances.</li>
+<li><em>Limitation</em>: Heavy computational complexity <span class="arithmatex">\(\mathcal{O}(L^2)\)</span> per candidate. Scoring 200 candidates with a Cross-Encoder takes <span class="arithmatex">\(&gt;500\text{ ms}\)</span>, violating latency SLAs.</li>
+<li><strong>The Two-Stage Synergy</strong>:</li>
+<li>RRF acts as a fast, zero-compute coarse ranker, pruning 100 dense + 100 sparse candidates down to the Top-20 candidates in <span class="arithmatex">\(&lt;2\text{ ms}\)</span>.</li>
+<li>The Cross-Encoder then scores only those 20 filtered candidates in <span class="arithmatex">\(&lt;40\text{ ms}\)</span>, delivering state-of-the-art ranking precision within latency budgets.</li>
+</ul>
 <hr />
 <h3 id="q3-explain-how-the-reflexion-framework-enables-an-autonomous-agent-to-perform-verbal-reinforcement-learning-without-computing-backpropagation-gradients">Q3: Explain how the Reflexion framework enables an autonomous agent to perform verbal reinforcement learning without computing backpropagation gradients.<a class="headerlink" href="#q3-explain-how-the-reflexion-framework-enables-an-autonomous-agent-to-perform-verbal-reinforcement-learning-without-computing-backpropagation-gradients" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Classical Reinforcement Learning</strong>: Updates policy weights <span class="arithmatex">\(\theta\)</span> via policy gradient ascent on scalar reward signals: <span class="arithmatex">\(\Delta \theta \propto \nabla_\theta \log \pi_\theta(a \mid s) R(\tau)\)</span>. This requires millions of interaction episodes and can disrupt pretraining alignment.
-- <strong>Reflexion (Verbal RL)</strong>:
-  - Replaces numeric scalar rewards with <strong>natural language self-critiques</strong>.
-  - When an episode <span class="arithmatex">\(\tau_t\)</span> terminates in failure (e.g. unit tests fail, loop detector trips), a <strong>Reflector LLM</strong> analyzes the trajectory <span class="arithmatex">\(\tau_t\)</span>, the environment error logs, and the objective.
-  - The reflector synthesizes a concise post-mortem critique: <em>"I failed because I assumed the API returned JSON; next time I must check content-type first."</em>
-  - This critique is appended to a persistent <strong>Episodic Memory Buffer</strong>.
-  - On the next episode <span class="arithmatex">\(t+1\)</span>, the agent actor is prompted with the objective along with all prior self-critiques <span class="arithmatex">\(\mathbf{r}_{1:t}\)</span>.
-  - Because the LLM's self-attention mechanism attends to its past reflections, it dynamically adjusts its generation trajectory, achieving policy improvement without updating a single weight parameter.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Classical Reinforcement Learning</strong>: Updates policy weights <span class="arithmatex">\(\theta\)</span> via policy gradient ascent on scalar reward signals: <span class="arithmatex">\(\Delta \theta \propto \nabla_\theta \log \pi_\theta(a \mid s) R(\tau)\)</span>. This requires millions of interaction episodes and can disrupt pretraining alignment.</li>
+<li><strong>Reflexion (Verbal RL)</strong>:</li>
+<li>Replaces numeric scalar rewards with <strong>natural language self-critiques</strong>.</li>
+<li>When an episode <span class="arithmatex">\(\tau_t\)</span> terminates in failure (e.g. unit tests fail, loop detector trips), a <strong>Reflector LLM</strong> analyzes the trajectory <span class="arithmatex">\(\tau_t\)</span>, the environment error logs, and the objective.</li>
+<li>The reflector synthesizes a concise post-mortem critique: <em>"I failed because I assumed the API returned JSON; next time I must check content-type first."</em></li>
+<li>This critique is appended to a persistent <strong>Episodic Memory Buffer</strong>.</li>
+<li>On the next episode <span class="arithmatex">\(t+1\)</span>, the agent actor is prompted with the objective along with all prior self-critiques <span class="arithmatex">\(\mathbf{r}_{1:t}\)</span>.</li>
+<li>Because the LLM's self-attention mechanism attends to its past reflections, it dynamically adjusts its generation trajectory, achieving policy improvement without updating a single weight parameter.</li>
+</ul>
 <hr />
 <h3 id="q4-in-tier-8-how-does-an-automated-drift-gate-prevent-model-performance-degradation-while-avoiding-unnecessary-retraining-costs">Q4: In Tier 8, how does an automated drift gate prevent model performance degradation while avoiding unnecessary retraining costs?<a class="headerlink" href="#q4-in-tier-8-how-does-an-automated-drift-gate-prevent-model-performance-degradation-while-avoiding-unnecessary-retraining-costs" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>The Trade-Off</strong>: Retraining deep neural networks on enterprise datasets consumes expensive GPU hours and risks introducing regressions on edge cases. Conversely, failing to retrain allows covariate shift and concept drift to degrade predictions silently.
-- <strong>Two-Tier Gating Architecture</strong>:
-  1. <em>Statistical Drift Detection</em>: Every incoming production batch is scored against the baseline training distribution using the Population Stability Index (PSI) and Kolmogorov-Smirnov test. If <span class="arithmatex">\(\text{PSI} &lt; 0.10\)</span>, distribution stability is certified, and the pipeline halts, saving thousands in compute.
-  2. <em>Candidate Retraining with Pre-Promotion Evaluation</em>: If <span class="arithmatex">\(\text{PSI} \ge 0.15\)</span>, the automated retraining pipeline triggers. However, the newly trained candidate model is <strong>not</strong> immediately deployed. It must pass an automated evaluation gate asserting:
-     - Validation loss improvement over the active champion (<span class="arithmatex">\(\Delta \mathcal{L} \le -0.01\)</span>).
-     - <span class="arithmatex">\(100\%\)</span> pass rate on deterministic Minimum Functionality Tests (MFT) and Directional Expectation Tests (DIR).
-     - Latency benchmark compliance (<span class="arithmatex">\(P_{99} \le 50\text{ ms}\)</span>).
-  - Only upon passing all criteria is the model promoted in the MLflow Registry.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>The Trade-Off</strong>: Retraining deep neural networks on enterprise datasets consumes expensive GPU hours and risks introducing regressions on edge cases. Conversely, failing to retrain allows covariate shift and concept drift to degrade predictions silently.</li>
+<li><strong>Two-Tier Gating Architecture</strong>:</li>
+<li><em>Statistical Drift Detection</em>: Every incoming production batch is scored against the baseline training distribution using the Population Stability Index (PSI) and Kolmogorov-Smirnov test. If <span class="arithmatex">\(\text{PSI} &lt; 0.10\)</span>, distribution stability is certified, and the pipeline halts, saving thousands in compute.</li>
+<li><em>Candidate Retraining with Pre-Promotion Evaluation</em>: If <span class="arithmatex">\(\text{PSI} \ge 0.15\)</span>, the automated retraining pipeline triggers. However, the newly trained candidate model is <strong>not</strong> immediately deployed. It must pass an automated evaluation gate asserting:<ul>
+<li>Validation loss improvement over the active champion (<span class="arithmatex">\(\Delta \mathcal{L} \le -0.01\)</span>).</li>
+<li><span class="arithmatex">\(100\%\)</span> pass rate on deterministic Minimum Functionality Tests (MFT) and Directional Expectation Tests (DIR).</li>
+<li>Latency benchmark compliance (<span class="arithmatex">\(P_{99} \le 50\text{ ms}\)</span>).</li>
+</ul>
+</li>
+<li>Only upon passing all criteria is the model promoted in the MLflow Registry.</li>
+</ul>
 <hr />
 <h3 id="q5-how-do-temperature-top-k-and-nucleus-top-p-sampling-mathematically-modify-the-next-token-probability-distribution-in-language-models">Q5: How do temperature, top-<span class="arithmatex">\(k\)</span>, and nucleus (top-<span class="arithmatex">\(p\)</span>) sampling mathematically modify the next-token probability distribution in language models?<a class="headerlink" href="#q5-how-do-temperature-top-k-and-nucleus-top-p-sampling-mathematically-modify-the-next-token-probability-distribution-in-language-models" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
-Given unnormalized model logits <span class="arithmatex">\(\mathbf{z} \in \mathbb{R}^V\)</span>:
-1. <strong>Temperature Scaling (<span class="arithmatex">\(T &gt; 0\)</span>)</strong>:</p>
+Given unnormalized model logits <span class="arithmatex">\(\mathbf{z} \in \mathbb{R}^V\)</span>:</p>
+<ol>
+<li><strong>Temperature Scaling (<span class="arithmatex">\(T &gt; 0\)</span>)</strong>:</li>
+</ol>
 <p>$<span class="arithmatex">\(p_i = \frac{\exp(z_i / T)}{\sum_j \exp(z_j / T)}\)</span>$</p>
 <ul>
 <li>As <span class="arithmatex">\(T \to 0\)</span>, the distribution concentrates on the argmax token (deterministic greedy search).</li>
@@ -4840,17 +4862,17 @@ Given unnormalized model logits <span class="arithmatex">\(\mathbf{z} \in \mathb
 </ul>
 <hr />
 <h2 id="8-mastery-ladder">8. Mastery Ladder<a class="headerlink" href="#8-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Implement scaled dot-product attention and multi-head causal masking in PyTorch from scratch.</li>
-<li>[ ] <strong>L2:</strong> Explain weight tying between token embedding and language model unembedding layers.</li>
-<li>[ ] <strong>L3:</strong> Formulate temperature scaling, top-<span class="arithmatex">\(k\)</span>, and nucleus (top-<span class="arithmatex">\(p\)</span>) probability adjustments for text generation.</li>
-<li>[ ] <strong>L4:</strong> Construct a hybrid semantic search engine combining HNSW dense vectors and BM25 sparse inverted indices.</li>
-<li>[ ] <strong>L5:</strong> Implement Reciprocal Rank Fusion (RRF) to merge multimodal retrieval results without score calibration.</li>
-<li>[ ] <strong>L6:</strong> Author a production FastAPI Server-Sent Events (SSE) streaming endpoint with citation metadata.</li>
-<li>[ ] <strong>L7:</strong> Build an autonomous ReAct cognitive loop with loop detection and action history fingerprinting.</li>
-<li>[ ] <strong>L8:</strong> Implement the Reflexion framework to achieve verbal reinforcement learning across multi-trial tasks.</li>
-<li>[ ] <strong>L9:</strong> Construct an automated production pipeline linking Pandera data validation, PSI drift gating, and MLflow registry logging.</li>
-<li>[ ] <strong>L10:</strong> Author a multi-container Docker Compose and Kubernetes orchestration topology for enterprise AI serving.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Implement scaled dot-product attention and multi-head causal masking in PyTorch from scratch.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Explain weight tying between token embedding and language model unembedding layers.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Formulate temperature scaling, top-<span class="arithmatex">\(k\)</span>, and nucleus (top-<span class="arithmatex">\(p\)</span>) probability adjustments for text generation.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Construct a hybrid semantic search engine combining HNSW dense vectors and BM25 sparse inverted indices.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Implement Reciprocal Rank Fusion (RRF) to merge multimodal retrieval results without score calibration.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Author a production FastAPI Server-Sent Events (SSE) streaming endpoint with citation metadata.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Build an autonomous ReAct cognitive loop with loop detection and action history fingerprinting.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Implement the Reflexion framework to achieve verbal reinforcement learning across multi-trial tasks.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Construct an automated production pipeline linking Pandera data validation, PSI drift gating, and MLflow registry logging.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Author a multi-container Docker Compose and Kubernetes orchestration topology for enterprise AI serving.</li>
 </ul>
 
 

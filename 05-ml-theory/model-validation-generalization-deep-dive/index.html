@@ -4170,10 +4170,12 @@
 <div class="arithmatex">\[
 y = f(\mathbf{x}) + \epsilon
 \]</div>
-<p>where <span class="arithmatex">\(f(\mathbf{x}) = \mathbb{E}[y | \mathbf{x}]\)</span> is the true deterministic regression function, and <span class="arithmatex">\(\epsilon\)</span> is an independent noise variable with:
-- Zero mean: <span class="arithmatex">\(\mathbb{E}[\epsilon] = 0\)</span>
-- Constant variance: <span class="arithmatex">\(\text{Var}(\epsilon) = \mathbb{E}[\epsilon^2] = \sigma^2\)</span>
-- Independence: <span class="arithmatex">\(\mathbb{E}[\epsilon \cdot g(\mathbf{x})] = 0\)</span> for any function <span class="arithmatex">\(g\)</span>.</p>
+<p>where <span class="arithmatex">\(f(\mathbf{x}) = \mathbb{E}[y | \mathbf{x}]\)</span> is the true deterministic regression function, and <span class="arithmatex">\(\epsilon\)</span> is an independent noise variable with:</p>
+<ul>
+<li>Zero mean: <span class="arithmatex">\(\mathbb{E}[\epsilon] = 0\)</span></li>
+<li>Constant variance: <span class="arithmatex">\(\text{Var}(\epsilon) = \mathbb{E}[\epsilon^2] = \sigma^2\)</span></li>
+<li>Independence: <span class="arithmatex">\(\mathbb{E}[\epsilon \cdot g(\mathbf{x})] = 0\)</span> for any function <span class="arithmatex">\(g\)</span>.</li>
+</ul>
 <p>Let <span class="arithmatex">\(\mathcal{D} = \{(\mathbf{x}_1, y_1), \dots, (\mathbf{x}_n, y_n)\}\)</span> be a random training dataset drawn from the distribution. A learning algorithm fits a model <span class="arithmatex">\(\hat{f}(\mathbf{x}; \mathcal{D})\)</span>.
 Because <span class="arithmatex">\(\mathcal{D}\)</span> is random, the trained model <span class="arithmatex">\(\hat{f}(\mathbf{x})\)</span> is itself a random variable with expected prediction:</p>
 <div class="arithmatex">\[
@@ -4194,24 +4196,36 @@ Because <span class="arithmatex">\(\mathcal{D}\)</span> is random, the trained m
 \]</div>
 <p>Now take the expectation <span class="arithmatex">\(\mathbb{E}_{\mathcal{D}, \epsilon}[\cdot]\)</span> of each term:</p>
 <ol>
-<li><strong>Term <span class="arithmatex">\(\mathbb{E}[A^2]\)</span></strong>:
+<li>
+<p><strong>Term <span class="arithmatex">\(\mathbb{E}[A^2]\)</span></strong>:
    <span class="arithmatex">\(A = f(\mathbf{x}) - \bar{f}(\mathbf{x})\)</span> is completely deterministic (contains no random <span class="arithmatex">\(\mathcal{D}\)</span> or <span class="arithmatex">\(\epsilon\)</span>):
-   $<span class="arithmatex">\(\mathbb{E}[A^2] = (f(\mathbf{x}) - \mathbb{E}[\hat{f}(\mathbf{x})])^2 \equiv \text{Bias}(\hat{f}(\mathbf{x}))^2\)</span>$</li>
-<li><strong>Term <span class="arithmatex">\(\mathbb{E}[B^2]\)</span></strong>:
+   $<span class="arithmatex">\(\mathbb{E}[A^2] = (f(\mathbf{x}) - \mathbb{E}[\hat{f}(\mathbf{x})])^2 \equiv \text{Bias}(\hat{f}(\mathbf{x}))^2\)</span>$</p>
+</li>
+<li>
+<p><strong>Term <span class="arithmatex">\(\mathbb{E}[B^2]\)</span></strong>:
    <span class="arithmatex">\(B = \bar{f}(\mathbf{x}) - \hat{f}(\mathbf{x}) = -(\hat{f}(\mathbf{x}) - \mathbb{E}[\hat{f}(\mathbf{x})])\)</span>. By definition of variance:
-   $<span class="arithmatex">\(\mathbb{E}[B^2] = \mathbb{E}\left[ (\hat{f}(\mathbf{x}) - \mathbb{E}[\hat{f}(\mathbf{x})])^2 \right] \equiv \text{Var}(\hat{f}(\mathbf{x}))\)</span>$</li>
-<li><strong>Term <span class="arithmatex">\(\mathbb{E}[C^2]\)</span></strong>:
+   $<span class="arithmatex">\(\mathbb{E}[B^2] = \mathbb{E}\left[ (\hat{f}(\mathbf{x}) - \mathbb{E}[\hat{f}(\mathbf{x})])^2 \right] \equiv \text{Var}(\hat{f}(\mathbf{x}))\)</span>$</p>
+</li>
+<li>
+<p><strong>Term <span class="arithmatex">\(\mathbb{E}[C^2]\)</span></strong>:
    By definition of environmental noise variance:
-   $<span class="arithmatex">\(\mathbb{E}[C^2] = \mathbb{E}[\epsilon^2] = \sigma^2 \equiv \text{Irreducible Error}\)</span>$</li>
-<li><strong>Cross-Term <span class="arithmatex">\(2\mathbb{E}[AB]\)</span></strong>:
+   $<span class="arithmatex">\(\mathbb{E}[C^2] = \mathbb{E}[\epsilon^2] = \sigma^2 \equiv \text{Irreducible Error}\)</span>$</p>
+</li>
+<li>
+<p><strong>Cross-Term <span class="arithmatex">\(2\mathbb{E}[AB]\)</span></strong>:
    Since <span class="arithmatex">\(A\)</span> is constant with respect to <span class="arithmatex">\(\mathcal{D}\)</span>:
-   $<span class="arithmatex">\(\mathbb{E}_{\mathcal{D}}[AB] = A \cdot \mathbb{E}_{\mathcal{D}}[\bar{f}(\mathbf{x}) - \hat{f}(\mathbf{x})] = A \cdot (\bar{f}(\mathbf{x}) - \mathbb{E}_{\mathcal{D}}[\hat{f}(\mathbf{x})]) = A \cdot (\bar{f}(\mathbf{x}) - \bar{f}(\mathbf{x})) = 0\)</span>$</li>
-<li><strong>Cross-Term <span class="arithmatex">\(2\mathbb{E}[AC]\)</span></strong>:
+   $<span class="arithmatex">\(\mathbb{E}_{\mathcal{D}}[AB] = A \cdot \mathbb{E}_{\mathcal{D}}[\bar{f}(\mathbf{x}) - \hat{f}(\mathbf{x})] = A \cdot (\bar{f}(\mathbf{x}) - \mathbb{E}_{\mathcal{D}}[\hat{f}(\mathbf{x})]) = A \cdot (\bar{f}(\mathbf{x}) - \bar{f}(\mathbf{x})) = 0\)</span>$</p>
+</li>
+<li>
+<p><strong>Cross-Term <span class="arithmatex">\(2\mathbb{E}[AC]\)</span></strong>:
    Because noise <span class="arithmatex">\(\epsilon\)</span> has zero mean and is independent of <span class="arithmatex">\(f\)</span> and <span class="arithmatex">\(\hat{f}\)</span>:
-   $<span class="arithmatex">\(\mathbb{E}[AC] = A \cdot \mathbb{E}[\epsilon] = A \cdot 0 = 0\)</span>$</li>
-<li><strong>Cross-Term <span class="arithmatex">\(2\mathbb{E}[BC]\)</span></strong>:
+   $<span class="arithmatex">\(\mathbb{E}[AC] = A \cdot \mathbb{E}[\epsilon] = A \cdot 0 = 0\)</span>$</p>
+</li>
+<li>
+<p><strong>Cross-Term <span class="arithmatex">\(2\mathbb{E}[BC]\)</span></strong>:
    Because the training dataset <span class="arithmatex">\(\mathcal{D}\)</span> used to fit <span class="arithmatex">\(\hat{f}\)</span> is independent of the test label noise <span class="arithmatex">\(\epsilon\)</span>:
-   $<span class="arithmatex">\(\mathbb{E}_{\mathcal{D}, \epsilon}[BC] = \mathbb{E}_{\mathcal{D}}[B] \cdot \mathbb{E}_{\epsilon}[\epsilon] = \mathbb{E}_{\mathcal{D}}[B] \cdot 0 = 0\)</span>$</li>
+   $<span class="arithmatex">\(\mathbb{E}_{\mathcal{D}, \epsilon}[BC] = \mathbb{E}_{\mathcal{D}}[B] \cdot \mathbb{E}_{\epsilon}[\epsilon] = \mathbb{E}_{\mathcal{D}}[B] \cdot 0 = 0\)</span>$</p>
+</li>
 </ol>
 <p>All three cross-terms vanish identically! We arrive at the celebrated <strong>Bias-Variance Decomposition</strong>:</p>
 <div class="arithmatex">\[
@@ -4240,10 +4254,14 @@ Because <span class="arithmatex">\(\mathcal{D}\)</span> is random, the trained m
         HV3["Remedy: Collect more data, apply L1/L2 regularization, reduce feature count"]
     end</code></pre>
 <ul>
-<li><strong>High Bias (Underfitting)</strong>:
-  Both training and validation errors are unacceptably high. Adding more training data does not help; the model has plateaued because its hypothesis space lacks the capacity to express the true relationship.</li>
-<li><strong>High Variance (Overfitting)</strong>:
-  Training error is low, but validation error remains high, creating a wide <strong>generalization gap</strong>. Adding more training samples steadily pulls the validation curve down toward the training curve.</li>
+<li>
+<p><strong>High Bias (Underfitting)</strong>:
+  Both training and validation errors are unacceptably high. Adding more training data does not help; the model has plateaued because its hypothesis space lacks the capacity to express the true relationship.</p>
+</li>
+<li>
+<p><strong>High Variance (Overfitting)</strong>:
+  Training error is low, but validation error remains high, creating a wide <strong>generalization gap</strong>. Adding more training samples steadily pulls the validation curve down toward the training curve.</p>
+</li>
 </ul>
 <hr />
 <h2 id="4-cross-validation-schemes-structural-leakage-prevention">4. Cross-Validation Schemes &amp; Structural Leakage Prevention<a class="headerlink" href="#4-cross-validation-schemes-structural-leakage-prevention" title="Permanent link">&para;</a></h2>
@@ -4298,9 +4316,11 @@ Because <span class="arithmatex">\(\mathcal{D}\)</span> is random, the trained m
         G3["Group C: Patient 103 (2 scans)"] --&gt; FOLD2["Fold 2 (Validation)"]
     end</code></pre>
 <h3 id="42-purged-embargoed-cross-validation-financial-time-series">4.2 Purged &amp; Embargoed Cross-Validation (Financial Time Series)<a class="headerlink" href="#42-purged-embargoed-cross-validation-financial-time-series" title="Permanent link">&para;</a></h3>
-<p>In financial machine learning, training and testing on standard time slices produces massive leakage due to overlapping prediction labels (e.g., predicting 5-day holding returns):
-1. <strong>Purging</strong>: Removes training labels whose evaluation horizon overlaps with the validation window.
-2. <strong>Embargoing</strong>: Imposes a mandatory buffer period immediately following the validation window to eliminate post-validation auto-regressive memory.</p>
+<p>In financial machine learning, training and testing on standard time slices produces massive leakage due to overlapping prediction labels (e.g., predicting 5-day holding returns):</p>
+<ol>
+<li><strong>Purging</strong>: Removes training labels whose evaluation horizon overlaps with the validation window.</li>
+<li><strong>Embargoing</strong>: Imposes a mandatory buffer period immediately following the validation window to eliminate post-validation auto-regressive memory.</li>
+</ol>
 <pre class="mermaid"><code>flowchart LR
     TRAIN1["Training Data t₀ → t₁"] --&gt; PURGE1["Purged Buffer"]
     PURGE1 --&gt; VAL["Validation Window t₂ → t₃"]
@@ -4310,29 +4330,39 @@ Because <span class="arithmatex">\(\mathcal{D}\)</span> is random, the trained m
 <h2 id="5-regularization-theory-erm-vs-structural-risk-minimization-srm">5. Regularization Theory: ERM vs. Structural Risk Minimization (SRM)<a class="headerlink" href="#5-regularization-theory-erm-vs-structural-risk-minimization-srm" title="Permanent link">&para;</a></h2>
 <p>In Vladimir Vapnik's Statistical Learning Theory:</p>
 <ul>
-<li><strong>Empirical Risk Minimization (ERM)</strong>:
+<li>
+<p><strong>Empirical Risk Minimization (ERM)</strong>:
   Minimizes training error over hypothesis space <span class="arithmatex">\(\mathcal{H}\)</span>:
   $<span class="arithmatex">\(f_{\text{ERM}} = \arg\min_{f \in \mathcal{H}} \frac{1}{n} \sum_{i=1}^n L(y_i, f(\mathbf{x}_i))\)</span>$
   By the Vapnik-Chervonenkis (VC) inequality, with probability <span class="arithmatex">\(1 - \delta\)</span>:
   $<span class="arithmatex">\(R(f) \le R_{\text{emp}}(f) + \sqrt{\frac{h \left( \ln \frac{2n}{h} + 1 \right) - \ln(\delta/4)}{n}}\)</span>$
-  where <span class="arithmatex">\(h\)</span> is the <strong>VC Dimension</strong> (measure of capacity). If capacity <span class="arithmatex">\(h\)</span> is large relative to <span class="arithmatex">\(n\)</span>, empirical risk guarantees nothing about true risk <span class="arithmatex">\(R(f)\)</span>!</li>
-<li><strong>Structural Risk Minimization (SRM)</strong>:
+  where <span class="arithmatex">\(h\)</span> is the <strong>VC Dimension</strong> (measure of capacity). If capacity <span class="arithmatex">\(h\)</span> is large relative to <span class="arithmatex">\(n\)</span>, empirical risk guarantees nothing about true risk <span class="arithmatex">\(R(f)\)</span>!</p>
+</li>
+<li>
+<p><strong>Structural Risk Minimization (SRM)</strong>:
   Defines a nested sequence of hypothesis spaces of increasing capacity <span class="arithmatex">\(\mathcal{H}_1 \subset \mathcal{H}_2 \subset \dots \subset \mathcal{H}_\infty\)</span>.
   SRM minimizes the joint bound:
   $<span class="arithmatex">\(f_{\text{SRM}} = \arg\min_{f} \left[ R_{\text{emp}}(f) + \Omega(f) \right]\)</span>$
-  where <span class="arithmatex">\(\Omega(f)\)</span> is a complexity penalty (e.g., <span class="arithmatex">\(L_2\)</span> norm <span class="arithmatex">\(\|\mathbf{w}\|_2^2\)</span>, tree leaf count <span class="arithmatex">\(|T|\)</span>). Ridge, Lasso, and cost-complexity pruning are direct mathematical embodiments of Structural Risk Minimization!</li>
+  where <span class="arithmatex">\(\Omega(f)\)</span> is a complexity penalty (e.g., <span class="arithmatex">\(L_2\)</span> norm <span class="arithmatex">\(\|\mathbf{w}\|_2^2\)</span>, tree leaf count <span class="arithmatex">\(|T|\)</span>). Ridge, Lasso, and cost-complexity pruning are direct mathematical embodiments of Structural Risk Minimization!</p>
+</li>
 </ul>
 <hr />
 <h2 id="6-data-feature-leakage-typologies-and-pipeline-encapsulation">6. Data &amp; Feature Leakage: Typologies and Pipeline Encapsulation<a class="headerlink" href="#6-data-feature-leakage-typologies-and-pipeline-encapsulation" title="Permanent link">&para;</a></h2>
 <p><strong>Data Leakage</strong> occurs when information from outside the training dataset is inadvertently used to train the machine learning model.</p>
 <h3 id="61-the-three-archetypes-of-leakage">6.1 The Three Archetypes of Leakage<a class="headerlink" href="#61-the-three-archetypes-of-leakage" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Train-Test Contamination (Preprocessing Leakage)</strong>:
-   Fitting a <code>StandardScaler</code>, <code>SimpleImputer</code>, or <code>PCA</code> on the entire dataset <em>before</em> performing cross-validation splitting. The mean and variance of the validation fold leak into the training fold, understating generalization error.</li>
-<li><strong>Target Leakage</strong>:
-   Including a feature that is a proxy for the target or that is recorded <em>chronologically after</em> the target event has occurred (e.g., using <code>hospital_discharge_timestamp</code> to predict whether a patient will be admitted to the ICU).</li>
-<li><strong>Identity / Group Leakage</strong>:
-   Multiple rows originating from the same physical entity (e.g., 10 MRI images of the same patient's brain tumor). Random splitting puts 8 images in train and 2 in validation. The convolutional net memorizes the patient's unique skull shape rather than tumor pathology!</li>
+<li>
+<p><strong>Train-Test Contamination (Preprocessing Leakage)</strong>:
+   Fitting a <code>StandardScaler</code>, <code>SimpleImputer</code>, or <code>PCA</code> on the entire dataset <em>before</em> performing cross-validation splitting. The mean and variance of the validation fold leak into the training fold, understating generalization error.</p>
+</li>
+<li>
+<p><strong>Target Leakage</strong>:
+   Including a feature that is a proxy for the target or that is recorded <em>chronologically after</em> the target event has occurred (e.g., using <code>hospital_discharge_timestamp</code> to predict whether a patient will be admitted to the ICU).</p>
+</li>
+<li>
+<p><strong>Identity / Group Leakage</strong>:
+   Multiple rows originating from the same physical entity (e.g., 10 MRI images of the same patient's brain tumor). Random splitting puts 8 images in train and 2 in validation. The convolutional net memorizes the patient's unique skull shape rather than tumor pathology!</p>
+</li>
 </ol>
 <pre class="mermaid"><code>flowchart TD
     subgraph "Fatal Contamination (Broken)"
@@ -4353,11 +4383,13 @@ Because <span class="arithmatex">\(\mathcal{D}\)</span> is random, the trained m
 <h3 id="71-resampling-geometries-smote-adasyn">7.1 Resampling Geometries: SMOTE &amp; ADASYN<a class="headerlink" href="#71-resampling-geometries-smote-adasyn" title="Permanent link">&para;</a></h3>
 <h4 id="smote-synthetic-minority-over-sampling-technique">SMOTE (Synthetic Minority Over-sampling Technique):<a class="headerlink" href="#smote-synthetic-minority-over-sampling-technique" title="Permanent link">&para;</a></h4>
 <p>Chawla et al. (2002) observed that naive oversampling with replacement merely duplicates points, leading to overfitting.
-SMOTE synthesizes novel minority samples along the line segments connecting <span class="arithmatex">\(k\)</span>-nearest minority neighbors:
-1. For each minority instance <span class="arithmatex">\(\mathbf{x}_i\)</span>, find its <span class="arithmatex">\(k\)</span>-nearest minority neighbors in feature space: <span class="arithmatex">\(\mathcal{N}_k(\mathbf{x}_i)\)</span>.
-2. Randomly select one neighbor <span class="arithmatex">\(\mathbf{x}_{zi} \in \mathcal{N}_k(\mathbf{x}_i)\)</span>.
-3. Generate a synthetic instance <span class="arithmatex">\(\mathbf{x}_{\text{new}}\)</span> via linear convex interpolation:
-   $<span class="arithmatex">\(\mathbf{x}_{\text{new}} = \mathbf{x}_i + \lambda (\mathbf{x}_{zi} - \mathbf{x}_i), \quad \lambda \sim \mathcal{U}(0, 1)\)</span>$</p>
+SMOTE synthesizes novel minority samples along the line segments connecting <span class="arithmatex">\(k\)</span>-nearest minority neighbors:</p>
+<ol>
+<li>For each minority instance <span class="arithmatex">\(\mathbf{x}_i\)</span>, find its <span class="arithmatex">\(k\)</span>-nearest minority neighbors in feature space: <span class="arithmatex">\(\mathcal{N}_k(\mathbf{x}_i)\)</span>.</li>
+<li>Randomly select one neighbor <span class="arithmatex">\(\mathbf{x}_{zi} \in \mathcal{N}_k(\mathbf{x}_i)\)</span>.</li>
+<li>Generate a synthetic instance <span class="arithmatex">\(\mathbf{x}_{\text{new}}\)</span> via linear convex interpolation:
+   $<span class="arithmatex">\(\mathbf{x}_{\text{new}} = \mathbf{x}_i + \lambda (\mathbf{x}_{zi} - \mathbf{x}_i), \quad \lambda \sim \mathcal{U}(0, 1)\)</span>$</li>
+</ol>
 <pre class="mermaid"><code>flowchart LR
     M1["Minority Sample x_i"] --- M2["Neighbor x_zi"]
     M1 -. "λ(x_zi - x_i)" .-&gt; NEW["Synthetic Point x_new"]
@@ -4371,11 +4403,17 @@ ADASYN normalizes <span class="arithmatex">\(r_i\)</span> into a probability dis
 <div class="arithmatex">\[
 \mathcal{L}_{\text{focal}}(p_t) = -\alpha_t (1 - p_t)^\gamma \ln(p_t)
 \]</div>
-<p>where:
-- <span class="arithmatex">\(p_t\)</span> is the model's estimated probability for the ground-truth class:
-  $<span class="arithmatex">\(p_t = \begin{cases} \hat{p} &amp; \text{if } y = 1 \\ 1 - \hat{p} &amp; \text{if } y = 0 \end{cases}\)</span>$
-- <span class="arithmatex">\(\alpha_t \in [0, 1]\)</span> is a balancing factor addressing class frequency.
-- <span class="arithmatex">\(\gamma \ge 0\)</span> is the <strong>focusing parameter</strong>.</p>
+<p>where:</p>
+<ul>
+<li>
+<p><span class="arithmatex">\(p_t\)</span> is the model's estimated probability for the ground-truth class:
+  $<span class="arithmatex">\(p_t = \begin{cases} \hat{p} &amp; \text{if } y = 1 \\ 1 - \hat{p} &amp; \text{if } y = 0 \end{cases}\)</span>$</p>
+</li>
+<li>
+<p><span class="arithmatex">\(\alpha_t \in [0, 1]\)</span> is a balancing factor addressing class frequency.</p>
+</li>
+<li><span class="arithmatex">\(\gamma \ge 0\)</span> is the <strong>focusing parameter</strong>.</li>
+</ul>
 <pre class="mermaid"><code>flowchart LR
     A["Easy Negative: p_t = 0.99"] --&gt; B["Modulating Factor (1 - 0.99)² = 0.0001 (Loss suppressed by 10,000x!)"]
     C["Hard Misclassified: p_t = 0.20"] --&gt; D["Modulating Factor (1 - 0.20)² = 0.64 (Loss preserved)"]</code></pre>
@@ -4541,27 +4579,37 @@ $<span class="arithmatex">\(\begin{aligned}
 &amp;\quad + 2(f(\mathbf{x}) - \bar{f}(\mathbf{x}))(\bar{f}(\mathbf{x}) - \hat{f}(\mathbf{x})) \\
 &amp;\quad + 2(f(\mathbf{x}) - \bar{f}(\mathbf{x}))\epsilon + 2(\bar{f}(\mathbf{x}) - \hat{f}(\mathbf{x}))\epsilon
 \end{aligned}\)</span>$
-Taking expectation <span class="arithmatex">\(\mathbb{E}_{\mathcal{D}, \epsilon}[\cdot]\)</span> across all terms:
-1. <span class="arithmatex">\(\mathbb{E}[(f(\mathbf{x}) - \bar{f}(\mathbf{x}))^2] = (f(\mathbf{x}) - \mathbb{E}[\hat{f}(\mathbf{x})])^2 \equiv \text{Bias}(\hat{f}(\mathbf{x}))^2\)</span> (deterministic).
-2. <span class="arithmatex">\(\mathbb{E}[(\bar{f}(\mathbf{x}) - \hat{f}(\mathbf{x}))^2] = \mathbb{E}[(\hat{f}(\mathbf{x}) - \mathbb{E}[\hat{f}(\mathbf{x})])^2] \equiv \text{Var}(\hat{f}(\mathbf{x}))\)</span>.
-3. <span class="arithmatex">\(\mathbb{E}[\epsilon^2] = \sigma^2\)</span> (irreducible noise).
-4. <span class="arithmatex">\(\mathbb{E}_{\mathcal{D}}[2(f(\mathbf{x}) - \bar{f}(\mathbf{x}))(\bar{f}(\mathbf{x}) - \hat{f}(\mathbf{x}))] = 2(f(\mathbf{x}) - \bar{f}(\mathbf{x})) \cdot (\bar{f}(\mathbf{x}) - \mathbb{E}[\hat{f}(\mathbf{x})]) = 0\)</span>.
-5. <span class="arithmatex">\(\mathbb{E}_{\epsilon}[2(f(\mathbf{x}) - \bar{f}(\mathbf{x}))\epsilon] = 2(f(\mathbf{x}) - \bar{f}(\mathbf{x})) \mathbb{E}[\epsilon] = 0\)</span>.
-6. <span class="arithmatex">\(\mathbb{E}_{\mathcal{D}, \epsilon}[2(\bar{f}(\mathbf{x}) - \hat{f}(\mathbf{x}))\epsilon] = 2\mathbb{E}_{\mathcal{D}}[\bar{f}(\mathbf{x}) - \hat{f}(\mathbf{x})] \mathbb{E}_{\epsilon}[\epsilon] = 0\)</span>.
+Taking expectation <span class="arithmatex">\(\mathbb{E}_{\mathcal{D}, \epsilon}[\cdot]\)</span> across all terms:</p>
+<ol>
+<li><span class="arithmatex">\(\mathbb{E}[(f(\mathbf{x}) - \bar{f}(\mathbf{x}))^2] = (f(\mathbf{x}) - \mathbb{E}[\hat{f}(\mathbf{x})])^2 \equiv \text{Bias}(\hat{f}(\mathbf{x}))^2\)</span> (deterministic).</li>
+<li><span class="arithmatex">\(\mathbb{E}[(\bar{f}(\mathbf{x}) - \hat{f}(\mathbf{x}))^2] = \mathbb{E}[(\hat{f}(\mathbf{x}) - \mathbb{E}[\hat{f}(\mathbf{x})])^2] \equiv \text{Var}(\hat{f}(\mathbf{x}))\)</span>.</li>
+<li><span class="arithmatex">\(\mathbb{E}[\epsilon^2] = \sigma^2\)</span> (irreducible noise).</li>
+<li><span class="arithmatex">\(\mathbb{E}_{\mathcal{D}}[2(f(\mathbf{x}) - \bar{f}(\mathbf{x}))(\bar{f}(\mathbf{x}) - \hat{f}(\mathbf{x}))] = 2(f(\mathbf{x}) - \bar{f}(\mathbf{x})) \cdot (\bar{f}(\mathbf{x}) - \mathbb{E}[\hat{f}(\mathbf{x})]) = 0\)</span>.</li>
+<li><span class="arithmatex">\(\mathbb{E}_{\epsilon}[2(f(\mathbf{x}) - \bar{f}(\mathbf{x}))\epsilon] = 2(f(\mathbf{x}) - \bar{f}(\mathbf{x})) \mathbb{E}[\epsilon] = 0\)</span>.</li>
+<li><span class="arithmatex">\(\mathbb{E}_{\mathcal{D}, \epsilon}[2(\bar{f}(\mathbf{x}) - \hat{f}(\mathbf{x}))\epsilon] = 2\mathbb{E}_{\mathcal{D}}[\bar{f}(\mathbf{x}) - \hat{f}(\mathbf{x})] \mathbb{E}_{\epsilon}[\epsilon] = 0\)</span>.
 All cross-terms vanish identically, yielding:
-$<span class="arithmatex">\(\mathbb{E}[(y - \hat{f}(\mathbf{x}))^2] = \text{Bias}(\hat{f}(\mathbf{x}))^2 + \text{Var}(\hat{f}(\mathbf{x})) + \sigma^2\)</span>$</p>
+$<span class="arithmatex">\(\mathbb{E}[(y - \hat{f}(\mathbf{x}))^2] = \text{Bias}(\hat{f}(\mathbf{x}))^2 + \text{Var}(\hat{f}(\mathbf{x})) + \sigma^2\)</span>$</li>
+</ol>
 <hr />
 <h3 id="q2-contrast-group-k-fold-stratified-k-fold-and-purged-timeseriessplit-give-concrete-real-world-failure-modes-for-misapplying-them">Q2: Contrast Group K-Fold, Stratified K-Fold, and Purged TimeSeriesSplit. Give concrete real-world failure modes for misapplying them.<a class="headerlink" href="#q2-contrast-group-k-fold-stratified-k-fold-and-purged-timeseriessplit-give-concrete-real-world-failure-modes-for-misapplying-them" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>Stratified K-Fold:</strong>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li>
+<p><strong>Stratified K-Fold:</strong>
   <em>Mechanism:</em> Enforces that every fold preserves the exact class label proportion <span class="arithmatex">\(P(y=k)\)</span> of the full dataset.
-  <em>Failure Mode:</em> If applied to hospital patient data where each patient has 20 medical records, records from Patient 101 will be split across both train and validation folds. A neural network will memorize Patient 101's unique biological quirks rather than true disease pathology, inflating CV performance while collapsing on new patients in production.
-- <strong>Group K-Fold:</strong>
+  <em>Failure Mode:</em> If applied to hospital patient data where each patient has 20 medical records, records from Patient 101 will be split across both train and validation folds. A neural network will memorize Patient 101's unique biological quirks rather than true disease pathology, inflating CV performance while collapsing on new patients in production.</p>
+</li>
+<li>
+<p><strong>Group K-Fold:</strong>
   <em>Mechanism:</em> Partitions data such that all records associated with a specific entity group identifier (e.g., <code>patient_id</code>, <code>device_id</code>, <code>household_id</code>) are placed strictly within a single fold.
-  <em>Failure Mode:</em> Mandatory whenever rows are not statistically independent. If violated, identity leakage gives an illusion of high generalization.
-- <strong>Purged &amp; Embargoed TimeSeriesSplit:</strong>
+  <em>Failure Mode:</em> Mandatory whenever rows are not statistically independent. If violated, identity leakage gives an illusion of high generalization.</p>
+</li>
+<li>
+<p><strong>Purged &amp; Embargoed TimeSeriesSplit:</strong>
   <em>Mechanism:</em> Splits data chronologically (<span class="arithmatex">\(t_1 &lt; t_2 &lt; t_3\)</span>), removes training samples whose label computation window overlaps with the test period (purging), and adds a dead-zone buffer after testing (embargoing).
   <em>Failure Mode:</em> If standard random K-Fold is applied to financial equity data, the model trains on prices from Wednesday to predict Tuesday prices, exploiting lookahead bias and serial correlation to generate illusory profits that evaporate in live trading.</p>
+</li>
+</ul>
 <hr />
 <h3 id="q3-derive-focal-loss-and-explain-how-the-modulating-factor-1-p_tgamma-prevents-easy-negatives-from-dominating-the-gradient">Q3: Derive Focal Loss and explain how the modulating factor <span class="arithmatex">\((1 - p_t)^\gamma\)</span> prevents easy negatives from dominating the gradient.<a class="headerlink" href="#q3-derive-focal-loss-and-explain-how-the-modulating-factor-1-p_tgamma-prevents-easy-negatives-from-dominating-the-gradient" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4572,22 +4620,32 @@ $<span class="arithmatex">\(p_t = \begin{cases} p &amp; \text{if } y = 1 \\ 1 - 
 In extreme class imbalance (e.g., 1 positive per 1,000 negatives), the vast majority of negative samples are easily classified (e.g., <span class="arithmatex">\(p_t \ge 0.99\)</span>). Even though each individual easy negative incurs a tiny loss <span class="arithmatex">\(-\ln(0.99) \approx 0.01\)</span>, their overwhelming cumulative sum (<span class="arithmatex">\(\sum 0.01 \times 1,000 = 10\)</span>) completely dominates the loss and washes out the gradient from rare positives.</p>
 <p><strong>Focal Loss Formulation:</strong>
 $<span class="arithmatex">\(\mathcal{L}_{\text{focal}}(p_t) = -\alpha_t (1 - p_t)^\gamma \ln(p_t)\)</span>$
-The modulating factor <span class="arithmatex">\((1 - p_t)^\gamma\)</span> dynamically rescales the gradient based on confidence:
-- For an easy instance (<span class="arithmatex">\(p_t = 0.99\)</span>) with <span class="arithmatex">\(\gamma = 2\)</span>:
+The modulating factor <span class="arithmatex">\((1 - p_t)^\gamma\)</span> dynamically rescales the gradient based on confidence:</p>
+<ul>
+<li>
+<p>For an easy instance (<span class="arithmatex">\(p_t = 0.99\)</span>) with <span class="arithmatex">\(\gamma = 2\)</span>:
   $<span class="arithmatex">\((1 - 0.99)^2 = (0.01)^2 = 0.0001\)</span>$
-  Its loss and gradient are attenuated by a factor of <strong>10,000</strong>!
-- For a hard, misclassified instance (<span class="arithmatex">\(p_t = 0.2\)</span>):
+  Its loss and gradient are attenuated by a factor of <strong>10,000</strong>!</p>
+</li>
+<li>
+<p>For a hard, misclassified instance (<span class="arithmatex">\(p_t = 0.2\)</span>):
   $<span class="arithmatex">\((1 - 0.2)^2 = (0.8)^2 = 0.64\)</span>$
   Its loss and gradient are largely preserved.
 Focal Loss effectively suppresses easy background negatives without discarding them, directing gradient updates exclusively toward hard, ambiguous boundary cases.</p>
+</li>
+</ul>
 <hr />
 <h3 id="q4-differentiate-empirical-risk-minimization-erm-and-structural-risk-minimization-srm-from-statistical-learning-theory">Q4: Differentiate Empirical Risk Minimization (ERM) and Structural Risk Minimization (SRM) from statistical learning theory.<a class="headerlink" href="#q4-differentiate-empirical-risk-minimization-erm-and-structural-risk-minimization-srm-from-statistical-learning-theory" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>Empirical Risk Minimization (ERM):</strong>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li>
+<p><strong>Empirical Risk Minimization (ERM):</strong>
   Minimizes the average sample loss over the training dataset:
   $<span class="arithmatex">\(f_{\text{ERM}} = \arg\min_{f \in \mathcal{H}} R_{\text{emp}}(f) = \arg\min_{f \in \mathcal{H}} \frac{1}{n}\sum_{i=1}^n L(y_i, f(\mathbf{x}_i))\)</span>$
-  <em>Vulnerability:</em> ERM has no mechanism to control model capacity. If the hypothesis space <span class="arithmatex">\(\mathcal{H}\)</span> has high capacity (large VC dimension <span class="arithmatex">\(h\)</span>), ERM overfits by memorizing training instances, leading to large generalization error <span class="arithmatex">\(R(f) \gg R_{\text{emp}}(f)\)</span>.
-- <strong>Structural Risk Minimization (SRM) (Vapnik):</strong>
+  <em>Vulnerability:</em> ERM has no mechanism to control model capacity. If the hypothesis space <span class="arithmatex">\(\mathcal{H}\)</span> has high capacity (large VC dimension <span class="arithmatex">\(h\)</span>), ERM overfits by memorizing training instances, leading to large generalization error <span class="arithmatex">\(R(f) \gg R_{\text{emp}}(f)\)</span>.</p>
+</li>
+<li>
+<p><strong>Structural Risk Minimization (SRM) (Vapnik):</strong>
   Defines a nested structure of hypothesis classes of increasing capacity:
   $<span class="arithmatex">\(\mathcal{H}_1 \subset \mathcal{H}_2 \subset \dots \subset \mathcal{H}_k \subset \dots\)</span>$
   where their VC dimensions satisfy <span class="arithmatex">\(h_1 \le h_2 \le \dots \le h_k\)</span>.
@@ -4595,37 +4653,47 @@ Focal Loss effectively suppresses easy background negatives without discarding t
   $<span class="arithmatex">\(R(f) \le R_{\text{emp}}(f) + \sqrt{\frac{h \left(\ln\frac{2n}{h} + 1\right) - \ln(\delta/4)}{n}}\)</span>$
   SRM minimizes the empirical risk and the capacity bound simultaneously:
   $<span class="arithmatex">\(f_{\text{SRM}} = \arg\min_{f \in \mathcal{H}_k} \left[ R_{\text{emp}}(f) + \Omega(\mathcal{H}_k) \right]\)</span>$
-  In practice, <span class="arithmatex">\(\Omega(\mathcal{H}_k)\)</span> is realized as explicit regularization penalties:
-  - In Ridge/Lasso: <span class="arithmatex">\(\mathcal{L}_{\text{SRM}} = \text{MSE} + \lambda \|\mathbf{w}\|_p\)</span>.
-  - In Support Vector Machines: maximizing the margin <span class="arithmatex">\(\frac{2}{\|\mathbf{w}\|}\)</span> minimizes the VC dimension of linear hyperplanes.
-  - In Decision Trees: Cost-complexity pruning <span class="arithmatex">\(R(T) + \alpha |T|\)</span>.</p>
+  In practice, <span class="arithmatex">\(\Omega(\mathcal{H}_k)\)</span> is realized as explicit regularization penalties:</p>
+</li>
+<li>In Ridge/Lasso: <span class="arithmatex">\(\mathcal{L}_{\text{SRM}} = \text{MSE} + \lambda \|\mathbf{w}\|_p\)</span>.</li>
+<li>In Support Vector Machines: maximizing the margin <span class="arithmatex">\(\frac{2}{\|\mathbf{w}\|}\)</span> minimizes the VC dimension of linear hyperplanes.</li>
+<li>In Decision Trees: Cost-complexity pruning <span class="arithmatex">\(R(T) + \alpha |T|\)</span>.</li>
+</ul>
 <hr />
 <h3 id="q5-what-is-the-double-descent-phenomenon-in-modern-deep-learning-and-how-does-it-reconcile-with-classical-bias-variance-theory">Q5: What is the "Double Descent" phenomenon in modern deep learning, and how does it reconcile with classical bias-variance theory?<a class="headerlink" href="#q5-what-is-the-double-descent-phenomenon-in-modern-deep-learning-and-how-does-it-reconcile-with-classical-bias-variance-theory" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>Classical Bias-Variance Theory (The U-Curve):</strong>
-  As model capacity increases (more parameters <span class="arithmatex">\(p\)</span>), training error decreases monotonically. Validation error decreases to an optimal "sweet spot", beyond which the model overfits, causing test error to diverge toward infinity as <span class="arithmatex">\(p \to n\)</span>.
-- <strong>The Modern Double Descent Curve (Belkin et al., 2019):</strong>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li>
+<p><strong>Classical Bias-Variance Theory (The U-Curve):</strong>
+  As model capacity increases (more parameters <span class="arithmatex">\(p\)</span>), training error decreases monotonically. Validation error decreases to an optimal "sweet spot", beyond which the model overfits, causing test error to diverge toward infinity as <span class="arithmatex">\(p \to n\)</span>.</p>
+</li>
+<li>
+<p><strong>The Modern Double Descent Curve (Belkin et al., 2019):</strong>
   When parameter count exceeds sample size (<span class="arithmatex">\(p &gt; n\)</span>, the <strong>overparameterized regime</strong>), test error peaks at the <strong>interpolation threshold</strong> (<span class="arithmatex">\(p = n\)</span>, where training error hits exactly zero), but then <strong>decreases a second time as capacity continues to grow (<span class="arithmatex">\(p \gg n\)</span>)</strong>!</p>
+</li>
+</ul>
 <pre class="mermaid"><code>flowchart LR
     A["Underparameterized (p &lt; n): Classical U-Curve"] --&gt; B["Interpolation Threshold (p ≈ n): Extreme Variance Peak"]
     B --&gt; C["Overparameterized (p ≫ n): Second Descent (Implicit Regularization)"]</code></pre>
-<p><strong>Mechanistic Explanation:</strong>
-1. At the interpolation threshold <span class="arithmatex">\(p \approx n\)</span>, there is only one unique set of parameters that interpolates the training data. The Gram matrix is near-singular, causing parameters to explode in magnitude (astronomical variance).
-2. When <span class="arithmatex">\(p \gg n\)</span>, there are infinitely many parameter configurations that achieve zero training error. Optimizers like Stochastic Gradient Descent (SGD) find the minimum-norm interpolating solution (<span class="arithmatex">\(\min \|\mathbf{w}\|_2\)</span>).
-3. This inductive bias acts as an implicit regularizer, producing smooth interpolating functions that eliminate high-frequency oscillations between points.</p>
+<p><strong>Mechanistic Explanation:</strong></p>
+<ol>
+<li>At the interpolation threshold <span class="arithmatex">\(p \approx n\)</span>, there is only one unique set of parameters that interpolates the training data. The Gram matrix is near-singular, causing parameters to explode in magnitude (astronomical variance).</li>
+<li>When <span class="arithmatex">\(p \gg n\)</span>, there are infinitely many parameter configurations that achieve zero training error. Optimizers like Stochastic Gradient Descent (SGD) find the minimum-norm interpolating solution (<span class="arithmatex">\(\min \|\mathbf{w}\|_2\)</span>).</li>
+<li>This inductive bias acts as an implicit regularizer, producing smooth interpolating functions that eliminate high-frequency oscillations between points.</li>
+</ol>
 <hr />
 <h2 id="12-mastery-ladder">12. Mastery Ladder<a class="headerlink" href="#12-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> You can state the three components of expected prediction error: <span class="arithmatex">\(\text{Bias}^2\)</span>, <span class="arithmatex">\(\text{Variance}\)</span>, and <span class="arithmatex">\(\sigma^2\)</span>.</li>
-<li>[ ] <strong>L2:</strong> You can identify underfitting vs. overfitting from training and validation learning curves.</li>
-<li>[ ] <strong>L3:</strong> You can explain why Stratified K-Fold is mandatory for classification tasks.</li>
-<li>[ ] <strong>L4:</strong> You can explain Group K-Fold and give an example of identity leakage across patient records.</li>
-<li>[ ] <strong>L5:</strong> You can explain purging and embargoing in time-series cross-validation.</li>
-<li>[ ] <strong>L6:</strong> You can mathematically prove the Bias-Variance Decomposition step-by-step.</li>
-<li>[ ] <strong>L7:</strong> You can differentiate Empirical Risk Minimization (ERM) and Structural Risk Minimization (SRM).</li>
-<li>[ ] <strong>L8:</strong> You can explain why preprocessing before train-test split causes data leakage.</li>
-<li>[ ] <strong>L9:</strong> You can write the SMOTE interpolation formula <span class="arithmatex">\(\mathbf{x}_{\text{new}} = \mathbf{x}_i + \lambda(\mathbf{x}_{zi} - \mathbf{x}_i)\)</span> and explain why SMOTE must be performed inside CV.</li>
-<li>[ ] <strong>L10:</strong> You can derive Focal Loss and implement SMOTE from scratch in NumPy.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can state the three components of expected prediction error: <span class="arithmatex">\(\text{Bias}^2\)</span>, <span class="arithmatex">\(\text{Variance}\)</span>, and <span class="arithmatex">\(\sigma^2\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can identify underfitting vs. overfitting from training and validation learning curves.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can explain why Stratified K-Fold is mandatory for classification tasks.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can explain Group K-Fold and give an example of identity leakage across patient records.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can explain purging and embargoing in time-series cross-validation.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can mathematically prove the Bias-Variance Decomposition step-by-step.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can differentiate Empirical Risk Minimization (ERM) and Structural Risk Minimization (SRM).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can explain why preprocessing before train-test split causes data leakage.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can write the SMOTE interpolation formula <span class="arithmatex">\(\mathbf{x}_{\text{new}} = \mathbf{x}_i + \lambda(\mathbf{x}_{zi} - \mathbf{x}_i)\)</span> and explain why SMOTE must be performed inside CV.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can derive Focal Loss and implement SMOTE from scratch in NumPy.</li>
 </ul>
 
 

@@ -4282,13 +4282,17 @@ h(\mathbf{x}) = \text{sign}(\mathbf{w}^T \mathbf{x} + b)
 <h3 id="22-functional-vs-geometric-margin">2.2 Functional vs. Geometric Margin<a class="headerlink" href="#22-functional-vs-geometric-margin" title="Permanent link">&para;</a></h3>
 <p>For a training sample <span class="arithmatex">\((\mathbf{x}_i, y_i)\)</span>:</p>
 <ol>
-<li><strong>Functional Margin (<span class="arithmatex">\(\hat{\gamma}_i\)</span>)</strong>:
+<li>
+<p><strong>Functional Margin (<span class="arithmatex">\(\hat{\gamma}_i\)</span>)</strong>:
    $<span class="arithmatex">\(\hat{\gamma}_i = y_i (\mathbf{w}^T \mathbf{x}_i + b)\)</span>$
-   A positive functional margin implies correct classification. However, <span class="arithmatex">\(\hat{\gamma}_i\)</span> is scale-invariant: scaling <span class="arithmatex">\(\mathbf{w} \to 2\mathbf{w}\)</span> and <span class="arithmatex">\(b \to 2b\)</span> doubles <span class="arithmatex">\(\hat{\gamma}_i\)</span> without altering the physical hyperplane.</li>
-<li><strong>Geometric Margin (<span class="arithmatex">\(\gamma_i\)</span>)</strong>:
+   A positive functional margin implies correct classification. However, <span class="arithmatex">\(\hat{\gamma}_i\)</span> is scale-invariant: scaling <span class="arithmatex">\(\mathbf{w} \to 2\mathbf{w}\)</span> and <span class="arithmatex">\(b \to 2b\)</span> doubles <span class="arithmatex">\(\hat{\gamma}_i\)</span> without altering the physical hyperplane.</p>
+</li>
+<li>
+<p><strong>Geometric Margin (<span class="arithmatex">\(\gamma_i\)</span>)</strong>:
    The Euclidean perpendicular distance from point <span class="arithmatex">\(\mathbf{x}_i\)</span> to the hyperplane:
    $<span class="arithmatex">\(\gamma_i = \frac{y_i (\mathbf{w}^T \mathbf{x}_i + b)}{\|\mathbf{w}\|_2}\)</span>$
-   The geometric margin is strictly invariant to parameter re-scaling.</li>
+   The geometric margin is strictly invariant to parameter re-scaling.</p>
+</li>
 </ol>
 <p>The geometric margin of the dataset is the distance to the closest training sample:</p>
 <div class="arithmatex">\[
@@ -4327,9 +4331,11 @@ y_i (\mathbf{w}^T \mathbf{x}_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0
 <div class="arithmatex">\[
 \min_{\mathbf{w}, b, \boldsymbol{\xi}} \frac{1}{2} \|\mathbf{w}\|_2^2 + C \sum_{i=1}^n \xi_i \quad \text{s.t. } y_i (\mathbf{w}^T \mathbf{x}_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0 \quad \forall i
 \]</div>
-<p>The hyperparameter <span class="arithmatex">\(C &gt; 0\)</span> governs the trade-off between margin width and violation penalty:
-- <strong>Large <span class="arithmatex">\(C\)</span></strong>: Heavy penalty on slack violations. Forces a narrow margin to minimize training errors (high variance, risk of overfitting).
-- <strong>Small <span class="arithmatex">\(C\)</span></strong>: Tolerates many slack violations in exchange for a wider margin (high bias, robust to noise).</p>
+<p>The hyperparameter <span class="arithmatex">\(C &gt; 0\)</span> governs the trade-off between margin width and violation penalty:</p>
+<ul>
+<li><strong>Large <span class="arithmatex">\(C\)</span></strong>: Heavy penalty on slack violations. Forces a narrow margin to minimize training errors (high variance, risk of overfitting).</li>
+<li><strong>Small <span class="arithmatex">\(C\)</span></strong>: Tolerates many slack violations in exchange for a wider margin (high bias, robust to noise).</li>
+</ul>
 <h3 id="33-the-hinge-loss-perspective">3.3 The Hinge Loss Perspective<a class="headerlink" href="#33-the-hinge-loss-perspective" title="Permanent link">&para;</a></h3>
 <p>Notice that the slack constraint requires <span class="arithmatex">\(\xi_i \ge 1 - y_i f(\mathbf{x}_i)\)</span>. Since <span class="arithmatex">\(\xi_i \ge 0\)</span>:</p>
 <div class="arithmatex">\[
@@ -4353,12 +4359,18 @@ y_i (\mathbf{w}^T \mathbf{x}_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0
 <h3 id="42-karush-kuhn-tucker-kkt-stationarity-conditions">4.2 Karush-Kuhn-Tucker (KKT) Stationarity Conditions<a class="headerlink" href="#42-karush-kuhn-tucker-kkt-stationarity-conditions" title="Permanent link">&para;</a></h3>
 <p>Setting the partial derivatives with respect to the primal variables <span class="arithmatex">\((\mathbf{w}, b, \boldsymbol{\xi})\)</span> to zero:</p>
 <ol>
-<li><strong>Stationarity with respect to <span class="arithmatex">\(\mathbf{w}\)</span></strong>:
-   $<span class="arithmatex">\(\nabla_{\mathbf{w}} \mathcal{L}_P = \mathbf{w} - \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i = \mathbf{0} \implies \mathbf{w} = \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i\)</span>$</li>
-<li><strong>Stationarity with respect to <span class="arithmatex">\(b\)</span></strong>:
-   $<span class="arithmatex">\(\frac{\partial \mathcal{L}_P}{\partial b} = -\sum_{i=1}^n \alpha_i y_i = 0 \implies \sum_{i=1}^n \alpha_i y_i = 0\)</span>$</li>
-<li><strong>Stationarity with respect to <span class="arithmatex">\(\xi_i\)</span></strong>:
-   $<span class="arithmatex">\(\frac{\partial \mathcal{L}_P}{\partial \xi_i} = C - \alpha_i - \mu_i = 0 \implies C = \alpha_i + \mu_i\)</span>$</li>
+<li>
+<p><strong>Stationarity with respect to <span class="arithmatex">\(\mathbf{w}\)</span></strong>:
+   $<span class="arithmatex">\(\nabla_{\mathbf{w}} \mathcal{L}_P = \mathbf{w} - \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i = \mathbf{0} \implies \mathbf{w} = \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i\)</span>$</p>
+</li>
+<li>
+<p><strong>Stationarity with respect to <span class="arithmatex">\(b\)</span></strong>:
+   $<span class="arithmatex">\(\frac{\partial \mathcal{L}_P}{\partial b} = -\sum_{i=1}^n \alpha_i y_i = 0 \implies \sum_{i=1}^n \alpha_i y_i = 0\)</span>$</p>
+</li>
+<li>
+<p><strong>Stationarity with respect to <span class="arithmatex">\(\xi_i\)</span></strong>:
+   $<span class="arithmatex">\(\frac{\partial \mathcal{L}_P}{\partial \xi_i} = C - \alpha_i - \mu_i = 0 \implies C = \alpha_i + \mu_i\)</span>$</p>
+</li>
 </ol>
 <p>Since <span class="arithmatex">\(\mu_i \ge 0\)</span> and <span class="arithmatex">\(\alpha_i \ge 0\)</span>, this implies the <strong>box constraint</strong>:</p>
 <div class="arithmatex">\[
@@ -4374,13 +4386,19 @@ y_i (\mathbf{w}^T \mathbf{x}_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0
 \]</div>
 <h4 id="three-distinct-regimes-of-training-points">Three Distinct Regimes of Training Points:<a class="headerlink" href="#three-distinct-regimes-of-training-points" title="Permanent link">&para;</a></h4>
 <ol>
-<li><strong>Non-Support Vectors (<span class="arithmatex">\(\alpha_i = 0\)</span>)</strong>:
-   <span class="arithmatex">\(y_i(\mathbf{w}^T \mathbf{x}_i + b) &gt; 1\)</span> and <span class="arithmatex">\(\xi_i = 0\)</span>. The sample lies strictly outside the margin. It contributes <strong>zero weight</strong> to <span class="arithmatex">\(\mathbf{w}\)</span> and can be deleted from the dataset with zero effect on the model!</li>
-<li><strong>Free Support Vectors on the Margin (<span class="arithmatex">\(0 &lt; \alpha_i &lt; C\)</span>)</strong>:
+<li>
+<p><strong>Non-Support Vectors (<span class="arithmatex">\(\alpha_i = 0\)</span>)</strong>:
+   <span class="arithmatex">\(y_i(\mathbf{w}^T \mathbf{x}_i + b) &gt; 1\)</span> and <span class="arithmatex">\(\xi_i = 0\)</span>. The sample lies strictly outside the margin. It contributes <strong>zero weight</strong> to <span class="arithmatex">\(\mathbf{w}\)</span> and can be deleted from the dataset with zero effect on the model!</p>
+</li>
+<li>
+<p><strong>Free Support Vectors on the Margin (<span class="arithmatex">\(0 &lt; \alpha_i &lt; C\)</span>)</strong>:
    Since <span class="arithmatex">\(\alpha_i &lt; C\)</span>, <span class="arithmatex">\(\mu_i = C - \alpha_i &gt; 0\)</span>, forcing <span class="arithmatex">\(\xi_i = 0\)</span>.
-   Therefore, <span class="arithmatex">\(y_i(\mathbf{w}^T \mathbf{x}_i + b) = 1\)</span>. These points lie <strong>exactly on the margin boundaries</strong>. They uniquely determine the intercept <span class="arithmatex">\(b\)</span>.</li>
-<li><strong>Bounded Support Vectors Violating the Margin (<span class="arithmatex">\(\alpha_i = C\)</span>)</strong>:
-   <span class="arithmatex">\(\mu_i = 0\)</span>, so <span class="arithmatex">\(\xi_i \ge 0\)</span>. The sample is either inside the margin or misclassified.</li>
+   Therefore, <span class="arithmatex">\(y_i(\mathbf{w}^T \mathbf{x}_i + b) = 1\)</span>. These points lie <strong>exactly on the margin boundaries</strong>. They uniquely determine the intercept <span class="arithmatex">\(b\)</span>.</p>
+</li>
+<li>
+<p><strong>Bounded Support Vectors Violating the Margin (<span class="arithmatex">\(\alpha_i = C\)</span>)</strong>:
+   <span class="arithmatex">\(\mu_i = 0\)</span>, so <span class="arithmatex">\(\xi_i \ge 0\)</span>. The sample is either inside the margin or misclassified.</p>
+</li>
 </ol>
 <h3 id="44-the-wolfe-dual-optimization-problem">4.4 The Wolfe Dual Optimization Problem<a class="headerlink" href="#44-the-wolfe-dual-optimization-problem" title="Permanent link">&para;</a></h3>
 <p>Substituting <span class="arithmatex">\(\mathbf{w} = \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i\)</span> and <span class="arithmatex">\(\sum_{i=1}^n \alpha_i y_i = 0\)</span> back into <span class="arithmatex">\(\mathcal{L}_P\)</span>:</p>
@@ -4449,9 +4467,11 @@ K(x, z) &amp;= \exp(-x^2) \exp(-z^2) \sum_{k=0}^\infty \left( \sqrt{\frac{2^k}{k
 <hr />
 <h2 id="6-sequential-minimal-optimization-smo">6. Sequential Minimal Optimization (SMO)<a class="headerlink" href="#6-sequential-minimal-optimization-smo" title="Permanent link">&para;</a></h2>
 <p>John Platt (1998) introduced <strong>Sequential Minimal Optimization (SMO)</strong>. Standard quadratic programming packages require storing the <span class="arithmatex">\(n \times n\)</span> kernel matrix, costing <span class="arithmatex">\(\mathcal{O}(n^2)\)</span> memory and <span class="arithmatex">\(\mathcal{O}(n^3)\)</span> flops.</p>
-<p>SMO exploits the linear equality constraint <span class="arithmatex">\(\sum_{i=1}^n \alpha_i y_i = 0\)</span>:
-- We cannot update a single multiplier <span class="arithmatex">\(\alpha_1\)</span> alone, because <span class="arithmatex">\(\alpha_1 = -\frac{1}{y_1}\sum_{i=2}^n \alpha_i y_i\)</span> is completely locked.
-- The smallest subproblem that can be optimized while satisfying the constraint involves <strong>two Lagrange multipliers <span class="arithmatex">\((\alpha_1, \alpha_2)\)</span> simultaneously</strong>.</p>
+<p>SMO exploits the linear equality constraint <span class="arithmatex">\(\sum_{i=1}^n \alpha_i y_i = 0\)</span>:</p>
+<ul>
+<li>We cannot update a single multiplier <span class="arithmatex">\(\alpha_1\)</span> alone, because <span class="arithmatex">\(\alpha_1 = -\frac{1}{y_1}\sum_{i=2}^n \alpha_i y_i\)</span> is completely locked.</li>
+<li>The smallest subproblem that can be optimized while satisfying the constraint involves <strong>two Lagrange multipliers <span class="arithmatex">\((\alpha_1, \alpha_2)\)</span> simultaneously</strong>.</li>
+</ul>
 <pre class="mermaid"><code>flowchart TD
     A["Select pair (α₁, α₂) violating KKT conditions"] --&gt; B["Compute bounds: L ≤ α₂ ≤ H based on box constraint 0 ≤ α ≤ C"]
     B --&gt; C["Compute second derivative: η = 2K₁₂ - K₁₁ - K₂₂"]
@@ -4604,11 +4624,13 @@ If feature <span class="arithmatex">\(x_1\)</span> spans <span class="arithmatex
 The Gram matrix collapses to the identity matrix (<span class="arithmatex">\(K \approx I\)</span>), causing every training point to become its own isolated island (100% memorization on train, 50% random guessing on test).</p>
 <p><strong>Remedy</strong>: Always apply <code>StandardScaler</code> to zero-mean and unit-variance all features prior to fitting SVM.</p>
 <h3 id="92-the-gamma-c-interplay-in-rbf">9.2 The Gamma-C Interplay in RBF<a class="headerlink" href="#92-the-gamma-c-interplay-in-rbf" title="Permanent link">&para;</a></h3>
-<p>In the RBF kernel:
-- <span class="arithmatex">\(\gamma\)</span> controls the radius of influence of each support vector: <span class="arithmatex">\(\sigma = \frac{1}{\sqrt{2\gamma}}\)</span>.
-  - If <span class="arithmatex">\(\gamma\)</span> is excessively large: Each support vector has a tiny Gaussian bell. The decision boundary creates tight concentric bubbles around individual training points (extreme overfitting).
-  - If <span class="arithmatex">\(\gamma\)</span> is excessively small: The Gaussian bell is nearly flat. The kernel behaves like a linear model (underfitting).
-- Pairwise grid search across logarithmic scales (<span class="arithmatex">\(\gamma \in [10^{-4}, 10^1], C \in [10^{-2}, 10^3]\)</span>) is strictly necessary.</p>
+<p>In the RBF kernel:</p>
+<ul>
+<li><span class="arithmatex">\(\gamma\)</span> controls the radius of influence of each support vector: <span class="arithmatex">\(\sigma = \frac{1}{\sqrt{2\gamma}}\)</span>.</li>
+<li>If <span class="arithmatex">\(\gamma\)</span> is excessively large: Each support vector has a tiny Gaussian bell. The decision boundary creates tight concentric bubbles around individual training points (extreme overfitting).</li>
+<li>If <span class="arithmatex">\(\gamma\)</span> is excessively small: The Gaussian bell is nearly flat. The kernel behaves like a linear model (underfitting).</li>
+<li>Pairwise grid search across logarithmic scales (<span class="arithmatex">\(\gamma \in [10^{-4}, 10^1], C \in [10^{-2}, 10^3]\)</span>) is strictly necessary.</li>
+</ul>
 <h3 id="93-computational-bottleneck-on-large-datasets-n-100000">9.3 Computational Bottleneck on Large Datasets (<span class="arithmatex">\(n &gt; 100,000\)</span>)<a class="headerlink" href="#93-computational-bottleneck-on-large-datasets-n-100000" title="Permanent link">&para;</a></h3>
 <p>Kernel SVM solvers like LibSVM require <span class="arithmatex">\(\mathcal{O}(n^2)\)</span> memory to cache the Gram matrix and <span class="arithmatex">\(\mathcal{O}(n^2 \text{ to } n^3)\)</span> training time. Fitting an RBF SVM on <span class="arithmatex">\(n = 500,000\)</span> will hang or exhaust RAM.</p>
 <p><strong>Remedy</strong>: For large datasets, use <strong>Linear SVM</strong> via <code>LinearSVC</code> (LibLinear, <span class="arithmatex">\(\mathcal{O}(n \cdot p)\)</span>) or use Random Fourier Features (<code>RBFSampler</code>) to approximate the RBF kernel via explicit linear features.</p>
@@ -4620,10 +4642,11 @@ The primal soft-margin SVM problem is:
 $<span class="arithmatex">\(\min_{\mathbf{w}, b, \boldsymbol{\xi}} \frac{1}{2}\|\mathbf{w}\|_2^2 + C\sum_{i=1}^n \xi_i \quad \text{s.t. } y_i(\mathbf{w}^T \mathbf{x}_i + b) \ge 1 - \xi_i, \; \xi_i \ge 0\)</span>$
 Forming the primal Lagrangian with multipliers <span class="arithmatex">\(\alpha_i \ge 0\)</span> and <span class="arithmatex">\(\mu_i \ge 0\)</span>:
 $<span class="arithmatex">\(\mathcal{L}_P(\mathbf{w}, b, \boldsymbol{\xi}, \boldsymbol{\alpha}, \boldsymbol{\mu}) = \frac{1}{2}\|\mathbf{w}\|_2^2 + C\sum_{i=1}^n \xi_i - \sum_{i=1}^n \alpha_i \left[ y_i(\mathbf{w}^T \mathbf{x}_i + b) - 1 + \xi_i \right] - \sum_{i=1}^n \mu_i \xi_i\)</span>$
-Setting partial derivatives with respect to primal variables to zero:
-1. <span class="arithmatex">\(\nabla_{\mathbf{w}} \mathcal{L}_P = \mathbf{w} - \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i = \mathbf{0} \implies \mathbf{w} = \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i\)</span>
-2. <span class="arithmatex">\(\frac{\partial \mathcal{L}_P}{\partial b} = -\sum_{i=1}^n \alpha_i y_i = 0 \implies \sum_{i=1}^n \alpha_i y_i = 0\)</span>
-3. <span class="arithmatex">\(\frac{\partial \mathcal{L}_P}{\partial \xi_i} = C - \alpha_i - \mu_i = 0 \implies C = \alpha_i + \mu_i\)</span>
+Setting partial derivatives with respect to primal variables to zero:</p>
+<ol>
+<li><span class="arithmatex">\(\nabla_{\mathbf{w}} \mathcal{L}_P = \mathbf{w} - \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i = \mathbf{0} \implies \mathbf{w} = \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i\)</span></li>
+<li><span class="arithmatex">\(\frac{\partial \mathcal{L}_P}{\partial b} = -\sum_{i=1}^n \alpha_i y_i = 0 \implies \sum_{i=1}^n \alpha_i y_i = 0\)</span></li>
+<li><span class="arithmatex">\(\frac{\partial \mathcal{L}_P}{\partial \xi_i} = C - \alpha_i - \mu_i = 0 \implies C = \alpha_i + \mu_i\)</span>
 Because <span class="arithmatex">\(\mu_i \ge 0\)</span>, this enforces <span class="arithmatex">\(0 \le \alpha_i \le C\)</span>.
 Substituting <span class="arithmatex">\(\mathbf{w}\)</span> into <span class="arithmatex">\(\mathcal{L}_P\)</span>:
 $<span class="arithmatex">\(\begin{aligned}
@@ -4632,26 +4655,37 @@ $<span class="arithmatex">\(\begin{aligned}
 &amp;= \sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j (\mathbf{x}_i^T \mathbf{x}_j)
 \end{aligned}\)</span>$
 Thus, the dual problem is:
-$<span class="arithmatex">\(\max_{\boldsymbol{\alpha}} \sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j (\mathbf{x}_i^T \mathbf{x}_j) \quad \text{s.t. } 0 \le \alpha_i \le C, \; \sum_{i=1}^n \alpha_i y_i = 0\)</span>$</p>
+$<span class="arithmatex">\(\max_{\boldsymbol{\alpha}} \sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j (\mathbf{x}_i^T \mathbf{x}_j) \quad \text{s.t. } 0 \le \alpha_i \le C, \; \sum_{i=1}^n \alpha_i y_i = 0\)</span>$</li>
+</ol>
 <hr />
 <h3 id="q2-classify-the-three-regimes-of-support-vectors-using-the-kkt-complementary-slackness-conditions">Q2: Classify the three regimes of support vectors using the KKT complementary slackness conditions.<a class="headerlink" href="#q2-classify-the-three-regimes-of-support-vectors-using-the-kkt-complementary-slackness-conditions" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-The KKT complementary slackness conditions state:
-1. <span class="arithmatex">\(\alpha_i \left[ y_i(\mathbf{w}^T \mathbf{x}_i + b) - 1 + \xi_i \right] = 0\)</span>
-2. <span class="arithmatex">\(\mu_i \xi_i = (C - \alpha_i) \xi_i = 0\)</span></p>
-<p>This categorizes all training samples into three distinct regimes:
-- <strong>Case 1: <span class="arithmatex">\(\alpha_i = 0\)</span> (Non-Support Vectors)</strong>:
+The KKT complementary slackness conditions state:</p>
+<ol>
+<li><span class="arithmatex">\(\alpha_i \left[ y_i(\mathbf{w}^T \mathbf{x}_i + b) - 1 + \xi_i \right] = 0\)</span></li>
+<li><span class="arithmatex">\(\mu_i \xi_i = (C - \alpha_i) \xi_i = 0\)</span></li>
+</ol>
+<p>This categorizes all training samples into three distinct regimes:</p>
+<ul>
+<li>
+<p><strong>Case 1: <span class="arithmatex">\(\alpha_i = 0\)</span> (Non-Support Vectors)</strong>:
   From condition 2, since <span class="arithmatex">\(\alpha_i &lt; C\)</span>, <span class="arithmatex">\(\mu_i &gt; 0 \implies \xi_i = 0\)</span>.
   From the primal constraint, <span class="arithmatex">\(y_i(\mathbf{w}^T \mathbf{x}_i + b) \ge 1\)</span>. Since condition 1 is satisfied with <span class="arithmatex">\(\alpha_i = 0\)</span>, <span class="arithmatex">\(y_i(\mathbf{w}^T \mathbf{x}_i + b) &gt; 1\)</span>.
-  These samples lie strictly outside the margin on the correct side. They contribute nothing to the weight vector (<span class="arithmatex">\(\mathbf{w} = \sum \alpha_i y_i \mathbf{x}_i\)</span>) and have zero influence on the decision boundary.
-- <strong>Case 2: <span class="arithmatex">\(0 &lt; \alpha_i &lt; C\)</span> (Free / Unbounded Support Vectors)</strong>:
+  These samples lie strictly outside the margin on the correct side. They contribute nothing to the weight vector (<span class="arithmatex">\(\mathbf{w} = \sum \alpha_i y_i \mathbf{x}_i\)</span>) and have zero influence on the decision boundary.</p>
+</li>
+<li>
+<p><strong>Case 2: <span class="arithmatex">\(0 &lt; \alpha_i &lt; C\)</span> (Free / Unbounded Support Vectors)</strong>:
   Since <span class="arithmatex">\(\alpha_i &lt; C\)</span>, <span class="arithmatex">\(\mu_i = C - \alpha_i &gt; 0 \implies \xi_i = 0\)</span>.
   Since <span class="arithmatex">\(\alpha_i &gt; 0\)</span>, condition 1 requires <span class="arithmatex">\(y_i(\mathbf{w}^T \mathbf{x}_i + b) - 1 + 0 = 0 \implies y_i(\mathbf{w}^T \mathbf{x}_i + b) = 1\)</span>.
-  These points lie <strong>exactly on the margin boundaries</strong>. They physically anchor the separating slab and are used to solve for the intercept <span class="arithmatex">\(b\)</span>.
-- <strong>Case 3: <span class="arithmatex">\(\alpha_i = C\)</span> (Bounded Support Vectors)</strong>:
+  These points lie <strong>exactly on the margin boundaries</strong>. They physically anchor the separating slab and are used to solve for the intercept <span class="arithmatex">\(b\)</span>.</p>
+</li>
+<li>
+<p><strong>Case 3: <span class="arithmatex">\(\alpha_i = C\)</span> (Bounded Support Vectors)</strong>:
   Here <span class="arithmatex">\(\mu_i = C - \alpha_i = 0\)</span>, so <span class="arithmatex">\(\xi_i \ge 0\)</span>.
   Condition 1 requires <span class="arithmatex">\(y_i(\mathbf{w}^T \mathbf{x}_i + b) = 1 - \xi_i\)</span>.
   These points violate the margin: if <span class="arithmatex">\(0 &lt; \xi_i \le 1\)</span>, they fall inside the margin band; if <span class="arithmatex">\(\xi_i &gt; 1\)</span>, they are misclassified.</p>
+</li>
+</ul>
 <hr />
 <h3 id="q3-prove-that-the-gaussian-rbf-kernel-corresponds-to-an-inner-product-in-an-infinite-dimensional-hilbert-space">Q3: Prove that the Gaussian RBF kernel corresponds to an inner product in an infinite-dimensional Hilbert space.<a class="headerlink" href="#q3-prove-that-the-gaussian-rbf-kernel-corresponds-to-an-inner-product-in-an-infinite-dimensional-hilbert-space" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4700,17 +4734,17 @@ To maximize numerical stability against floating-point inaccuracies, production 
 $<span class="arithmatex">\(b^* = \frac{1}{|S_{\text{free}}|} \sum_{k \in S_{\text{free}}} \left[ y_k - \sum_{i \in \text{SV}} \alpha_i^* y_i K(\mathbf{x}_i, \mathbf{x}_k) \right]\)</span>$</p>
 <hr />
 <h2 id="11-mastery-ladder">11. Mastery Ladder<a class="headerlink" href="#11-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> You can write the hyperplane formula <span class="arithmatex">\(\mathbf{w}^T \mathbf{x} + b = 0\)</span> and state the decision rule.</li>
-<li>[ ] <strong>L2:</strong> You can define functional and geometric margins and prove why margin width is <span class="arithmatex">\(\frac{2}{\|\mathbf{w}\|_2}\)</span>.</li>
-<li>[ ] <strong>L3:</strong> You can formulate the hard-margin and soft-margin primal quadratic programs with slack variables <span class="arithmatex">\(\xi_i\)</span>.</li>
-<li>[ ] <strong>L4:</strong> You can express SVM as Hinge Loss minimization with <span class="arithmatex">\(L_2\)</span> regularization.</li>
-<li>[ ] <strong>L5:</strong> You can derive the stationarity conditions <span class="arithmatex">\(\mathbf{w} = \sum \alpha_i y_i \mathbf{x}_i\)</span> and <span class="arithmatex">\(\sum \alpha_i y_i = 0\)</span> from the Lagrangian.</li>
-<li>[ ] <strong>L6:</strong> You can derive the Wolfe Dual quadratic program and state its box constraints <span class="arithmatex">\(0 \le \alpha_i \le C\)</span>.</li>
-<li>[ ] <strong>L7:</strong> You can classify points into non-support vectors, free support vectors, and bounded support vectors via KKT conditions.</li>
-<li>[ ] <strong>L8:</strong> You can state Mercer's theorem and prove that the RBF kernel maps to an infinite-dimensional Hilbert space.</li>
-<li>[ ] <strong>L9:</strong> You can explain why SMO must update two multipliers simultaneously and derive the analytic update.</li>
-<li>[ ] <strong>L10:</strong> You can implement an SVM from scratch in NumPy with both linear and RBF kernels and benchmark against scikit-learn.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can write the hyperplane formula <span class="arithmatex">\(\mathbf{w}^T \mathbf{x} + b = 0\)</span> and state the decision rule.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can define functional and geometric margins and prove why margin width is <span class="arithmatex">\(\frac{2}{\|\mathbf{w}\|_2}\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can formulate the hard-margin and soft-margin primal quadratic programs with slack variables <span class="arithmatex">\(\xi_i\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can express SVM as Hinge Loss minimization with <span class="arithmatex">\(L_2\)</span> regularization.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can derive the stationarity conditions <span class="arithmatex">\(\mathbf{w} = \sum \alpha_i y_i \mathbf{x}_i\)</span> and <span class="arithmatex">\(\sum \alpha_i y_i = 0\)</span> from the Lagrangian.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can derive the Wolfe Dual quadratic program and state its box constraints <span class="arithmatex">\(0 \le \alpha_i \le C\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can classify points into non-support vectors, free support vectors, and bounded support vectors via KKT conditions.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can state Mercer's theorem and prove that the RBF kernel maps to an infinite-dimensional Hilbert space.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can explain why SMO must update two multipliers simultaneously and derive the analytic update.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can implement an SVM from scratch in NumPy with both linear and RBF kernels and benchmark against scikit-learn.</li>
 </ul>
 
 

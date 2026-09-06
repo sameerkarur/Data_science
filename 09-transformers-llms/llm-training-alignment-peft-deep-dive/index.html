@@ -4278,24 +4278,28 @@
     SFT --&gt; PreferenceData["Pairwise Human Preferences (Prompt, Winner, Loser)\n(10k - 100k Comparisons)"]
     PreferenceData --&gt; Alignment["Stage 3: Alignment (RLHF or DPO)\nConstrained Policy Optimization\nOutput: Aligned Assistant (Helpful &amp; Harmless)"]
     Alignment --&gt; Deployment["Stage 4: Quantization &amp; Compression\nINT8, INT4 (AWQ / GPTQ / QLoRA)\nOutput: Production Serving Engine"]</code></pre>
-<p>Each stage targets a distinct mathematical objective:
-1. <strong>Pretraining</strong> compresses universal world knowledge into billions of neural weights via maximum likelihood estimation over trillions of tokens.
-2. <strong>Supervised Fine-Tuning (SFT)</strong> aligns the base model's raw probability distribution to conversational formats and task templates.
-3. <strong>Alignment (RLHF / DPO)</strong> shapes the policy to satisfy human values (truthfulness, safety, instruction following) by penalizing toxic, hallucinatory, or degenerate paths.
-4. <strong>Quantization &amp; PEFT</strong> compresses representations and enables adaptation without fine-tuning billions of baseline parameters.</p>
+<p>Each stage targets a distinct mathematical objective:</p>
+<ol>
+<li><strong>Pretraining</strong> compresses universal world knowledge into billions of neural weights via maximum likelihood estimation over trillions of tokens.</li>
+<li><strong>Supervised Fine-Tuning (SFT)</strong> aligns the base model's raw probability distribution to conversational formats and task templates.</li>
+<li><strong>Alignment (RLHF / DPO)</strong> shapes the policy to satisfy human values (truthfulness, safety, instruction following) by penalizing toxic, hallucinatory, or degenerate paths.</li>
+<li><strong>Quantization &amp; PEFT</strong> compresses representations and enables adaptation without fine-tuning billions of baseline parameters.</li>
+</ol>
 <hr />
 <h2 id="2-pretraining-infrastructure-distributed-systems">2. Pretraining Infrastructure &amp; Distributed Systems<a class="headerlink" href="#2-pretraining-infrastructure-distributed-systems" title="Permanent link">&para;</a></h2>
 <p>Modern frontier models contain hundreds of billions of parameters. Training requires distributing compute, parameters, gradients, and optimizer states across clusters of thousands of GPUs.</p>
 <h3 id="21-the-gpu-memory-breakdown">2.1 The GPU Memory Breakdown<a class="headerlink" href="#21-the-gpu-memory-breakdown" title="Permanent link">&para;</a></h3>
-<p>When training an LLM with <span class="arithmatex">\(N\)</span> parameters using 16-bit mixed precision (FP16 or BF16) and the AdamW optimizer:
-1. <strong>Model Parameters</strong>: 2 bytes per parameter <span class="arithmatex">\(\to 2N\)</span> bytes.
-2. <strong>Gradients</strong>: 2 bytes per parameter <span class="arithmatex">\(\to 2N\)</span> bytes.
-3. <strong>AdamW Optimizer States</strong>:
-   - FP32 master copy of weights: 4 bytes per parameter <span class="arithmatex">\(\to 4N\)</span> bytes.
-   - First momentum vector (<span class="arithmatex">\(m_t\)</span>): 4 bytes per parameter <span class="arithmatex">\(\to 4N\)</span> bytes.
-   - Second momentum vector (<span class="arithmatex">\(v_t\)</span>): 4 bytes per parameter <span class="arithmatex">\(\to 4N\)</span> bytes.
-   - Total Optimizer States: <span class="arithmatex">\(12N\)</span> bytes.
-4. <strong>Static State Memory Total</strong>: <span class="arithmatex">\(2N + 2N + 12N = 16N\)</span> bytes.</p>
+<p>When training an LLM with <span class="arithmatex">\(N\)</span> parameters using 16-bit mixed precision (FP16 or BF16) and the AdamW optimizer:</p>
+<ol>
+<li><strong>Model Parameters</strong>: 2 bytes per parameter <span class="arithmatex">\(\to 2N\)</span> bytes.</li>
+<li><strong>Gradients</strong>: 2 bytes per parameter <span class="arithmatex">\(\to 2N\)</span> bytes.</li>
+<li><strong>AdamW Optimizer States</strong>:</li>
+<li>FP32 master copy of weights: 4 bytes per parameter <span class="arithmatex">\(\to 4N\)</span> bytes.</li>
+<li>First momentum vector (<span class="arithmatex">\(m_t\)</span>): 4 bytes per parameter <span class="arithmatex">\(\to 4N\)</span> bytes.</li>
+<li>Second momentum vector (<span class="arithmatex">\(v_t\)</span>): 4 bytes per parameter <span class="arithmatex">\(\to 4N\)</span> bytes.</li>
+<li>Total Optimizer States: <span class="arithmatex">\(12N\)</span> bytes.</li>
+<li><strong>Static State Memory Total</strong>: <span class="arithmatex">\(2N + 2N + 12N = 16N\)</span> bytes.</li>
+</ol>
 <p>For a 70B parameter model, static weights, gradients, and optimizer states demand:</p>
 <div class="arithmatex">\[
 16 \times 70 \times 10^9 \approx 1,120 \text{ GB}
@@ -4329,22 +4333,30 @@
     end</code></pre>
 <ul>
 <li><strong>Column-Parallel (Q, K, V Projections &amp; MLP Gate/Up)</strong>: Matrix <span class="arithmatex">\(\mathbf{W} \in \mathbb{R}^{d \times d}\)</span> is sliced column-wise into <span class="arithmatex">\([\mathbf{W}_1, \mathbf{W}_2]\)</span>. No communication needed during forward pass.</li>
-<li><strong>Row-Parallel (Attention Output <span class="arithmatex">\(\mathbf{W}^O\)</span> &amp; MLP Down)</strong>: Matrix is sliced row-wise:
+<li>
+<p><strong>Row-Parallel (Attention Output <span class="arithmatex">\(\mathbf{W}^O\)</span> &amp; MLP Down)</strong>: Matrix is sliced row-wise:
   $<span class="arithmatex">\(\mathbf{Y} = [\mathbf{X}_1, \mathbf{X}_2] \begin{bmatrix} \mathbf{W}_1 \\ \mathbf{W}_2 \end{bmatrix} = \mathbf{X}_1 \mathbf{W}_1 + \mathbf{X}_2 \mathbf{W}_2\)</span>$
-  A single <code>All-Reduce (Sum)</code> operation combines the partial sums.</li>
-<li><strong>Communication Cost</strong>: Exactly 2 All-Reduce operations per Transformer block in forward pass, and 2 in backward pass. Requires high-bandwidth NVLink (<span class="arithmatex">\(900\text{ GB/s}\)</span>).</li>
+  A single <code>All-Reduce (Sum)</code> operation combines the partial sums.</p>
+</li>
+<li>
+<p><strong>Communication Cost</strong>: Exactly 2 All-Reduce operations per Transformer block in forward pass, and 2 in backward pass. Requires high-bandwidth NVLink (<span class="arithmatex">\(900\text{ GB/s}\)</span>).</p>
+</li>
 </ul>
 <h4 id="3-pipeline-parallelism-pp">3. Pipeline Parallelism (PP)<a class="headerlink" href="#3-pipeline-parallelism-pp" title="Permanent link">&para;</a></h4>
-<p>Partitions the <span class="arithmatex">\(L\)</span> layers of the Transformer across <span class="arithmatex">\(P\)</span> nodes in sequential stages. Because naive sequential execution leaves <span class="arithmatex">\(P-1\)</span> nodes idle at any given time (a pipeline bubble), modern frameworks adopt the <strong>1F1B (One-Forward-One-Backward)</strong> schedule:
-- Split the batch into <span class="arithmatex">\(M\)</span> micro-batches (<span class="arithmatex">\(M \gg P\)</span>).
-- After a warm-up phase, each stage alternates execution of one forward micro-batch and one backward micro-batch.
-- The pipeline bubble fraction is:
-  $<span class="arithmatex">\(\text{Bubble Fraction} = \frac{P - 1}{M + P - 1}\)</span>$</p>
+<p>Partitions the <span class="arithmatex">\(L\)</span> layers of the Transformer across <span class="arithmatex">\(P\)</span> nodes in sequential stages. Because naive sequential execution leaves <span class="arithmatex">\(P-1\)</span> nodes idle at any given time (a pipeline bubble), modern frameworks adopt the <strong>1F1B (One-Forward-One-Backward)</strong> schedule:</p>
+<ul>
+<li>Split the batch into <span class="arithmatex">\(M\)</span> micro-batches (<span class="arithmatex">\(M \gg P\)</span>).</li>
+<li>After a warm-up phase, each stage alternates execution of one forward micro-batch and one backward micro-batch.</li>
+<li>The pipeline bubble fraction is:
+  $<span class="arithmatex">\(\text{Bubble Fraction} = \frac{P - 1}{M + P - 1}\)</span>$</li>
+</ul>
 <h4 id="4-zero-zero-redundancy-optimizer">4. ZeRO (Zero Redundancy Optimizer)<a class="headerlink" href="#4-zero-zero-redundancy-optimizer" title="Permanent link">&para;</a></h4>
-<p><a href="https://arxiv.org/abs/1910.02054">Rajbhandari et al. (2020)</a> eliminate redundant memory allocations across DDP workers:
-- <strong>ZeRO-Stage 1</strong>: Partitions AdamW optimizer states (<span class="arithmatex">\(12N\)</span> bytes) across <span class="arithmatex">\(P\)</span> devices. Memory reduction: <span class="arithmatex">\(4\times\)</span>.
-- <strong>ZeRO-Stage 2</strong>: Partitions optimizer states and gradients (<span class="arithmatex">\(12N + 2N = 14N\)</span> bytes). Memory reduction: <span class="arithmatex">\(8\times\)</span>.
-- <strong>ZeRO-Stage 3</strong>: Partitions optimizer states, gradients, and model parameters (<span class="arithmatex">\(16N\)</span> bytes). Each GPU fetches parameters on-the-fly via <code>All-Gather</code> during forward/backward passes and discards them immediately after computation.</p>
+<p><a href="https://arxiv.org/abs/1910.02054">Rajbhandari et al. (2020)</a> eliminate redundant memory allocations across DDP workers:</p>
+<ul>
+<li><strong>ZeRO-Stage 1</strong>: Partitions AdamW optimizer states (<span class="arithmatex">\(12N\)</span> bytes) across <span class="arithmatex">\(P\)</span> devices. Memory reduction: <span class="arithmatex">\(4\times\)</span>.</li>
+<li><strong>ZeRO-Stage 2</strong>: Partitions optimizer states and gradients (<span class="arithmatex">\(12N + 2N = 14N\)</span> bytes). Memory reduction: <span class="arithmatex">\(8\times\)</span>.</li>
+<li><strong>ZeRO-Stage 3</strong>: Partitions optimizer states, gradients, and model parameters (<span class="arithmatex">\(16N\)</span> bytes). Each GPU fetches parameters on-the-fly via <code>All-Gather</code> during forward/backward passes and discards them immediately after computation.</li>
+</ul>
 <h4 id="5-flashattention-exact-attention-with-tiling">5. FlashAttention: Exact Attention with Tiling<a class="headerlink" href="#5-flashattention-exact-attention-with-tiling" title="Permanent link">&para;</a></h4>
 <p><a href="https://arxiv.org/abs/2205.14135">Dao et al. (2022)</a> identified that computing standard attention <span class="arithmatex">\(\text{softmax}(QK^T)V\)</span> spends over <span class="arithmatex">\(80\%\)</span> of its time reading and writing the <span class="arithmatex">\(N \times N\)</span> attention matrix between High Bandwidth Memory (HBM: 1.5–3 TB/s) and fast on-chip SRAM (19 TB/s).</p>
 <p>FlashAttention computes mathematically exact attention without materializing the <span class="arithmatex">\(N \times N\)</span> attention matrix in HBM. By utilizing the <strong>online softmax algorithm</strong> (<a href="https://arxiv.org/abs/1805.02867">Milakov &amp; Gimelshein, 2018</a>), attention is computed in small SRAM tiles:</p>
@@ -4518,11 +4530,13 @@ q_i = \frac{1}{2} \left( Q_X\left( \frac{i}{2^k} \right) + Q_X\left( \frac{i+1}{
 <div class="arithmatex">\[
 \mathbf{W} = \mathbf{W}_0 + \Delta \mathbf{W} = \mathbf{W}_0 + \frac{\alpha}{r} \mathbf{B} \mathbf{A}
 \]</div>
-<p>where:
-- <span class="arithmatex">\(\mathbf{A} \in \mathbb{R}^{r \times k}\)</span> is initialized with Gaussian noise: <span class="arithmatex">\(\mathbf{A} \sim \mathcal{N}\left(0, \frac{1}{r}\right)\)</span>.
-- <span class="arithmatex">\(\mathbf{B} \in \mathbb{R}^{d \times r}\)</span> is initialized to <strong>zeros</strong>: <span class="arithmatex">\(\mathbf{B} = \mathbf{0}\)</span>.
-- <span class="arithmatex">\(r \ll \min(d, k)\)</span> is the rank (typically <span class="arithmatex">\(r \in [8, 64]\)</span>).
-- <span class="arithmatex">\(\alpha\)</span> is a constant scaling hyperparameter.</p>
+<p>where:</p>
+<ul>
+<li><span class="arithmatex">\(\mathbf{A} \in \mathbb{R}^{r \times k}\)</span> is initialized with Gaussian noise: <span class="arithmatex">\(\mathbf{A} \sim \mathcal{N}\left(0, \frac{1}{r}\right)\)</span>.</li>
+<li><span class="arithmatex">\(\mathbf{B} \in \mathbb{R}^{d \times r}\)</span> is initialized to <strong>zeros</strong>: <span class="arithmatex">\(\mathbf{B} = \mathbf{0}\)</span>.</li>
+<li><span class="arithmatex">\(r \ll \min(d, k)\)</span> is the rank (typically <span class="arithmatex">\(r \in [8, 64]\)</span>).</li>
+<li><span class="arithmatex">\(\alpha\)</span> is a constant scaling hyperparameter.</li>
+</ul>
 <pre class="mermaid"><code>flowchart LR
     X["Input x (1 × k)"] --&gt; Frozen["Frozen Pretrained Weight W_0 (d × k)"]
     X --&gt; DownA["LoRA Down-Projection A (r × k)\n(Init: Gaussian)"]
@@ -4540,10 +4554,12 @@ q_i = \frac{1}{2} \left( Q_X\left( \frac{i}{2^k} \right) + Q_X\left( \frac{i+1}{
 </ol>
 <hr />
 <h3 id="62-qlora-4-bit-base-quantization-with-double-quantization">6.2 QLoRA: 4-bit Base Quantization with Double Quantization<a class="headerlink" href="#62-qlora-4-bit-base-quantization-with-double-quantization" title="Permanent link">&para;</a></h3>
-<p><a href="https://arxiv.org/abs/2305.14314">Dettmers et al. (2023)</a> made it possible to fine-tune a 65B/70B parameter model on a single 48GB GPU by combining:
-1. <strong>4-bit NormalFloat (NF4)</strong> base model weights.
-2. <strong>Double Quantization (DQ)</strong>: Quantizes the quantization constants <span class="arithmatex">\(s_1\)</span> themselves using 8-bit FP with block size 256, saving <span class="arithmatex">\(0.37\)</span> bits per parameter (reducing memory by <span class="arithmatex">\(\approx 3\text{ GB}\)</span> on a 65B model).
-3. <strong>Paged Optimizers</strong>: Uses CUDA Unified Memory to automatically page AdamW memory states between GPU and CPU RAM during gradient checkpointing spikes, eliminating Out-Of-Memory (<code>OOM</code>) crashes.</p>
+<p><a href="https://arxiv.org/abs/2305.14314">Dettmers et al. (2023)</a> made it possible to fine-tune a 65B/70B parameter model on a single 48GB GPU by combining:</p>
+<ol>
+<li><strong>4-bit NormalFloat (NF4)</strong> base model weights.</li>
+<li><strong>Double Quantization (DQ)</strong>: Quantizes the quantization constants <span class="arithmatex">\(s_1\)</span> themselves using 8-bit FP with block size 256, saving <span class="arithmatex">\(0.37\)</span> bits per parameter (reducing memory by <span class="arithmatex">\(\approx 3\text{ GB}\)</span> on a 65B model).</li>
+<li><strong>Paged Optimizers</strong>: Uses CUDA Unified Memory to automatically page AdamW memory states between GPU and CPU RAM during gradient checkpointing spikes, eliminating Out-Of-Memory (<code>OOM</code>) crashes.</li>
+</ol>
 <hr />
 <h2 id="7-complete-pytorch-implementations-from-scratch">7. Complete PyTorch Implementations from Scratch<a class="headerlink" href="#7-complete-pytorch-implementations-from-scratch" title="Permanent link">&para;</a></h2>
 <h3 id="71-loralinear-layer-with-fusion-unfusion">7.1 LoRALinear Layer with Fusion &amp; Unfusion<a class="headerlink" href="#71-loralinear-layer-with-fusion-unfusion" title="Permanent link">&para;</a></h3>
@@ -4758,39 +4774,45 @@ $<span class="arithmatex">\(\mathcal{L}_{\text{DPO}}(\theta) = -\mathbb{E}_{(x, 
 Because the loss is evaluated directly on offline preference pairs using policy and reference log probabilities, neither reward model training nor policy rollout generation is required.</p>
 <hr />
 <h3 id="q2-compare-data-parallelism-ddp-megatron-tensor-parallelism-tp-and-pipeline-parallelism-pp-when-should-each-be-chosen">Q2: Compare Data Parallelism (DDP), Megatron Tensor Parallelism (TP), and Pipeline Parallelism (PP). When should each be chosen?<a class="headerlink" href="#q2-compare-data-parallelism-ddp-megatron-tensor-parallelism-tp-and-pipeline-parallelism-pp-when-should-each-be-chosen" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-1. <strong>Tensor Parallelism (TP)</strong>: Slices matrices within each layer.
-   - <em>Communication</em>: Requires 2 All-Reduce operations per transformer block in forward and backward passes.
-   - <em>Hardware requirement</em>: High-bandwidth, low-latency interconnects (NVLink: <span class="arithmatex">\(900\text{ GB/s}\)</span>).
-   - <em>Scope</em>: Strictly within a single multi-GPU node (typically up to 8 GPUs).
-2. <strong>Pipeline Parallelism (PP)</strong>: Partitions layers across sequential nodes.
-   - <em>Communication</em>: Point-to-point transfer of activation tensors between boundary layers.
-   - <em>Hardware requirement</em>: Can run across slower inter-node networking (InfiniBand <span class="arithmatex">\(200-400\text{ Gbps}\)</span>).
-   - <em>Overhead</em>: Suffers from pipeline bubbles, mitigated by 1F1B scheduling.
-3. <strong>Data Parallelism (DDP / ZeRO)</strong>: Replicates or partitions parameters across workers processing different batch slices.
-   - <em>Communication</em>: All-Reduce for gradients (or All-Gather / Reduce-Scatter in ZeRO-3).
-   - <em>Scope</em>: Scaled horizontally across thousands of nodes once TP and PP make the model fit.<br />
-<em>Standard 3D Parallelism Recipe</em>: Use TP within a single 8-GPU node <span class="arithmatex">\(\to\)</span> use PP across nodes until parameters fit <span class="arithmatex">\(\to\)</span> scale DDP/ZeRO across the remaining cluster nodes for throughput.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ol>
+<li><strong>Tensor Parallelism (TP)</strong>: Slices matrices within each layer.</li>
+<li><em>Communication</em>: Requires 2 All-Reduce operations per transformer block in forward and backward passes.</li>
+<li><em>Hardware requirement</em>: High-bandwidth, low-latency interconnects (NVLink: <span class="arithmatex">\(900\text{ GB/s}\)</span>).</li>
+<li><em>Scope</em>: Strictly within a single multi-GPU node (typically up to 8 GPUs).</li>
+<li><strong>Pipeline Parallelism (PP)</strong>: Partitions layers across sequential nodes.</li>
+<li><em>Communication</em>: Point-to-point transfer of activation tensors between boundary layers.</li>
+<li><em>Hardware requirement</em>: Can run across slower inter-node networking (InfiniBand <span class="arithmatex">\(200-400\text{ Gbps}\)</span>).</li>
+<li><em>Overhead</em>: Suffers from pipeline bubbles, mitigated by 1F1B scheduling.</li>
+<li><strong>Data Parallelism (DDP / ZeRO)</strong>: Replicates or partitions parameters across workers processing different batch slices.</li>
+<li><em>Communication</em>: All-Reduce for gradients (or All-Gather / Reduce-Scatter in ZeRO-3).</li>
+<li><em>Scope</em>: Scaled horizontally across thousands of nodes once TP and PP make the model fit.<br />
+<em>Standard 3D Parallelism Recipe</em>: Use TP within a single 8-GPU node <span class="arithmatex">\(\to\)</span> use PP across nodes until parameters fit <span class="arithmatex">\(\to\)</span> scale DDP/ZeRO across the remaining cluster nodes for throughput.</li>
+</ol>
 <hr />
 <h3 id="q3-why-is-normalfloat4-nf4-in-qlora-information-theoretically-superior-to-standard-int4-uniform-quantization-for-neural-network-weights">Q3: Why is NormalFloat4 (NF4) in QLoRA information-theoretically superior to standard INT4 uniform quantization for neural network weights?<a class="headerlink" href="#q3-why-is-normalfloat4-nf4-in-qlora-information-theoretically-superior-to-standard-int4-uniform-quantization-for-neural-network-weights" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
 Neural network weights trained with weight decay and gradient descent conform closely to a normal distribution <span class="arithmatex">\(\mathbf{W} \sim \mathcal{N}(0, \sigma^2)\)</span>.<br />
-In standard uniform 4-bit quantization, 16 discrete levels are spaced at equal linear intervals across <span class="arithmatex">\([-1, 1]\)</span>. Because the probability density of a Gaussian is concentrated near zero and decays exponentially toward the tails:
-1. Outer intervals near <span class="arithmatex">\(\pm 1\)</span> represent virtually empty probability mass, wasting quantization bins.
-2. The high-density center near 0 is quantized with coarse resolution, resulting in high mean squared quantization error (quantization noise).<br />
+In standard uniform 4-bit quantization, 16 discrete levels are spaced at equal linear intervals across <span class="arithmatex">\([-1, 1]\)</span>. Because the probability density of a Gaussian is concentrated near zero and decays exponentially toward the tails:</p>
+<ol>
+<li>Outer intervals near <span class="arithmatex">\(\pm 1\)</span> represent virtually empty probability mass, wasting quantization bins.</li>
+<li>The high-density center near 0 is quantized with coarse resolution, resulting in high mean squared quantization error (quantization noise).<br />
 NF4 computes the quantiles of <span class="arithmatex">\(\mathcal{N}(0, 1)\)</span> such that every one of the 16 bins contains exactly <span class="arithmatex">\(\frac{1}{16}\)</span> of the continuous distribution's probability mass. This maximizes the Shannon entropy of the discrete representation:
 $<span class="arithmatex">\(H(Q) = -\sum_{i=1}^{16} p_i \log_2 p_i = -\sum_{i=1}^{16} \frac{1}{16} (-4) = 4 \text{ bits}\)</span>$
-Every bit of the 4-bit integer carries maximal information, minimizing expected reconstruction error <span class="arithmatex">\(\mathbb{E}[(\mathbf{W} - \hat{\mathbf{W}})^2]\)</span>.</p>
+Every bit of the 4-bit integer carries maximal information, minimizing expected reconstruction error <span class="arithmatex">\(\mathbb{E}[(\mathbf{W} - \hat{\mathbf{W}})^2]\)</span>.</li>
+</ol>
 <hr />
 <h3 id="q4-explain-the-mathematical-role-of-the-fracalphar-scaling-factor-in-lora-what-happens-when-rank-r-is-increased-while-keeping-alpha-constant">Q4: Explain the mathematical role of the <span class="arithmatex">\(\frac{\alpha}{r}\)</span> scaling factor in LoRA. What happens when rank <span class="arithmatex">\(r\)</span> is increased while keeping <span class="arithmatex">\(\alpha\)</span> constant?<a class="headerlink" href="#q4-explain-the-mathematical-role-of-the-fracalphar-scaling-factor-in-lora-what-happens-when-rank-r-is-increased-while-keeping-alpha-constant" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
 In LoRA, the forward pass computes:
 $<span class="arithmatex">\(\mathbf{y} = \mathbf{x} \mathbf{W}_0 + \frac{\alpha}{r} (\mathbf{x} \mathbf{A}^T \mathbf{B}^T)\)</span>$
 The factor <span class="arithmatex">\(\frac{\alpha}{r}\)</span> serves as a learning rate multiplier for the low-rank adapter updates.<br />
-When the rank <span class="arithmatex">\(r\)</span> is varied (e.g. comparing <span class="arithmatex">\(r=4\)</span> to <span class="arithmatex">\(r=64\)</span>):
-- Because <span class="arithmatex">\(\mathbf{A} \in \mathbb{R}^{r \times k}\)</span> has <span class="arithmatex">\(r\)</span> rows, the expected magnitude of the inner product <span class="arithmatex">\(\mathbf{x} \mathbf{A}^T\)</span> grows with <span class="arithmatex">\(\sqrt{r}\)</span>.
-- Dividing by <span class="arithmatex">\(r\)</span> ensures that the overall scale of adapter updates <span class="arithmatex">\(\Delta \mathbf{W}\)</span> remains stable when experimenting with different rank values.<br />
-If <span class="arithmatex">\(\alpha\)</span> is kept constant while <span class="arithmatex">\(r\)</span> is increased, the effective magnitude of the adapter update is normalized, allowing hyperparameter reuse (learning rate and warmup) across different rank configurations without re-tuning.</p>
+When the rank <span class="arithmatex">\(r\)</span> is varied (e.g. comparing <span class="arithmatex">\(r=4\)</span> to <span class="arithmatex">\(r=64\)</span>):</p>
+<ul>
+<li>Because <span class="arithmatex">\(\mathbf{A} \in \mathbb{R}^{r \times k}\)</span> has <span class="arithmatex">\(r\)</span> rows, the expected magnitude of the inner product <span class="arithmatex">\(\mathbf{x} \mathbf{A}^T\)</span> grows with <span class="arithmatex">\(\sqrt{r}\)</span>.</li>
+<li>Dividing by <span class="arithmatex">\(r\)</span> ensures that the overall scale of adapter updates <span class="arithmatex">\(\Delta \mathbf{W}\)</span> remains stable when experimenting with different rank values.<br />
+If <span class="arithmatex">\(\alpha\)</span> is kept constant while <span class="arithmatex">\(r\)</span> is increased, the effective magnitude of the adapter update is normalized, allowing hyperparameter reuse (learning rate and warmup) across different rank configurations without re-tuning.</li>
+</ul>
 <hr />
 <h3 id="q5-how-does-flashattention-eliminate-the-mathcalon2-memory-bandwidth-bottleneck-without-altering-the-exact-mathematical-output-of-attention">Q5: How does FlashAttention eliminate the <span class="arithmatex">\(\mathcal{O}(N^2)\)</span> memory bandwidth bottleneck without altering the exact mathematical output of attention?<a class="headerlink" href="#q5-how-does-flashattention-eliminate-the-mathcalon2-memory-bandwidth-bottleneck-without-altering-the-exact-mathematical-output-of-attention" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
@@ -4801,17 +4823,17 @@ As new key-value blocks are loaded into SRAM, FlashAttention maintains running r
 Because intermediate attention matrices are never written to or read from HBM, memory access drops from <span class="arithmatex">\(\mathcal{O}(N^2)\)</span> to <span class="arithmatex">\(\mathcal{O}(N)\)</span> while producing floating-point outputs mathematically identical to standard attention.</p>
 <hr />
 <h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Calculate the static GPU memory required to store a 7B, 13B, and 70B parameter model in FP16 with AdamW optimizer states.</li>
-<li>[ ] <strong>L2:</strong> Explain the difference between Data Parallelism (DDP), Megatron Tensor Parallelism (TP), and Pipeline Parallelism (PP).</li>
-<li>[ ] <strong>L3:</strong> Describe the 3 stages of DeepSpeed ZeRO memory partitioning.</li>
-<li>[ ] <strong>L4:</strong> Formulate the online softmax algorithm and explain how FlashAttention eliminates HBM memory roundtrips.</li>
-<li>[ ] <strong>L5:</strong> Explain why SFT token loss masking with <code>ignore_index=-100</code> prevents prompt degradation.</li>
-<li>[ ] <strong>L6:</strong> Formulate the Bradley-Terry preference loss used in RLHF reward modeling.</li>
-<li>[ ] <strong>L7:</strong> Derive the DPO loss function from the constrained KL-regularized reward maximization objective.</li>
-<li>[ ] <strong>L8:</strong> Contrast Symmetric INT8, Asymmetric INT8, and NormalFloat4 (NF4) quantization.</li>
-<li>[ ] <strong>L9:</strong> Explain the initialization of matrices <span class="arithmatex">\(\mathbf{A}\)</span> and <span class="arithmatex">\(\mathbf{B}\)</span> in LoRA and why <span class="arithmatex">\(\Delta \mathbf{W} = \mathbf{0}\)</span> at step 0.</li>
-<li>[ ] <strong>L10:</strong> Implement a functional <code>LoRALinear</code> module with weight merging and write the vectorized DPO loss function in PyTorch.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Calculate the static GPU memory required to store a 7B, 13B, and 70B parameter model in FP16 with AdamW optimizer states.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Explain the difference between Data Parallelism (DDP), Megatron Tensor Parallelism (TP), and Pipeline Parallelism (PP).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Describe the 3 stages of DeepSpeed ZeRO memory partitioning.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Formulate the online softmax algorithm and explain how FlashAttention eliminates HBM memory roundtrips.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Explain why SFT token loss masking with <code>ignore_index=-100</code> prevents prompt degradation.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Formulate the Bradley-Terry preference loss used in RLHF reward modeling.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Derive the DPO loss function from the constrained KL-regularized reward maximization objective.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Contrast Symmetric INT8, Asymmetric INT8, and NormalFloat4 (NF4) quantization.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Explain the initialization of matrices <span class="arithmatex">\(\mathbf{A}\)</span> and <span class="arithmatex">\(\mathbf{B}\)</span> in LoRA and why <span class="arithmatex">\(\Delta \mathbf{W} = \mathbf{0}\)</span> at step 0.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Implement a functional <code>LoRALinear</code> module with weight merging and write the vectorized DPO loss function in PyTorch.</li>
 </ul>
 
 

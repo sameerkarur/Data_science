@@ -4291,10 +4291,14 @@
 <p>Let <span class="arithmatex">\(p = P(y = 1 | \mathbf{x}) \in (0, 1)\)</span> denote the conditional probability of the positive class.</p>
 <ol>
 <li><strong>Probability (<span class="arithmatex">\(p\)</span>)</strong>: Bounded in <span class="arithmatex">\((0, 1)\)</span>. Unsuitable for linear combinations because sums can exceed <span class="arithmatex">\(1\)</span> or drop below <span class="arithmatex">\(0\)</span>.</li>
-<li><strong>Odds (<span class="arithmatex">\(\frac{p}{1-p}\)</span>)</strong>: The ratio of probability of success to probability of failure, bounded in <span class="arithmatex">\((0, \infty)\)</span>:
-   $<span class="arithmatex">\(\text{Odds} = \frac{p}{1 - p}\)</span>$</li>
-<li><strong>Log-Odds or Logit (<span class="arithmatex">\(\ln \frac{p}{1-p}\)</span>)</strong>: The natural logarithm of the odds maps <span class="arithmatex">\((0, \infty)\)</span> to the entire real line <span class="arithmatex">\((-\infty, \infty)\)</span>:
-   $<span class="arithmatex">\(\text{logit}(p) = \ln \left( \frac{p}{1 - p} \right) = z = \mathbf{w}^T \mathbf{x} + b\)</span>$</li>
+<li>
+<p><strong>Odds (<span class="arithmatex">\(\frac{p}{1-p}\)</span>)</strong>: The ratio of probability of success to probability of failure, bounded in <span class="arithmatex">\((0, \infty)\)</span>:
+   $<span class="arithmatex">\(\text{Odds} = \frac{p}{1 - p}\)</span>$</p>
+</li>
+<li>
+<p><strong>Log-Odds or Logit (<span class="arithmatex">\(\ln \frac{p}{1-p}\)</span>)</strong>: The natural logarithm of the odds maps <span class="arithmatex">\((0, \infty)\)</span> to the entire real line <span class="arithmatex">\((-\infty, \infty)\)</span>:
+   $<span class="arithmatex">\(\text{logit}(p) = \ln \left( \frac{p}{1 - p} \right) = z = \mathbf{w}^T \mathbf{x} + b\)</span>$</p>
+</li>
 </ol>
 <h3 id="22-derivation-of-the-standard-logistic-sigmoid">2.2 Derivation of the Standard Logistic Sigmoid<a class="headerlink" href="#22-derivation-of-the-standard-logistic-sigmoid" title="Permanent link">&para;</a></h3>
 <p>Solving the logit equation for <span class="arithmatex">\(p\)</span>:</p>
@@ -4304,10 +4308,12 @@
 <div class="arithmatex">\[
 p (1 + e^z) = e^z \implies p = \frac{e^z}{1 + e^z} = \frac{1}{1 + e^{-z}} \equiv \sigma(z)
 \]</div>
-<p>The logistic sigmoid <span class="arithmatex">\(\sigma(z)\)</span> satisfies key analytical properties:
-- <strong>Symmetry</strong>: <span class="arithmatex">\(\sigma(-z) = 1 - \sigma(z)\)</span>.
-- <strong>Asymptotes</strong>: <span class="arithmatex">\(\lim_{z \to \infty} \sigma(z) = 1\)</span>, and <span class="arithmatex">\(\lim_{z \to -\infty} \sigma(z) = 0\)</span>.
-- <strong>Decision Boundary</strong>: <span class="arithmatex">\(z = 0 \iff \sigma(z) = 0.5 \iff \mathbf{w}^T \mathbf{x} + b = 0\)</span>, forming a linear hyperplane separating class <span class="arithmatex">\(1\)</span> from class <span class="arithmatex">\(0\)</span>.</p>
+<p>The logistic sigmoid <span class="arithmatex">\(\sigma(z)\)</span> satisfies key analytical properties:</p>
+<ul>
+<li><strong>Symmetry</strong>: <span class="arithmatex">\(\sigma(-z) = 1 - \sigma(z)\)</span>.</li>
+<li><strong>Asymptotes</strong>: <span class="arithmatex">\(\lim_{z \to \infty} \sigma(z) = 1\)</span>, and <span class="arithmatex">\(\lim_{z \to -\infty} \sigma(z) = 0\)</span>.</li>
+<li><strong>Decision Boundary</strong>: <span class="arithmatex">\(z = 0 \iff \sigma(z) = 0.5 \iff \mathbf{w}^T \mathbf{x} + b = 0\)</span>, forming a linear hyperplane separating class <span class="arithmatex">\(1\)</span> from class <span class="arithmatex">\(0\)</span>.</li>
+</ul>
 <h3 id="23-derivative-of-the-sigmoid-function">2.3 Derivative of the Sigmoid Function<a class="headerlink" href="#23-derivative-of-the-sigmoid-function" title="Permanent link">&para;</a></h3>
 <p>The derivative of <span class="arithmatex">\(\sigma(z)\)</span> can be expressed elegantly in terms of its output:</p>
 <div class="arithmatex">\[
@@ -4352,10 +4358,12 @@ J(\mathbf{w}) = -\frac{1}{n} \sum_{i=1}^n \left[ y_i \ln \hat{y}_i + (1 - y_i) \
 <div class="arithmatex">\[
 \frac{\partial J_i}{\partial w_j} = \frac{\partial J_i}{\partial \hat{y}_i} \cdot \frac{\partial \hat{y}_i}{\partial z_i} \cdot \frac{\partial z_i}{\partial w_j}
 \]</div>
-<p>Evaluating each partial derivative:
-1. <span class="arithmatex">\(\frac{\partial J_i}{\partial \hat{y}_i} = -\left( \frac{y_i}{\hat{y}_i} - \frac{1 - y_i}{1 - \hat{y}_i} \right) = -\frac{y_i(1 - \hat{y}_i) - (1 - y_i)\hat{y}_i}{\hat{y}_i(1 - \hat{y}_i)} = \frac{\hat{y}_i - y_i}{\hat{y}_i(1 - \hat{y}_i)}\)</span>
-2. <span class="arithmatex">\(\frac{\partial \hat{y}_i}{\partial z_i} = \hat{y}_i(1 - \hat{y}_i)\)</span>
-3. <span class="arithmatex">\(\frac{\partial z_i}{\partial w_j} = X_{ij}\)</span></p>
+<p>Evaluating each partial derivative:</p>
+<ol>
+<li><span class="arithmatex">\(\frac{\partial J_i}{\partial \hat{y}_i} = -\left( \frac{y_i}{\hat{y}_i} - \frac{1 - y_i}{1 - \hat{y}_i} \right) = -\frac{y_i(1 - \hat{y}_i) - (1 - y_i)\hat{y}_i}{\hat{y}_i(1 - \hat{y}_i)} = \frac{\hat{y}_i - y_i}{\hat{y}_i(1 - \hat{y}_i)}\)</span></li>
+<li><span class="arithmatex">\(\frac{\partial \hat{y}_i}{\partial z_i} = \hat{y}_i(1 - \hat{y}_i)\)</span></li>
+<li><span class="arithmatex">\(\frac{\partial z_i}{\partial w_j} = X_{ij}\)</span></li>
+</ol>
 <p>Multiplying them together, the denominators cancel out:</p>
 <div class="arithmatex">\[
 \frac{\partial J_i}{\partial w_j} = \left( \frac{\hat{y}_i - y_i}{\hat{y}_i(1 - \hat{y}_i)} \right) \cdot \left[ \hat{y}_i(1 - \hat{y}_i) \right] \cdot X_{ij} = (\hat{y}_i - y_i) X_{ij}
@@ -4459,9 +4467,11 @@ The Newton-Raphson update solves a weighted least squares problem at every itera
 <div class="arithmatex">\[
 P(y = k | \mathbf{x}) = \hat{p}_k = \frac{\exp(\mathbf{w}_k^T \mathbf{x})}{\sum_{j=1}^K \exp(\mathbf{w}_j^T \mathbf{x})}
 \]</div>
-<p>Properties:
-- <span class="arithmatex">\(\hat{p}_k &gt; 0\)</span> for all <span class="arithmatex">\(k\)</span>.
-- <span class="arithmatex">\(\sum_{k=1}^K \hat{p}_k = 1\)</span>. The output vector <span class="arithmatex">\(\hat{\mathbf{p}}\)</span> lies on the standard <span class="arithmatex">\((K-1)\)</span>-simplex.</p>
+<p>Properties:</p>
+<ul>
+<li><span class="arithmatex">\(\hat{p}_k &gt; 0\)</span> for all <span class="arithmatex">\(k\)</span>.</li>
+<li><span class="arithmatex">\(\sum_{k=1}^K \hat{p}_k = 1\)</span>. The output vector <span class="arithmatex">\(\hat{\mathbf{p}}\)</span> lies on the standard <span class="arithmatex">\((K-1)\)</span>-simplex.</li>
+</ul>
 <h3 id="62-categorical-cross-entropy-loss">6.2 Categorical Cross-Entropy Loss<a class="headerlink" href="#62-categorical-cross-entropy-loss" title="Permanent link">&para;</a></h3>
 <p>Represent the target using a one-hot encoded vector <span class="arithmatex">\(\mathbf{y}_i \in \{0, 1\}^K\)</span>, where <span class="arithmatex">\(y_{ik} = 1\)</span> if sample <span class="arithmatex">\(i\)</span> belongs to class <span class="arithmatex">\(k\)</span>. The multi-sample Categorical Cross-Entropy (CCE) loss is:</p>
 <div class="arithmatex">\[
@@ -4685,9 +4695,11 @@ J(W) = -\frac{1}{n} \sum_{i=1}^n \sum_{k=1}^K y_{ik} \ln \hat{p}_{ik}
 <hr />
 <h2 id="9-common-errors-production-debugging">9. Common Errors &amp; Production Debugging<a class="headerlink" href="#9-common-errors-production-debugging" title="Permanent link">&para;</a></h2>
 <h3 id="91-numerical-underflowoverflow-in-sigmoid-log-loss">9.1 Numerical Underflow/Overflow in Sigmoid &amp; Log-Loss<a class="headerlink" href="#91-numerical-underflowoverflow-in-sigmoid-log-loss" title="Permanent link">&para;</a></h3>
-<p>Computing <span class="arithmatex">\(\frac{1}{1 + e^{-z}}\)</span> naively fails when <span class="arithmatex">\(z \ll -709\)</span> or <span class="arithmatex">\(z \gg 709\)</span> in IEEE 754 64-bit floating-point:
-- If <span class="arithmatex">\(z = -1000 \implies e^{1000} \to \text{inf} \implies \text{OverflowError}\)</span>.
-- If <span class="arithmatex">\(\hat{y} = 1.0 \implies \ln(1 - \hat{y}) = \ln(0) = -\infty \implies \text{NaN}\)</span>.</p>
+<p>Computing <span class="arithmatex">\(\frac{1}{1 + e^{-z}}\)</span> naively fails when <span class="arithmatex">\(z \ll -709\)</span> or <span class="arithmatex">\(z \gg 709\)</span> in IEEE 754 64-bit floating-point:</p>
+<ul>
+<li>If <span class="arithmatex">\(z = -1000 \implies e^{1000} \to \text{inf} \implies \text{OverflowError}\)</span>.</li>
+<li>If <span class="arithmatex">\(\hat{y} = 1.0 \implies \ln(1 - \hat{y}) = \ln(0) = -\infty \implies \text{NaN}\)</span>.</li>
+</ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># BROKEN: Direct naive sigmoid evaluation</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">naive_sigmoid</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="k">return</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">z</span><span class="p">))</span>  <span class="c1"># Overflows for negative z &lt; -709</span>
@@ -4724,9 +4736,11 @@ $<span class="arithmatex">\(\mathbf{v}^T H \mathbf{v} = \frac{1}{n} \mathbf{v}^T
 Let <span class="arithmatex">\(\mathbf{u} = X\mathbf{v} \in \mathbb{R}^n\)</span>. Then:
 $<span class="arithmatex">\(\mathbf{v}^T H \mathbf{v} = \frac{1}{n} \mathbf{u}^T R \mathbf{u} = \frac{1}{n} \sum_{i=1}^n R_{ii} u_i^2\)</span>$
 Assuming the design matrix <span class="arithmatex">\(X\)</span> has full column rank (<span class="arithmatex">\(n \ge p\)</span> with linearly independent columns), <span class="arithmatex">\(X\mathbf{v} = \mathbf{0} \iff \mathbf{v} = \mathbf{0}\)</span>. For any <span class="arithmatex">\(\mathbf{v} \ne \mathbf{0}\)</span>, at least one component <span class="arithmatex">\(u_i \ne 0\)</span>, meaning the sum is strictly positive: <span class="arithmatex">\(\mathbf{v}^T H \mathbf{v} &gt; 0\)</span>.
-<strong>Optimization Implications:</strong>
-1. The loss surface has no local minima, saddle points, or plateaus with zero gradient other than the unique global minimum <span class="arithmatex">\(\mathbf{w}^*\)</span>.
-2. Any standard descent algorithm (Gradient Descent, Conjugate Gradient, Newton-Raphson) will reliably converge to the exact same optimal parameters.</p>
+<strong>Optimization Implications:</strong></p>
+<ol>
+<li>The loss surface has no local minima, saddle points, or plateaus with zero gradient other than the unique global minimum <span class="arithmatex">\(\mathbf{w}^*\)</span>.</li>
+<li>Any standard descent algorithm (Gradient Descent, Conjugate Gradient, Newton-Raphson) will reliably converge to the exact same optimal parameters.</li>
+</ol>
 <hr />
 <h3 id="q2-derive-the-newton-raphson-update-for-logistic-regression-and-show-that-it-is-mathematically-identical-to-iteratively-reweighted-least-squares-irls">Q2: Derive the Newton-Raphson update for Logistic Regression and show that it is mathematically identical to Iteratively Reweighted Least Squares (IRLS).<a class="headerlink" href="#q2-derive-the-newton-raphson-update-for-logistic-regression-and-show-that-it-is-mathematically-identical-to-iteratively-reweighted-least-squares-irls" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4756,21 +4770,27 @@ The Binary Cross-Entropy loss is:
 $<span class="arithmatex">\(J(\mathbf{w}) = -\sum_{i=1}^n \left[ y_i \ln \sigma(z_i) + (1 - y_i) \ln(1 - \sigma(z_i)) \right]\)</span>$
 To achieve <span class="arithmatex">\(J(\mathbf{w}) \to 0\)</span>, the predicted probabilities must satisfy <span class="arithmatex">\(\hat{y}_i \to 1\)</span> for <span class="arithmatex">\(y_i=1\)</span> and <span class="arithmatex">\(\hat{y}_i \to 0\)</span> for <span class="arithmatex">\(y_i=0\)</span>.
 Because the sigmoid function reaches <span class="arithmatex">\(1.0\)</span> only as <span class="arithmatex">\(z \to +\infty\)</span> and <span class="arithmatex">\(0.0\)</span> only as <span class="arithmatex">\(z \to -\infty\)</span>, the optimizer scales the magnitude of the weight vector <span class="arithmatex">\(\|\mathbf{w}\| \to \infty\)</span> along the normal vector of the separating hyperplane.</p>
-<p><strong>Consequences &amp; Diagnosis:</strong>
-1. Gradient descent never terminates: gradients become tiny not because the optimum is reached, but because <span class="arithmatex">\(\sigma'(z) \to 0\)</span> in the saturation zones.
-2. Estimated coefficients explode to numbers like <span class="arithmatex">\(\pm 10^4\)</span> or <span class="arithmatex">\(\pm 10^7\)</span>.
-3. The standard errors of the parameters computed from the Fisher Information matrix / inverse Hessian <span class="arithmatex">\(H^{-1} = (X^T R X)^{-1}\)</span> explode to infinity because <span class="arithmatex">\(R_{ii} = \hat{y}_i(1 - \hat{y}_i) \to 0\)</span>, making <span class="arithmatex">\(H\)</span> singular.
-4. <strong>Diagnosis in Scikit-Learn</strong>: Large coefficient magnitudes and <code>ConvergenceWarning: lbfgs failed to converge</code>.
-5. <strong>Remedy</strong>: Apply <span class="arithmatex">\(L_2\)</span> regularization (Ridge penalty <span class="arithmatex">\(\frac{\lambda}{2}\|\mathbf{w}\|_2^2\)</span>), which penalizes infinite weights and yields a finite maximum margin solution (equivalent to a hard-margin SVM).</p>
+<p><strong>Consequences &amp; Diagnosis:</strong></p>
+<ol>
+<li>Gradient descent never terminates: gradients become tiny not because the optimum is reached, but because <span class="arithmatex">\(\sigma'(z) \to 0\)</span> in the saturation zones.</li>
+<li>Estimated coefficients explode to numbers like <span class="arithmatex">\(\pm 10^4\)</span> or <span class="arithmatex">\(\pm 10^7\)</span>.</li>
+<li>The standard errors of the parameters computed from the Fisher Information matrix / inverse Hessian <span class="arithmatex">\(H^{-1} = (X^T R X)^{-1}\)</span> explode to infinity because <span class="arithmatex">\(R_{ii} = \hat{y}_i(1 - \hat{y}_i) \to 0\)</span>, making <span class="arithmatex">\(H\)</span> singular.</li>
+<li><strong>Diagnosis in Scikit-Learn</strong>: Large coefficient magnitudes and <code>ConvergenceWarning: lbfgs failed to converge</code>.</li>
+<li><strong>Remedy</strong>: Apply <span class="arithmatex">\(L_2\)</span> regularization (Ridge penalty <span class="arithmatex">\(\frac{\lambda}{2}\|\mathbf{w}\|_2^2\)</span>), which penalizes infinite weights and yields a finite maximum margin solution (equivalent to a hard-margin SVM).</li>
+</ol>
 <hr />
 <h3 id="q4-why-cant-we-use-mean-squared-error-mse-as-the-loss-function-for-logistic-regression">Q4: Why can't we use Mean Squared Error (MSE) as the loss function for Logistic Regression?<a class="headerlink" href="#q4-why-cant-we-use-mean-squared-error-mse-as-the-loss-function-for-logistic-regression" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-While MSE <span class="arithmatex">\(J(\mathbf{w}) = \frac{1}{2n}\sum_{i=1}^n (\sigma(\mathbf{w}^T \mathbf{x}_i) - y_i)^2\)</span> is mathematically permissible, it is profoundly inferior to Cross-Entropy for two fundamental reasons:
-1. <strong>Non-Convexity &amp; Local Minima</strong>:
+While MSE <span class="arithmatex">\(J(\mathbf{w}) = \frac{1}{2n}\sum_{i=1}^n (\sigma(\mathbf{w}^T \mathbf{x}_i) - y_i)^2\)</span> is mathematically permissible, it is profoundly inferior to Cross-Entropy for two fundamental reasons:</p>
+<ol>
+<li>
+<p><strong>Non-Convexity &amp; Local Minima</strong>:
    When <span class="arithmatex">\(\hat{y}_i = \sigma(z_i)\)</span> is substituted into MSE, the loss function is no longer quadratic in <span class="arithmatex">\(z_i\)</span>. Differentiating MSE:
    $<span class="arithmatex">\(\frac{\partial J}{\partial w_j} = \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i) \cdot \sigma'(z_i) \cdot X_{ij} = \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i) \hat{y}_i(1 - \hat{y}_i) X_{ij}\)</span>$
-   Computing the second derivative yields terms containing both <span class="arithmatex">\(\sigma'(z)\)</span> and <span class="arithmatex">\(\sigma''(z)\)</span>. Because <span class="arithmatex">\(\sigma''(z) = \sigma(z)(1-\sigma(z))(1-2\sigma(z))\)</span> changes sign across <span class="arithmatex">\(z=0\)</span>, the Hessian matrix ceases to be positive semi-definite everywhere. MSE creates a <strong>non-convex loss landscape plagued by saddle points and local minima</strong>.
-2. <strong>Vanishing Gradients on Wildly Wrong Predictions</strong>:
+   Computing the second derivative yields terms containing both <span class="arithmatex">\(\sigma'(z)\)</span> and <span class="arithmatex">\(\sigma''(z)\)</span>. Because <span class="arithmatex">\(\sigma''(z) = \sigma(z)(1-\sigma(z))(1-2\sigma(z))\)</span> changes sign across <span class="arithmatex">\(z=0\)</span>, the Hessian matrix ceases to be positive semi-definite everywhere. MSE creates a <strong>non-convex loss landscape plagued by saddle points and local minima</strong>.</p>
+</li>
+<li>
+<p><strong>Vanishing Gradients on Wildly Wrong Predictions</strong>:
    Suppose the true label is <span class="arithmatex">\(y_i = 1\)</span>, but the current model is catastrophically wrong with <span class="arithmatex">\(z_i = -10\)</span>, predicting <span class="arithmatex">\(\hat{y}_i \approx 0.000045\)</span>.
    Under MSE:
    $<span class="arithmatex">\(\frac{\partial J_i}{\partial w_j} = (\hat{y}_i - 1) \cdot \hat{y}_i(1 - \hat{y}_i) \cdot X_{ij} \approx (-1) \cdot (0.000045) \cdot (1) \cdot X_{ij} \approx -0.000045 X_{ij}\)</span>$
@@ -4778,16 +4798,24 @@ While MSE <span class="arithmatex">\(J(\mathbf{w}) = \frac{1}{2n}\sum_{i=1}^n (\
    Under Cross-Entropy:
    $<span class="arithmatex">\(\frac{\partial J_i}{\partial w_j} = (\hat{y}_i - y_i) X_{ij} \approx (0.000045 - 1) X_{ij} \approx -0.999955 X_{ij}\)</span>$
    The gradient has maximum magnitude <span class="arithmatex">\(\approx 1\)</span>, propelling the parameters rapidly away from the catastrophic error.</p>
+</li>
+</ol>
 <hr />
 <h3 id="q5-how-do-one-vs-rest-ovr-and-multinomial-softmax-differ-for-multi-class-classification-and-when-is-softmax-preferred">Q5: How do One-vs-Rest (OvR) and Multinomial Softmax differ for multi-class classification, and when is Softmax preferred?<a class="headerlink" href="#q5-how-do-one-vs-rest-ovr-and-multinomial-softmax-differ-for-multi-class-classification-and-when-is-softmax-preferred" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>One-vs-Rest (OvR / One-vs-All):</strong>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li>
+<p><strong>One-vs-Rest (OvR / One-vs-All):</strong>
   Trains <span class="arithmatex">\(K\)</span> independent binary logistic regression models. Model <span class="arithmatex">\(k\)</span> predicts <span class="arithmatex">\(P(y = k \text{ vs } y \ne k)\)</span>.
-  <em>Limitations:</em> The binary models are uncoordinated; their independent probabilities do not sum to 1 (<span class="arithmatex">\(\sum_{k=1}^K P(y=k|\mathbf{x}) \ne 1\)</span>). Calibrating probabilities requires ad-hoc post-processing normalization. Furthermore, each binary classifier suffers from class imbalance (1 positive class vs <span class="arithmatex">\(K-1\)</span> negative classes).
-- <strong>Multinomial Softmax Regression:</strong>
+  <em>Limitations:</em> The binary models are uncoordinated; their independent probabilities do not sum to 1 (<span class="arithmatex">\(\sum_{k=1}^K P(y=k|\mathbf{x}) \ne 1\)</span>). Calibrating probabilities requires ad-hoc post-processing normalization. Furthermore, each binary classifier suffers from class imbalance (1 positive class vs <span class="arithmatex">\(K-1\)</span> negative classes).</p>
+</li>
+<li>
+<p><strong>Multinomial Softmax Regression:</strong>
   Trains all <span class="arithmatex">\(K\)</span> classes simultaneously under a single unified objective. The categorical cross-entropy loss couples the class weights through the softmax denominator <span class="arithmatex">\(\sum_{j=1}^K e^{\mathbf{w}_j^T \mathbf{x}}\)</span>.
   <em>Advantages:</em> The outputs are guaranteed to form a mathematically valid probability distribution on the simplex (<span class="arithmatex">\(\sum \hat{p}_k = 1\)</span>). A boost in the logit for class <span class="arithmatex">\(k\)</span> automatically depresses the probabilities of competing classes. Softmax is mathematically consistent with maximum likelihood estimation for categorical random variables.
   <em>Decision Rule:</em> Multinomial Softmax is strictly preferred whenever classes are mutually exclusive (e.g., digit recognition, medical diagnosis of distinct conditions). OvR is only retained for multi-label classification where an example can belong to multiple classes simultaneously.</p>
+</li>
+</ul>
 <hr />
 <h3 id="q6-interpret-the-coefficients-of-a-logistic-regression-model-in-terms-of-the-odds-ratio-or">Q6: Interpret the coefficients of a Logistic Regression model in terms of the Odds Ratio (OR).<a class="headerlink" href="#q6-interpret-the-coefficients-of-a-logistic-regression-model-in-terms-of-the-odds-ratio-or" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4797,23 +4825,25 @@ $<span class="arithmatex">\(\text{logit}(p(\mathbf{x} + \mathbf{e}_j)) = \text{l
 Exponentiating both sides:
 $<span class="arithmatex">\(\frac{p(\mathbf{x} + \mathbf{e}_j)}{1 - p(\mathbf{x} + \mathbf{e}_j)} = \frac{p(\mathbf{x})}{1 - p(\mathbf{x})} \cdot e^{w_j}\)</span>$
 The ratio of the odds after the 1-unit increase to the odds before is the <strong>Odds Ratio (OR)</strong>:
-$<span class="arithmatex">\(\text{OR}_j = \frac{\text{Odds}(x_j + 1)}{\text{Odds}(x_j)} = e^{w_j}\)</span>$
-- If <span class="arithmatex">\(w_j = 0 \implies \text{OR} = 1\)</span>: Feature <span class="arithmatex">\(j\)</span> has no association with the positive class odds.
-- If <span class="arithmatex">\(w_j &gt; 0 \implies \text{OR} &gt; 1\)</span>: Every 1-unit increase in <span class="arithmatex">\(x_j\)</span> multiplies the odds of the outcome by <span class="arithmatex">\(e^{w_j}\)</span> (e.g., <span class="arithmatex">\(w_j = 0.693 \implies e^{0.693} \approx 2.0\)</span>, doubling the odds of success).
-- If <span class="arithmatex">\(w_j &lt; 0 \implies \text{OR} &lt; 1\)</span>: Every 1-unit increase diminishes the odds of success.</p>
+$<span class="arithmatex">\(\text{OR}_j = \frac{\text{Odds}(x_j + 1)}{\text{Odds}(x_j)} = e^{w_j}\)</span>$</p>
+<ul>
+<li>If <span class="arithmatex">\(w_j = 0 \implies \text{OR} = 1\)</span>: Feature <span class="arithmatex">\(j\)</span> has no association with the positive class odds.</li>
+<li>If <span class="arithmatex">\(w_j &gt; 0 \implies \text{OR} &gt; 1\)</span>: Every 1-unit increase in <span class="arithmatex">\(x_j\)</span> multiplies the odds of the outcome by <span class="arithmatex">\(e^{w_j}\)</span> (e.g., <span class="arithmatex">\(w_j = 0.693 \implies e^{0.693} \approx 2.0\)</span>, doubling the odds of success).</li>
+<li>If <span class="arithmatex">\(w_j &lt; 0 \implies \text{OR} &lt; 1\)</span>: Every 1-unit increase diminishes the odds of success.</li>
+</ul>
 <hr />
 <h2 id="11-mastery-ladder">11. Mastery Ladder<a class="headerlink" href="#11-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> You can write the logistic sigmoid <span class="arithmatex">\(\sigma(z) = \frac{1}{1 + e^{-z}}\)</span> and state why linear regression fails for classification.</li>
-<li>[ ] <strong>L2:</strong> You can define odds, log-odds (logit), and derive the sigmoid function by inverting the logit.</li>
-<li>[ ] <strong>L3:</strong> You can prove the sigmoid derivative identity <span class="arithmatex">\(\sigma'(z) = \sigma(z)(1 - \sigma(z))\)</span>.</li>
-<li>[ ] <strong>L4:</strong> You can derive Binary Cross-Entropy loss from the Bernoulli likelihood via Maximum Likelihood Estimation.</li>
-<li>[ ] <strong>L5:</strong> You can derive the gradient <span class="arithmatex">\(\nabla_{\mathbf{w}} J = \frac{1}{n} X^T (\hat{\mathbf{y}} - \mathbf{y})\)</span> using the chain rule.</li>
-<li>[ ] <strong>L6:</strong> You can derive the Hessian <span class="arithmatex">\(H = \frac{1}{n} X^T R X\)</span> and prove strict convexity (<span class="arithmatex">\(H \succ 0\)</span>).</li>
-<li>[ ] <strong>L7:</strong> You can derive the Newton-Raphson IRLS update <span class="arithmatex">\(\mathbf{w}^{(t+1)} = (X^T R_t X)^{-1} X^T R_t \mathbf{z}_t\)</span>.</li>
-<li>[ ] <strong>L8:</strong> You can write the Softmax function, formulate Categorical Cross-Entropy, and derive its gradient matrix.</li>
-<li>[ ] <strong>L9:</strong> You can explain the perfect separation problem and interpret logistic weights as Odds Ratios (<span class="arithmatex">\(e^{w_j}\)</span>).</li>
-<li>[ ] <strong>L10:</strong> You can implement vectorized IRLS and Softmax regression from scratch in NumPy with numerical overflow guards.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can write the logistic sigmoid <span class="arithmatex">\(\sigma(z) = \frac{1}{1 + e^{-z}}\)</span> and state why linear regression fails for classification.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can define odds, log-odds (logit), and derive the sigmoid function by inverting the logit.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can prove the sigmoid derivative identity <span class="arithmatex">\(\sigma'(z) = \sigma(z)(1 - \sigma(z))\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can derive Binary Cross-Entropy loss from the Bernoulli likelihood via Maximum Likelihood Estimation.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can derive the gradient <span class="arithmatex">\(\nabla_{\mathbf{w}} J = \frac{1}{n} X^T (\hat{\mathbf{y}} - \mathbf{y})\)</span> using the chain rule.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can derive the Hessian <span class="arithmatex">\(H = \frac{1}{n} X^T R X\)</span> and prove strict convexity (<span class="arithmatex">\(H \succ 0\)</span>).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can derive the Newton-Raphson IRLS update <span class="arithmatex">\(\mathbf{w}^{(t+1)} = (X^T R_t X)^{-1} X^T R_t \mathbf{z}_t\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can write the Softmax function, formulate Categorical Cross-Entropy, and derive its gradient matrix.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can explain the perfect separation problem and interpret logistic weights as Odds Ratios (<span class="arithmatex">\(e^{w_j}\)</span>).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can implement vectorized IRLS and Softmax regression from scratch in NumPy with numerical overflow guards.</li>
 </ul>
 
 

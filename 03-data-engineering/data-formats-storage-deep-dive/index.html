@@ -4187,16 +4187,24 @@
 </span></code></pre></div>
 <h4 id="1-the-row-oriented-approach-csv-json-postgresql-heap-pages">1. The Row-Oriented Approach (CSV, JSON, PostgreSQL Heap Pages):<a class="headerlink" href="#1-the-row-oriented-approach-csv-json-postgresql-heap-pages" title="Permanent link">&para;</a></h4>
 <ul>
-<li>Data is stored on disk row-by-row:
-  $<span class="arithmatex">\(\text{Row 1} \to [c_1, c_2, \dots, c_{50}], \quad \text{Row 2} \to [c_1, c_2, \dots, c_{50}]\)</span>$</li>
-<li>To evaluate <code>AVG(Price)</code>, the storage engine must load <strong>all 50 columns</strong> of every single row from disk into RAM.</li>
+<li>
+<p>Data is stored on disk row-by-row:
+  $<span class="arithmatex">\(\text{Row 1} \to [c_1, c_2, \dots, c_{50}], \quad \text{Row 2} \to [c_1, c_2, \dots, c_{50}]\)</span>$</p>
+</li>
+<li>
+<p>To evaluate <code>AVG(Price)</code>, the storage engine must load <strong>all 50 columns</strong> of every single row from disk into RAM.</p>
+</li>
 <li>If each row is 500 bytes, scanning 100M rows requires reading <strong>50 GB of disk I/O</strong>, even though <code>Price</code>, <code>Category</code>, and <code>Timestamp</code> only account for 20 bytes per row (96% of disk bandwidth is wasted reading discarded features).</li>
 </ul>
 <h4 id="2-the-column-oriented-approach-apache-parquet-clickhouse-snowflake">2. The Column-Oriented Approach (Apache Parquet, ClickHouse, Snowflake):<a class="headerlink" href="#2-the-column-oriented-approach-apache-parquet-clickhouse-snowflake" title="Permanent link">&para;</a></h4>
 <ul>
-<li>Data is grouped into blocks and stored column-by-column:
-  $<span class="arithmatex">\(\text{Block 1} \to \text{Category}[1 \dots N], \quad \text{Price}[1 \dots N], \quad \text{Timestamp}[1 \dots N]\)</span>$</li>
-<li>The engine reads <strong>only the 3 relevant columns</strong> from disk (2 GB instead of 50 GB).</li>
+<li>
+<p>Data is grouped into blocks and stored column-by-column:
+  $<span class="arithmatex">\(\text{Block 1} \to \text{Category}[1 \dots N], \quad \text{Price}[1 \dots N], \quad \text{Timestamp}[1 \dots N]\)</span>$</p>
+</li>
+<li>
+<p>The engine reads <strong>only the 3 relevant columns</strong> from disk (2 GB instead of 50 GB).</p>
+</li>
 <li>Because all values in a column share the exact same data type and high statistical redundancy (e.g., millions of repeated "Electronics" strings), compression algorithms compress the data by 80% to 90%.</li>
 <li>Total disk read drops from <strong>50 GB to 300 MB</strong> (<strong>160x reduction in disk I/O</strong>).</li>
 </ul>
@@ -4401,12 +4409,14 @@
 <hr />
 <h2 id="5-ingestion-protocols-rest-apis-rate-limiting-and-pagination">5. Ingestion Protocols: REST APIs, Rate Limiting and Pagination<a class="headerlink" href="#5-ingestion-protocols-rest-apis-rate-limiting-and-pagination" title="Permanent link">&para;</a></h2>
 <h3 id="51-the-token-bucket-rate-limiting-algorithm">5.1 The Token Bucket Rate Limiting Algorithm<a class="headerlink" href="#51-the-token-bucket-rate-limiting-algorithm" title="Permanent link">&para;</a></h3>
-<p>To protect backend ML inference and data ingestion services from being overwhelmed by bursty traffic, production gateways enforce <strong>Token Bucket Rate Limiting</strong>:
-- A bucket holds up to <span class="arithmatex">\(C\)</span> tokens (maximum burst capacity).
-- Tokens are continuously added to the bucket at a constant fill rate <span class="arithmatex">\(r\)</span> tokens per second.
-- When an API request arrives:
-  - If tokens <span class="arithmatex">\(\ge 1\)</span>, 1 token is consumed, and the request proceeds.
-  - If tokens <span class="arithmatex">\(&lt; 1\)</span>, the request is rejected immediately with HTTP status <code>429 Too Many Requests</code>.</p>
+<p>To protect backend ML inference and data ingestion services from being overwhelmed by bursty traffic, production gateways enforce <strong>Token Bucket Rate Limiting</strong>:</p>
+<ul>
+<li>A bucket holds up to <span class="arithmatex">\(C\)</span> tokens (maximum burst capacity).</li>
+<li>Tokens are continuously added to the bucket at a constant fill rate <span class="arithmatex">\(r\)</span> tokens per second.</li>
+<li>When an API request arrives:</li>
+<li>If tokens <span class="arithmatex">\(\ge 1\)</span>, 1 token is consumed, and the request proceeds.</li>
+<li>If tokens <span class="arithmatex">\(&lt; 1\)</span>, the request is rejected immediately with HTTP status <code>429 Too Many Requests</code>.</li>
+</ul>
 <pre class="mermaid"><code>flowchart TD
     REFILL["Refill Engine: adds r tokens/sec up to capacity C"] --&gt; BUCKET["Token Bucket (Current Tokens: T)"]
     REQ["Incoming API Request"] --&gt; CHECK{"T &gt;= 1 ?"}
@@ -4474,11 +4484,13 @@ T_{\text{now}} = \min\left(C, \; T_{\text{last}} + (t_{\text{now}} - t_{\text{la
 </ol>
 <hr />
 <h2 id="7-python-implementation-rate-limiter-pagination-and-analytical-sql">7. Python Implementation: Rate Limiter, Pagination and Analytical SQL<a class="headerlink" href="#7-python-implementation-rate-limiter-pagination-and-analytical-sql" title="Permanent link">&para;</a></h2>
-<p>Below is a complete, runnable script featuring:
-1. A thread-safe <strong>Token Bucket Rate Limiter</strong>.
-2. An automated <strong>Keyset (Cursor-Based) Pagination Client</strong>.
-3. <strong>PyArrow Parquet Generation</strong> with dictionary encoding inspection.
-4. <strong>DuckDB In-Memory Analytical Execution</strong> running window functions and physical query plan generation.</p>
+<p>Below is a complete, runnable script featuring:</p>
+<ol>
+<li>A thread-safe <strong>Token Bucket Rate Limiter</strong>.</li>
+<li>An automated <strong>Keyset (Cursor-Based) Pagination Client</strong>.</li>
+<li><strong>PyArrow Parquet Generation</strong> with dictionary encoding inspection.</li>
+<li><strong>DuckDB In-Memory Analytical Execution</strong> running window functions and physical query plan generation.</li>
+</ol>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="sd">"""</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="sd">data_formats_storage_deep_dive.py</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="sd">Production implementations of Token Bucket rate limiters, Keyset pagination,</span>
@@ -4690,29 +4702,35 @@ T_{\text{now}} = \min\left(C, \; T_{\text{last}} + (t_{\text{now}} - t_{\text{la
 <h3 id="q1-walk-through-the-physical-storage-layout-of-an-apache-parquet-file-how-do-dictionary-encoding-run-length-encoding-rle-and-bit-packing-combine-to-compress-columnar-data">Q1: Walk through the physical storage layout of an Apache Parquet file. How do dictionary encoding, run-length encoding (RLE), and bit-packing combine to compress columnar data?<a class="headerlink" href="#q1-walk-through-the-physical-storage-layout-of-an-apache-parquet-file-how-do-dictionary-encoding-run-length-encoding-rle-and-bit-packing-combine-to-compress-columnar-data" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
 An Apache Parquet file is divided into one or more <strong>Row Groups</strong> (typically 128MB–512MB in size). Each Row Group contains <strong>Column Chunks</strong> for every column in the schema. Column chunks are subdivided into <strong>Pages</strong> (typically 1MB), consisting of a Header, an optional Dictionary Page, and Data Pages.</p>
-<p><strong>Compression and Encoding Pipeline:</strong>
-1. <strong>Dictionary Encoding:</strong> High-cardinality data like strings or categorical identifiers are replaced with integer dictionary IDs. The unique strings are stored once in a Dictionary Page at the head of the Column Chunk. Subsequent Data Pages store only compact integer indices.
-2. <strong>Bit-Packing:</strong> If the dictionary contains only 5 unique values, standard 32-bit integers are wasteful. Bit-packing stores each integer using only <span class="arithmatex">\(\lceil \log_2(5) \rceil = 3\)</span> bits, packing eight 3-bit values into 3 bytes.
-3. <strong>Run-Length Encoding (RLE):</strong> If identical values repeat sequentially (common in sorted data or boolean validity masks), RLE encodes the run as a pair: <code>(count, value)</code>. For example, 10,000 consecutive true values compress to <code>(10000, 1)</code>.
-4. <strong>Snappy / ZSTD Block Compression:</strong> After structural encodings (Dictionary + RLE + Bit-packing), the resulting byte stream is compressed using a general-purpose LZ77-derivative codec (Snappy for high decompression speed, or ZSTD for high compression ratio).</p>
+<p><strong>Compression and Encoding Pipeline:</strong></p>
+<ol>
+<li><strong>Dictionary Encoding:</strong> High-cardinality data like strings or categorical identifiers are replaced with integer dictionary IDs. The unique strings are stored once in a Dictionary Page at the head of the Column Chunk. Subsequent Data Pages store only compact integer indices.</li>
+<li><strong>Bit-Packing:</strong> If the dictionary contains only 5 unique values, standard 32-bit integers are wasteful. Bit-packing stores each integer using only <span class="arithmatex">\(\lceil \log_2(5) \rceil = 3\)</span> bits, packing eight 3-bit values into 3 bytes.</li>
+<li><strong>Run-Length Encoding (RLE):</strong> If identical values repeat sequentially (common in sorted data or boolean validity masks), RLE encodes the run as a pair: <code>(count, value)</code>. For example, 10,000 consecutive true values compress to <code>(10000, 1)</code>.</li>
+<li><strong>Snappy / ZSTD Block Compression:</strong> After structural encodings (Dictionary + RLE + Bit-packing), the resulting byte stream is compressed using a general-purpose LZ77-derivative codec (Snappy for high decompression speed, or ZSTD for high compression ratio).</li>
+</ol>
 <hr />
 <h3 id="q2-compare-the-read-write-and-space-amplification-characteristics-of-b-trees-vs-log-structured-merge-lsm-trees">Q2: Compare the read, write, and space amplification characteristics of B-Trees vs. Log-Structured Merge (LSM) Trees.<a class="headerlink" href="#q2-compare-the-read-write-and-space-amplification-characteristics-of-b-trees-vs-log-structured-merge-lsm-trees" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>Write Amplification (WA):</strong> Ratio of bytes written to physical storage vs. bytes submitted by user.
-  - <em>B-Tree:</em> High WA. Updating a single 50-byte record requires rewriting an entire 4KB or 16KB leaf page to disk, plus writing to the Write-Ahead Log (WAL).
-  - <em>LSM-Tree:</em> Low initial WA (writes are appended sequentially to MemTable and WAL). However, background compactions rewrite data across SSTable levels, leading to moderate-to-high amortized WA (<span class="arithmatex">\(\approx 10\times\)</span> to <span class="arithmatex">\(30\times\)</span>).
-- <strong>Read Amplification (RA):</strong> Number of disk reads required to satisfy a single point query.
-  - <em>B-Tree:</em> Minimal RA (<span class="arithmatex">\(\mathcal{O}(\log_B N)\)</span>). Typically 2 to 4 page reads, almost all cached in RAM except the leaf.
-  - <em>LSM-Tree:</em> High RA. A key might reside in the MemTable or across any SSTable level (L0 to Ln). Mitigated by <strong>Bloom Filters</strong>, which eliminate non-existent lookups in <span class="arithmatex">\(\mathcal{O}(1)\)</span> without disk I/O.
-- <strong>Space Amplification (SA):</strong> Ratio of disk space used vs. raw data size.
-  - <em>B-Tree:</em> High SA (<span class="arithmatex">\(33\% - 50\%\)</span> fragmentation due to page splits and empty page fill factors).
-  - <em>LSM-Tree:</em> Low SA. SSTables are immutable, sequential, fully packed, and easily compressed.</p>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li><strong>Write Amplification (WA):</strong> Ratio of bytes written to physical storage vs. bytes submitted by user.</li>
+<li><em>B-Tree:</em> High WA. Updating a single 50-byte record requires rewriting an entire 4KB or 16KB leaf page to disk, plus writing to the Write-Ahead Log (WAL).</li>
+<li><em>LSM-Tree:</em> Low initial WA (writes are appended sequentially to MemTable and WAL). However, background compactions rewrite data across SSTable levels, leading to moderate-to-high amortized WA (<span class="arithmatex">\(\approx 10\times\)</span> to <span class="arithmatex">\(30\times\)</span>).</li>
+<li><strong>Read Amplification (RA):</strong> Number of disk reads required to satisfy a single point query.</li>
+<li><em>B-Tree:</em> Minimal RA (<span class="arithmatex">\(\mathcal{O}(\log_B N)\)</span>). Typically 2 to 4 page reads, almost all cached in RAM except the leaf.</li>
+<li><em>LSM-Tree:</em> High RA. A key might reside in the MemTable or across any SSTable level (L0 to Ln). Mitigated by <strong>Bloom Filters</strong>, which eliminate non-existent lookups in <span class="arithmatex">\(\mathcal{O}(1)\)</span> without disk I/O.</li>
+<li><strong>Space Amplification (SA):</strong> Ratio of disk space used vs. raw data size.</li>
+<li><em>B-Tree:</em> High SA (<span class="arithmatex">\(33\% - 50\%\)</span> fragmentation due to page splits and empty page fill factors).</li>
+<li><em>LSM-Tree:</em> Low SA. SSTables are immutable, sequential, fully packed, and easily compressed.</li>
+</ul>
 <hr />
 <h3 id="q3-explain-why-offset-1000000-limit-10-is-a-database-anti-pattern-how-does-keyset-pagination-resolve-this">Q3: Explain why <code>OFFSET 1000000 LIMIT 10</code> is a database anti-pattern. How does Keyset pagination resolve this?<a class="headerlink" href="#q3-explain-why-offset-1000000-limit-10-is-a-database-anti-pattern-how-does-keyset-pagination-resolve-this" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-When executing <code>SELECT * FROM table ORDER BY id LIMIT 10 OFFSET 1000000</code>, the database engine cannot jump directly to the 1,000,000th row because rows vary in byte length and deleted/updated rows leave dead tuples. The engine must scan the index, materialize the first 1,000,010 rows, discard the first 1,000,000, and return the final 10.
-- <strong>Time Complexity:</strong> <span class="arithmatex">\(\mathcal{O}(N)\)</span> where <span class="arithmatex">\(N\)</span> is the offset magnitude. As users page deeper, query latency degrades linearly, causing CPU spikes.
-- <strong>Inconsistency Under Concurrent Writes:</strong> If a new row is inserted into page 1 while a user navigates to page 2, all subsequent rows shift downward by 1, causing the user to see duplicate records or miss records entirely.</p>
+When executing <code>SELECT * FROM table ORDER BY id LIMIT 10 OFFSET 1000000</code>, the database engine cannot jump directly to the 1,000,000th row because rows vary in byte length and deleted/updated rows leave dead tuples. The engine must scan the index, materialize the first 1,000,010 rows, discard the first 1,000,000, and return the final 10.</p>
+<ul>
+<li><strong>Time Complexity:</strong> <span class="arithmatex">\(\mathcal{O}(N)\)</span> where <span class="arithmatex">\(N\)</span> is the offset magnitude. As users page deeper, query latency degrades linearly, causing CPU spikes.</li>
+<li><strong>Inconsistency Under Concurrent Writes:</strong> If a new row is inserted into page 1 while a user navigates to page 2, all subsequent rows shift downward by 1, causing the user to see duplicate records or miss records entirely.</li>
+</ul>
 <p><strong>Keyset Pagination Solution:</strong>
 The client provides the last seen values of the sort keys as an opaque cursor:
 <div class="language-sql highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">table</span><span class="w"> </span>
@@ -4724,47 +4742,55 @@ The B-Tree index seeks directly to the tuple <code>(:last_created_at, :last_id)<
 <hr />
 <h3 id="q4-how-do-acid-transactions-work-on-top-of-stateless-object-storage-in-delta-lake-and-apache-iceberg">Q4: How do ACID transactions work on top of stateless object storage in Delta Lake and Apache Iceberg?<a class="headerlink" href="#q4-how-do-acid-transactions-work-on-top-of-stateless-object-storage-in-delta-lake-and-apache-iceberg" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
-Object storage systems like AWS S3 lack POSIX file locking and atomic multi-file operations. Table formats solve this by introducing an explicit <strong>Metadata Transaction Log</strong>:
-1. <strong>Atomicity &amp; Consistency:</strong> Every table mutation (append, overwrite, delete) writes new immutable Parquet data files to S3. It then writes a new commit JSON file (e.g., <code>000004.json</code> in Delta) or updates a pointer to the newest <code>metadata.json</code> (Iceberg) via an atomic compare-and-swap operation (e.g., AWS S3 PutObject with conditional headers or a catalog like AWS Glue/DynamoDB).
-2. <strong>Isolation (Snapshot Isolation via MVCC):</strong> Readers read the latest valid commit metadata file at query start time. The metadata explicitly enumerates the exact set of active Parquet files for that snapshot. Even if concurrent writers are actively writing new files or compacting old ones, the reader sees a completely stable, consistent snapshot of the data.
-3. <strong>Optimistic Concurrency Control (OCC):</strong> When two writers attempt to commit concurrently, both assume no conflict. The first writer's commit succeeds. The second writer detects that its base version is outdated, inspects whether the first commit modified the same partitions/files, and if no logical conflict exists, replays its metadata commit forward; otherwise, it aborts.</p>
+Object storage systems like AWS S3 lack POSIX file locking and atomic multi-file operations. Table formats solve this by introducing an explicit <strong>Metadata Transaction Log</strong>:</p>
+<ol>
+<li><strong>Atomicity &amp; Consistency:</strong> Every table mutation (append, overwrite, delete) writes new immutable Parquet data files to S3. It then writes a new commit JSON file (e.g., <code>000004.json</code> in Delta) or updates a pointer to the newest <code>metadata.json</code> (Iceberg) via an atomic compare-and-swap operation (e.g., AWS S3 PutObject with conditional headers or a catalog like AWS Glue/DynamoDB).</li>
+<li><strong>Isolation (Snapshot Isolation via MVCC):</strong> Readers read the latest valid commit metadata file at query start time. The metadata explicitly enumerates the exact set of active Parquet files for that snapshot. Even if concurrent writers are actively writing new files or compacting old ones, the reader sees a completely stable, consistent snapshot of the data.</li>
+<li><strong>Optimistic Concurrency Control (OCC):</strong> When two writers attempt to commit concurrently, both assume no conflict. The first writer's commit succeeds. The second writer detects that its base version is outdated, inspects whether the first commit modified the same partitions/files, and if no logical conflict exists, replays its metadata commit forward; otherwise, it aborts.</li>
+</ol>
 <hr />
 <h3 id="q5-compare-hash-join-sort-merge-join-and-broadcast-hash-join-when-does-a-query-optimizer-select-each">Q5: Compare Hash Join, Sort-Merge Join, and Broadcast Hash Join. When does a query optimizer select each?<a class="headerlink" href="#q5-compare-hash-join-sort-merge-join-and-broadcast-hash-join-when-does-a-query-optimizer-select-each" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>Hash Join:</strong>
-  - <em>Mechanism:</em> Builds an in-memory hash table on the join key of the smaller table <span class="arithmatex">\(R\)</span> (<span class="arithmatex">\(\mathcal{O}(|R|)\)</span>), then streams the larger table <span class="arithmatex">\(S\)</span> and probes the hash table (<span class="arithmatex">\(\mathcal{O}(|S|)\)</span>).
-  - <em>Best When:</em> Joining unsorted, moderately sized tables where the build side fits comfortably in RAM (<code>work_mem</code>).
-- <strong>Sort-Merge Join:</strong>
-  - <em>Mechanism:</em> Sorts both tables by the join key (if not already sorted by an index), then merges them via two pointers in lockstep.
-  - <em>Best When:</em> Tables are already ordered on the join key, the join condition contains inequalities (<span class="arithmatex">\(&lt;, \le\)</span>), or tables are far too massive to fit in RAM (sort runs can spill to disk gracefully).
-- <strong>Broadcast Hash Join (Distributed SQL / Spark):</strong>
-  - <em>Mechanism:</em> In a cluster of <span class="arithmatex">\(K\)</span> worker nodes, if one table is very small (e.g., <span class="arithmatex">\(&lt; 10\text{ MB}\)</span> dimension table), the driver broadcasts the entire small table to every worker node. Each node performs a local hash join against its local partition of the massive fact table.
-  - <em>Advantage:</em> Eliminates the massive network shuffle (data exchange) of the large table across the cluster, transforming an <span class="arithmatex">\(\mathcal{O}(N)\)</span> network bottleneck into local CPU processing.</p>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li><strong>Hash Join:</strong></li>
+<li><em>Mechanism:</em> Builds an in-memory hash table on the join key of the smaller table <span class="arithmatex">\(R\)</span> (<span class="arithmatex">\(\mathcal{O}(|R|)\)</span>), then streams the larger table <span class="arithmatex">\(S\)</span> and probes the hash table (<span class="arithmatex">\(\mathcal{O}(|S|)\)</span>).</li>
+<li><em>Best When:</em> Joining unsorted, moderately sized tables where the build side fits comfortably in RAM (<code>work_mem</code>).</li>
+<li><strong>Sort-Merge Join:</strong></li>
+<li><em>Mechanism:</em> Sorts both tables by the join key (if not already sorted by an index), then merges them via two pointers in lockstep.</li>
+<li><em>Best When:</em> Tables are already ordered on the join key, the join condition contains inequalities (<span class="arithmatex">\(&lt;, \le\)</span>), or tables are far too massive to fit in RAM (sort runs can spill to disk gracefully).</li>
+<li><strong>Broadcast Hash Join (Distributed SQL / Spark):</strong></li>
+<li><em>Mechanism:</em> In a cluster of <span class="arithmatex">\(K\)</span> worker nodes, if one table is very small (e.g., <span class="arithmatex">\(&lt; 10\text{ MB}\)</span> dimension table), the driver broadcasts the entire small table to every worker node. Each node performs a local hash join against its local partition of the massive fact table.</li>
+<li><em>Advantage:</em> Eliminates the massive network shuffle (data exchange) of the large table across the cluster, transforming an <span class="arithmatex">\(\mathcal{O}(N)\)</span> network bottleneck into local CPU processing.</li>
+</ul>
 <hr />
 <h3 id="q6-explain-the-small-file-problem-in-data-lakes-why-it-degrades-query-performance-and-what-automated-compaction-strategies-resolve-it">Q6: Explain the "Small File Problem" in data lakes, why it degrades query performance, and what automated compaction strategies resolve it.<a class="headerlink" href="#q6-explain-the-small-file-problem-in-data-lakes-why-it-degrades-query-performance-and-what-automated-compaction-strategies-resolve-it" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
 The <strong>Small File Problem</strong> arises when streaming ingestion pipelines (e.g., Kafka consumers or micro-batch Spark jobs) commit micro-batches every few seconds, generating millions of tiny (10KB to 1MB) Parquet or ORC files in cloud object storage.</p>
-<p><strong>Why It Degrades Performance:</strong>
-1. <strong>Metadata Bloat:</strong> Query engines (Trino, Athena, Spark) must issue <code>LIST</code> and <code>GET</code> requests to discover and open each file. In AWS S3, each HTTP request introduces 10-30 ms of round-trip latency. Opening 100,000 small files consumes 30 minutes in pure HTTP handshake overhead before any computation begins!
-2. <strong>Compression Inefficiency:</strong> Columnar compression (dictionary encoding, RLE) requires large statistical sample sizes (50,000+ rows) to achieve high compression ratios. A 500-row file exhibits virtually zero compression.
-3. <strong>Loss of Row Group Pruning:</strong> Tiny files contain only a single small row group, rendering Parquet footer min/max statistics ineffective.</p>
-<p><strong>Compaction Strategies:</strong>
-- <strong>Scheduled Bin-Packing (Compaction Jobs):</strong> Run background jobs (e.g., <code>OPTIMIZE my_table COMPACT</code> in Delta Lake or Iceberg rewrite actions) that read clusters of small files within a partition and coalesce them into optimal 128MB–512MB files.
-- <strong>Hierarchical Partitioning &amp; Buffering:</strong> Buffer streaming events in an append-ahead buffer (e.g., Kafka or Apache Arrow memory ring buffers) and flush to object storage only when file size reaches <span class="arithmatex">\(\ge 64\text{ MB}\)</span> or a maximum time threshold (e.g., 15 minutes) elapses.</p>
+<p><strong>Why It Degrades Performance:</strong></p>
+<ol>
+<li><strong>Metadata Bloat:</strong> Query engines (Trino, Athena, Spark) must issue <code>LIST</code> and <code>GET</code> requests to discover and open each file. In AWS S3, each HTTP request introduces 10-30 ms of round-trip latency. Opening 100,000 small files consumes 30 minutes in pure HTTP handshake overhead before any computation begins!</li>
+<li><strong>Compression Inefficiency:</strong> Columnar compression (dictionary encoding, RLE) requires large statistical sample sizes (50,000+ rows) to achieve high compression ratios. A 500-row file exhibits virtually zero compression.</li>
+<li><strong>Loss of Row Group Pruning:</strong> Tiny files contain only a single small row group, rendering Parquet footer min/max statistics ineffective.</li>
+</ol>
+<p><strong>Compaction Strategies:</strong></p>
+<ul>
+<li><strong>Scheduled Bin-Packing (Compaction Jobs):</strong> Run background jobs (e.g., <code>OPTIMIZE my_table COMPACT</code> in Delta Lake or Iceberg rewrite actions) that read clusters of small files within a partition and coalesce them into optimal 128MB–512MB files.</li>
+<li><strong>Hierarchical Partitioning &amp; Buffering:</strong> Buffer streaming events in an append-ahead buffer (e.g., Kafka or Apache Arrow memory ring buffers) and flush to object storage only when file size reaches <span class="arithmatex">\(\ge 64\text{ MB}\)</span> or a maximum time threshold (e.g., 15 minutes) elapses.</li>
+</ul>
 <hr />
 <h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
 <p>Complete this checklist to verify your depth in data formats and storage architectures:</p>
-<ul>
-<li>[ ] <strong>L1:</strong> You can explain the difference between row-oriented and columnar disk layouts and their I/O implications.</li>
-<li>[ ] <strong>L2:</strong> You can describe the internal hierarchy of a Parquet file (Header, Row Groups, Column Chunks, Pages, Footer).</li>
-<li>[ ] <strong>L3:</strong> You can explain how dictionary encoding, bit-packing, and RLE achieve high compression on columnar data.</li>
-<li>[ ] <strong>L4:</strong> You can explain the architectural trade-offs between B-Trees (read-optimized) and LSM-Trees (write-optimized).</li>
-<li>[ ] <strong>L5:</strong> You can state how Hash Join, Sort-Merge Join, and Broadcast Hash Join operate and when an optimizer selects each.</li>
-<li>[ ] <strong>L6:</strong> You can write complex SQL window functions (<code>ROW_NUMBER</code>, <code>SUM OVER</code>, <code>LAG</code>) for feature extraction.</li>
-<li>[ ] <strong>L7:</strong> You can implement a thread-safe Token Bucket rate limiter using lazy differential replenishment.</li>
-<li>[ ] <strong>L8:</strong> You can explain why <code>OFFSET</code> pagination degrades to <span class="arithmatex">\(\mathcal{O}(N)\)</span> and implement Keyset (cursor-based) pagination.</li>
-<li>[ ] <strong>L9:</strong> You can explain how Lakehouse formats (Delta Lake, Apache Iceberg) enforce ACID transactions and time travel over S3.</li>
-<li>[ ] <strong>L10:</strong> You can diagnose the "Small File Problem" in distributed data lakes and formulate an automated compaction strategy.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can explain the difference between row-oriented and columnar disk layouts and their I/O implications.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can describe the internal hierarchy of a Parquet file (Header, Row Groups, Column Chunks, Pages, Footer).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can explain how dictionary encoding, bit-packing, and RLE achieve high compression on columnar data.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can explain the architectural trade-offs between B-Trees (read-optimized) and LSM-Trees (write-optimized).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can state how Hash Join, Sort-Merge Join, and Broadcast Hash Join operate and when an optimizer selects each.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can write complex SQL window functions (<code>ROW_NUMBER</code>, <code>SUM OVER</code>, <code>LAG</code>) for feature extraction.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can implement a thread-safe Token Bucket rate limiter using lazy differential replenishment.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can explain why <code>OFFSET</code> pagination degrades to <span class="arithmatex">\(\mathcal{O}(N)\)</span> and implement Keyset (cursor-based) pagination.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can explain how Lakehouse formats (Delta Lake, Apache Iceberg) enforce ACID transactions and time travel over S3.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can diagnose the "Small File Problem" in distributed data lakes and formulate an automated compaction strategy.</li>
 </ul>
 
 

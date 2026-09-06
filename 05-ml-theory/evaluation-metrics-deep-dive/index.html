@@ -4138,11 +4138,13 @@
 <h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
 <p>A machine learning algorithm optimizes an internal loss function (MSE, Cross-Entropy, Hinge Loss), but loss numbers do not directly reflect business utility, operational risk, or diagnostic validity.</p>
 <p>Choosing an improper evaluation metric is one of the most frequent causes of catastrophic failure in production AI systems. A fraud model boasting <span class="arithmatex">\(99.9\%\)</span> accuracy may fail to detect a single real transaction theft; a medical diagnostic tool with high ROC-AUC may flood doctors with thousands of false alarms because the underlying class prevalence is tiny.</p>
-<p>Evaluation metrics form a rigorous hierarchy across three primary domains:
-1. <strong>Classification Point Metrics</strong>: Derived from the Confusion Matrix at a chosen decision threshold (<span class="arithmatex">\(F_1, F_\beta\)</span>, Balanced Accuracy).
-2. <strong>Threshold-Agnostic Curve Metrics</strong>: Evaluating discrimination across all possible operating thresholds (ROC-AUC, PR-AUC, Brier score).
-3. <strong>Probability Calibration</strong>: Measuring whether predicted continuous probabilities reflect true empirical long-run frequencies (Reliability curves, ECE, Platt Scaling, Isotonic Regression).
-4. <strong>Regression Diagnostics</strong>: Dissecting residual geometry, outlier vulnerability, and explanatory power (<span class="arithmatex">\(R^2\)</span>, Adjusted <span class="arithmatex">\(R^2\)</span>, MAE, RMSE, sMAPE).</p>
+<p>Evaluation metrics form a rigorous hierarchy across three primary domains:</p>
+<ol>
+<li><strong>Classification Point Metrics</strong>: Derived from the Confusion Matrix at a chosen decision threshold (<span class="arithmatex">\(F_1, F_\beta\)</span>, Balanced Accuracy).</li>
+<li><strong>Threshold-Agnostic Curve Metrics</strong>: Evaluating discrimination across all possible operating thresholds (ROC-AUC, PR-AUC, Brier score).</li>
+<li><strong>Probability Calibration</strong>: Measuring whether predicted continuous probabilities reflect true empirical long-run frequencies (Reliability curves, ECE, Platt Scaling, Isotonic Regression).</li>
+<li><strong>Regression Diagnostics</strong>: Dissecting residual geometry, outlier vulnerability, and explanatory power (<span class="arithmatex">\(R^2\)</span>, Adjusted <span class="arithmatex">\(R^2\)</span>, MAE, RMSE, sMAPE).</li>
+</ol>
 <pre class="mermaid"><code>flowchart TD
     subgraph Metric Taxonomy
         ROOT["Model Predictions"] --&gt; CLAS["Classification Task"]
@@ -4192,19 +4194,29 @@
 </table>
 <h3 id="22-point-metric-definitions">2.2 Point Metric Definitions<a class="headerlink" href="#22-point-metric-definitions" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Accuracy</strong>:
+<li>
+<p><strong>Accuracy</strong>:
    $<span class="arithmatex">\(\text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}\)</span>$
-   <em>Hazard</em>: Deceptively inflated under class imbalance (<span class="arithmatex">\(P \ll N\)</span>).</li>
-<li><strong>Precision (Positive Predictive Value - PPV)</strong>:
+   <em>Hazard</em>: Deceptively inflated under class imbalance (<span class="arithmatex">\(P \ll N\)</span>).</p>
+</li>
+<li>
+<p><strong>Precision (Positive Predictive Value - PPV)</strong>:
    $<span class="arithmatex">\(\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}\)</span>$
-   "When the model predicts positive, how often is it right?" (Cost of false alarms).</li>
-<li><strong>Recall (Sensitivity / True Positive Rate - TPR)</strong>:
+   "When the model predicts positive, how often is it right?" (Cost of false alarms).</p>
+</li>
+<li>
+<p><strong>Recall (Sensitivity / True Positive Rate - TPR)</strong>:
    $<span class="arithmatex">\(\text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}\)</span>$
-   "Out of all actual positive cases, how many did the model catch?" (Cost of misses).</li>
-<li><strong>Specificity (True Negative Rate - TNR)</strong>:
-   $<span class="arithmatex">\(\text{Specificity} = \frac{\text{TN}}{\text{TN} + \text{FP}} = 1 - \text{FPR}\)</span>$</li>
-<li><strong>False Positive Rate (FPR / Fall-out)</strong>:
-   $<span class="arithmatex">\(\text{FPR} = \frac{\text{FP}}{\text{FP} + \text{TN}} = 1 - \text{Specificity}\)</span>$</li>
+   "Out of all actual positive cases, how many did the model catch?" (Cost of misses).</p>
+</li>
+<li>
+<p><strong>Specificity (True Negative Rate - TNR)</strong>:
+   $<span class="arithmatex">\(\text{Specificity} = \frac{\text{TN}}{\text{TN} + \text{FP}} = 1 - \text{FPR}\)</span>$</p>
+</li>
+<li>
+<p><strong>False Positive Rate (FPR / Fall-out)</strong>:
+   $<span class="arithmatex">\(\text{FPR} = \frac{\text{FP}}{\text{FP} + \text{TN}} = 1 - \text{Specificity}\)</span>$</p>
+</li>
 </ol>
 <h3 id="23-the-f_beta-score-derivation-of-weighted-harmonic-mean">2.3 The <span class="arithmatex">\(F_\beta\)</span> Score: Derivation of Weighted Harmonic Mean<a class="headerlink" href="#23-the-f_beta-score-derivation-of-weighted-harmonic-mean" title="Permanent link">&para;</a></h3>
 <p>Why can't we simply take the arithmetic mean <span class="arithmatex">\(\frac{\text{Precision} + \text{Recall}}{2}\)</span>?
@@ -4237,9 +4249,11 @@ H = \frac{2}{\frac{1}{x} + \frac{1}{y}} = \frac{2xy}{x + y}
     B --&gt; D["Trace ROC Curve &amp; Integrate ROC-AUC"]
     C --&gt; E["Trace PR Curve &amp; Integrate PR-AUC / Average Precision"]</code></pre>
 <h3 id="31-roc-curve-the-wilcoxon-mann-whitney-statistic">3.1 ROC Curve &amp; The Wilcoxon-Mann-Whitney Statistic<a class="headerlink" href="#31-roc-curve-the-wilcoxon-mann-whitney-statistic" title="Permanent link">&para;</a></h3>
-<p>The <strong>Receiver Operating Characteristic (ROC)</strong> curve plots <span class="arithmatex">\(\text{TPR}(\tau)\)</span> against <span class="arithmatex">\(\text{FPR}(\tau)\)</span> for all thresholds <span class="arithmatex">\(\tau \in [0, 1]\)</span>.
-- A random guesser yields a diagonal line from <span class="arithmatex">\((0, 0)\)</span> to <span class="arithmatex">\((1, 1)\)</span> with <span class="arithmatex">\(\text{AUC} = 0.5\)</span>.
-- A perfect classifier achieves <span class="arithmatex">\(\text{AUC} = 1.0\)</span>, passing through the top-left corner <span class="arithmatex">\((0, 1)\)</span>.</p>
+<p>The <strong>Receiver Operating Characteristic (ROC)</strong> curve plots <span class="arithmatex">\(\text{TPR}(\tau)\)</span> against <span class="arithmatex">\(\text{FPR}(\tau)\)</span> for all thresholds <span class="arithmatex">\(\tau \in [0, 1]\)</span>.</p>
+<ul>
+<li>A random guesser yields a diagonal line from <span class="arithmatex">\((0, 0)\)</span> to <span class="arithmatex">\((1, 1)\)</span> with <span class="arithmatex">\(\text{AUC} = 0.5\)</span>.</li>
+<li>A perfect classifier achieves <span class="arithmatex">\(\text{AUC} = 1.0\)</span>, passing through the top-left corner <span class="arithmatex">\((0, 1)\)</span>.</li>
+</ul>
 <h4 id="the-equivalence-theorem">The Equivalence Theorem:<a class="headerlink" href="#the-equivalence-theorem" title="Permanent link">&para;</a></h4>
 <p>The Area Under the ROC Curve (ROC-AUC) is <strong>mathematically identical to the probability that a randomly selected positive instance <span class="arithmatex">\(x^+\)</span> receives a higher predicted score than a randomly selected negative instance <span class="arithmatex">\(x^-\)</span></strong>:</p>
 <div class="arithmatex">\[
@@ -4252,11 +4266,13 @@ H = \frac{2}{\frac{1}{x} + \frac{1}{y}} = \frac{2xy}{x + y}
 <p>where <span class="arithmatex">\(U\)</span> is the <strong>Mann-Whitney <span class="arithmatex">\(U\)</span> statistic</strong>! This can be computed in <span class="arithmatex">\(\mathcal{O}(n \log n)\)</span> time simply by sorting predictions and summing ranks.</p>
 <h3 id="32-pr-auc-the-mathematical-failure-of-roc-on-imbalanced-data">3.2 PR-AUC &amp; The Mathematical Failure of ROC on Imbalanced Data<a class="headerlink" href="#32-pr-auc-the-mathematical-failure-of-roc-on-imbalanced-data" title="Permanent link">&para;</a></h3>
 <p>Consider a fraud detection problem with <span class="arithmatex">\(100\)</span> fraudulent transactions (<span class="arithmatex">\(P = 100\)</span>) and <span class="arithmatex">\(1,000,000\)</span> legitimate transactions (<span class="arithmatex">\(N = 10^6\)</span>).
-Suppose a model produces <strong>10,000 False Positives</strong> while capturing <span class="arithmatex">\(90\)</span> True Positives:
-- <strong>True Positive Rate (Recall)</strong>: <span class="arithmatex">\(\text{TPR} = \frac{90}{100} = 0.90\)</span>.
-- <strong>False Positive Rate</strong>:
+Suppose a model produces <strong>10,000 False Positives</strong> while capturing <span class="arithmatex">\(90\)</span> True Positives:</p>
+<ul>
+<li><strong>True Positive Rate (Recall)</strong>: <span class="arithmatex">\(\text{TPR} = \frac{90}{100} = 0.90\)</span>.</li>
+<li><strong>False Positive Rate</strong>:
   $<span class="arithmatex">\(\text{FPR} = \frac{\text{FP}}{N} = \frac{10,000}{1,000,000} = 0.01 \quad (1\%)\)</span>$
-On the ROC curve, the point is at <span class="arithmatex">\((0.01, 0.90)\)</span>—extremely close to the top-left corner! The ROC-AUC will appear stellar (<span class="arithmatex">\(\text{AUC} &gt; 0.98\)</span>).</p>
+On the ROC curve, the point is at <span class="arithmatex">\((0.01, 0.90)\)</span>—extremely close to the top-left corner! The ROC-AUC will appear stellar (<span class="arithmatex">\(\text{AUC} &gt; 0.98\)</span>).</li>
+</ul>
 <p>Now compute <strong>Precision</strong>:</p>
 <div class="arithmatex">\[
 \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{90}{90 + 10,000} \approx 0.0089 \quad (0.89\%)
@@ -4284,25 +4300,35 @@ P(y = 1 \mid \hat{p}(\mathbf{x}) = p) = p \quad \forall p \in [0, 1]
 <h3 id="41-expected-calibration-error-ece">4.1 Expected Calibration Error (ECE)<a class="headerlink" href="#41-expected-calibration-error-ece" title="Permanent link">&para;</a></h3>
 <p>To quantify calibration error across <span class="arithmatex">\(M\)</span> probability bins <span class="arithmatex">\(B_1, \dots, B_M\)</span> (typically <span class="arithmatex">\(M = 10\)</span> bins of width <span class="arithmatex">\(0.1\)</span>):</p>
 <ol>
-<li>Compute empirical accuracy within bin <span class="arithmatex">\(B_m\)</span>:
-   $<span class="arithmatex">\(\text{acc}(B_m) = \frac{1}{|B_m|} \sum_{i \in B_m} y_i\)</span>$</li>
-<li>Compute average predicted confidence within bin <span class="arithmatex">\(B_m\)</span>:
-   $<span class="arithmatex">\(\text{conf}(B_m) = \frac{1}{|B_m|} \sum_{i \in B_m} \hat{p}_i\)</span>$</li>
-<li>The <strong>Expected Calibration Error (ECE)</strong> is the weighted average absolute difference:
-   $<span class="arithmatex">\(\text{ECE} = \sum_{m=1}^M \frac{|B_m|}{n} \Big| \text{acc}(B_m) - \text{conf}(B_m) \Big|\)</span>$</li>
+<li>
+<p>Compute empirical accuracy within bin <span class="arithmatex">\(B_m\)</span>:
+   $<span class="arithmatex">\(\text{acc}(B_m) = \frac{1}{|B_m|} \sum_{i \in B_m} y_i\)</span>$</p>
+</li>
+<li>
+<p>Compute average predicted confidence within bin <span class="arithmatex">\(B_m\)</span>:
+   $<span class="arithmatex">\(\text{conf}(B_m) = \frac{1}{|B_m|} \sum_{i \in B_m} \hat{p}_i\)</span>$</p>
+</li>
+<li>
+<p>The <strong>Expected Calibration Error (ECE)</strong> is the weighted average absolute difference:
+   $<span class="arithmatex">\(\text{ECE} = \sum_{m=1}^M \frac{|B_m|}{n} \Big| \text{acc}(B_m) - \text{conf}(B_m) \Big|\)</span>$</p>
+</li>
 </ol>
 <h3 id="42-post-hoc-calibration-algorithms">4.2 Post-Hoc Calibration Algorithms<a class="headerlink" href="#42-post-hoc-calibration-algorithms" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Platt Scaling (Sigmoid Calibration)</strong>:
+<li>
+<p><strong>Platt Scaling (Sigmoid Calibration)</strong>:
    Fits a scalar logistic regression model on the uncalibrated model outputs <span class="arithmatex">\(s(\mathbf{x})\)</span>:
    $<span class="arithmatex">\(\hat{p}_{\text{calibrated}} = \frac{1}{1 + \exp\left( A \cdot s(\mathbf{x}) + B \right)}\)</span>$
    Parameters <span class="arithmatex">\(A\)</span> and <span class="arithmatex">\(B\)</span> are fit via Maximum Likelihood on an independent validation holdout set.
-   <em>Best for</em>: Models whose uncalibrated scores produce an S-shaped reliability curve (e.g., SVM margin scores).</li>
-<li><strong>Isotonic Regression (Non-Parametric)</strong>:
+   <em>Best for</em>: Models whose uncalibrated scores produce an S-shaped reliability curve (e.g., SVM margin scores).</p>
+</li>
+<li>
+<p><strong>Isotonic Regression (Non-Parametric)</strong>:
    Fits a non-decreasing, non-parametric step function <span class="arithmatex">\(m(s)\)</span> minimizing squared error:
    $<span class="arithmatex">\(\min_{m} \sum_{i=1}^n \left( y_i - m(s_i) \right)^2 \quad \text{subject to } m(s_i) \le m(s_j) \text{ whenever } s_i \le s_j\)</span>$
    Solved in <span class="arithmatex">\(\mathcal{O}(n)\)</span> time via the <strong>Pool Adjacent Violators Algorithm (PAVA)</strong>.
-   <em>Best for</em>: Complex models with abundant validation data (<span class="arithmatex">\(n &gt; 1000\)</span>). Risk of overfitting on small validation sets.</li>
+   <em>Best for</em>: Complex models with abundant validation data (<span class="arithmatex">\(n &gt; 1000\)</span>). Risk of overfitting on small validation sets.</p>
+</li>
 </ol>
 <hr />
 <h2 id="5-regression-metrics">5. Regression Metrics<a class="headerlink" href="#5-regression-metrics" title="Permanent link">&para;</a></h2>
@@ -4370,11 +4396,13 @@ R_{\text{adj}}^2 = 1 - \frac{\text{SS}_{\text{res}} / (n - p - 1)}{\text{SS}_{\t
 <div class="arithmatex">\[
 \text{MAPE} = \frac{100\%}{n} \sum_{i=1}^n \left| \frac{y_i - \hat{y}_i}{y_i} \right|
 \]</div>
-<p><strong>Critical Flaws of MAPE</strong>:
-1. <strong>Division by Zero</strong>: If any actual target <span class="arithmatex">\(y_i = 0\)</span>, MAPE is undefined (<span class="arithmatex">\(\infty\)</span>).
-2. <strong>Asymmetry</strong>: Over-predictions are punished much more leniently than under-predictions.
-   - If true <span class="arithmatex">\(y = 100\)</span> and <span class="arithmatex">\(\hat{y} = 200 \implies \text{Error} = |100 - 200| / 100 = 100\%\)</span>.
-   - If true <span class="arithmatex">\(y = 100\)</span> and <span class="arithmatex">\(\hat{y} = 0 \implies \text{Error} = |100 - 0| / 100 = 100\%\)</span> (maximum penalty for zero prediction is 100%, but over-prediction is unbounded!).</p>
+<p><strong>Critical Flaws of MAPE</strong>:</p>
+<ol>
+<li><strong>Division by Zero</strong>: If any actual target <span class="arithmatex">\(y_i = 0\)</span>, MAPE is undefined (<span class="arithmatex">\(\infty\)</span>).</li>
+<li><strong>Asymmetry</strong>: Over-predictions are punished much more leniently than under-predictions.</li>
+<li>If true <span class="arithmatex">\(y = 100\)</span> and <span class="arithmatex">\(\hat{y} = 200 \implies \text{Error} = |100 - 200| / 100 = 100\%\)</span>.</li>
+<li>If true <span class="arithmatex">\(y = 100\)</span> and <span class="arithmatex">\(\hat{y} = 0 \implies \text{Error} = |100 - 0| / 100 = 100\%\)</span> (maximum penalty for zero prediction is 100%, but over-prediction is unbounded!).</li>
+</ol>
 <h4 id="symmetric-mape-smape">Symmetric MAPE (sMAPE):<a class="headerlink" href="#symmetric-mape-smape" title="Permanent link">&para;</a></h4>
 <p>Bounds percentage errors in <span class="arithmatex">\([0\%, 200\%]\)</span> by averaging the actual and predicted values in the denominator:</p>
 <div class="arithmatex">\[
@@ -4527,14 +4555,22 @@ R_{\text{adj}}^2 = 1 - \frac{\text{SS}_{\text{res}} / (n - p - 1)}{\text{SS}_{\t
 <hr />
 <h2 id="8-common-errors-production-debugging">8. Common Errors &amp; Production Debugging<a class="headerlink" href="#8-common-errors-production-debugging" title="Permanent link">&para;</a></h2>
 <h3 id="81-macro-vs-micro-vs-weighted-averaging-in-multiclass">8.1 Macro vs. Micro vs. Weighted Averaging in Multiclass<a class="headerlink" href="#81-macro-vs-micro-vs-weighted-averaging-in-multiclass" title="Permanent link">&para;</a></h3>
-<p>When extending binary metrics to multi-class classification (<span class="arithmatex">\(K\)</span> classes):
-- <strong>Micro Average</strong>: Pools total global TPs, FPs, and FNs across all classes:
+<p>When extending binary metrics to multi-class classification (<span class="arithmatex">\(K\)</span> classes):</p>
+<ul>
+<li>
+<p><strong>Micro Average</strong>: Pools total global TPs, FPs, and FNs across all classes:
   $<span class="arithmatex">\(\text{Precision}_{\text{micro}} = \frac{\sum_{k=1}^K \text{TP}_k}{\sum_{k=1}^K (\text{TP}_k + \text{FP}_k)}\)</span>$
-  <em>Property</em>: Micro-Precision, Micro-Recall, and Micro-<span class="arithmatex">\(F_1\)</span> are all <strong>mathematically identical to overall Accuracy</strong>!
-- <strong>Macro Average</strong>: Computes the metric independently for each class and calculates the unweighted arithmetic mean:
+  <em>Property</em>: Micro-Precision, Micro-Recall, and Micro-<span class="arithmatex">\(F_1\)</span> are all <strong>mathematically identical to overall Accuracy</strong>!</p>
+</li>
+<li>
+<p><strong>Macro Average</strong>: Computes the metric independently for each class and calculates the unweighted arithmetic mean:
   $<span class="arithmatex">\(\text{Macro } F_1 = \frac{1}{K} \sum_{k=1}^K F_{1, k}\)</span>$
-  Weights every class equally; gives massive influence to tiny rare classes.
-- <strong>Weighted Average</strong>: Averages per-class metrics weighted by class support (sample count <span class="arithmatex">\(N_k\)</span>).</p>
+  Weights every class equally; gives massive influence to tiny rare classes.</p>
+</li>
+<li>
+<p><strong>Weighted Average</strong>: Averages per-class metrics weighted by class support (sample count <span class="arithmatex">\(N_k\)</span>).</p>
+</li>
+</ul>
 <h3 id="82-calculating-negative-r2-on-out-of-sample-test-sets">8.2 Calculating Negative <span class="arithmatex">\(R^2\)</span> on Out-of-Sample Test Sets<a class="headerlink" href="#82-calculating-negative-r2-on-out-of-sample-test-sets" title="Permanent link">&para;</a></h3>
 <p>Engineers are often shocked when their model produces an <span class="arithmatex">\(R^2 = -0.42\)</span> on test data.
 <strong>Root Cause</strong>: <span class="arithmatex">\(R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}}\)</span>. If the model has overfit or the test distribution has shifted, the test residuals can easily be larger than the variance of the test data around its mean (<span class="arithmatex">\(\text{SS}_{\text{res}} &gt; \text{SS}_{\text{tot}}\)</span>). A negative <span class="arithmatex">\(R^2\)</span> is mathematically valid; it simply means your model is worse than a horizontal line predicting <span class="arithmatex">\(\bar{y}_{\text{test}}\)</span>.</p>
@@ -4544,20 +4580,24 @@ R_{\text{adj}}^2 = 1 - \frac{\text{SS}_{\text{res}} / (n - p - 1)}{\text{SS}_{\t
 <p><strong>Model Answer:</strong>
 Let <span class="arithmatex">\(f_1(s)\)</span> and <span class="arithmatex">\(f_0(s)\)</span> be the probability density functions of the continuous predicted scores for positive (<span class="arithmatex">\(y = 1\)</span>) and negative (<span class="arithmatex">\(y = 0\)</span>) instances, respectively.
 Let <span class="arithmatex">\(F_1(s) = \int_{-\infty}^s f_1(t) dt\)</span> and <span class="arithmatex">\(F_0(s) = \int_{-\infty}^s f_0(t) dt\)</span> be their cumulative distribution functions.
-For a given decision threshold <span class="arithmatex">\(\tau\)</span>:
-- True Positive Rate: <span class="arithmatex">\(\text{TPR}(\tau) = P(\hat{s} &gt; \tau \mid y = 1) = 1 - F_1(\tau)\)</span>
-- False Positive Rate: <span class="arithmatex">\(\text{FPR}(\tau) = P(\hat{s} &gt; \tau \mid y = 0) = 1 - F_0(\tau)\)</span></p>
+For a given decision threshold <span class="arithmatex">\(\tau\)</span>:</p>
+<ul>
+<li>True Positive Rate: <span class="arithmatex">\(\text{TPR}(\tau) = P(\hat{s} &gt; \tau \mid y = 1) = 1 - F_1(\tau)\)</span></li>
+<li>False Positive Rate: <span class="arithmatex">\(\text{FPR}(\tau) = P(\hat{s} &gt; \tau \mid y = 0) = 1 - F_0(\tau)\)</span></li>
+</ul>
 <p>The Area Under the ROC Curve is the integral of <span class="arithmatex">\(\text{TPR}\)</span> with respect to <span class="arithmatex">\(\text{FPR}\)</span>:
 $<span class="arithmatex">\(\text{ROC-AUC} = \int_{0}^{1} \text{TPR} \, d(\text{FPR})\)</span>$
 Using substitution <span class="arithmatex">\(u = \text{FPR}(\tau) = 1 - F_0(\tau) \implies du = -f_0(\tau) d\tau\)</span>.
 When <span class="arithmatex">\(\tau = -\infty\)</span>, <span class="arithmatex">\(\text{FPR} = 1\)</span>; when <span class="arithmatex">\(\tau = \infty\)</span>, <span class="arithmatex">\(\text{FPR} = 0\)</span>:
 $<span class="arithmatex">\(\text{ROC-AUC} = \int_{\infty}^{-\infty} [1 - F_1(\tau)] (-f_0(\tau) d\tau) = \int_{-\infty}^{\infty} [1 - F_1(\tau)] f_0(\tau) d\tau\)</span>$
-Notice what the integral represents:
-- <span class="arithmatex">\(f_0(\tau) d\tau\)</span> is the probability that a randomly drawn negative instance <span class="arithmatex">\(\mathbf{x}^-\)</span> has score equal to <span class="arithmatex">\(\tau\)</span>.
-- <span class="arithmatex">\(1 - F_1(\tau) = P(\hat{s}(\mathbf{x}^+) &gt; \tau)\)</span> is the probability that an independently drawn positive instance <span class="arithmatex">\(\mathbf{x}^+\)</span> has score strictly greater than <span class="arithmatex">\(\tau\)</span>.
+Notice what the integral represents:</p>
+<ul>
+<li><span class="arithmatex">\(f_0(\tau) d\tau\)</span> is the probability that a randomly drawn negative instance <span class="arithmatex">\(\mathbf{x}^-\)</span> has score equal to <span class="arithmatex">\(\tau\)</span>.</li>
+<li><span class="arithmatex">\(1 - F_1(\tau) = P(\hat{s}(\mathbf{x}^+) &gt; \tau)\)</span> is the probability that an independently drawn positive instance <span class="arithmatex">\(\mathbf{x}^+\)</span> has score strictly greater than <span class="arithmatex">\(\tau\)</span>.
 Integrating over all possible values of <span class="arithmatex">\(\tau\)</span> evaluates the joint continuous expectation:
 $<span class="arithmatex">\(\int_{-\infty}^{\infty} P(\hat{s}(\mathbf{x}^+) &gt; \tau) \cdot f_0(\tau) d\tau = P\left( \hat{s}(\mathbf{x}^+) &gt; \hat{s}(\mathbf{x}^-) \right)\)</span>$
-Thus, the ROC-AUC is precisely the probability that a classifier assigns a higher score to a randomly chosen positive sample than to a randomly chosen negative sample.</p>
+Thus, the ROC-AUC is precisely the probability that a classifier assigns a higher score to a randomly chosen positive sample than to a randomly chosen negative sample.</li>
+</ul>
 <hr />
 <h3 id="q2-derive-the-f_beta-metric-from-the-weighted-harmonic-mean-of-precision-and-recall-why-does-the-arithmetic-mean-fail">Q2: Derive the <span class="arithmatex">\(F_\beta\)</span> metric from the weighted harmonic mean of Precision and Recall. Why does the arithmetic mean fail?<a class="headerlink" href="#q2-derive-the-f_beta-metric-from-the-weighted-harmonic-mean-of-precision-and-recall-why-does-the-arithmetic-mean-fail" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4574,18 +4614,24 @@ Inverting both sides gives the exact <span class="arithmatex">\(F_\beta\)</span>
 $<span class="arithmatex">\(F_\beta = (1 + \beta^2) \frac{P \cdot R}{\beta^2 P + R}\)</span>$</p>
 <hr />
 <h3 id="q3-contrast-platt-scaling-and-isotonic-regression-for-probability-calibration-when-should-each-be-chosen">Q3: Contrast Platt Scaling and Isotonic Regression for probability calibration. When should each be chosen?<a class="headerlink" href="#q3-contrast-platt-scaling-and-isotonic-regression-for-probability-calibration-when-should-each-be-chosen" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong>
-- <strong>Platt Scaling:</strong>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li>
+<p><strong>Platt Scaling:</strong>
   <em>Mechanism:</em> A parametric approach that transforms raw model output scores <span class="arithmatex">\(s(\mathbf{x})\)</span> into calibrated probabilities via a 2-parameter logistic sigmoid:
   $<span class="arithmatex">\(\hat{p} = \frac{1}{1 + \exp(As + B)}\)</span>$
   <em>Assumptions:</em> Assumes the uncalibrated scores follow an approximate Gaussian distribution within each class with equal variance, yielding a sigmoidal miscalibration profile.
   <em>Advantages:</em> Extremely robust against overfitting. Uses only 2 parameters (<span class="arithmatex">\(A, B\)</span>), making it highly effective on tiny validation sets (<span class="arithmatex">\(n &lt; 500\)</span>).
-  <em>Disadvantages:</em> Incapable of correcting non-sigmoidal distortion (e.g., multi-modal confidence errors produced by boosted decision trees).
-- <strong>Isotonic Regression:</strong>
+  <em>Disadvantages:</em> Incapable of correcting non-sigmoidal distortion (e.g., multi-modal confidence errors produced by boosted decision trees).</p>
+</li>
+<li>
+<p><strong>Isotonic Regression:</strong>
   <em>Mechanism:</em> A non-parametric piecewise-constant regression model that fits a monotonic step function <span class="arithmatex">\(m(s)\)</span> using the Pool Adjacent Violators Algorithm (PAVA).
   <em>Assumptions:</em> Only assumes <strong>monotonicity</strong>—that higher raw scores should correspond to higher empirical probabilities.
   <em>Advantages:</em> Completely flexible; can correct arbitrary monotonic distortions, making it ideal for GBDTs and Random Forests.
   <em>Disadvantages:</em> Prone to severe overfitting if the calibration dataset is small (<span class="arithmatex">\(n &lt; 1,000\)</span>). Can produce flat regions with identical probabilities.</p>
+</li>
+</ul>
 <hr />
 <h3 id="q4-derive-adjusted-r2-and-explain-why-it-can-decrease-when-a-new-feature-is-added-to-a-regression-model">Q4: Derive Adjusted <span class="arithmatex">\(R^2\)</span> and explain why it can decrease when a new feature is added to a regression model.<a class="headerlink" href="#q4-derive-adjusted-r2-and-explain-why-it-can-decrease-when-a-new-feature-is-added-to-a-regression-model" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong>
@@ -4605,17 +4651,17 @@ $<span class="arithmatex">\(R_{\text{adj}}^2 = 1 - (1 - R^2) \frac{n - 1}{n - p 
 When an uninformative feature is added, <span class="arithmatex">\(p\)</span> increases by 1, reducing the denominator <span class="arithmatex">\((n - p - 1)\)</span>. The factor <span class="arithmatex">\(\frac{n - 1}{n - p - 1} &gt; 1\)</span> inflates the subtracted penalty. If the reduction in <span class="arithmatex">\(\text{SS}_{\text{res}}\)</span> is smaller than the penalty imposed by losing one degree of freedom, <span class="arithmatex">\(R_{\text{adj}}^2\)</span> strictly drops. It penalizes non-informative feature expansion.</p>
 <hr />
 <h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> You can construct a Confusion Matrix and define Accuracy, Precision, Recall, and Specificity.</li>
-<li>[ ] <strong>L2:</strong> You can derive the <span class="arithmatex">\(F_\beta\)</span> score formula from the weighted harmonic mean.</li>
-<li>[ ] <strong>L3:</strong> You can state the Wilcoxon-Mann-Whitney theorem for ROC-AUC: <span class="arithmatex">\(P(\hat{s}(x^+) &gt; \hat{s}(x^-))\)</span>.</li>
-<li>[ ] <strong>L4:</strong> You can explain mathematically why ROC-AUC fails under extreme class imbalance while PR-AUC succeeds.</li>
-<li>[ ] <strong>L5:</strong> You can calculate Expected Calibration Error (ECE) across reliability bins.</li>
-<li>[ ] <strong>L6:</strong> You can explain the mechanics of Platt Scaling and Isotonic Regression via PAVA.</li>
-<li>[ ] <strong>L7:</strong> You can define MSE, RMSE, MAE, and MedAE, explaining their trade-offs regarding outlier sensitivity.</li>
-<li>[ ] <strong>L8:</strong> You can derive Adjusted <span class="arithmatex">\(R^2\)</span> from unbiased variance degrees of freedom.</li>
-<li>[ ] <strong>L9:</strong> You can explain why MAPE is asymmetric and state the sMAPE formula.</li>
-<li>[ ] <strong>L10:</strong> You can implement a vectorized metric suite including rank-sum ROC-AUC and ECE from scratch in NumPy.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> You can construct a Confusion Matrix and define Accuracy, Precision, Recall, and Specificity.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> You can derive the <span class="arithmatex">\(F_\beta\)</span> score formula from the weighted harmonic mean.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> You can state the Wilcoxon-Mann-Whitney theorem for ROC-AUC: <span class="arithmatex">\(P(\hat{s}(x^+) &gt; \hat{s}(x^-))\)</span>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> You can explain mathematically why ROC-AUC fails under extreme class imbalance while PR-AUC succeeds.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> You can calculate Expected Calibration Error (ECE) across reliability bins.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> You can explain the mechanics of Platt Scaling and Isotonic Regression via PAVA.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> You can define MSE, RMSE, MAE, and MedAE, explaining their trade-offs regarding outlier sensitivity.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> You can derive Adjusted <span class="arithmatex">\(R^2\)</span> from unbiased variance degrees of freedom.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> You can explain why MAPE is asymmetric and state the sMAPE formula.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> You can implement a vectorized metric suite including rank-sum ROC-AUC and ECE from scratch in NumPy.</li>
 </ul>
 
 

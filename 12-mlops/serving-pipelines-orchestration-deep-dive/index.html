@@ -4212,10 +4212,12 @@
         Client["Client / API Gateway"] --&gt;|gRPC / REST / SSE| K8sDeployment
         K8sDeployment --&gt; HPA["KEDA / HPA\n(GPU Metric Autoscaling)"]
     end</code></pre>
-<p>The enterprise MLOps lifecycle centers on three critical boundaries:
-1. <strong>The Feature Consistency Boundary</strong>: Bridging offline analytical data engines (optimized for multi-terabyte scans) and online operational databases (optimized for sub-5 millisecond key-value lookups) without temporal feature leakage.
-2. <strong>The Lineage &amp; Governance Boundary</strong>: Structuring model provenance, metrics, hyperparameters, weights, schemas, and approval workflows from exploratory training to production rollout.
-3. <strong>The Distributed Compute Boundary</strong>: Scheduling inference workloads dynamically across Kubernetes pods, utilizing hardware acceleration (GPUs, Tensor Cores), and coordinating continuous batching and multi-worker execution.</p>
+<p>The enterprise MLOps lifecycle centers on three critical boundaries:</p>
+<ol>
+<li><strong>The Feature Consistency Boundary</strong>: Bridging offline analytical data engines (optimized for multi-terabyte scans) and online operational databases (optimized for sub-5 millisecond key-value lookups) without temporal feature leakage.</li>
+<li><strong>The Lineage &amp; Governance Boundary</strong>: Structuring model provenance, metrics, hyperparameters, weights, schemas, and approval workflows from exploratory training to production rollout.</li>
+<li><strong>The Distributed Compute Boundary</strong>: Scheduling inference workloads dynamically across Kubernetes pods, utilizing hardware acceleration (GPUs, Tensor Cores), and coordinating continuous batching and multi-worker execution.</li>
+</ol>
 <hr />
 <h2 id="2-model-serving-paradigms">2. Model Serving Paradigms<a class="headerlink" href="#2-model-serving-paradigms" title="Permanent link">&para;</a></h2>
 <p>Selecting an inference serving paradigm requires navigating trade-offs between <strong>latency</strong>, <strong>throughput</strong>, <strong>hardware utilization</strong>, and <strong>system complexity</strong>.</p>
@@ -4289,14 +4291,18 @@
     Backend1 --&gt; Response["Client Response"]
     Backend2 --&gt; Response
     Backend3 --&gt; Response</code></pre>
-<p>Key architectural capabilities of Triton:
-- <strong>Concurrent Model Execution</strong>: Multiple models or multiple instances of the same model run simultaneously across one or more physical GPUs.
-- <strong>Dynamic Batching</strong>: Queues requests from different client threads over a configurable microsecond window (<code>max_queue_delay_microseconds: 5000</code>), assembling them into single Tensor Core GEMM operations without modifying client payloads.
-- <strong>Model Ensembles &amp; BLS (Business Logic Scripting)</strong>: Chains tokenizers, image normalizers, neural models, and post-processing steps inside the server memory space, eliminating network serialization hops between pipeline stages.</p>
+<p>Key architectural capabilities of Triton:</p>
+<ul>
+<li><strong>Concurrent Model Execution</strong>: Multiple models or multiple instances of the same model run simultaneously across one or more physical GPUs.</li>
+<li><strong>Dynamic Batching</strong>: Queues requests from different client threads over a configurable microsecond window (<code>max_queue_delay_microseconds: 5000</code>), assembling them into single Tensor Core GEMM operations without modifying client payloads.</li>
+<li><strong>Model Ensembles &amp; BLS (Business Logic Scripting)</strong>: Chains tokenizers, image normalizers, neural models, and post-processing steps inside the server memory space, eliminating network serialization hops between pipeline stages.</li>
+</ul>
 <h3 id="22-llm-serving-continuous-batching-pagedattention">2.2 LLM Serving: Continuous Batching &amp; PagedAttention<a class="headerlink" href="#22-llm-serving-continuous-batching-pagedattention" title="Permanent link">&para;</a></h3>
-<p>Traditional static or dynamic mini-batching fails catastrophically for Large Language Models (LLMs) due to the autoregressive generation loop:
-1. Different prompts produce wildly varying output token lengths (<span class="arithmatex">\(L_{\text{out}} \in [1, 2048]\)</span>).
-2. Static batching forces all sequences in a batch to wait for the slowest sequence to finish generation (<strong>the straggler problem</strong>), wasting GPU FLOPs on padding tokens:</p>
+<p>Traditional static or dynamic mini-batching fails catastrophically for Large Language Models (LLMs) due to the autoregressive generation loop:</p>
+<ol>
+<li>Different prompts produce wildly varying output token lengths (<span class="arithmatex">\(L_{\text{out}} \in [1, 2048]\)</span>).</li>
+<li>Static batching forces all sequences in a batch to wait for the slowest sequence to finish generation (<strong>the straggler problem</strong>), wasting GPU FLOPs on padding tokens:</li>
+</ol>
 <div class="arithmatex">\[\text{Efficiency}_{\text{static}} = \frac{\sum_{i=1}^{B} L_i}{B \times \max_{i}(L_i)} \ll 1.0\]</div>
 <pre class="mermaid"><code>flowchart TD
     subgraph StaticBatching["Static Batching (Massive Padding Waste)"]
@@ -4309,10 +4315,12 @@
         Iter1["Iteration t: [Seq 1 Token 2, Seq 2 Token 8, Seq 4 Token 1]"]
         Iter2["Iteration t+1: Seq 3 finished -&gt; Evict &amp; Insert Seq 5 immediately!"]
     end</code></pre>
-<p><strong>Continuous Batching (Iteration-Level Scheduling)</strong> (<a href="https://www.usenix.org/conference/osdi22/presentation/yu">Yu et al., 2022 (Orca)</a>) resolves this:
-- The batch is evaluated at the granularity of a <strong>single token generation step</strong> rather than an entire sequence.
-- Sequences that emit the end-of-sequence token (<code>&lt;eos&gt;</code>) are evicted immediately. New incoming requests are inserted into the running batch on the very next token iteration.
-- Combined with <strong>PagedAttention</strong> (<a href="https://arxiv.org/abs/2309.06180">Kwon et al., 2023</a>), which partitions Key-Value (KV) cache memory into non-contiguous physical memory blocks (mirroring OS virtual memory pages), GPU memory fragmentation drops from <span class="arithmatex">\(&gt;60\%\)</span> to <span class="arithmatex">\(&lt;4\%\)</span>, increasing serving throughput by <span class="arithmatex">\(2-4\times\)</span>.</p>
+<p><strong>Continuous Batching (Iteration-Level Scheduling)</strong> (<a href="https://www.usenix.org/conference/osdi22/presentation/yu">Yu et al., 2022 (Orca)</a>) resolves this:</p>
+<ul>
+<li>The batch is evaluated at the granularity of a <strong>single token generation step</strong> rather than an entire sequence.</li>
+<li>Sequences that emit the end-of-sequence token (<code>&lt;eos&gt;</code>) are evicted immediately. New incoming requests are inserted into the running batch on the very next token iteration.</li>
+<li>Combined with <strong>PagedAttention</strong> (<a href="https://arxiv.org/abs/2309.06180">Kwon et al., 2023</a>), which partitions Key-Value (KV) cache memory into non-contiguous physical memory blocks (mirroring OS virtual memory pages), GPU memory fragmentation drops from <span class="arithmatex">\(&gt;60\%\)</span> to <span class="arithmatex">\(&lt;4\%\)</span>, increasing serving throughput by <span class="arithmatex">\(2-4\times\)</span>.</li>
+</ul>
 <hr />
 <h2 id="3-experiment-tracking-model-registry-mlflow">3. Experiment Tracking &amp; Model Registry (MLflow)<a class="headerlink" href="#3-experiment-tracking-model-registry-mlflow" title="Permanent link">&para;</a></h2>
 <p>Without disciplined tracking, machine learning development collapses into untracked scripts, lost artifact paths, and unreproducible weights.</p>
@@ -4434,9 +4442,11 @@
 </span></code></pre></div>
 <hr />
 <h2 id="4-feature-stores-dual-storage-point-in-time-correctness">4. Feature Stores: Dual-Storage &amp; Point-in-Time Correctness<a class="headerlink" href="#4-feature-stores-dual-storage-point-in-time-correctness" title="Permanent link">&para;</a></h2>
-<p>In production ML, feature engineering is plagued by two classic failure modes:
-1. <strong>Online/Offline Skew</strong>: Features are computed in SQL/Spark for batch training, but reimplemented in Python/C++ for online serving. Subtly mismatched logic degrades model performance.
-2. <strong>Temporal Feature Leakage (Lookahead Bias)</strong>: During training set creation, feature values computed <em>after</em> the prediction event timestamp are accidentally joined, giving the model access to future information it will never observe in production.</p>
+<p>In production ML, feature engineering is plagued by two classic failure modes:</p>
+<ol>
+<li><strong>Online/Offline Skew</strong>: Features are computed in SQL/Spark for batch training, but reimplemented in Python/C++ for online serving. Subtly mismatched logic degrades model performance.</li>
+<li><strong>Temporal Feature Leakage (Lookahead Bias)</strong>: During training set creation, feature values computed <em>after</em> the prediction event timestamp are accidentally joined, giving the model access to future information it will never observe in production.</li>
+</ol>
 <pre class="mermaid"><code>flowchart TD
     subgraph DataSources["Streaming &amp; Batch Data Ingestion"]
         BatchDB["Warehouse (Snowflake / BigQuery)"]
@@ -4553,7 +4563,7 @@
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="s2">"owner"</span><span class="p">:</span> <span class="s2">"mlops-platform"</span><span class="p">,</span>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="s2">"depends_on_past"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="s2">"email_on_failure"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="s2">"email"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"mlops-alerts@enterprise.com"</span><span class="p">],</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="s2">"email"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"mlops-alerts@example.com"</span><span class="p">],</span>
 </span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="s2">"retries"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
 </span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="s2">"retry_delay"</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
 </span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">}</span>
@@ -4629,10 +4639,12 @@
     GPUOperator -.-&gt;|Manages Drivers &amp; Metrics| Pod1
     GPUOperator -.-&gt;|Manages Drivers &amp; Metrics| Pod2</code></pre>
 <h3 id="61-the-nvidia-gpu-operator">6.1 The NVIDIA GPU Operator<a class="headerlink" href="#61-the-nvidia-gpu-operator" title="Permanent link">&para;</a></h3>
-<p>Managing GPUs manually on bare-metal Kubernetes nodes is fraught with failure (driver updates require node rebuilds, CUDA library mismatches halt containers). The <strong>NVIDIA GPU Operator</strong> automates this via Kubernetes DaemonSets:
-- Automatically installs the host NVIDIA driver kernel modules.
-- Deploys the NVIDIA Container Toolkit hook.
-- Runs the <strong>Data Center GPU Manager (DCGM) Exporter</strong>, which exposes fine-grained hardware metrics (VRAM saturation, GPU compute utilization, tensor core temperature, PCIe bandwidth) to Prometheus.</p>
+<p>Managing GPUs manually on bare-metal Kubernetes nodes is fraught with failure (driver updates require node rebuilds, CUDA library mismatches halt containers). The <strong>NVIDIA GPU Operator</strong> automates this via Kubernetes DaemonSets:</p>
+<ul>
+<li>Automatically installs the host NVIDIA driver kernel modules.</li>
+<li>Deploys the NVIDIA Container Toolkit hook.</li>
+<li>Runs the <strong>Data Center GPU Manager (DCGM) Exporter</strong>, which exposes fine-grained hardware metrics (VRAM saturation, GPU compute utilization, tensor core temperature, PCIe bandwidth) to Prometheus.</li>
+</ul>
 <h3 id="62-production-kubernetes-deployment-manifest-with-gpu-limits">6.2 Production Kubernetes Deployment Manifest with GPU Limits<a class="headerlink" href="#62-production-kubernetes-deployment-manifest-with-gpu-limits" title="Permanent link">&para;</a></h3>
 <p>Below is a production-grade Kubernetes manifest configuring an inference deployment, GPU resource pinning, liveness/readiness probes, shared memory mounting, and Horizontal Pod Autoscaling (HPA):</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
@@ -4774,65 +4786,75 @@
 <hr />
 <h2 id="8-staff-level-technical-interview-questions">8. Staff-Level Technical Interview Questions<a class="headerlink" href="#8-staff-level-technical-interview-questions" title="Permanent link">&para;</a></h2>
 <h3 id="q1-compare-static-mini-batching-dynamic-mini-batching-and-continuous-batching-with-pagedattention-why-is-continuous-batching-necessary-for-llm-serving">Q1: Compare static mini-batching, dynamic mini-batching, and continuous batching with PagedAttention. Why is continuous batching necessary for LLM serving?<a class="headerlink" href="#q1-compare-static-mini-batching-dynamic-mini-batching-and-continuous-batching-with-pagedattention-why-is-continuous-batching-necessary-for-llm-serving" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>Static Mini-batching</strong>: Assembles a fixed number of samples <span class="arithmatex">\(B\)</span> before execution. In LLM autoregressive generation, sequences terminate at different token lengths. Shorter sequences must be padded with <code>&lt;pad&gt;</code> tokens while waiting for the longest sequence to finish, wasting memory bandwidth and FLOPs.
-- <strong>Dynamic Mini-batching</strong>: Aggregates independent client requests across a short time window <span class="arithmatex">\(W\)</span> into a single forward pass. Effective for static-shape or single-pass models (ResNet, BERT), but still suffers from the straggler problem in multi-step autoregressive generation.
-- <strong>Continuous Batching (Iteration-Level Scheduling)</strong>: Evaluates requests at the granularity of individual token generation steps. Sequences that complete generation are evicted immediately, freeing KV cache slots, while newly arrived requests enter the batch on the next token iteration.
-- <strong>PagedAttention</strong>: Partitions the continuous KV cache memory into fixed-size physical blocks (e.g. 16 tokens per block). Instead of reserving maximum sequence length memory upfront (<span class="arithmatex">\(L_{\max} = 4096\)</span>), memory is allocated on-demand in non-contiguous pages, reducing memory fragmentation from <span class="arithmatex">\(&gt;60\%\)</span> to <span class="arithmatex">\(&lt;4\%\)</span>, drastically increasing concurrent batch capacity.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>Static Mini-batching</strong>: Assembles a fixed number of samples <span class="arithmatex">\(B\)</span> before execution. In LLM autoregressive generation, sequences terminate at different token lengths. Shorter sequences must be padded with <code>&lt;pad&gt;</code> tokens while waiting for the longest sequence to finish, wasting memory bandwidth and FLOPs.</li>
+<li><strong>Dynamic Mini-batching</strong>: Aggregates independent client requests across a short time window <span class="arithmatex">\(W\)</span> into a single forward pass. Effective for static-shape or single-pass models (ResNet, BERT), but still suffers from the straggler problem in multi-step autoregressive generation.</li>
+<li><strong>Continuous Batching (Iteration-Level Scheduling)</strong>: Evaluates requests at the granularity of individual token generation steps. Sequences that complete generation are evicted immediately, freeing KV cache slots, while newly arrived requests enter the batch on the next token iteration.</li>
+<li><strong>PagedAttention</strong>: Partitions the continuous KV cache memory into fixed-size physical blocks (e.g. 16 tokens per block). Instead of reserving maximum sequence length memory upfront (<span class="arithmatex">\(L_{\max} = 4096\)</span>), memory is allocated on-demand in non-contiguous pages, reducing memory fragmentation from <span class="arithmatex">\(&gt;60\%\)</span> to <span class="arithmatex">\(&lt;4\%\)</span>, drastically increasing concurrent batch capacity.</li>
+</ul>
 <hr />
 <h3 id="q2-how-does-a-feature-store-achieve-point-in-time-correctness-and-what-mathematical-guarantee-does-it-provide-against-lookahead-bias">Q2: How does a Feature Store achieve point-in-time correctness, and what mathematical guarantee does it provide against lookahead bias?<a class="headerlink" href="#q2-how-does-a-feature-store-achieve-point-in-time-correctness-and-what-mathematical-guarantee-does-it-provide-against-lookahead-bias" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
 Point-in-time correctness guarantees that for any observation record <span class="arithmatex">\(i\)</span> occurring at timestamp <span class="arithmatex">\(T_{E, i}\)</span>, the feature vector <span class="arithmatex">\(\mathbf{x}_i\)</span> joined for training incorporates state updates known strictly at or prior to <span class="arithmatex">\(T_{E, i}\)</span>:</p>
 <div class="arithmatex">\[\mathbf{x}_i = \{ f_j(T^*) \mid T^* = \max \{ t \le T_{E, i} \mid \text{update}(f_j, t) \} \}\]</div>
-<p>In an offline feature store (like Feast), this is achieved through an <strong>As-Of Join</strong>:
-1. The training entity dataframe (containing entity IDs and event timestamps) is joined with historical feature event logs.
-2. The join condition filters out any feature record with <span class="arithmatex">\(T_{\text{feature}} &gt; T_{\text{entity}}\)</span>.
-3. For records where <span class="arithmatex">\(T_{\text{feature}} \le T_{\text{entity}}\)</span>, it computes a window partition ordered by <span class="arithmatex">\(T_{\text{feature}}\)</span> descending and retains row rank 1.
-This provides a formal guarantee that feature states post-dating the decision boundary cannot leak into model training weights.</p>
+<p>In an offline feature store (like Feast), this is achieved through an <strong>As-Of Join</strong>:</p>
+<ol>
+<li>The training entity dataframe (containing entity IDs and event timestamps) is joined with historical feature event logs.</li>
+<li>The join condition filters out any feature record with <span class="arithmatex">\(T_{\text{feature}} &gt; T_{\text{entity}}\)</span>.</li>
+<li>For records where <span class="arithmatex">\(T_{\text{feature}} \le T_{\text{entity}}\)</span>, it computes a window partition ordered by <span class="arithmatex">\(T_{\text{feature}}\)</span> descending and retains row rank 1.
+This provides a formal guarantee that feature states post-dating the decision boundary cannot leak into model training weights.</li>
+</ol>
 <hr />
 <h3 id="q3-contrast-celeryexecutor-and-kubernetesexecutor-in-apache-airflow-for-machine-learning-workflows">Q3: Contrast CeleryExecutor and KubernetesExecutor in Apache Airflow for machine learning workflows.<a class="headerlink" href="#q3-contrast-celeryexecutor-and-kubernetesexecutor-in-apache-airflow-for-machine-learning-workflows" title="Permanent link">&para;</a></h3>
-<p><strong>Model Answer:</strong><br />
-- <strong>CeleryExecutor</strong>:
-  - <em>Mechanism</em>: Tasks are pushed to a message broker (RabbitMQ/Redis) and picked up by a fixed pool of persistent Celery worker nodes.
-  - <em>Pros</em>: Low task initiation latency (workers are pre-warmed, no container spin-up overhead).
-  - <em>Cons</em>: Resource isolation is poor (tasks share the host Python environment and libraries); cannot dynamically scale heterogeneous resources (e.g. allocating 1 GPU to Task A, 64 GB RAM to Task B) without maintaining separate static worker queues.
-- <strong>KubernetesExecutor</strong>:
-  - <em>Mechanism</em>: The Airflow scheduler calls the Kubernetes API to launch an isolated pod for every individual task instance.
-  - <em>Pros</em>: Complete dependency isolation (each task runs its own Docker image); dynamic resource elasticity (pods request exact CPU, RAM, and GPU requirements and terminate immediately upon completion, saving cloud spend).
-  - <em>Cons</em>: Higher task startup latency (<span class="arithmatex">\(10 - 45\text{ seconds}\)</span> to schedule pod, pull image, and initialize).
-  - <em>Staff Recommendation</em>: For production ML workloads involving heavy dependencies, conflicting library versions, and intermittent GPU training/evaluation runs, <code>KubernetesExecutor</code> (or <code>KubernetesPodOperator</code>) is strongly preferred.</p>
+<p><strong>Model Answer:</strong>  </p>
+<ul>
+<li><strong>CeleryExecutor</strong>:</li>
+<li><em>Mechanism</em>: Tasks are pushed to a message broker (RabbitMQ/Redis) and picked up by a fixed pool of persistent Celery worker nodes.</li>
+<li><em>Pros</em>: Low task initiation latency (workers are pre-warmed, no container spin-up overhead).</li>
+<li><em>Cons</em>: Resource isolation is poor (tasks share the host Python environment and libraries); cannot dynamically scale heterogeneous resources (e.g. allocating 1 GPU to Task A, 64 GB RAM to Task B) without maintaining separate static worker queues.</li>
+<li><strong>KubernetesExecutor</strong>:</li>
+<li><em>Mechanism</em>: The Airflow scheduler calls the Kubernetes API to launch an isolated pod for every individual task instance.</li>
+<li><em>Pros</em>: Complete dependency isolation (each task runs its own Docker image); dynamic resource elasticity (pods request exact CPU, RAM, and GPU requirements and terminate immediately upon completion, saving cloud spend).</li>
+<li><em>Cons</em>: Higher task startup latency (<span class="arithmatex">\(10 - 45\text{ seconds}\)</span> to schedule pod, pull image, and initialize).</li>
+<li><em>Staff Recommendation</em>: For production ML workloads involving heavy dependencies, conflicting library versions, and intermittent GPU training/evaluation runs, <code>KubernetesExecutor</code> (or <code>KubernetesPodOperator</code>) is strongly preferred.</li>
+</ul>
 <hr />
 <h3 id="q4-how-should-kubernetes-autoscaling-be-designed-for-gpu-inference-services-why-is-standard-cpumemory-horizontal-pod-autoscaling-hpa-insufficient">Q4: How should Kubernetes autoscaling be designed for GPU inference services? Why is standard CPU/Memory Horizontal Pod Autoscaling (HPA) insufficient?<a class="headerlink" href="#q4-how-should-kubernetes-autoscaling-be-designed-for-gpu-inference-services-why-is-standard-cpumemory-horizontal-pod-autoscaling-hpa-insufficient" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
-Standard Kubernetes HPA triggers scaling based on container CPU or RAM percentage. In GPU inference serving:
-1. <strong>CPU/RAM Disconnect</strong>: A model serving pod may utilize <span class="arithmatex">\(&lt;10\%\)</span> host CPU and stable RAM while its GPU Tensor Cores are fully saturated at <span class="arithmatex">\(100\%\)</span> capacity with incoming inference batches. Standard HPA will never trigger a scale-up event.
-2. <strong>GPU Metric Integration</strong>: Production GPU autoscaling requires exporting hardware metrics via the NVIDIA DCGM Exporter into Prometheus.
-3. <strong>Leading vs. Lagging Indicators</strong>: GPU utilization is a lagging indicator. Under sudden traffic spikes, queuing delay increases before GPU utilization changes.
-4. <strong>Optimal Architecture</strong>: Deploy <strong>KEDA (Kubernetes Event-driven Autoscaling)</strong> targeting two metrics:
-   - <em>Primary (Leading)</em>: Inference request queue depth or incoming HTTP/gRPC request rate (QPS per replica via Prometheus).
-   - <em>Secondary (Lagging)</em>: Average GPU compute engine saturation (<code>DCGM_FI_DEV_GPU_UTIL &gt; 75%</code>).</p>
+Standard Kubernetes HPA triggers scaling based on container CPU or RAM percentage. In GPU inference serving:</p>
+<ol>
+<li><strong>CPU/RAM Disconnect</strong>: A model serving pod may utilize <span class="arithmatex">\(&lt;10\%\)</span> host CPU and stable RAM while its GPU Tensor Cores are fully saturated at <span class="arithmatex">\(100\%\)</span> capacity with incoming inference batches. Standard HPA will never trigger a scale-up event.</li>
+<li><strong>GPU Metric Integration</strong>: Production GPU autoscaling requires exporting hardware metrics via the NVIDIA DCGM Exporter into Prometheus.</li>
+<li><strong>Leading vs. Lagging Indicators</strong>: GPU utilization is a lagging indicator. Under sudden traffic spikes, queuing delay increases before GPU utilization changes.</li>
+<li><strong>Optimal Architecture</strong>: Deploy <strong>KEDA (Kubernetes Event-driven Autoscaling)</strong> targeting two metrics:</li>
+<li><em>Primary (Leading)</em>: Inference request queue depth or incoming HTTP/gRPC request rate (QPS per replica via Prometheus).</li>
+<li><em>Secondary (Lagging)</em>: Average GPU compute engine saturation (<code>DCGM_FI_DEV_GPU_UTIL &gt; 75%</code>).</li>
+</ol>
 <hr />
 <h3 id="q5-in-mlflow-what-is-the-purpose-of-model-signatures-and-what-operational-risks-arise-if-they-are-omitted">Q5: In MLflow, what is the purpose of Model Signatures, and what operational risks arise if they are omitted?<a class="headerlink" href="#q5-in-mlflow-what-is-the-purpose-of-model-signatures-and-what-operational-risks-arise-if-they-are-omitted" title="Permanent link">&para;</a></h3>
 <p><strong>Model Answer:</strong><br />
-An <strong>MLflow Model Signature</strong> defines the explicit data contract for model inputs and outputs:
-- It specifies column names, data types (e.g. <code>DataType.float32</code>, <code>DataType.string</code>), and structural shapes (e.g. tensor dimensions <code>[-1, 10]</code>).
-- <em>Operational Risks of Omission</em>:
-  1. <strong>Silent Type Coercion</strong>: Pandas or JSON parsers may cast a nullable integer ID into a floating-point number (<code>1001</code> <span class="arithmatex">\(\to\)</span> <code>1001.0</code>), silently altering hashing features or embeddings.
-  2. <strong>Dimension Mismatch</strong>: Upstream microservices adding or dropping an unannounced feature column will bypass preprocessing and crash deep learning matrix multiplication layers with opaque C++/CUDA errors (<code>RuntimeError: mat1 and mat2 shapes cannot be multiplied</code>).
-  3. <strong>Downstream Pipeline Breakage</strong>: Automated deployment gates cannot verify whether a candidate model version is backwards-compatible with active client payloads.</p>
+An <strong>MLflow Model Signature</strong> defines the explicit data contract for model inputs and outputs:</p>
+<ul>
+<li>It specifies column names, data types (e.g. <code>DataType.float32</code>, <code>DataType.string</code>), and structural shapes (e.g. tensor dimensions <code>[-1, 10]</code>).</li>
+<li><em>Operational Risks of Omission</em>:</li>
+<li><strong>Silent Type Coercion</strong>: Pandas or JSON parsers may cast a nullable integer ID into a floating-point number (<code>1001</code> <span class="arithmatex">\(\to\)</span> <code>1001.0</code>), silently altering hashing features or embeddings.</li>
+<li><strong>Dimension Mismatch</strong>: Upstream microservices adding or dropping an unannounced feature column will bypass preprocessing and crash deep learning matrix multiplication layers with opaque C++/CUDA errors (<code>RuntimeError: mat1 and mat2 shapes cannot be multiplied</code>).</li>
+<li><strong>Downstream Pipeline Breakage</strong>: Automated deployment gates cannot verify whether a candidate model version is backwards-compatible with active client payloads.</li>
+</ul>
 <hr />
 <h2 id="9-mastery-ladder">9. Mastery Ladder<a class="headerlink" href="#9-mastery-ladder" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <strong>L1:</strong> Differentiate between real-time, streaming, and batch inference serving architectures.</li>
-<li>[ ] <strong>L2:</strong> Explain the operational mechanisms of NVIDIA Triton Inference Server's dynamic batcher.</li>
-<li>[ ] <strong>L3:</strong> Explain why static batching causes GPU FLOP waste in LLM generation, and how continuous batching eliminates it.</li>
-<li>[ ] <strong>L4:</strong> Describe the memory allocation mechanics of PagedAttention and how it mitigates KV cache fragmentation.</li>
-<li>[ ] <strong>L5:</strong> Instrument an end-to-end PyTorch training run with MLflow tracking, parameter logging, and model signature capture.</li>
-<li>[ ] <strong>L6:</strong> Explain the phenomenon of temporal feature leakage and formulate the As-Of Join mathematical condition.</li>
-<li>[ ] <strong>L7:</strong> Define Feast Entities, FeatureViews, and configure online Redis materialization with offline Parquet sources.</li>
-<li>[ ] <strong>L8:</strong> Construct an idempotent Apache Airflow DAG executing GPU training workloads via <code>KubernetesPodOperator</code>.</li>
-<li>[ ] <strong>L9:</strong> Author a production Kubernetes Deployment manifest utilizing the NVIDIA GPU Operator, shared memory mounts, and health probes.</li>
-<li>[ ] <strong>L10:</strong> Configure KEDA and Prometheus to autoscale a Kubernetes GPU inference deployment based on queue depth and DCGM metrics.</li>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L1:</strong> Differentiate between real-time, streaming, and batch inference serving architectures.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L2:</strong> Explain the operational mechanisms of NVIDIA Triton Inference Server's dynamic batcher.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L3:</strong> Explain why static batching causes GPU FLOP waste in LLM generation, and how continuous batching eliminates it.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L4:</strong> Describe the memory allocation mechanics of PagedAttention and how it mitigates KV cache fragmentation.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L5:</strong> Instrument an end-to-end PyTorch training run with MLflow tracking, parameter logging, and model signature capture.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L6:</strong> Explain the phenomenon of temporal feature leakage and formulate the As-Of Join mathematical condition.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L7:</strong> Define Feast Entities, FeatureViews, and configure online Redis materialization with offline Parquet sources.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L8:</strong> Construct an idempotent Apache Airflow DAG executing GPU training workloads via <code>KubernetesPodOperator</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L9:</strong> Author a production Kubernetes Deployment manifest utilizing the NVIDIA GPU Operator, shared memory mounts, and health probes.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>L10:</strong> Configure KEDA and Prometheus to autoscale a Kubernetes GPU inference deployment based on queue depth and DCGM metrics.</li>
 </ul>
 
 

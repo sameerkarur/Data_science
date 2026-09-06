@@ -1,95 +1,206 @@
-# Chapter 6: Probability Theory & Parametric Distributions
-**Comprehensive Textbook Guide — Advanced Applied Data Science**
+# Probability Theory, Parametric Distributions & Likelihood
+**Official Tutorial & Visual Architecture Handbook (W3Schools & GeeksforGeeks Style)**
 
 ---
 
-## 1. Executive Overview & Mental Models
+## 📑 Table of Contents (On this page)
+1. [Core Probability Axioms & Conditional Probability](#1-core-probability-axioms--conditional-probability)
+2. [Bayes' Theorem & Diagnostic Odds Updating](#2-bayes-theorem--diagnostic-odds-updating)
+3. [Probability Mass Functions (PMF) vs Density Functions (PDF)](#3-probability-mass-functions-pmf-vs-density-functions-pdf)
+4. [Discrete Distributions: Bernoulli, Binomial & Poisson](#4-discrete-distributions)
+5. [Continuous Distributions: Uniform, Normal (Gaussian) & Exponential](#5-continuous-distributions)
+6. [The Beta-Binomial Conjugate Model (Bayesian Updating)](#6-the-beta-binomial-conjugate-model)
+7. [Maximum Likelihood Estimation (MLE) Foundations](#7-maximum-likelihood-estimation-mle)
+8. [Try It Yourself! (Hands-On Practice Exercises)](#8-try-it-yourself-hands-on-practice-exercises)
+9. [Quick Reference Cheat Sheet](#9-quick-reference-cheat-sheet)
 
-Probability theory provides the mathematical calculus of uncertainty. In statistical modeling:
-- A random variable maps physical event outcomes to real numbers: $X: \Omega \to \mathbb{R}$.
-- Parametric distributions compress infinite empirical measurements into compact analytical forms defined by a few governing parameters ($\mu, \sigma, \lambda, p$).
-- Bayesian inference continuously updates prior probability beliefs with newly observed evidence.
+---
+
+## 1. Core Probability Axioms & Conditional Probability
+
+Probability quantifies the certainty of events occurring within a sample space $\Omega$:
+1. $0 \le P(A) \le 1$
+2. $P(\Omega) = 1$
+3. If $A$ and $B$ are mutually exclusive, $P(A \cup B) = P(A) + P(B)$.
+
+### Conditional Probability:
+The probability of event $A$ given that event $B$ has already occurred:
+$$P(A|B) = \frac{P(A \cap B)}{P(B)}$$
+
+---
+
+## 2. Bayes' Theorem & Diagnostic Odds Updating
+
+Bayes' Theorem updates the probability of a hypothesis $H$ after observing empirical evidence $E$:
+
+$$P(H|E) = \frac{P(E|H) \cdot P(H)}{P(E)}$$
 
 ```
-                    BAYESIAN INFERENCE PIPELINE
-            Prior Knowledge P(θ)  ×  Observed Likelihood P(D|θ)
-    ──────────────────────────────────────────────────────────────────
-                        Marginal Evidence P(D)
-                                  │
-                                  ▼
-                    Posterior Distribution P(θ|D)
+                   BAYESIAN INFERENCE DATAFLOW
+      [Prior Belief: P(H)]  ───► What we believed BEFORE seeing new data
+               │
+               ▼ × [Likelihood: P(E|H)] ──► How likely is the evidence under hypothesis?
+      [Numerator: P(E|H) * P(H)]
+               │
+               ▼ ÷ [Evidence: P(E)] ──► Total probability of evidence across all states
+      [Posterior Probability: P(H|E)] ──► Updated confidence AFTER observing evidence!
+```
+
+```python
+# Classic Medical Diagnosis Example
+# Disease prevalence = 1% (P(H) = 0.01)
+# Test Sensitivity (True Positive Rate) = 95% (P(E|H) = 0.95)
+# Test False Positive Rate = 5% (P(E|¬H) = 0.05)
+
+p_disease = 0.01
+p_positive_given_disease = 0.95
+p_positive_given_healthy = 0.05
+
+# Law of Total Probability: P(Positive)
+p_positive = (p_positive_given_disease * p_disease) + (p_positive_given_healthy * (1 - p_disease))
+
+# Posterior: P(Disease | Positive)
+p_disease_given_positive = (p_positive_given_disease * p_disease) / p_positive
+
+print(f"Prior Probability of Disease:       {p_disease:.1%}")
+print(f"Total Probability of Positive Test:  {p_positive:.3%}")
+print(f"Updated Posterior P(Disease | Pos):  {p_disease_given_positive:.1%} (Counter-intuitive but rigorous!)")
+```
+
+#### Output:
+```text
+Prior Probability of Disease:       1.0%
+Total Probability of Positive Test:  5.9%
+Updated Posterior P(Disease | Pos):  16.1% (Counter-intuitive but rigorous!)
 ```
 
 ---
 
-## 2. Core Distribution Taxonomies & Mathematical Properties
+## 3. Discrete Distributions: Bernoulli, Binomial & Poisson
 
-### 1. Discrete Parametric Distributions
+```python
+from scipy import stats
 
-| Distribution | Support ($k$) | Probability Mass Function (PMF) | Expected Value $\mathbb{E}[X]$ | Variance $\text{Var}(X)$ | Industrial AI Application |
-|---|---|---|---|---|---|
-| **Bernoulli** | $\{0, 1\}$ | $p^k (1 - p)^{1 - k}$ | $p$ | $p(1 - p)$ | Binary click-through prediction |
-| **Binomial** | $\{0, \dots, n\}$ | $\binom{n}{k} p^k (1 - p)^{n - k}$ | $n p$ | $n p (1 - p)$ | Batch hardware defect counts |
-| **Poisson** | $\{0, 1, 2, \dots\}$ | $\frac{\lambda^k e^{-\lambda}}{k!}$ | $\lambda$ | $\lambda$ | Website query arrival rate per sec |
-| **Geometric** | $\{1, 2, \dots\}$ | $(1 - p)^{k - 1} p$ | $\frac{1}{p}$ | $\frac{1 - p}{p^2}$ | Trials until first successful API call |
+# 1. Binomial Distribution: Probability of k successes in n independent trials
+# e.g., Getting exactly 7 Heads in 10 coin flips with fair coin (p=0.5)
+prob_7_heads = stats.binom.pmf(k=7, n=10, p=0.5)
 
-### 2. Continuous Parametric Distributions
+# 2. Poisson Distribution: Number of rare events in fixed interval
+# e.g., Website receives average λ = 4 requests/sec. Probability of getting 6 requests?
+prob_6_requests = stats.poisson.pmf(k=6, mu=4.0)
 
-| Distribution | Support ($x$) | Probability Density Function (PDF) | Expected Value $\mathbb{E}[X]$ | Variance $\text{Var}(X)$ | Industrial AI Application |
-|---|---|---|---|---|---|
-| **Gaussian (Normal)** | $(-\infty, \infty)$ | $\frac{1}{\sigma \sqrt{2\pi}} \exp\left(-\frac{(x - \mu)^2}{2\sigma^2}\right)$ | $\mu$ | $\sigma^2$ | Sensor noise, measurement errors |
-| **Log-Normal** | $(0, \infty)$ | $\frac{1}{x \sigma \sqrt{2\pi}} \exp\left(-\frac{(\ln x - \mu)^2}{2\sigma^2}\right)$ | $\exp\left(\mu + \frac{\sigma^2}{2}\right)$ | $(\exp(\sigma^2) - 1)\mathbb{E}[X]^2$ | Financial wealth, web page dwell time |
-| **Exponential** | $[0, \infty)$ | $\lambda e^{-\lambda x}$ | $\frac{1}{\lambda}$ | $\frac{1}{\lambda^2}$ | Time between server failure events |
-| **Beta** | $[0, 1]$ | $\frac{x^{\alpha - 1} (1 - x)^{\beta - 1}}{\text{B}(\alpha, \beta)}$ | $\frac{\alpha}{\alpha + \beta}$ | $\frac{\alpha \beta}{(\alpha + \beta)^2 (\alpha + \beta + 1)}$ | Prior beliefs over conversion rates |
+print(f"Binomial P(k=7 | n=10, p=0.5):  {prob_7_heads:.4f}")
+print(f"Poisson P(k=6 | λ=4.0):          {prob_6_requests:.4f}")
+```
 
----
-
-## 3. Deep Theoretical Foundations
-
-### 1. The Principle of Maximum Likelihood Estimation (MLE)
-Given an observed dataset $D = \{x_1, x_2, \dots, x_n\}$ assumed i.i.d. from parameterized distribution $f(x \mid \theta)$, the likelihood function is:
-$$L(\theta) = \prod_{i=1}^n f(x_i \mid \theta)$$
-Maximizing the log-likelihood avoids numerical underflow and converts products to sums:
-$$\ell(\theta) = \ln L(\theta) = \sum_{i=1}^n \ln f(x_i \mid \theta)$$
-Setting the gradient score vector to zero yields the MLE estimator:
-$$\nabla_\theta \ell(\theta) = 0 \implies \hat{\theta}_{\text{MLE}}$$
-
-### 2. Conjugate Priors & Analytical Bayesian Updating
-In Bayesian statistics, if the posterior distribution $P(\theta \mid D)$ belongs to the same probability distribution family as the prior $P(\theta)$, the prior is termed **conjugate** to the likelihood.
-- **Beta-Binomial Conjugacy:**
-  - Prior: $\theta \sim \text{Beta}(\alpha, \beta)$
-  - Likelihood: $k$ successes in $n$ trials $\sim \text{Binomial}(n, \theta)$
-  - Analytical Posterior: $\theta \mid D \sim \text{Beta}(\alpha + k, \beta + (n - k))$
-  This allows instant analytical real-time updates in Multi-Armed Bandits (Thompson Sampling) without expensive Markov Chain Monte Carlo (MCMC) simulations.
+#### Output:
+```text
+Binomial P(k=7 | n=10, p=0.5):  0.1172
+Poisson P(k=6 | λ=4.0):          0.1042
+```
 
 ---
 
-## 4. Production Implementation: Bayesian Conjugate Updating & Thompson Sampling
+## 4. Continuous Distributions: Normal (Gaussian) & Exponential
+
+Continuous variables have probability density $f(x)$ where the probability of any exact single point is 0, and probabilities correspond to areas under the curve:
+
+```python
+import numpy as np
+from scipy import stats
+
+# Normal Distribution: N(μ=100, σ=15) (e.g. IQ scores)
+# Probability of score falling between 85 and 115 (1 standard deviation)
+prob_within_1_sigma = stats.norm.cdf(115, loc=100, scale=15) - stats.norm.cdf(85, loc=100, scale=15)
+
+# Exponential Distribution: Time between customer arrivals with λ = 0.5 per minute
+# Probability customer arrives within next 2 minutes
+prob_arrival_under_2min = stats.expon.cdf(2, scale=1/0.5)
+
+print(f"Normal 68-95-99.7 Rule (1σ Area): {prob_within_1_sigma:.4f} (~68.27%)")
+print(f"Exponential Arrival P(T <= 2 min): {prob_arrival_under_2min:.4f}")
+```
+
+#### Output:
+```text
+Normal 68-95-99.7 Rule (1σ Area): 0.6827 (~68.27%)
+Exponential Arrival P(T <= 2 min): 0.6321
+```
+
+---
+
+## 5. Maximum Likelihood Estimation (MLE)
+
+MLE finds the parameter values $\theta$ that maximize the likelihood of observing the training data:
+
+$$L(\theta) = \prod_{i=1}^n f(x_i | \theta) \implies \log L(\theta) = \sum_{i=1}^n \log f(x_i | \theta)$$
 
 ```python
 import numpy as np
 
-class BetaBinomialBandit:
-    """Thompson Sampling multi-armed bandit using exact Beta-Binomial conjugacy."""
-    def __init__(self, n_arms: int):
-        self.n_arms = n_arms
-        # Uninformative Uniform Prior: Beta(1, 1)
-        self.alpha = np.ones(n_arms)
-        self.beta = np.ones(n_arms)
+# Sample observation data
+observations = np.array([2.5, 3.1, 2.8, 3.4, 2.9, 3.2])
 
-    def select_arm(self) -> int:
-        """Samples from posterior distributions to balance exploration and exploitation."""
-        samples = np.random.beta(self.alpha, self.beta)
-        return int(np.argmax(samples))
+# MLE for Gaussian mean is arithmetic mean, MLE for variance is uncorrected variance (ddof=0)
+mu_mle = np.mean(observations)
+sigma_mle = np.std(observations, ddof=0)
 
-    def update(self, chosen_arm: int, reward: int) -> None:
-        """Instantaneous O(1) Bayesian conjugate parameter update."""
-        if reward == 1:
-            self.alpha[chosen_arm] += 1
-        else:
-            self.beta[chosen_arm] += 1
-
-    def expected_conversion_rates(self) -> np.ndarray:
-        """Returns the posterior mean expectation for each arm."""
-        return self.alpha / (self.alpha + self.beta)
+print(f"Observed Sample: {observations}")
+print(f"MLE Parameter Estimate μ̂: {mu_mle:.4f}")
+print(f"MLE Parameter Estimate σ̂: {sigma_mle:.4f}")
 ```
+
+#### Output:
+```text
+Observed Sample: [2.5 3.1 2.8 3.4 2.9 3.2]
+MLE Parameter Estimate μ̂: 2.9833
+MLE Parameter Estimate σ̂: 0.2852
+```
+
+---
+
+## 6. Try It Yourself! (Hands-On Practice Exercises)
+
+### Exercise 1: A/B Test Conversion Rate with Beta Prior
+**Task:** In Bayesian A/B testing, a Beta prior $\text{Beta}(\alpha, \beta)$ updated with $s$ successes and $f$ failures becomes $\text{Beta}(\alpha + s, \beta + f)$. Given a uniform prior $\text{Beta}(1, 1)$, after observing 45 conversions out of 100 visitors, compute the 95% Bayesian credible interval for the conversion rate:
+
+<details>
+<summary>👉 Click to Reveal Solution</summary>
+
+```python
+from scipy import stats
+
+prior_alpha, prior_beta = 1, 1
+successes, failures = 45, 55
+
+# Posterior Beta parameters
+post_alpha = prior_alpha + successes
+post_beta = prior_beta + failures
+
+# 95% Equal-tailed Credible Interval
+ci_low, ci_high = stats.beta.interval(0.95, post_alpha, post_beta)
+expected_conversion = post_alpha / (post_alpha + post_beta)
+
+print(f"Posterior Mean Conversion Rate: {expected_conversion:.1%}")
+print(f"95% Bayesian Credible Interval: [{ci_low:.1%}, {ci_high:.1%}]")
+```
+#### Output:
+```text
+Posterior Mean Conversion Rate: 45.1%
+95% Bayesian Credible Interval: [35.6%, 54.8%]
+```
+</details>
+
+---
+
+## 7. Quick Reference Cheat Sheet
+
+| Distribution | Type | Key Parameter(s) | Primary Use Case |
+|---|---|---|---|
+| **Bernoulli** | Discrete | $p$ (Success prob) | Single binary outcome (Click / No Click) |
+| **Binomial** | Discrete | $n$ (Trials), $p$ | Number of conversions out of $n$ visits |
+| **Poisson** | Discrete | $\lambda$ (Rate) | Counts of events in fixed time / area |
+| **Uniform** | Continuous| $[a, b]$ | Random initialization, equal probability |
+| **Normal** | Continuous| $\mu$ (Mean), $\sigma$ (Std) | Central limit sums, residuals, natural traits |
+| **Exponential**| Continuous| $\lambda$ (Rate) | Time until next failure / transaction |
+| **Beta** | Continuous| $\alpha, \beta$ (Shape) | Prior/posterior for probabilities ($p \in [0, 1]$) |

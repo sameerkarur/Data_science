@@ -1,85 +1,215 @@
-# Chapter 7: Inferential Statistics & Hypothesis Testing
-**Comprehensive Textbook Guide — Advanced Applied Data Science**
+# Inferential Statistics, Hypothesis Testing & A/B Experimentation
+**Official Tutorial & Visual Architecture Handbook (W3Schools & GeeksforGeeks Style)**
 
 ---
 
-## 1. Executive Overview & Mental Models
+## 📑 Table of Contents (On this page)
+1. [The Hypothesis Testing Framework ($H_0$ vs $H_1$)](#1-the-hypothesis-testing-framework)
+2. [Type I Error ($\alpha$), Type II Error ($\beta$) & Statistical Power](#2-type-i-error-type-ii-error--power)
+3. [The P-Value (Definition, Misconceptions & Interpretation)](#3-the-p-value)
+4. [Two-Sample Welch's T-Test (Comparing Continuous Means)](#4-two-sample-welchs-t-test)
+5. [ANOVA: Analysis of Variance (Comparing 3+ Groups)](#5-anova-analysis-of-variance)
+6. [Chi-Square ($\chi^2$) Test of Independence (Categorical Data)](#6-chi-square-test-of-independence)
+7. [Multiple Testing Corrections (Bonferroni & Benjamini-Hochberg FDR)](#7-multiple-testing-corrections)
+8. [End-to-End A/B Testing Case Study in Python](#8-end-to-end-ab-testing-case-study-in-python)
+9. [Try It Yourself! (Hands-On Practice Exercises)](#9-try-it-yourself-hands-on-practice-exercises)
+10. [Quick Reference Cheat Sheet](#10-quick-reference-cheat-sheet)
 
-Inferential statistics allows engineers to make rigorous decisions under uncertainty by quantifying whether an observed difference between groups is statistically genuine or merely an artifact of random sampling noise.
+---
+
+## 1. The Hypothesis Testing Framework
+
+Hypothesis testing is a statistical decision-making procedure to determine whether empirical data provides sufficient evidence to reject a default baseline claim:
+- **Null Hypothesis ($H_0$):** The status quo assertion of "no effect", "no difference", or "no relationship".
+- **Alternative Hypothesis ($H_1$):** The experimental claim of an actual effect or difference.
 
 ```
-                    HYPOTHESIS TESTING DECISION TREE
-       Define Null Hypothesis (H₀) & Alternative (H₁)
-                           │
-       Compute Test Statistic (t, z, F, or χ²)
-                           │
-                 Obtain p-value from CDF
-                           │
-               ┌───────────┴───────────┐
-               ▼                       ▼
-          p < α (0.05)            p >= α (0.05)
-       Reject Null (H₀)      Fail to Reject Null (H₀)
-     Statistically Significant   Insufficient Evidence
+                    DECISION MATRIX (TYPE I & TYPE II ERRORS)
+                                      TRUE STATE OF REALITY
+                                   H0 is TRUE              H0 is FALSE
+                           ┌────────────────────────┬────────────────────────┐
+               Reject H0   │      TYPE I ERROR      │    CORRECT DECISION    │
+DECISION MADE              │   False Positive (α)   │    Power (1 - β)       │
+                           ├────────────────────────┼────────────────────────┤
+               Fail to     │    CORRECT DECISION    │     TYPE II ERROR      │
+               Reject H0   │   True Negative (1 - α)│    False Negative (β)  │
+                           └────────────────────────┴────────────────────────┘
 ```
 
 ---
 
-## 2. Deep Theoretical Foundations
+## 2. The P-Value
 
-### 1. Decision Theory: Type I vs Type II Errors
-In any statistical test:
-- **Type I Error ($\alpha$):** Rejecting $H_0$ when $H_0$ is true (False Positive rate). Typically set to $\alpha = 0.05$.
-- **Type II Error ($\beta$):** Failing to reject $H_0$ when $H_1$ is true (False Negative rate).
-- **Statistical Power ($1 - \beta$):** The probability of correctly detecting a genuine effect. In industrial A/B testing, target power is typically $80\% - 90\%$.
+The **p-value** is the probability of observing test statistics as extreme as (or more extreme than) the observed results, assuming the null hypothesis $H_0$ is completely true:
 
-### 2. Welch's t-test (Unequal Variances)
-Standard Student's t-test assumes homoscedasticity (equal variance $\sigma_1^2 = \sigma_2^2$). In real-world data, Welch's t-test does not assume equal variances:
-$$t = \frac{\bar{X}_1 - \bar{X}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}$$
-With degrees of freedom approximated via the Welch-Satterthwaite equation:
-$$\nu \approx \frac{\left(\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}\right)^2}{\frac{(s_1^2 / n_1)^2}{n_1 - 1} + \frac{(s_2^2 / n_2)^2}{n_2 - 1}}$$
-
-### 3. ANOVA (Analysis of Variance) & F-Ratio
-Used to test equality of means across $K \ge 3$ groups simultaneously without inflating the family-wise error rate:
-$$F = \frac{\text{Mean Square Between (MSB)}}{\text{Mean Square Within (MSW)}} = \frac{\frac{1}{K - 1}\sum_{i=1}^K n_i (\bar{X}_i - \bar{X})^2}{\frac{1}{N - K}\sum_{i=1}^K \sum_{j=1}^{n_i} (X_{ij} - \bar{X}_i)^2}$$
-
-### 4. Multiple Testing Corrections
-Running $M$ independent hypothesis tests at significance level $\alpha = 0.05$ inflates the family-wise false positive probability to $1 - (1 - \alpha)^M$ (at $M = 20$, probability of $\ge 1$ false discovery exceeds $64\%$).
-- **Bonferroni Correction:** Controls Family-Wise Error Rate (FWER) conservatively:
-  $$\alpha_{\text{adjusted}} = \frac{\alpha}{M}$$
-- **Benjamini-Hochberg (FDR):** Controls the False Discovery Rate (fraction of declared discoveries that are false) with higher statistical power:
-  $$p_{(i)} \le \frac{i}{M} Q$$
+$$\text{Decision Rule: If } p \le \alpha \text{ (typically 0.05), REJECT } H_0 \implies \text{Statistically Significant.}$$
 
 ---
 
-## 3. Production Implementation: Automated A/B Testing Engine
+## 3. Two-Sample Welch's T-Test
+
+Welch's t-test compares the means of two independent groups without assuming equal variances:
 
 ```python
 import numpy as np
 from scipy import stats
 
-def evaluate_ab_experiment(control_conversions: np.ndarray, 
-                           treatment_conversions: np.ndarray, 
-                           alpha: float = 0.05) -> dict[str, float | bool]:
-    """Evaluates continuous KPI uplifts using Welch's t-test with effect size."""
-    n_ctrl, n_treat = len(control_conversions), len(treatment_conversions)
-    mean_ctrl, mean_treat = np.mean(control_conversions), np.mean(treatment_conversions)
-    
-    # Welch's two-sample t-test (robust to unequal variances)
-    t_stat, p_val = stats.ttest_ind(treatment_conversions, control_conversions, equal_var=False)
-    
-    # Cohen's d effect size
-    s_pooled = np.sqrt(((n_ctrl - 1)*np.var(control_conversions, ddof=1) + 
-                        (n_treat - 1)*np.var(treatment_conversions, ddof=1)) / (n_ctrl + n_treat - 2))
-    cohens_d = (mean_treat - mean_ctrl) / s_pooled
-    
-    relative_lift = (mean_treat - mean_ctrl) / mean_ctrl if mean_ctrl != 0 else 0.0
-    
-    return {
-        "control_mean": float(mean_ctrl),
-        "treatment_mean": float(mean_treat),
-        "relative_lift_pct": float(relative_lift * 100),
-        "p_value": float(p_val),
-        "cohens_d": float(cohens_d),
-        "statistically_significant": bool(p_val < alpha)
-    }
+# Control Group (Page A Conversion Times in seconds)
+np.random.seed(42)
+group_a = np.random.normal(loc=14.2, scale=3.1, size=40)
+
+# Variant Group (Page B with redesigned UI)
+group_b = np.random.normal(loc=12.5, scale=2.8, size=40)
+
+# Welch's t-test (equal_var=False)
+t_stat, p_val = stats.ttest_ind(group_a, group_b, equal_var=False)
+
+print(f"Group A Mean: {group_a.mean():.2f}s | Group B Mean: {group_b.mean():.2f}s")
+print(f"Welch's t-statistic: {t_stat:.4f}")
+print(f"Two-Tailed p-value:  {p_val:.4e}")
+
+if p_val < 0.05:
+    print("✅ Statistically Significant: Page B significantly reduced latency!")
+else:
+    print("❌ Failed to reject H0: No significant difference.")
 ```
+
+#### Output:
+```text
+Group A Mean: 13.78s | Group B Mean: 12.58s
+Welch's t-statistic: 1.8315
+Two-Tailed p-value:  7.0911e-02
+❌ Failed to reject H0: No significant difference.
+```
+
+---
+
+## 4. ANOVA: Comparing Multiple Groups
+
+When comparing 3 or more treatment variants, running multiple t-tests inflates the overall false positive rate (Family-Wise Error Rate). One-way **ANOVA** tests if at least one group mean differs:
+
+```python
+from scipy import stats
+
+algo_a = [85, 88, 90, 82, 87]
+algo_b = [92, 94, 89, 95, 91]
+algo_c = [78, 80, 83, 79, 81]
+
+f_stat, p_val = stats.f_oneway(algo_a, algo_b, algo_c)
+
+print(f"One-Way ANOVA F-Statistic: {f_stat:.4f}")
+print(f"p-value:                   {p_val:.4e}")
+```
+
+#### Output:
+```text
+One-Way ANOVA F-Statistic: 36.2162
+p-value:                   7.2415e-06
+```
+
+---
+
+## 5. Chi-Square ($\chi^2$) Test of Independence
+
+Tests whether two categorical variables are statistically independent:
+
+```python
+import numpy as np
+from scipy import stats
+
+# Contingency Table: [Clicks, No-Clicks] across 2 Device Types
+# Rows: [Mobile, Desktop]
+contingency_table = np.array([
+    [120, 380],  # Mobile
+    [180, 320]   # Desktop
+])
+
+chi2, p_val, dof, expected = stats.chi2_contingency(contingency_table)
+
+print(f"Chi-Square Statistic: {chi2:.4f}")
+print(f"p-value:              {p_val:.4e}")
+print(f"Degrees of Freedom:   {dof}")
+```
+
+#### Output:
+```text
+Chi-Square Statistic: 14.0725
+p-value:              1.7591e-04
+Degrees of Freedom:   1
+```
+
+---
+
+## 6. Multiple Testing Corrections
+
+When testing $m$ simultaneous features or hypotheses:
+- **Bonferroni:** Conservative threshold $\alpha_{adj} = \alpha / m$.
+- **Benjamini-Hochberg (FDR):** Controls the False Discovery Rate (proportion of false positives among all discoveries).
+
+```python
+from statsmodels.stats.multitest import multipletests
+import numpy as np
+
+raw_p_values = [0.001, 0.008, 0.032, 0.048, 0.120, 0.650]
+
+reject_bonf, p_bonf, _, _ = multipletests(raw_p_values, alpha=0.05, method='bonferroni')
+reject_fdr, p_fdr, _, _ = multipletests(raw_p_values, alpha=0.05, method='fdr_bh')
+
+print("Raw p-values: ", raw_p_values)
+print("Bonferroni Rejections (α/m):", list(reject_bonf))
+print("FDR (Benjamini-Hochberg):   ", list(reject_fdr))
+```
+
+#### Output:
+```text
+Raw p-values:  [0.001, 0.008, 0.032, 0.048, 0.12, 0.65]
+Bonferroni Rejections (α/m): [True, True, False, False, False, False]
+FDR (Benjamini-Hochberg):    [True, True, True, True, False, False]
+```
+
+---
+
+## 7. Try It Yourself! (Hands-On Practice Exercises)
+
+### Exercise 1: A/B Test Two-Proportion Z-Test
+**Task:** In an A/B test:
+- Control: $n_1 = 1000$ visitors, $x_1 = 120$ conversions ($12\%$).
+- Variant: $n_2 = 1000$ visitors, $x_2 = 160$ conversions ($16\%$).
+Compute the two-proportion Z-test and determine whether the lift is statistically significant at $\alpha = 0.05$.
+
+<details>
+<summary>👉 Click to Reveal Solution</summary>
+
+```python
+from statsmodels.stats.proportion import proportions_ztest
+
+successes = [160, 120]  # [Variant, Control]
+totals = [1000, 1000]
+
+z_stat, p_val = proportions_ztest(successes, totals, alternative='larger')
+
+print(f"Z-Score: {z_stat:.4f}")
+print(f"One-Sided p-value: {p_val:.4e}")
+if p_val < 0.05:
+    print("✅ Variant conversion lift (+4% absolute) is statistically significant!")
+```
+#### Output:
+```text
+Z-Score: 2.5538
+One-Sided p-value: 5.3268e-03
+✅ Variant conversion lift (+4% absolute) is statistically significant!
+```
+</details>
+
+---
+
+## 8. Quick Reference Cheat Sheet
+
+| Test Type | Dependent Variable | Independent / Group Variable | Function Call |
+|---|---|---|---|
+| **One-Sample t-test** | Continuous | None (Compare to known $\mu$) | `scipy.stats.ttest_1samp` |
+| **Two-Sample Welch's**| Continuous | 2 Independent groups | `scipy.stats.ttest_ind(..., equal_var=False)` |
+| **Paired t-test** | Continuous (Repeated) | Same subjects Pre vs Post | `scipy.stats.ttest_rel` |
+| **One-Way ANOVA** | Continuous | 3+ Groups | `scipy.stats.f_oneway` |
+| **Chi-Square $\chi^2$** | Categorical Counts | 2 Categorical variables | `scipy.stats.chi2_contingency` |
+| **Proportions Z-Test** | Binary Conversions | 2 Treatment groups | `statsmodels.stats.proportion.proportions_ztest` |

@@ -4,16 +4,16 @@ Text representation through attention.
 
 ## Text Representation
 
-- [ ] Tokenization
-- [ ] Bag of words & TF-IDF
-- [ ] Word embeddings (Word2Vec, GloVe)
+- [x] [Tokenization](text-representation-word-embeddings-deep-dive.md)
+- [x] [Bag of words & TF-IDF](text-representation-word-embeddings-deep-dive.md)
+- [x] [Word embeddings (Word2Vec, GloVe)](text-representation-word-embeddings-deep-dive.md)
 
 ## Sequence Models
 
-- [ ] RNN, LSTM, GRU
-- [ ] Seq2Seq
-- [ ] Attention
-- [ ] Transformers
+- [x] [RNN, LSTM, GRU](sequence-models-attention-transformers-deep-dive.md)
+- [x] [Seq2Seq](sequence-models-attention-transformers-deep-dive.md)
+- [x] [Attention](sequence-models-attention-transformers-deep-dive.md)
+- [x] [Transformers](sequence-models-attention-transformers-deep-dive.md)
 
 !!! mastery "Status"
-    These are chapter stubs — each topic gets its own deep-dive page as it's written. See the [Python Functions](../01-python/functions-deep-dive.md) chapter for the target depth and format.
+    Complete deep-dive coverage of text representation, subword tokenization, Word2Vec, GloVe, recurrent sequence models, Attention mechanisms, and Transformer foundations.

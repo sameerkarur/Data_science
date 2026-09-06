@@ -136,7 +136,10 @@ nav:
       - "Deep-dive: Convolutional Foundations": 07-computer-vision/convolutional-foundations-deep-dive.md
       - "Deep-dive: Modern CNN Architectures & Transfer Learning": 07-computer-vision/modern-cnn-architectures-transfer-learning-deep-dive.md
       - "Deep-dive: Vision Tasks, ViT & Multimodal Vision": 07-computer-vision/vision-tasks-transformers-multimodal-deep-dive.md
-  - Book 8 – NLP: 08-nlp/index.md
+  - Book 8 – NLP:
+      - Overview: 08-nlp/index.md
+      - "Deep-dive: Text Representation & Word Embeddings": 08-nlp/text-representation-word-embeddings-deep-dive.md
+      - "Deep-dive: Sequence Models, Attention & Transformers": 08-nlp/sequence-models-attention-transformers-deep-dive.md
   - Book 9 – Transformers & LLMs: 09-transformers-llms/index.md
   - Book 10 – Generative AI: 10-generative-ai/index.md
   - Book 11 – AI Agents: 11-ai-agents/index.md

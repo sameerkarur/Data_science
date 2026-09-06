@@ -4,13 +4,13 @@ How to know if a model is actually good.
 
 ## Validation
 
-- [ ] Train/val/test split
-- [ ] Cross-validation
-- [ ] Bias & variance
-- [ ] Overfitting & underfitting
-- [ ] Regularization
-- [ ] Data/feature leakage
-- [ ] Class imbalance
+- [x] [Train/val/test split](model-validation-generalization-deep-dive.md)
+- [x] [Cross-validation](model-validation-generalization-deep-dive.md)
+- [x] [Bias & variance](model-validation-generalization-deep-dive.md)
+- [x] [Overfitting & underfitting](model-validation-generalization-deep-dive.md)
+- [x] [Regularization](model-validation-generalization-deep-dive.md)
+- [x] [Data/feature leakage](model-validation-generalization-deep-dive.md)
+- [x] [Class imbalance — full deep-dive](model-validation-generalization-deep-dive.md)
 
 ## Metrics
 

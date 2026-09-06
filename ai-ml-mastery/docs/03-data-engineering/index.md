@@ -11,9 +11,9 @@ The unglamorous 80% of ML work.
 
 ## Data Formats & Sources
 
-- [ ] CSV, JSON, Parquet
-- [ ] SQL & APIs
-- [ ] Databases & warehouses
+- [x] [CSV, JSON, Parquet](data-formats-storage-deep-dive.md#3-storage-formats-and-compression-codecs)
+- [x] [SQL & APIs](data-formats-storage-deep-dive.md#5-ingestion-protocols-rest-apis-rate-limiting-and-pagination)
+- [x] [Databases & warehouses](data-formats-storage-deep-dive.md#6-analytical-warehouses-and-lakehouse-architectures)
 
 ## Cleaning
 

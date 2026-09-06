@@ -34,7 +34,7 @@ VARIABLES_QUESTIONS = [
     _q("Section 2: Operators", "Use `round(3.14159, 2)` and `round(2.675, 2)` — print both.", "print(round(3.14159, 2), round(2.675, 2))"),
     _q("Section 2: Operators", "Compute absolute value with `abs(-42)` and `pow(2,8)`.", "print(abs(-42), pow(2, 8))"),
     _q("Section 2: Operators", "Assign augmented ops: `x=10`, then `x+=5`, `x*=2`. Print final x.", "x = 10\nx += 5\nx *= 2\nprint(x)"),
-    _q("Section 3: Strings", "Create multi-line string with triple quotes containing your name and course.", "bio = '''Sameer\nAIML Certificate'''\nprint(bio)"),
+    _q("Section 3: Strings", "Create multi-line string with triple quotes containing your name and course.", "bio = '''Student\nAIML Certificate'''\nprint(bio)"),
     _q("Section 3: Strings", "Slice `'Data Science'` to get `'Data'`, `'Science'`, and reverse full string.", "s = 'Data Science'\nprint(s[:4], s[5:], s[::-1])"),
     _q("Section 3: Strings", "Use f-string to print `Sales: $1234.5` formatted to 2 decimals.", "amount = 1234.5\nprint(f'Sales: ${amount:.2f}')"),
     _q("Section 3: Strings", "Split `'a,b,c,d'` on comma and join back with `'-'`.", "parts = 'a,b,c,d'.split(',')\nprint('-'.join(parts))"),

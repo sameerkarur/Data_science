@@ -1,11 +1,11 @@
-# Python Data Structures & Algorithmic Complexity
-**Comprehensive Architectural Guide & Execution Foundations**
+# Chapter 3: Python Data Structures & Algorithmic Complexity
+**Comprehensive Textbook Guide — Advanced Python & Scientific Computing**
 
 ---
 
-## 📌 Executive Architecture & Visual Flowchart
+## 1. Executive Overview & Mental Models
 
-Python provides core data structures optimized for different memory layouts and algorithmic access patterns.
+Data structures are physical layouts in memory designed to enforce specific access, insertion, and deletion characteristics. Choosing between a continuous pointer array (`list`), an open-addressed hash table (`dict`, `set`), or a ring buffer (`deque`) can alter pipeline throughput by several orders of magnitude.
 
 ```
        DYNAMIC LIST (PyListObject)              HASH TABLE (PyDictObject)
@@ -21,60 +21,118 @@ Python provides core data structures optimized for different memory layouts and 
 
 ---
 
-## 🧭 Deep Theoretical Foundations
+## 2. Architectural Flowchart: Hash Table Insertion & Open Addressing
 
-### 1. Python `list` Over-Allocation Algorithm
-CPython lists are variable-length arrays of object pointers (`PyObject**`). When appending items, CPython grows the underlying array using an over-allocation formula:
-$$	ext{new\_allocated} = 	ext{new\_size} + (	ext{new\_size} \gg 3) + (	ext{new\_size} < 9 \,?\, 3 : 6)$$
-This guarantees that while individual reallocations cost $O(n)$, the **amortized cost per append operation is $O(1)$**.
-
-### 2. Modern Hash Table Architecture (`dict` & `set`)
-Since Python 3.6+, dictionaries are compact and preserve insertion order:
-- **Indices Array:** Dense hash bucket array mapping hash modulus to entry indices.
-- **Entries Array:** Contiguous array of entries stored in exact chronological insertion order: `[me_hash, me_key, me_value]`.
-- **Collision Resolution:** Open addressing with perturbation-driven pseudo-random probing sequence:
-  $$j = (5j + 1 + 	ext{perturb}) \pmod{2^k}$$
-
-### 3. Timsort: Python's Sorting Engine
-Python's `list.sort()` and `sorted()` implement Timsort, a hybrid stable sorting algorithm combining **Insertion Sort** (for small chunks or "runs", $n \le 64$) and **Merge Sort** with galloping mode optimization. It runs in $O(n)$ time on already-sorted or nearly-sorted data.
-
----
-
-## 💻 Production Implementation: High-Performance Queues & Heaps
-
-```python
-from collections import deque
-import heapq
-
-# 1. Double-Ended Queue (deque): O(1) pops and appends from both ends
-# (Unlike lists which require O(n) memory shifts for pop(0))
-stream_buffer = deque(maxlen=5)
-for i in range(10):
-    stream_buffer.append(i)
-print(f"Rolling Window Buffer: {list(stream_buffer)}")  # [5, 6, 7, 8, 9]
-
-# 2. Min-Heap Priority Queue: O(log k) top-k selection
-data_stream = [54, 12, 89, 43, 76, 23, 99, 1]
-# Find top 3 largest elements in O(n log k) instead of O(n log n) full sort
-top_3_largest = heapq.nlargest(3, data_stream)
-print(f"Top 3 Values: {top_3_largest}")  # [99, 89, 76]
+```
+                     HASH TABLE INSERTION & PROBING PIPELINE
+                     
+       Key Insertion: d["batch_size"] = 64
+                           │
+                           ▼
+                 1. Compute 64-bit Hash Value
+                    h = hash("batch_size") = 0x5a7b3c2e1f0...
+                           │
+                           ▼
+                 2. Modulo Table Size Mask
+                    bucket_index = h & (table_size - 1)
+                           │
+                           ▼
+                 3. Inspect Bucket State
+                    ├── Empty? ──► Write entry into compact array & set index!
+                    │
+                    └── Occupied?
+                         ├── Same Key? ──► Overwrite value pointer (Update)
+                         │
+                         └── Collision! ──► Open Addressing Perturbation Probing:
+                                           perturb >>= 5
+                                           i = (5*i + 1 + perturb) & mask
+                                           Repeat until empty slot found!
 ```
 
 ---
 
-## 📐 Computational Complexity Matrix
+## 3. Deep Theoretical Foundations
 
-| Data Structure | Lookup / Access | Insertion (Head) | Insertion (Tail) | Deletion |
-|---|---|---|---|---|
-| **Python List** | $O(1)$ | $O(n)$ (shift memory) | $O(1)$ amortized | $O(n)$ |
-| **Collections Deque** | $O(n)$ | $O(1)$ | $O(1)$ | $O(1)$ (at ends) |
-| **Dictionary (`dict`)** | $O(1)$ avg / $O(n)$ worst | $O(1)$ | $O(1)$ | $O(1)$ |
-| **Set (`set`)** | $O(1)$ avg / $O(n)$ worst | N/A | $O(1)$ | $O(1)$ |
-| **Heap (`heapq`)** | $O(1)$ min element | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ |
+### 1. Dynamic Array Growth Formula
+CPython lists are variable-length arrays of 64-bit object pointers (`PyObject**`). When appending items, the memory buffer expands according to an over-allocation formula:
+$$\text{new\_allocated} = \text{new\_size} + (\text{new\_size} \gg 3) + (\text{new\_size} < 9 \,?\, 3 : 6)$$
+This dynamic reallocation amortizes the cost of array resizing, guaranteeing that while an individual expansion takes $O(N)$ memory copying, $N$ sequential appends execute in $O(N)$ total time, yielding an **amortized cost of $O(1)$ per append**.
+
+### 2. Modern Compact Dictionary Architecture (PEP 468 & PyPy Design)
+Prior to Python 3.6, dictionaries consumed significant memory because each hash table row stored empty padding (`hash`, `key`, `value` tuples in a sparse table). Modern CPython separates the table into:
+1. **Indices Table (Sparse):** A simple byte/integer array of indices pointing to the entries array.
+2. **Entries Table (Dense):** A compact, contiguous array of entries `[me_hash, me_key, me_value]` stored in the exact chronological order of insertion.
+This innovation reduced dictionary memory consumption by 25–40% and enabled deterministic iteration ordering.
+
+### 3. Timsort Algorithm
+Python's built-in sorting routine (`list.sort()` and `sorted()`) implements **Timsort**, an adaptive hybrid sorting algorithm created by Tim Peters:
+- It scans the array for natural non-decreasing or strictly decreasing segments called **runs**.
+- Short runs are extended to a minimum run size (`minrun`, typically 32–64) and sorted using **Binary Insertion Sort**.
+- Runs are subsequently merged using **Merge Sort** with a stack-based merge policy maintaining balanced run sizes.
+- **Galloping Mode:** When elements from one run consistently win during merging, Timsort switches to exponential search (binary search) to skip large blocks of elements in $O(\log N)$ comparisons.
 
 ---
 
-## ⚠️ Common Pitfalls & Anti-Patterns
+## 4. Production Implementation: High-Throughput Buffers & Priority Queues
 
-1. **Using List as a FIFO Queue:** Calling `list.pop(0)` takes $O(n)$ time because every subsequent element in memory must be shifted left by one slot. Always use `collections.deque.popleft()` for $O(1)$ performance.
-2. **Hashing Mutable Objects:** Dictionaries and sets require keys to be hashable (immutable with consistent `__hash__` and `__eq__`). Attempting to use a `list` as a dict key raises `TypeError: unhashable type: 'list'`.
+```python
+from collections import deque
+import heapq
+from typing import Any
+
+class PriorityTaskQueue:
+    """Thread-safe priority scheduler using a min-heap."""
+    def __init__(self):
+        self._heap: list[tuple[int, int, Any]] = []
+        self._counter = 0  # Tie-breaker for identical priorities
+
+    def push(self, task: Any, priority: int) -> None:
+        """Pushes task with priority (lower number = higher priority)."""
+        heapq.heappush(self._heap, (priority, self._counter, task))
+        self._counter += 1
+
+    def pop(self) -> Any:
+        """Pops highest-priority task in O(log N) time."""
+        if not self._heap:
+            raise IndexError("Queue is empty")
+        priority, _, task = heapq.heappop(self._heap)
+        return task
+
+# Demonstrating O(1) Sliding Window with Deque vs O(N) List Slicing
+window = deque(maxlen=5)
+for sample in [10.2, 11.5, 12.1, 10.8, 11.9, 13.4, 14.1]:
+    window.append(sample)
+    # Average computed over sliding window without any list reallocations
+    rolling_mean = sum(window) / len(window)
+```
+
+---
+
+## 5. Algorithmic Complexity Comparison Matrix
+
+| Data Structure | Lookup / Access | Insertion (Head) | Insertion (Tail) | Deletion | Memory Overhead |
+|---|---|---|---|---|---|
+| **Python List** | $O(1)$ | $O(N)$ (Shifts memory) | $O(1)$ amortized | $O(N)$ (General) | Low (Contiguous pointers) |
+| **Collections Deque** | $O(N)$ | $O(1)$ | $O(1)$ | $O(1)$ (At ends) | Medium (Doubly linked blocks) |
+| **Dictionary (`dict`)** | $O(1)$ avg / $O(N)$ | $O(1)$ avg | $O(1)$ avg | $O(1)$ avg | High (Hash tables & indices) |
+| **Set (`set`)** | $O(1)$ avg / $O(N)$ | N/A | $O(1)$ avg | $O(1)$ avg | High (Hash table keys only) |
+| **Binary Heap (`heapq`)** | $O(1)$ min element | $O(\log N)$ | $O(\log N)$ | $O(\log N)$ | Low (Packed in list) |
+
+---
+
+## 6. Subtle Pitfalls, Bugs & Production Best Practices
+
+### Pitfall 1: Mutating a Collection While Iterating
+```python
+# BROKEN: Modifying collection indices causes skipped elements!
+records = [1, 2, 3, 4, 5]
+for item in records:
+    if item % 2 == 0:
+        records.remove(item)
+
+# PRODUCTION FIX: List comprehension or filtering into fresh memory:
+records_clean = [item for item in records if item % 2 != 0]
+```
+
+### Pitfall 2: Using Lists for Membership Testing
+Checking `if item in my_list` takes $O(N)$ linear scan time. If this check is executed inside a loop of size $M$, total complexity explodes to $O(M \cdot N)$. Converting the lookup collection to a `set` drops membership testing to $O(1)$ average time, collapsing overall complexity to $O(M)$.

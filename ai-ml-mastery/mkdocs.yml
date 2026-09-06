@@ -115,6 +115,7 @@ nav:
   - Book 4 – Classical ML:
       - Overview: 04-classical-ml/index.md
       - "Deep-dive: Linear Regression": 04-classical-ml/linear-regression-deep-dive.md
+      - "Deep-dive: Regularized & Polynomial Regression": 04-classical-ml/regularized-regression-deep-dive.md
   - Book 5 – ML Theory & Evaluation: 05-ml-theory/index.md
   - Book 6 – Deep Learning: 06-deep-learning/index.md
   - Book 7 – Computer Vision: 07-computer-vision/index.md

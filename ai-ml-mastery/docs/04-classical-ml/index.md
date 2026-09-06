@@ -5,8 +5,8 @@ Every algorithm walked through: intuition → math → from-scratch → library 
 ## Regression
 
 - [x] [Linear regression — full deep-dive](linear-regression-deep-dive.md)
-- [ ] Polynomial regression
-- [ ] Ridge / Lasso / Elastic Net
+- [x] [Polynomial regression](regularized-regression-deep-dive.md)
+- [x] [Ridge / Lasso / Elastic Net — full deep-dive](regularized-regression-deep-dive.md)
 
 ## Classification
 

@@ -23,11 +23,11 @@ Every concept here is built to connect directly to an ML mechanism.
 
 ## Calculus
 
-- [ ] Limits & derivatives
-- [ ] Partial derivatives & chain rule
-- [ ] Gradients, Jacobians, Hessians
-- [ ] Multivariable calculus
-- [ ] Optimization
+- [x] [Limits & derivatives](calculus-optimization-deep-dive.md#31-the-limit-and-single-variable-derivative)
+- [x] [Partial derivatives & chain rule](calculus-optimization-deep-dive.md#51-the-multivariate-chain-rule)
+- [x] [Gradients, Jacobians, Hessians](calculus-optimization-deep-dive.md#3-differential-calculus-limits-gradients-jacobians-and-hessians)
+- [x] [Multivariable calculus](calculus-optimization-deep-dive.md#4-taylor-series-approximations-and-convexity)
+- [x] [Optimization](calculus-optimization-deep-dive.md#6-optimization-algorithms-from-sgd-to-adam)
 
 ## Probability & Statistics
 

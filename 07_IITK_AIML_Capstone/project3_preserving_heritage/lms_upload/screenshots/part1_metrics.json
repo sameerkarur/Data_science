@@ -1,0 +1,26 @@
+{
+  "img_size": 160,
+  "batch": 32,
+  "max_per_class_train_subset": 350,
+  "num_classes": 10,
+  "classes": [
+    "altar",
+    "apse",
+    "bell_tower",
+    "column",
+    "dome(inner)",
+    "dome(outer)",
+    "flying_buttress",
+    "gargoyle",
+    "stained_glass",
+    "vault"
+  ],
+  "no_aug_best_val_accuracy": 0.9253224730491638,
+  "aug_best_val_accuracy": 0.9137814044952393,
+  "final_best_val_accuracy": 0.9253224730491638,
+  "final_best_val_loss": 0.2249237298965454,
+  "improvement_aug_minus_no_aug": -0.01154106855392456,
+  "best_checkpoint": "best_heritage_classifier.keras",
+  "saved_model": "heritage_structure_classifier_best.keras",
+  "aug_finetune_best_val_accuracy": 0.9232857823371887
+}

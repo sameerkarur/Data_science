@@ -1,0 +1,20 @@
+LMS upload — Project 2: Creating Designs by Leveraging OpenAI and Gradio UI
+==========================================================================
+
+1) Writeup
+   → Writeup_Netflix_Design_Generator.pdf
+
+2) Screenshots
+   → Screenshots_Netflix_Design_Generator.zip
+     (or individual PNGs in screenshots/)
+
+3) Source Code (ipynb only)
+   → netflix_design_generator.ipynb
+
+Optional Additional Remarks:
+Built a Gradio web app that generates Netflix-style marketing posters from text
+prompts using the OpenAI Images API (gpt-image-1) and Pillow. Includes size
+selector and sample thriller / romance campaign outputs.
+
+Folder:
+/Users/sameerkarur/Documents/Git/Data_science/06_IITK_AIML_Advanced_Generative_AI/lms_upload_project2

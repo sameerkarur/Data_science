@@ -28,3 +28,18 @@ materials/*/Ebooks.zip
 datasets/shared/Home_loan_data.csv
 **/Home_loan_data.csv
 !datasets/shared/Home_loan_data_sample.csv
+
+# Capstone raw downloaded datasets (>100MB zip files, already unpacked in project datasets)
+07_IITK_AIML_Capstone/datasets_raw/
+**/datasets_raw/
+*.crdownload
+
+# Capstone unzipped training image directories & heavy model weights (~50,000 files)
+07_IITK_AIML_Capstone/project1_autonomous_driving/data/part1/Images/
+07_IITK_AIML_Capstone/project1_autonomous_driving/data/part1/crops/
+07_IITK_AIML_Capstone/project3_preserving_heritage/data/part1*/
+07_IITK_AIML_Capstone/*/models/
+*.h5
+*.keras
+
+

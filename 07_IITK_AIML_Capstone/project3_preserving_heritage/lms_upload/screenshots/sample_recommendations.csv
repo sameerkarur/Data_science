@@ -1,0 +1,6 @@
+Place_Id,Place_Name,City,Category,cosine_distance,similarity
+349,Wisata Mangrove Tapak,Semarang,Cagar Alam,0.7287463832041773,0.2712536167958227
+362,Danau Rawa Pening,Semarang,Cagar Alam,0.7372713051695554,0.2627286948304446
+118,Museum Sonobudoyo Unit I,Yogyakarta,Budaya,0.7398290805880888,0.2601709194119112
+3,Dunia Fantasi,Jakarta,Taman Hiburan,0.7437638820819557,0.25623611791804435
+318,Situ Patenggang,Bandung,Cagar Alam,0.7588318598025802,0.24116814019741983

@@ -1,0 +1,134 @@
+AIML Capstone
+Preserving Heritage: Enhancing Tourism 
+with AI
+Business Scenario
+There are centuries old historical structures that preserve a country's and community's 
+history for future generations and promote tourism opportunities. 
+To improve tourism, a government agency decides to use advanced machine learning 
+techniques to monitor the condition of these historical structures and report if any of 
+them need maintenance. 
+Also, understanding customers (tourists) and their expectations is critical for eﬀective 
+marketing and promotion of tourism. A recommendation engine is an excellent way to 
+supplement existing marketing outreach. 
+Problem statement 1:
+Objectives
+XYZ Pvt. Ltd., a leading industry consulting ﬁrm, has been hired to help the cause by 
+developing an intelligent and automated AI model using TensorFlow that can predict the 
+category of a structure in an image. 
+Part 1:
+The second objective of this project requires you to perform exploratory data analysis 
+and develop a recommendation engine that will help tourists visit their places of interest. 
+Part 2:
+Part 1
+Dataset Snapshot
+Name of the dataset: Structures_dataset.zip
+ 
+This dataset is the training set and consists of images of historical structure.
+
+Dataset Snapshot
+Name of the dataset: dataset_test 
+ 
+This dataset is a test set and consists of images of historical structure.
+Project Task
+1. Plot sample images (8–10) from each class or category to gain a better understanding of 
+each class
+Hint: You can use the OpenCV open-source library for this task.
+2. Select a CNN architecture of your choice to train the CV model. Conﬁgure the architecture 
+for transfer learning, set up a TensorFlow environment for the selected backbone 
+architecture, and load pre-trained weights
+Note: Algorithm or architecture selection is an important step in the training of ML models. 
+So, select the one that performs the best on your dataset. 
+Deep learning
+Project Task
+3. Deep learning models tend to work well with large amounts (millions of images) of data, but 
+you might not always have enough data to train a deep learning model from scratch. 
+Transfer learning techniques allow you to train and ﬁne-tune large deep learning 
+architectures using limited data.
+Hint: For transfer learning, use pre-trained CNN weights and freeze all convolutional 
+layers' weights. 
+4. As of now, CNN architecture has been conﬁgured for the model. Modify the top of this 
+architecture to work with the dataset by: 
+• Adding an appropriate number of dense layers with an activation function
+• Using dropout for regularization
+Note: It is important to understand that these parameters are hyperparameters that 
+must be tuned. 
+Deep learning
+Project Task
+5. Compile the model with the right set of parameters like optimizer, loss function, and metric
+6. Deﬁne your callback class to stop the training once validation accuracy reaches a certain 
+number of your choice
+7. Set up the train or test dataset directories and review the number of image samples for the train 
+and test datasets for each class
+8. Train the model without augmentation while continuously monitoring the validation accuracy
+Deep learning
+Project Task
+10. Train the model with augmentation and keep monitoring validation accuracy 
+Note: Choose carefully the number of epochs, steps per epoch, and validation steps based on 
+your computer conﬁguration
+12. Visualize training and validation accuracy on the y-axis against each epoch on the x-axis to 
+see if the model overﬁts after a certain epoch
+Deep learning
+Part 2
+Dataset Snapshot
+Name of the dataset: user.csv
+Dataset Snapshot
+Name of the dataset: tourisim_with_id.csv
+Dataset Snapshot
+Name of the dataset: tourism_rating.csv
+Dataset Description
+Variables Description
+User_id Unique identiﬁcation for the user
+location Location the user visited
+age Age of the visitor
+user.csv: It includes user demographic data to help with recommendations.
+Dataset Description
+Variables Description
+Place_id Unique identiﬁcation for the place
+Place_name Name of the place
+Description Description of the place
+Category Category of the place
+City City for the tourist destination
+ Price Price of touring the place
+ Rating Rating of the destination
+Time_minute Time in minutes taken to tour the place
+Coordinate Coordinates of the place 
+Lat Latitude of the location
+Long Longitude of the location
+Toursim_with_id.csv: It provides details on the tourist attractions in
+Indonesia's ﬁve largest cities.
+Dataset Description
+Variables Description
+ user_id The user id of the visitor
+ place_id Unique identiﬁcation number of the place
+ place_rating Rating of the place
+Tourism_rating.csv: It has three columns: the user, the location, and the rating,
+which is used to build a recommendation engine based on the rating.
+Project Task
+1. Import all the datasets and perform preliminary inspections, such as:
+I. Check for missing values and duplicates
+II. Remove any anomalies found in the data
+2. To understand the tourism highlights better, you must explore the data in depth.
+I. Explore the user group that provides the tourism ratings by:
+• Analyzing the age distribution of users visiting the places and rating them 
+• Identifying the places where most of these users (tourists) are coming from
+Data science
+Project Task
+3. Next, let's explore the locations and categories of tourist spots.
+I. What are the diﬀerent categories of tourist spots?
+II. What kind of tourism each location is most famous or suitable for?
+III. Which city would be the best for a nature enthusiast to visit?
+4. To better understand tourism, you need to create a combined data with places and their user 
+ratings.
+Data science
+Project Task
+I. Use this data to ﬁgure out the spots that are most loved by the tourists. Also, which city 
+has the most loved tourist spots?
+II. Indonesia provides a wide range of tourist spots ranging from historical and cultural 
+beauties to advanced amusement parks. Among these, which category of places are users 
+liking the most?
+5. Build a recommender model for the system
+I. Use the above data to develop a collaborative ﬁltering model for recommendation and 
+use that to recommend other places to visit using the current tourist location (place 
+name)
+Data science
+Thank You

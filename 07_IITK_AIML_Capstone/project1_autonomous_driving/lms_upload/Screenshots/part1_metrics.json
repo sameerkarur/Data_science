@@ -1,0 +1,22 @@
+{
+  "val_accuracy": 0.6855172413793104,
+  "coarse_val_accuracy": 0.8993103448275862,
+  "n_train_crops": 2900,
+  "n_val_crops": 725,
+  "num_classes": 9,
+  "class_names": [
+    "articulated_truck",
+    "bicycle",
+    "bus",
+    "car",
+    "motorcycle",
+    "pedestrian",
+    "pickup_truck",
+    "single_unit_truck",
+    "work_van"
+  ],
+  "img_size": 160,
+  "phase_a_best_val_acc": 0.6745,
+  "phase_b_best_val_acc": 0.6828,
+  "boost_best_val_acc": 0.6855172514915466
+}

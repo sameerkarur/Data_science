@@ -37,9 +37,9 @@
 </head>
 <body>
   <header>
-    <span class="badge">IITK AIML · Open Learning Hub</span>
-    <h1>AI / ML Practice Hub</h1>
-    <p>From Python basics to Deep Learning &amp; GenAI — structured like the IIT Kanpur AIML program. Practice in Jupyter, prep for interviews, build portfolio projects.</p>
+    <span class="badge">IITK AIML · LMS-aligned</span>
+    <h1>Generative AI &amp; Machine Learning</h1>
+    <p>Professional Certificate Course — E&amp;ICT Academy, IIT Kanpur. Folders match the Simplilearn learning path.</p>
   </header>
 
   <main>
@@ -48,108 +48,193 @@
       <pre>git clone https://github.com/sameerkarur/Data_science.git
 cd Data_science
 pip install -r requirements.txt
-git lfs install && git lfs pull   # large Home Loan dataset
+git lfs install && git lfs pull
 jupyter notebook</pre>
       <p style="margin-top:0.75rem;color:var(--muted)">Open any <code>practice.ipynb</code> → read <code>basics.md</code> → solve → check <code>interview_qa.md</code></p>
     </div>
 
+    <h2>Mandatory courses</h2>
+
+    <section class="course" id="ind">
+      <div class="course-head" onclick="this.parentElement.classList.toggle('open')">
+        <h3>Induction Session</h3><span>Program induction</span>
+      </div>
+      <div class="course-body">
+        <div class="topic"><a href="00_Induction_Session/README.md">Induction Session for Professional Certificate Course in AI and Machine Learning</a></div>
+      </div>
+    </section>
+
     <section class="course open" id="c1">
       <div class="course-head" onclick="this.parentElement.classList.toggle('open')">
-        <h3>Course 1 — Python Foundations</h3><span>5 topics · 2 projects</span>
+        <h3>Course 1 — IITK AIML Foundations: Programming Refresher</h3><span>5 topics · 2 projects</span>
       </div>
       <div class="course-body">
         <div class="subtopics">
-          <div class="topic"><a href="Course_01_Python_Foundations/01_variables_datatypes/practice.ipynb">Variables &amp; Data Types</a><div class="files">basics · practice · interview</div></div>
-          <div class="topic"><a href="Course_01_Python_Foundations/02_control_flow_functions/practice.ipynb">Control Flow &amp; Functions</a><div class="files">basics · practice · interview</div></div>
-          <div class="topic"><a href="Course_01_Python_Foundations/03_data_structures/practice.ipynb">Data Structures</a><div class="files">basics · practice · interview</div></div>
-          <div class="topic"><a href="Course_01_Python_Foundations/04_oop_modules/practice.ipynb">OOP &amp; Modules</a><div class="files">basics · practice · interview</div></div>
-          <div class="topic"><a href="Course_01_Python_Foundations/05_file_io_exceptions/practice.ipynb">File I/O &amp; Exceptions</a><div class="files">basics · practice · interview</div></div>
+          <div class="topic"><a href="01_IITK_AIML_Foundations_Programming_Refresher/01_variables_datatypes/practice.ipynb">Variables &amp; Data Types</a><div class="files">basics · practice · interview</div></div>
+          <div class="topic"><a href="01_IITK_AIML_Foundations_Programming_Refresher/02_control_flow_functions/practice.ipynb">Control Flow &amp; Functions</a></div>
+          <div class="topic"><a href="01_IITK_AIML_Foundations_Programming_Refresher/03_data_structures/practice.ipynb">Data Structures</a></div>
+          <div class="topic"><a href="01_IITK_AIML_Foundations_Programming_Refresher/04_oop_modules/practice.ipynb">OOP &amp; Modules</a></div>
+          <div class="topic"><a href="01_IITK_AIML_Foundations_Programming_Refresher/05_file_io_exceptions/practice.ipynb">File I/O &amp; Exceptions</a></div>
         </div>
         <div class="projects"><h4>Projects</h4>
-          <a class="proj-list" href="Course_01_Python_Foundations/projects/Personal_Expense_Tracker/">Personal Expense Tracker</a>
-          <a class="proj-list" href="Course_01_Python_Foundations/projects/Task_Manager/">Task Manager</a>
+          <a class="proj-list" href="01_IITK_AIML_Foundations_Programming_Refresher/projects/Personal_Expense_Tracker/">Personal Expense Tracker</a>
+          <a class="proj-list" href="01_IITK_AIML_Foundations_Programming_Refresher/projects/Task_Manager/">Task Manager</a>
         </div>
       </div>
     </section>
 
     <section class="course" id="c2">
       <div class="course-head" onclick="this.parentElement.classList.toggle('open')">
-        <h3>Course 2 — Applied Data Science with Python</h3><span>11 topics · 220+ questions · 2 projects</span>
+        <h3>Course 2 — IITK AIML Core: Applied Data Science with Python</h3><span>11 topics · 2 projects</span>
       </div>
       <div class="course-body">
         <div class="subtopics">
-          <div class="topic"><a href="Course_02_Applied_Data_Science/01_intro_data_science/practice.ipynb">Intro to Data Science</a></div>
-          <div class="topic"><a href="Course_02_Applied_Data_Science/02_python_essentials/practice.ipynb">Python Essentials</a></div>
-          <div class="topic"><a href="Course_02_Applied_Data_Science/03_numpy/numpy_practice.ipynb">NumPy (45 Q)</a><div class="files">full guide from Python_Practice</div></div>
-          <div class="topic"><a href="Course_02_Applied_Data_Science/04_linear_algebra/practice.ipynb">Linear Algebra</a></div>
-          <div class="topic"><a href="Course_02_Applied_Data_Science/05_statistics_fundamentals/practice.ipynb">Statistics Fundamentals</a></div>
-          <div class="topic"><a href="Course_02_Applied_Data_Science/06_probability_distributions/practice.ipynb">Probability &amp; Distributions</a></div>
-          <div class="topic"><a href="Course_02_Applied_Data_Science/07_advanced_statistics/practice.ipynb">Advanced Statistics</a></div>
-          <div class="topic"><a href="Course_02_Applied_Data_Science/08_pandas/pandas_practice.ipynb">Pandas (70 Q)</a></div>
-          <div class="topic"><a href="Course_02_Applied_Data_Science/09_data_wrangling/practice.ipynb">Data Wrangling</a></div>
-          <div class="topic"><a href="Course_02_Applied_Data_Science/10_data_visualization/matplotlib/matplotlib_practice.ipynb">Matplotlib (45 Q)</a></div>
-          <div class="topic"><a href="Course_02_Applied_Data_Science/10_data_visualization/seaborn/seaborn_practice.ipynb">Seaborn (60 Q)</a></div>
-          <div class="topic"><a href="Course_02_Applied_Data_Science/11_regex_json_apis/practice.ipynb">Regex, JSON &amp; APIs</a></div>
+          <div class="topic"><a href="02_IITK_AIML_Core_Applied_Data_Science_with_Python/01_intro_data_science/practice.ipynb">Intro to Data Science</a></div>
+          <div class="topic"><a href="02_IITK_AIML_Core_Applied_Data_Science_with_Python/02_python_essentials/practice.ipynb">Python Essentials</a></div>
+          <div class="topic"><a href="02_IITK_AIML_Core_Applied_Data_Science_with_Python/03_numpy/numpy_practice.ipynb">NumPy (45 Q)</a></div>
+          <div class="topic"><a href="02_IITK_AIML_Core_Applied_Data_Science_with_Python/04_linear_algebra/practice.ipynb">Linear Algebra</a></div>
+          <div class="topic"><a href="02_IITK_AIML_Core_Applied_Data_Science_with_Python/05_statistics_fundamentals/practice.ipynb">Statistics Fundamentals</a></div>
+          <div class="topic"><a href="02_IITK_AIML_Core_Applied_Data_Science_with_Python/06_probability_distributions/practice.ipynb">Probability &amp; Distributions</a></div>
+          <div class="topic"><a href="02_IITK_AIML_Core_Applied_Data_Science_with_Python/07_advanced_statistics/practice.ipynb">Advanced Statistics</a></div>
+          <div class="topic"><a href="02_IITK_AIML_Core_Applied_Data_Science_with_Python/08_pandas/pandas_practice.ipynb">Pandas (70 Q)</a></div>
+          <div class="topic"><a href="02_IITK_AIML_Core_Applied_Data_Science_with_Python/09_data_wrangling/practice.ipynb">Data Wrangling</a></div>
+          <div class="topic"><a href="02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/matplotlib/matplotlib_practice.ipynb">Matplotlib (45 Q)</a></div>
+          <div class="topic"><a href="02_IITK_AIML_Core_Applied_Data_Science_with_Python/10_data_visualization/seaborn/seaborn_practice.ipynb">Seaborn (60 Q)</a></div>
+          <div class="topic"><a href="02_IITK_AIML_Core_Applied_Data_Science_with_Python/11_regex_json_apis/practice.ipynb">Regex, JSON &amp; APIs</a></div>
         </div>
         <div class="projects"><h4>Projects</h4>
-          <a class="proj-list" href="Course_02_Applied_Data_Science/projects/Marketing_Campaigns/Marketing_Campaigns_Analysis.ipynb">Marketing Campaigns</a>
-          <a class="proj-list" href="Course_02_Applied_Data_Science/projects/Sales_Analysis/Sales_Analysis.ipynb">Sales Analysis</a>
+          <a class="proj-list" href="02_IITK_AIML_Core_Applied_Data_Science_with_Python/projects/Marketing_Campaigns/Marketing_Campaigns_Analysis.ipynb">Marketing Campaigns</a>
+          <a class="proj-list" href="02_IITK_AIML_Core_Applied_Data_Science_with_Python/projects/Sales_Analysis/Sales_Analysis.ipynb">Sales Analysis</a>
         </div>
       </div>
     </section>
 
     <section class="course" id="c3">
       <div class="course-head" onclick="this.parentElement.classList.toggle('open')">
-        <h3>Course 3 — Machine Learning</h3><span>5 topics · 2 projects</span>
+        <h3>Course 3 — IITK AIML Core: Machine Learning</h3><span>5 topics · 2 projects</span>
       </div>
       <div class="course-body">
         <div class="subtopics">
-          <div class="topic"><a href="Course_03_Machine_Learning/01_eda_feature_engineering/practice.ipynb">EDA &amp; Feature Engineering</a></div>
-          <div class="topic"><a href="Course_03_Machine_Learning/02_clustering/practice.ipynb">Clustering</a></div>
-          <div class="topic"><a href="Course_03_Machine_Learning/03_classification/practice.ipynb">Classification</a></div>
-          <div class="topic"><a href="Course_03_Machine_Learning/04_imbalanced_data/practice.ipynb">Imbalanced Data &amp; SMOTE</a></div>
-          <div class="topic"><a href="Course_03_Machine_Learning/05_model_evaluation/practice.ipynb">Model Evaluation</a></div>
+          <div class="topic"><a href="03_IITK_AIML_Core_Machine_Learning/01_eda_feature_engineering/practice.ipynb">EDA &amp; Feature Engineering</a></div>
+          <div class="topic"><a href="03_IITK_AIML_Core_Machine_Learning/02_clustering/practice.ipynb">Clustering</a></div>
+          <div class="topic"><a href="03_IITK_AIML_Core_Machine_Learning/03_classification/practice.ipynb">Classification</a></div>
+          <div class="topic"><a href="03_IITK_AIML_Core_Machine_Learning/04_imbalanced_data/practice.ipynb">Imbalanced Data &amp; SMOTE</a></div>
+          <div class="topic"><a href="03_IITK_AIML_Core_Machine_Learning/05_model_evaluation/practice.ipynb">Model Evaluation</a></div>
         </div>
         <div class="projects"><h4>Projects</h4>
-          <a class="proj-list" href="Course_03_Machine_Learning/projects/Creating_Cohorts_of_Songs/Creating_Cohorts_of_Songs.ipynb">Cohorts of Songs</a>
-          <a class="proj-list" href="Course_03_Machine_Learning/projects/Employee_Turnover_Analytics/Employee_Turnover_Analytics.ipynb">Employee Turnover</a>
+          <a class="proj-list" href="03_IITK_AIML_Core_Machine_Learning/projects/Creating_Cohorts_of_Songs/Creating_Cohorts_of_Songs.ipynb">Cohorts of Songs</a>
+          <a class="proj-list" href="03_IITK_AIML_Core_Machine_Learning/projects/Employee_Turnover_Analytics/Employee_Turnover_Analytics.ipynb">Employee Turnover</a>
         </div>
       </div>
     </section>
 
     <section class="course" id="c4">
       <div class="course-head" onclick="this.parentElement.classList.toggle('open')">
-        <h3>Course 4 — Deep Learning (Keras &amp; TensorFlow)</h3><span>4 topics · 2 projects</span>
+        <h3>Course 4 — IITK AIML - Core: Deep Learning with Keras and TensorFlow</h3><span>4 topics · 2 projects</span>
       </div>
       <div class="course-body">
         <div class="subtopics">
-          <div class="topic"><a href="Course_04_Deep_Learning/01_neural_network_basics/practice.ipynb">Neural Network Basics</a></div>
-          <div class="topic"><a href="Course_04_Deep_Learning/02_keras_tensorflow/practice.ipynb">Keras &amp; TensorFlow</a></div>
-          <div class="topic"><a href="Course_04_Deep_Learning/03_preprocessing_imbalance/practice.ipynb">Preprocessing &amp; Imbalance</a></div>
-          <div class="topic"><a href="Course_04_Deep_Learning/04_model_evaluation_dl/practice.ipynb">DL Evaluation (AUC, ROC)</a></div>
+          <div class="topic"><a href="04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/01_neural_network_basics/practice.ipynb">Neural Network Basics</a></div>
+          <div class="topic"><a href="04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/02_keras_tensorflow/practice.ipynb">Keras &amp; TensorFlow</a></div>
+          <div class="topic"><a href="04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/03_preprocessing_imbalance/practice.ipynb">Preprocessing &amp; Imbalance</a></div>
+          <div class="topic"><a href="04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/04_model_evaluation_dl/practice.ipynb">DL Evaluation (AUC, ROC)</a></div>
         </div>
         <div class="projects"><h4>Projects</h4>
-          <a class="proj-list" href="Course_04_Deep_Learning/projects/Lending_Club_Loan_Analysis/Lending_Club_Loan_Analysis.ipynb">Lending Club Loans</a>
-          <a class="proj-list" href="Course_04_Deep_Learning/projects/Home_Loan_Data_Analysis/Home_Loan_Data_Analysis.ipynb">Home Loan Analysis</a>
+          <a class="proj-list" href="04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/projects/Lending_Club_Loan_Analysis/Lending_Club_Loan_Analysis.ipynb">Lending Club Loans</a>
+          <a class="proj-list" href="04_IITK_AIML_Core_Deep_Learning_with_Keras_and_TensorFlow/projects/Home_Loan_Data_Analysis/Home_Loan_Data_Analysis.ipynb">Home Loan Analysis</a>
         </div>
       </div>
     </section>
 
     <section class="course" id="c5">
       <div class="course-head" onclick="this.parentElement.classList.toggle('open')">
-        <h3>Course 5 — Generative AI &amp; Prompt Engineering</h3><span>3 topics · 2 projects</span>
+        <h3>Course 5 — IITK AIML Core: Essentials of Generative AI, Prompt Engineering &amp; ChatGPT</h3><span>3 topics · 2 projects</span>
       </div>
       <div class="course-body">
         <div class="subtopics">
-          <div class="topic"><a href="Course_05_Generative_AI/01_prompt_engineering/practice.ipynb">Prompt Engineering</a></div>
-          <div class="topic"><a href="Course_05_Generative_AI/02_chatgpt_applications/practice.ipynb">ChatGPT Applications</a></div>
-          <div class="topic"><a href="Course_05_Generative_AI/03_genai_optimization/practice.ipynb">GenAI Optimization</a></div>
+          <div class="topic"><a href="05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/01_prompt_engineering/practice.ipynb">Prompt Engineering</a></div>
+          <div class="topic"><a href="05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/02_chatgpt_applications/practice.ipynb">ChatGPT Applications</a></div>
+          <div class="topic"><a href="05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/03_genai_optimization/practice.ipynb">GenAI Optimization</a></div>
         </div>
         <div class="projects"><h4>Projects</h4>
-          <a class="proj-list" href="Course_05_Generative_AI/projects/ChatGPT_Based_Storytelling/ChatGPT_Based_Storytelling.ipynb">ChatGPT Storytelling</a>
-          <a class="proj-list" href="Course_05_Generative_AI/projects/Virtual_Project_Management_Consultant/Virtual_Project_Management_Consultant.ipynb">Virtual PM Consultant</a>
+          <a class="proj-list" href="05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/projects/ChatGPT_Based_Storytelling/ChatGPT_Based_Storytelling.ipynb">ChatGPT Storytelling</a>
+          <a class="proj-list" href="05_IITK_AIML_Core_Essentials_of_Generative_AI_Prompt_Engineering_ChatGPT/projects/Virtual_Project_Management_Consultant/Virtual_Project_Management_Consultant.ipynb">Virtual PM Consultant</a>
         </div>
       </div>
+    </section>
+
+    <section class="course" id="c6">
+      <div class="course-head" onclick="this.parentElement.classList.toggle('open')">
+        <h3>Course 6 — IITK AIML - Advanced Generative AI</h3><span>Course-end projects</span>
+      </div>
+      <div class="course-body">
+        <div class="projects"><h4>Projects</h4>
+          <a class="proj-list" href="06_IITK_AIML_Advanced_Generative_AI/project1_hr_assistant/hr_assistant.ipynb">Nestlé HR Assistant (RAG)</a>
+          <a class="proj-list" href="06_IITK_AIML_Advanced_Generative_AI/project2_designs/netflix_design_generator.ipynb">Netflix Design Generator</a>
+        </div>
+        <p style="color:var(--muted);margin-top:0.75rem"><a href="06_IITK_AIML_Advanced_Generative_AI/README.md" style="color:var(--accent)">Course 6 README</a></p>
+      </div>
+    </section>
+
+    <section class="course open" id="c7">
+      <div class="course-head" onclick="this.parentElement.classList.toggle('open')">
+        <h3>Course 7 — IITK AIML - Capstone</h3><span>3 Capstone Projects Completed</span>
+      </div>
+      <div class="course-body">
+        <div class="projects"><h4>Capstone Deliverables</h4>
+          <a class="proj-list" href="07_IITK_AIML_Capstone/project1_autonomous_driving/lms_upload/autonomous_driving.ipynb">Capstone 1: Autonomous Driving (Vision &amp; Tesla EDA)</a>
+          <a class="proj-list" href="07_IITK_AIML_Capstone/project2_sales_forecasting/lms_upload/sales_forecasting.ipynb">Capstone 2: Sales &amp; Demand Forecasting (XGBoost)</a>
+          <a class="proj-list" href="07_IITK_AIML_Capstone/project3_preserving_heritage/lms_upload/preserving_heritage.ipynb">Capstone 3: Heritage Tourism AI (CNN &amp; Recommender)</a>
+        </div>
+        <p style="color:var(--muted);margin-top:0.75rem"><a href="07_IITK_AIML_Capstone/README.md" style="color:var(--accent)">Capstone Overview &amp; Upload Documentation</a></p>
+      </div>
+    </section>
+
+    <h2>Advanced Dual Architecture &amp; Theory Guides</h2>
+    <section class="course open" id="v2-and-guides">
+      <div class="course-head" onclick="this.parentElement.classList.toggle('open')">
+        <h3>Projects Version 2 &amp; Master Learning Guide</h3><span>Next-Gen Architectures &amp; Theory</span>
+      </div>
+      <div class="course-body">
+        <div class="subtopics">
+          <div class="topic"><a href="LEARNING_GUIDE.md">Master AI/ML Learning Guide</a><div class="files">Core Math · Deep Theory · 100+ Interview Q&amp;A</div></div>
+          <div class="topic"><a href="PRACTICE_GUIDE.md">Practice Guide &amp; Workflow</a><div class="files">1,500+ Practice Problems &amp; Study Schedule</div></div>
+          <div class="topic"><a href="projects_version2/README.md">Projects Version 2 Portfolio</a><div class="files">15 Production-Grade Alternative Implementations</div></div>
+        </div>
+      </div>
+    </section>
+
+    <h2>Electives</h2>
+
+    <section class="course" id="e1">
+      <div class="course-head" onclick="this.parentElement.classList.toggle('open')">
+        <h3>Elective 1 — ADL &amp; Computer Vision</h3><span>Confirm with POC</span>
+      </div>
+      <div class="course-body"><div class="topic"><a href="Elective_01_ADL_and_Computer_Vision/README.md">IITK AIML Advanced: ADL &amp; Computer Vision</a></div></div>
+    </section>
+    <section class="course" id="e2">
+      <div class="course-head" onclick="this.parentElement.classList.toggle('open')">
+        <h3>Elective 2 — NLP and Speech Recognition</h3><span>Registered · Sep 19–Nov 1</span>
+      </div>
+      <div class="course-body"><div class="topic"><a href="Elective_02_NLP_and_Speech_Recognition/README.md">IITK AIML Advanced: NLP and Speech Recognition</a></div></div>
+    </section>
+    <section class="course" id="e3">
+      <div class="course-head" onclick="this.parentElement.classList.toggle('open')">
+        <h3>Elective 3 — Reinforcement Learning</h3><span>Registered · Sep 19–Nov 1</span>
+      </div>
+      <div class="course-body"><div class="topic"><a href="Elective_03_Reinforcement_Learning/README.md">IITK AIML Advanced: Reinforcement Learning</a></div></div>
+    </section>
+    <section class="course" id="e4">
+      <div class="course-head" onclick="this.parentElement.classList.toggle('open')">
+        <h3>Elective 4 — Microsoft Azure AI Fundamentals</h3><span>Confirm with POC</span>
+      </div>
+      <div class="course-body"><div class="topic"><a href="Elective_04_Microsoft_Azure_AI_Fundamentals/README.md">IITK AIML - Microsoft Azure AI Fundamentals</a></div></div>
+    </section>
+    <section class="course" id="e5">
+      <div class="course-head" onclick="this.parentElement.classList.toggle('open')">
+        <h3>Elective 5 — Academic Masterclass by IIT Kanpur</h3><span>Masterclass</span>
+      </div>
+      <div class="course-body"><div class="topic"><a href="Elective_05_Academic_Masterclass_by_IIT_Kanpur/README.md">Academic Masterclass by IIT Kanpur</a></div></div>
     </section>
 
     <h2>Datasets</h2>

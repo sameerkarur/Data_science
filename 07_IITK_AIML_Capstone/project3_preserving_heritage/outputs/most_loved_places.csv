@@ -1,0 +1,11 @@
+Place_Id,Place_Name,City,Category,avg_user_rating,n_ratings,love_score
+416,Keraton Surabaya,Surabaya,Budaya,4.0,28,13.469183319945897
+322,Bukit Jamur,Bandung,Cagar Alam,3.7857142857142856,28,12.747619927805937
+300,Sanghyang Heuleut,Bandung,Cagar Alam,3.6551724137931036,29,12.431962843316844
+134,Desa Wisata Gamplong,Yogyakarta,Taman Hiburan,3.6206896551724137,29,12.314680174983666
+279,Masjid Agung Trans Studio Bandung,Bandung,Tempat Ibadah,3.642857142857143,28,12.266577666379298
+401,Taman Keputran,Surabaya,Taman Hiburan,3.576923076923077,26,11.788954943784717
+437,Gereja Perawan Maria Tak Berdosa Surabaya,Surabaya,Tempat Ibadah,3.3333333333333335,33,11.754535082053872
+91,Situs Warungboto,Yogyakarta,Taman Hiburan,3.5185185185185186,27,11.724423276542383
+336,Grand Maerakaca,Semarang,Taman Hiburan,3.303030303030303,33,11.64767567221702
+97,Monumen Yogya Kembali,Yogyakarta,Budaya,3.761904761904762,21,11.628207324538426

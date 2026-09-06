@@ -1,0 +1,97 @@
+AIML Capstone
+Autonomous Driving
+Business Scenario
+Autonomous vehicles (AV) and intelligent transport systems (ITS) are the future of road 
+transport. Automatic detection of vehicles on the road in real-time is essential for vehicle 
+tracking, vehicle counting, and road incident response.
+Problem statement 1:
+This problem statement and objective consists of two parts: Part 1 and Part 2
+Tesla, Inc. is an American multinational automotive and artiﬁcial intelligence company. In 
+October 2020, Tesla started a full self-driving capability beta program in the United 
+States. Tesla has over 100k people in this program.
+Additional Information:
+Business Scenario
+As the second part of this project, you need to analyze the usage of autopilot and its 
+eﬀect on road safety.
+Objective part 2:
+As the ﬁrst part of this project, you need to develop an AI model using a deep learning 
+framework that predicts the type of vehicle present in an image as well as localizes the 
+vehicle by rectangular bounding box.  
+Objective part 1:
+Part 1
+Dataset Description
+Images.zip
+ 
+This dataset consists of images of autonomous vehicles.
+
+Project Task
+1. Create a parent folder for custom model training and child folders to store data.
+2. Prepare the dataset for model training, keeping the following points in mind:
+• This dataset contains many images, and depending on the compute power of the VM, 
+it might take a long time to unzip this huge amount of data.
+3. Create a CNN architecture of your choice for object detection to train an object detection 
+model. Please note that algorithm or architecture selection is a very important aspect of ML 
+model training, and you must choose the one that works best for your dataset.
+Object detection
+Project Task
+4. Evaluate the model and check the test results
+5. Run inferences on sample images and see if vehicles are detected accurately
+Object detection
+Part 2
+Dataset Snapshot
+Tesla-Deaths.csv
+
+Dataset Description
+Variables Description
+Case# Unique identiﬁcation for the accident case
+Year Year in which the accident occurred
+Date Date of occurrence of the accident
+Country Country where the accident occurred
+State State where the accident occurred
+Description Description of the accident
+Deaths No. of deaths that occurred in the accident
+Tesla driver If there was death of the driver
+Tesla - Deaths.csv
+Dataset Description
+Variables Description
+Tesla Occupant Unique identiﬁcation for beneﬁciary (primary)
+Other vehicle Number of vehicles teslahas collided with
+Cyclists/ Peds Number of cyclists per pedestrian they have collided with
+ TSLA+cycl / peds Number of Teslas or bicycles or pedestrians the vehicle collided with
+Model Model of the vehicle
+  Autopilot claimed If insurance has been claimed for the vehicle 
+  Veriﬁed Tesla Autopilot Deaths Total number of veriﬁed deaths
+ Veriﬁed Tesla Autopilot Deaths + All 
+Deaths Reported to NHTSA SGO
+All the veriﬁed deaths and the reported deaths to NHSTA SGO
+Tesla - Deaths.csv
+Dataset Description
+Variables Description
+ Source Source of the reported accident case
+ Note Note of whether the accident was caused by Tesla
+ Deceased 1 First deceased 
+ Deceased 2 Second deceased
+ Deceased 3 Third deceased
+ Deceased 4 Fourth deceased
+Tesla - deaths.csv
+Project Task
+1. Preliminary Data Inspection and Cleaning
+a. Perform preliminary data inspection, checking for data types, missing values, and duplicates
+b. Remove any columns that might not be relevant for the analysis
+2. Exploratory Data Analysis
+a. Perform an in-depth exploratory data analysis on the number of events by date, per year, and 
+per day for each state and country
+b. Analyze the diﬀerent aspects of the death events. For example:
+• What is the number of victims (deaths) in each accident?
+• How many times did tesla drivers die?
+• What is the proportion of events in which one or more occupants died?
+• What is the distribution of events in which the vehicle hit a cyclist or a pedestrian?
+• How many times did the accident involve the death of an occupant or driver of a Tesla    
+along with a cyclist or pedestrian?
+• What is the frequency of Tesla colliding with other vehicles?
+Data science
+Project Task
+c. Study the event distribution across models
+d. Check the distribution of veriﬁed Tesla autopilot deaths
+Data science
+Thank You

@@ -1,0 +1,25 @@
+{
+  "n_events": 293,
+  "total_deaths": 352.0,
+  "mean_deaths_per_event": 1.2013651877133107,
+  "tesla_driver_death_events": 117,
+  "tesla_driver_death_pct": 39.93174061433447,
+  "occupant_or_driver_death_events": 139,
+  "occupant_or_driver_death_pct": 47.44027303754266,
+  "cyclist_ped_events": 43,
+  "cyclist_ped_pct": 14.675767918088736,
+  "tesla_and_cycl_ped_events": 1,
+  "other_vehicle_collision_events": 110,
+  "other_vehicle_collision_pct": 37.54266211604095,
+  "top_models": {
+    "UNKNOWN / UNSPECIFIED": 181,
+    "S": 45,
+    "3": 38,
+    "X": 17,
+    "Y": 10,
+    "OTHER / UNSPECIFIED": 2
+  },
+  "verified_ap_death_events": 16,
+  "verified_ap_deaths_total": 19.0,
+  "autopilot_claimed_events": 34
+}

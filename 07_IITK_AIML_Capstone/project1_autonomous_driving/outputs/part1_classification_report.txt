@@ -1,0 +1,17 @@
+Validation accuracy: 0.6855
+
+                   precision    recall  f1-score   support
+
+articulated_truck      0.743     0.705     0.724        78
+          bicycle      0.577     0.714     0.638        21
+              bus      0.831     0.822     0.827        90
+              car      0.672     0.800     0.730       220
+       motorcycle      0.353     0.462     0.400        13
+       pedestrian      0.700     0.292     0.412        24
+     pickup_truck      0.681     0.640     0.660       150
+single_unit_truck      0.574     0.551     0.562        49
+         work_van      0.695     0.512     0.590        80
+
+         accuracy                          0.686       725
+        macro avg      0.647     0.611     0.616       725
+     weighted avg      0.690     0.686     0.681       725

@@ -1,0 +1,22 @@
+LMS upload — Project 1: Nestlé HR Assistant
+============================================
+
+Open the Simplilearn submit modal and map files like this:
+
+1) Writeup
+   → Writeup_Nestle_HR_Assistant.pdf
+
+2) Screenshots
+   → Screenshots_Nestle_HR_Assistant.zip
+     (or upload the individual PNGs from the screenshots/ folder)
+
+3) Source Code (ipynb only)
+   → hr_assistant.ipynb
+
+Optional Additional Remarks (copy-paste):
+Built a RAG HR chatbot on Nestlé's HR policy PDF using LangChain,
+OpenAI embeddings, ChromaDB, GPT-3.5 Turbo, and Gradio ChatInterface.
+PDF was split into 20 chunks across 8 pages; answers are grounded in retrieved context.
+
+All files are under:
+/Users/sameerkarur/Documents/Git/Data_science/06_IITK_AIML_Advanced_Generative_AI/lms_upload_project1

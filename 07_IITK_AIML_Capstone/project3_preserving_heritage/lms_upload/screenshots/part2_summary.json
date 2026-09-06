@@ -1,0 +1,50 @@
+{
+  "n_users": 300,
+  "n_ratings": 9597,
+  "n_places": 437,
+  "best_nature_city": "Bandung",
+  "most_liked_category": "Taman Hiburan",
+  "sample_seed_place": "Monumen Nasional",
+  "sample_recommendations": [
+    {
+      "Place_Id": 349,
+      "Place_Name": "Wisata Mangrove Tapak",
+      "City": "Semarang",
+      "Category": "Cagar Alam",
+      "cosine_distance": 0.7287463832041773,
+      "similarity": 0.2712536167958227
+    },
+    {
+      "Place_Id": 362,
+      "Place_Name": "Danau Rawa Pening",
+      "City": "Semarang",
+      "Category": "Cagar Alam",
+      "cosine_distance": 0.7372713051695554,
+      "similarity": 0.2627286948304446
+    },
+    {
+      "Place_Id": 118,
+      "Place_Name": "Museum Sonobudoyo Unit I",
+      "City": "Yogyakarta",
+      "Category": "Budaya",
+      "cosine_distance": 0.7398290805880888,
+      "similarity": 0.2601709194119112
+    },
+    {
+      "Place_Id": 3,
+      "Place_Name": "Dunia Fantasi",
+      "City": "Jakarta",
+      "Category": "Taman Hiburan",
+      "cosine_distance": 0.7437638820819557,
+      "similarity": 0.25623611791804435
+    },
+    {
+      "Place_Id": 318,
+      "Place_Name": "Situ Patenggang",
+      "City": "Bandung",
+      "Category": "Cagar Alam",
+      "cosine_distance": 0.7588318598025802,
+      "similarity": 0.24116814019741983
+    }
+  ]
+}

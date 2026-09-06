@@ -145,7 +145,11 @@ nav:
       - "Deep-dive: Transformer Architecture & Mechanics": 09-transformers-llms/transformer-architecture-mechanics-deep-dive.md
       - "Deep-dive: Foundation Model Families": 09-transformers-llms/foundation-model-families-deep-dive.md
       - "Deep-dive: LLM Training, Alignment & PEFT": 09-transformers-llms/llm-training-alignment-peft-deep-dive.md
-  - Book 10 – Generative AI: 10-generative-ai/index.md
+  - Book 10 – Generative AI:
+      - Overview: 10-generative-ai/index.md
+      - "Deep-dive: LLM Application Engineering": 10-generative-ai/llm-application-engineering-deep-dive.md
+      - "Deep-dive: Enterprise RAG Systems": 10-generative-ai/enterprise-rag-systems-deep-dive.md
+      - "Deep-dive: Diffusion Models": 10-generative-ai/diffusion-models-deep-dive.md
   - Book 11 – AI Agents: 11-ai-agents/index.md
   - Book 12 – MLOps: 12-mlops/index.md
   - Book 13 – AI System Design: 13-ai-system-design/index.md

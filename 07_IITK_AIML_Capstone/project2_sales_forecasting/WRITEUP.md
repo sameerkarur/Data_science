@@ -28,7 +28,7 @@ Deliver an end-to-end analytics and forecasting package that:
 2. Completes **EDA** covering overall patterns, weekday/month/quarter seasonality, restaurant performance, item popularity, volume-vs-revenue leadership, and most expensive items by store (with calories).
 3. Builds and compares **Linear Regression, Random Forest, and XGBoost** using calendar features (day of week, quarter, month, year, day of month, and related flags), with the **last six months** held out for testing.
 4. Selects the best model by **RMSE** and produces a **365-day forward forecast**.
-5. Packages a polished notebook, charts, and LinkedIn-ready write-up for LMS submission.
+5. Packages a polished notebook, publication-grade charts, and executive analytical write-up.
 
 ---
 
@@ -67,7 +67,7 @@ Deliver an end-to-end analytics and forecasting package that:
 
 - Executed notebook: `sales_forecasting.ipynb`
 - Charts & metrics: `outputs/`
-- LMS package: `lms_upload/` (write-up PDF, screenshots zip, notebook)
+- Deliverables: Executable notebook, 365-day forecasting models, evaluation plots, and executive writeup.
 
 ---
 

@@ -7,7 +7,7 @@
 
 ## 🎯 Executive Overview
 
-While the standard program deliverables (Version 1) in each course folder address the foundational LMS requirements, **Projects Version 2** demonstrates mastery through **alternative, modern, and production-ready architectural paradigms**.
+While the standard program deliverables (Version 1) in each course folder address the foundational curriculum requirements, **Projects Version 2** demonstrates mastery through **alternative, modern, and production-ready architectural paradigms**.
 
 Every single project from Course 1 through Course 7 Capstone has been re-architected with:
 1. **Alternative Algorithmic Families:** (e.g., HDBSCAN vs K-Means, Tabular ResNet/TabNet vs standard MLPs, Hybrid Dense-Sparse RRF vs naive vector RAG, BPR Graph Ranking vs SVD).

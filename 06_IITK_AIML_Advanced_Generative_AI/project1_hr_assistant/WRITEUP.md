@@ -16,7 +16,7 @@ Build a conversational chatbot that answers HR policy questions using Nestlé's 
 ## Result
 The assistant retrieves relevant HR policy sections and generates grounded answers. Example queries include leave policy, recruitment, working hours, and benefits. The solution improves HR self-service, reduces manual document lookup, and demonstrates practical enterprise GenAI deployment.
 
-## Screenshots to capture for LMS submission
+## Key Architecture Visualizations
 - Notebook cells showing PDF load + chunk count
 - Vector store creation output
 - Sample QA response in notebook

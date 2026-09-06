@@ -40,7 +40,7 @@ Deliver a two-part Capstone solution:
 | Plots | `outputs/curves_*.png`, `outputs/samples_*.png`, `outputs/eda_*.png` |
 | Sample recs | `outputs/sample_recommendations.csv` |
 
-## Screenshots for LMS
+## Key Architecture Visualizations
 1. Per-class sample image grids  
 2. Class count bar chart  
 3. Train/val accuracy curves (no-aug vs aug)  

@@ -73,7 +73,7 @@ Ambiguous catch-all labels were the main noise source on the full 11-class taxon
 - Executed notebook: `autonomous_driving.ipynb`  
 - Charts & inferences: `outputs/`  
 - Models: `models/`  
-- LMS package: `lms_upload/` (write-up PDF, screenshots zip, notebook)
+- Deliverables: Jupyter notebook, trained weights, inference visualizer, and executive writeup.
 
 ---
 

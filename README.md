@@ -19,7 +19,7 @@ Folder layout matches the Simplilearn LMS learning path (mandatory courses + ele
 
 - 📚 **Interactive Course Navigation:** Jump directly to any `practice.ipynb` or `solutions.ipynb` notebook across all courses.
 - 🎯 **1,650+ Curated Problems:** Systematic progression through Python, NumPy, Pandas, Matplotlib, Seaborn, ML, DL, and GenAI (including Course 6 RAG, Vector DBs & Multimodal).
-- 💼 **Project Deliverables & V2 Suite:** One-click links to all LMS submission packs and the 15 next-generation `projects_version2/` architectures.
+- 💼 **Project Deliverables & V2 Suite:** One-click links to all foundational deliverables and the 15 next-generation `projects_version2/` architectures.
 
 ---
 
@@ -44,11 +44,11 @@ Folder layout matches the Simplilearn LMS learning path (mandatory courses + ele
 
 | Folder | LMS name | Notes |
 |--------|----------|-------|
-| `Elective_01_ADL_and_Computer_Vision/` | IITK AIML Advanced: ADL & Computer Vision | Confirm registration / recordings with POC |
-| `Elective_02_NLP_and_Speech_Recognition/` | IITK AIML Advanced: NLP and Speech Recognition | Registered · classes ~Sep 19–Nov 1 |
-| `Elective_03_Reinforcement_Learning/` | IITK AIML Advanced: Reinforcement Learning | Registered · classes ~Sep 19–Nov 1 |
-| `Elective_04_Microsoft_Azure_AI_Fundamentals/` | IITK AIML - Microsoft Azure AI Fundamentals | Confirm registration / recordings with POC |
-| `Elective_05_Academic_Masterclass_by_IIT_Kanpur/` | Academic Masterclass by IIT Kanpur | |
+| `Elective_01_ADL_and_Computer_Vision/` | IITK AIML Advanced: ADL & Computer Vision | Vision Transformers, YOLOv8 & Diffusion Models |
+| `Elective_02_NLP_and_Speech_Recognition/` | IITK AIML Advanced: NLP and Speech Recognition | Transformers, Whisper Speech & Sequence Models |
+| `Elective_03_Reinforcement_Learning/` | IITK AIML Advanced: Reinforcement Learning | Deep Q-Networks, Policy Gradients & RLHF |
+| `Elective_04_Microsoft_Azure_AI_Fundamentals/` | IITK AIML - Microsoft Azure AI Fundamentals | Azure AI Search, Azure OpenAI & Cloud MLOps |
+| `Elective_05_Academic_Masterclass_by_IIT_Kanpur/` | Academic Masterclass by IIT Kanpur | Statistical Learning Theory & Optimization |
 
 ```
 Data_science/
@@ -59,7 +59,7 @@ Data_science/
 ├── 04_…Deep_Learning…/
 ├── 05_…Essentials_of_Generative_AI…/
 ├── 06_…Advanced_Generative_AI/    ← Nestlé RAG + Netflix designs (Completed)
-├── 07_…Capstone/                  ← Capstone 1, 2, 3 (Completed & LMS Packaged)
+├── 07_…Capstone/                  ← Capstone 1, 2, 3 (Autonomous Driving, Sales, Heritage AI)
 ├── projects_version2/             ← Next-Gen Alternative Implementations (15 Projects)
 ├── Elective_01_… → Elective_05_…
 ├── datasets/shared/
@@ -85,7 +85,7 @@ Each practice subtopic typically has: `basics.md`, `practice.md`, `practice.ipyn
 ## Dual Project Portfolio (Version 1 & Version 2)
 
 Each project from Course 1 through Course 7 Capstone is provided in two independent architectures:
-1. **Version 1 (LMS Course Packages):** Found in their course directories with complete LMS upload bundles (write-up PDFs, screenshots, and source code).
+1. **Version 1 (Foundational Baselines):** Found in their course directories with complete project implementations, executable notebooks, and writeups.
 2. **Version 2 (`projects_version2/`):** Enterprise-grade next-generation implementations showcasing alternative algorithmic paradigms, modular architectures, and explainability frameworks.
 
 ---

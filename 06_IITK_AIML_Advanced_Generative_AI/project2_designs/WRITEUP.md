@@ -15,7 +15,7 @@ Create a web platform that converts text prompts into bespoke marketing designs 
 ## Result
 Designers can prototype campaign visuals in seconds from natural-language prompts. The platform supports iterative creative exploration and reduces time-to-concept for promotional assets.
 
-## Screenshots to capture for LMS submission
+## Key Architecture Visualizations
 - Notebook with successful `generate_image` test output
 - Gradio UI home screen
 - 2–3 generated Netflix-style poster examples with different prompts

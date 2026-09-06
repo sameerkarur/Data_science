@@ -91,7 +91,7 @@ Some subtopics also copy CSVs locally (e.g. NumPy folder) — both work; prefer 
 
 ## Where the big banks live
 
-These already had full content (220+ questions) and are mapped into the LMS structure:
+These already had full content (220+ questions) and are mapped into the curriculum structure:
 
 - `02_IITK_AIML_Core_Applied_Data_Science_with_Python/03_numpy/numpy_practice.md` (+ `.ipynb`)
 - `02_IITK_AIML_Core_Applied_Data_Science_with_Python/08_pandas/pandas_practice.md`
@@ -112,7 +112,7 @@ For complete mathematical derivations, theoretical deep dives across all courses
 ## Dual Project Portfolio (Version 1 & Version 2)
 
 All course and capstone projects have been implemented across two distinct technical architectures:
-- **Version 1 (LMS Submissions):** Located inside each respective course folder (`01_.../projects`, `06_.../`, `07_.../`).
+- **Version 1 (Foundational Baselines):** Located inside each respective course folder (`01_.../projects`, `06_.../`, `07_.../`).
 - **Version 2 (Next-Gen Production Implementations):** Located in **[`projects_version2/`](projects_version2/)**, featuring alternative algorithmic paradigms, advanced design patterns, and explainability layers.
 
 

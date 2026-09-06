@@ -5,7 +5,7 @@
 ---
 
 ## 📌 Table of Contents
-1. [Program Architecture & LMS Course Mapping](#1-program-architecture--lms-course-mapping)
+1. [Program Architecture & Curriculum Mapping](#1-program-architecture--curriculum-mapping)
 2. [Theoretical Foundations & Core Mathematics](#2-theoretical-foundations--core-mathematics)
 3. [Course-by-Course Deep Dives & Industry Applications](#3-course-by-course-deep-dives--industry-applications)
    - [Course 00: Induction Session](#course-00-induction-session)
@@ -23,7 +23,7 @@
 
 ---
 
-# 1. Program Architecture & LMS Course Mapping
+# 1. Program Architecture & Curriculum Mapping
 
 The curriculum is structured across 8 mandatory modules (Induction + 7 core courses) followed by 5 specialized electives:
 
@@ -271,7 +271,7 @@ Data_science/
 # 6. Project Portfolio Dual-Architecture: Version 1 vs Version 2
 
 Every project completed in this program has been implemented in two distinct architectural paradigms:
-* **Version 1 (Core LMS Baseline):** Implemented in the respective course directory, focusing on fundamental problem statements and LMS submission packages.
+* **Version 1 (Foundational Baseline):** Implemented in the respective course directory, focusing on fundamental problem statements and benchmark deliverable packages.
 * **Version 2 (`projects_version2/`):** Enterprise-grade, production-oriented alternative technical implementations featuring advanced design patterns, alternative algorithmic families, explainability layers, and modern architectural paradigms.
 
 | Project # | Domain & Curriculum | Version 1 Baseline Architecture | Version 2 Advanced Alternative Architecture |

@@ -197,6 +197,78 @@ extra_css = """
       --accent-indigo: #6366f1;
     }
 
+    /* HIGH-CONTRAST ACCESSIBLE LINK & CONTENT STYLES (OPENCAREERAI PALETTE) */
+    .stat-card {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .stat-card:hover {
+      border-color: #38bdf8 !important;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px -2px rgba(56, 189, 248, 0.25);
+    }
+    .doc-viewer a,
+    .doc-viewer a:visited,
+    .standalone-dialog a,
+    .studio-dialog a {
+      color: #38bdf8 !important; /* Luminous Sky Cyan - highly readable on obsidian/navy */
+      text-decoration: underline;
+      text-decoration-color: rgba(56, 189, 248, 0.45);
+      text-underline-offset: 3px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .doc-viewer a:hover,
+    .standalone-dialog a:hover,
+    .studio-dialog a:hover {
+      color: #7dd3fc !important;
+      text-decoration-color: #38bdf8;
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+    .doc-viewer table a,
+    .doc-viewer table a:visited {
+      color: #38bdf8 !important;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+    .doc-viewer table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(15, 23, 42, 0.7);
+    }
+    .doc-viewer th {
+      background: #1e293b;
+      color: #38bdf8;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid #334155;
+      text-align: left;
+    }
+    .doc-viewer td {
+      padding: 0.75rem 1rem;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      font-size: 0.88rem;
+    }
+    .doc-viewer tr:hover td {
+      background: rgba(30, 41, 59, 0.8);
+    }
+    .doc-viewer h1 {
+      color: #f8fafc !important;
+      border-bottom: 2px solid #334155;
+    }
+    .doc-viewer h2 {
+      color: #38bdf8 !important;
+    }
+    .doc-viewer h3 {
+      color: #34d399 !important;
+    }
+
     .nav-github-link {
       display: inline-flex;
       align-items: center;
@@ -675,13 +747,40 @@ def build():
         f'{interview_hub_html}\n{guides_view_html}\n  </main>',
     )
 
+    # Enhance stat cards to be interactive
+    head_html = head_html.replace(
+        '<div class="stat-card"><span class="stat-val">1,650+</span><span class="stat-lbl">Practice Problems</span></div>',
+        '<div class="stat-card" onclick="switchNavSection(\'courses\', document.querySelectorAll(\'.nav-tab\')[1])" title="View all course practice problems"><span class="stat-val">1,650+</span><span class="stat-lbl">Practice Problems</span></div>',
+    )
+    head_html = head_html.replace(
+        '<div class="stat-card"><span class="stat-val">990+</span><span class="stat-lbl">Interview Flashcards</span></div>',
+        '<div class="stat-card" onclick="switchNavSection(\'interview\', document.querySelectorAll(\'.nav-tab\')[4])" title="Open 33-module technical interview vault"><span class="stat-val">990+</span><span class="stat-lbl">Interview Flashcards</span></div>',
+    )
+    head_html = head_html.replace(
+        '<div class="stat-card"><span class="stat-val">15</span><span class="stat-lbl">Next-Gen V2 Projects</span></div>',
+        '<div class="stat-card" onclick="switchNavSection(\'v2\', document.querySelectorAll(\'.nav-tab\')[2])" title="Explore Version 2 alternative architectures"><span class="stat-val">15</span><span class="stat-lbl">Next-Gen V2 Projects</span></div>',
+    )
+    head_html = head_html.replace(
+        '<div class="stat-card"><span class="stat-val">3</span><span class="stat-lbl">Capstone Deliverables</span></div>',
+        '<div class="stat-card" onclick="switchNavSection(\'capstones\', document.querySelectorAll(\'.nav-tab\')[3])" title="Explore Capstone industrial projects"><span class="stat-val">3</span><span class="stat-lbl">Capstone Deliverables</span></div>',
+    )
+
+    # Remove openDomainModal and closeDomainModal if present
+    head_html = re.sub(
+        r'function openDomainModal\(\)\s*\{[\s\S]*?function closeDomainModal\([^\)]*\)\s*\{[\s\S]*?\n    \}',
+        '',
+        head_html,
+    )
+    head_html = head_html.replace('closeDomainModal();', '')
+
     # Replace switchNavSection in script
     old_switch_re = re.compile(
-        r'function switchNavSection\(sec, btn\)\s*\{[\s\S]*?\}\s*function handleGlobalSearch',
+        r'function switchNavSection\(sec, btn\)\s*\{[\s\S]*?\n    \}',
         re.DOTALL,
     )
+    assert old_switch_re.search(head_html), "Could not find old switchNavSection in head_html!"
     head_html = old_switch_re.sub(
-        lambda m: updated_switch_nav + '\n\n    function handleGlobalSearch',
+        lambda m: updated_switch_nav.strip(),
         head_html,
     )
 

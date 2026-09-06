@@ -111,6 +111,7 @@ nav:
       - "Deep-dive: Python Data Ecosystem": 03-data-engineering/data-ecosystem-deep-dive.md
       - "Deep-dive: Data Formats & Storage": 03-data-engineering/data-formats-storage-deep-dive.md
       - "Deep-dive: Data Cleaning & Preprocessing": 03-data-engineering/data-cleaning-preprocessing-deep-dive.md
+      - "Deep-dive: Feature Engineering & Selection": 03-data-engineering/feature-engineering-selection-deep-dive.md
   - Book 4 – Classical ML:
       - Overview: 04-classical-ml/index.md
       - "Deep-dive: Linear Regression": 04-classical-ml/linear-regression-deep-dive.md

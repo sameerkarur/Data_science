@@ -25,12 +25,12 @@ The unglamorous 80% of ML work.
 
 ## Feature Engineering
 
-- [ ] Numerical features
-- [ ] Categorical features
-- [ ] Temporal features
-- [ ] Text features
-- [ ] Aggregations
-- [ ] Feature selection
+- [x] [Numerical features](feature-engineering-selection-deep-dive.md#3-numerical-transformations-power-transforms-discretization-and-interactions)
+- [x] [Categorical features](feature-engineering-selection-deep-dive.md#1-the-big-picture)
+- [x] [Temporal features](feature-engineering-selection-deep-dive.md#4-temporal-features-cyclical-encoding-lags-and-point-in-time-windows)
+- [x] [Text features](feature-engineering-selection-deep-dive.md#5-text-representations-tf-idf-and-subword-tokenization)
+- [x] [Aggregations](feature-engineering-selection-deep-dive.md#42-point-in-time-aggregations-and-lookahead-leakage-prevention)
+- [x] [Feature selection](feature-engineering-selection-deep-dive.md#6-feature-selection-filter-wrapper-and-embedded-paradigms)
 
 !!! mastery "Status"
     These are chapter stubs — each topic gets its own deep-dive page as it's written. See the [Python Functions](../01-python/functions-deep-dive.md) chapter for the target depth and format.

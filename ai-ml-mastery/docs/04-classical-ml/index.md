@@ -11,8 +11,8 @@ Every algorithm walked through: intuition → math → from-scratch → library 
 ## Classification
 
 - [x] [Logistic regression — full deep-dive](logistic-regression-deep-dive.md)
-- [ ] KNN
-- [ ] Naive Bayes
+- [x] [KNN — full deep-dive](knn-naive-bayes-deep-dive.md)
+- [x] [Naive Bayes — full deep-dive](knn-naive-bayes-deep-dive.md)
 - [ ] Decision trees
 - [ ] Random forests
 - [ ] Gradient boosting (XGBoost, LightGBM, CatBoost)

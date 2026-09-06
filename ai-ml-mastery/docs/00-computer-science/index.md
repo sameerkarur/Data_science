@@ -22,15 +22,15 @@ Before Python, you need enough computing fundamentals to understand *why* ML sys
 
 ## Programming Fundamentals
 
-- [ ] Algorithms
-- [ ] Flowcharts
-- [ ] Pseudocode
-- [ ] Variables & data
-- [ ] Control flow
-- [ ] Functions
-- [ ] Modularity
-- [ ] Abstraction
-- [ ] Complexity
+- [x] [Algorithms](algorithms-deep-dive.md)
+- [x] [Flowcharts](algorithms-deep-dive.md)
+- [x] [Pseudocode](algorithms-deep-dive.md)
+- [x] [Variables & data](how-computers-execute-programs.md)
+- [x] [Control flow](how-computers-execute-programs.md)
+- [x] [Functions](how-computers-execute-programs.md)
+- [x] [Modularity](how-computers-execute-programs.md)
+- [x] [Abstraction](how-computers-execute-programs.md)
+- [x] [Complexity](algorithms-deep-dive.md)
 
 ## Data Structures
 

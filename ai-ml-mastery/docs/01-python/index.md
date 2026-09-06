@@ -16,14 +16,14 @@ Fundamentals → OOP → advanced Python → CPython internals (bytecode, frames
 
 ## Part D — Functions
 
-- [ ] Parameters & arguments
-- [ ] Return & scope (LEGB)
-- [ ] Default & keyword args
-- [ ] *args / **kwargs
-- [ ] Lambda
-- [ ] Closures
-- [ ] Recursion
-- [ ] Decorators
+- [x] [Parameters & arguments](functions-deep-dive.md)
+- [x] [Return & scope (LEGB)](functions-deep-dive.md)
+- [x] [Default & keyword args](functions-deep-dive.md)
+- [x] [*args / **kwargs](functions-deep-dive.md)
+- [x] [Lambda](functions-deep-dive.md)
+- [x] [Closures](functions-deep-dive.md)
+- [x] [Recursion](functions-deep-dive.md)
+- [x] [Decorators](functions-deep-dive.md)
 - [x] [Functions — full deep-dive](functions-deep-dive.md) *(written, use as the depth template)*
 
 ## Part E — OOP

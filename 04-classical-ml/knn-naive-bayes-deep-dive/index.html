@@ -1,0 +1,4717 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete, deep-dive AI/ML curriculum — from Python internals to production AI systems.">
+      
+      
+        <meta name="author" content="Sameer Karur">
+      
+      
+      
+        <link rel="prev" href="../logistic-regression-deep-dive/">
+      
+      
+        <link rel="next" href="../decision-trees-deep-dive/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Deep-dive: KNN & Naive Bayes - AI/ML Mastery Program</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#k-nearest-neighbors-naive-bayes-non-parametric-generative-classifiers" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI/ML Mastery Program" class="md-header__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI/ML Mastery Program
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Deep-dive: KNN & Naive Bayes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../00-computer-science/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 0 – CS Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-python/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 1 – Python
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../02-mathematics/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 2 – Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../03-data-engineering/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 3 – Data Engineering
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 4 – Classical ML
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../05-ml-theory/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 5 – ML Theory & Evaluation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../06-deep-learning/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 6 – Deep Learning
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../07-computer-vision/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 7 – Computer Vision
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../08-nlp/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 8 – NLP
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../09-transformers-llms/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 9 – Transformers & LLMs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../10-generative-ai/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 10 – Generative AI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../11-ai-agents/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 11 – AI Agents
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../12-mlops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 12 – MLOps
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../13-ai-system-design/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 13 – AI System Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../14-projects/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 14 – Projects & Interview
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI/ML Mastery Program" class="md-nav__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI/ML Mastery Program
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../00-computer-science/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 0 – CS Foundations
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 0 – CS Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/how-computers-execute-programs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: How Computers Execute Programs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/arrays-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Arrays
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/linked-lists-stacks-queues-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linked Lists, Stacks & Queues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/hash-tables-sets-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hash Tables & Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Trees (Binary, BST, Heaps)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/graphs-tries-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Graphs & Tries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/algorithms-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Algorithms (Big-O, Searching, Sorting, Recursion, Greedy, DP, Graphs)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../01-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 1 – Python
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 1 – Python
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/fundamentals-control-flow-collections-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Fundamentals, Control Flow & Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/functions-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/oop-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: OOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/advanced-python-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced Python (Iterators, Generators, Async, Concurrency)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/internals-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Internals (CPython, Bytecode, GC, GIL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../02-mathematics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 2 – Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 2 – Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/foundations-math-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundations of Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/linear-algebra-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/calculus-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Calculus & Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/probability-statistics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Probability & Statistics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../03-data-engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 3 – Data Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 3 – Data Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-ecosystem-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Data Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-formats-storage-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Formats & Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-cleaning-preprocessing-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Cleaning & Preprocessing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/feature-engineering-selection-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Feature Engineering & Selection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 4 – Classical ML
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 4 – Classical ML
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linear-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../regularized-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Regularized & Polynomial Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logistic-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Logistic Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: KNN & Naive Bayes
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: KNN & Naive Bayes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-k-nearest-neighbors-knn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. K-Nearest Neighbors (KNN)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. K-Nearest Neighbors (KNN)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-geometric-intuition-voronoi-tessellation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Geometric Intuition &amp; Voronoi Tessellation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-distance-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Distance Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-the-curse-of-dimensionality-analytical-proof" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 The Curse of Dimensionality: Analytical Proof
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-spatial-search-indexing-kd-trees-ball-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Spatial Search Indexing: KD-Trees &amp; Ball-Trees
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-naive-bayes-classifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Naive Bayes Classifiers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Naive Bayes Classifiers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-bayes-rule-for-classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Bayes' Rule for Classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-the-conditional-independence-assumption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 The Conditional Independence Assumption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-three-classic-naive-bayes-formulations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Three Classic Naive Bayes Formulations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-the-zero-frequency-problem-laplace-lidstone-smoothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 The Zero-Frequency Problem &amp; Laplace / Lidstone Smoothing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-implementation-1-vectorized-kd-tree-knn-from-scratch-numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Implementation 1 — Vectorized KD-Tree KNN from Scratch (NumPy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-implementation-2-gaussian-multinomial-naive-bayes-from-scratch-numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Implementation 2 — Gaussian &amp; Multinomial Naive Bayes from Scratch (NumPy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-implementation-3-scikit-learn-benchmarking-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Implementation 3 — scikit-learn Benchmarking &amp; Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-common-errors-production-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Common Errors &amp; Production Debugging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Common Errors &amp; Production Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-unscaled-features-in-distance-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Unscaled Features in Distance Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-underflow-in-naive-bayes-likelihood-products" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Underflow in Naive Bayes Likelihood Products
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-zero-frequency-tokens-without-smoothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Zero-Frequency Tokens Without Smoothing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-staff-level-interview-questions-model-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Staff-Level Interview Questions &amp; Model Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Staff-Level Interview Questions &amp; Model Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-prove-how-the-curse-of-dimensionality-impacts-distance-metrics-in-knn-as-dimension-p-to-infty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Prove how the Curse of Dimensionality impacts distance metrics in KNN as dimension \(p \to \infty\).
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-why-does-naive-bayes-frequently-perform-exceptionally-well-in-practice-despite-its-conditional-independence-assumption-being-blatantly-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Why does Naive Bayes frequently perform exceptionally well in practice despite its conditional independence assumption being blatantly false?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-derive-the-decision-boundary-of-gaussian-naive-bayes-under-what-conditions-is-it-strictly-linear-vs-quadratic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: Derive the decision boundary of Gaussian Naive Bayes. Under what conditions is it strictly linear vs. quadratic?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-derive-laplace-and-lidstone-smoothing-from-a-bayesian-perspective-using-dirichlet-conjugate-priors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Derive Laplace and Lidstone smoothing from a Bayesian perspective using Dirichlet conjugate priors.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-compare-multinomial-naive-bayes-and-bernoulli-naive-bayes-for-text-classification-when-does-each-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: Compare Multinomial Naive Bayes and Bernoulli Naive Bayes for text classification. When does each fail?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q6-how-does-the-choice-of-k-in-knn-govern-the-bias-variance-tradeoff-what-happens-at-k1-and-kn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q6: How does the choice of \(k\) in KNN govern the bias-variance tradeoff? What happens at \(k=1\) and \(k=n\)?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decision-trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ensemble-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Ensemble Learning (Random Forests & GBDT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../svm-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Support Vector Machines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../05-ml-theory/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/model-validation-generalization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Validation & Generalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/evaluation-metrics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/hyperparameter-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hyperparameter Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../06-deep-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 6 – Deep Learning
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 6 – Deep Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/neural-network-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Neural Network Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/architecture-components-regularization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Architecture Components & Regularization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/deep-learning-optimizers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Deep Learning Optimizers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../07-computer-vision/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 7 – Computer Vision
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 7 – Computer Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/convolutional-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Convolutional Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/modern-cnn-architectures-transfer-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Modern CNN Architectures & Transfer Learning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/vision-tasks-transformers-multimodal-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Vision Tasks, ViT & Multimodal Vision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../08-nlp/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 8 – NLP
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 8 – NLP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/text-representation-word-embeddings-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Text Representation & Word Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/sequence-models-attention-transformers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Sequence Models, Attention & Transformers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../09-transformers-llms/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 9 – Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 9 – Transformers & LLMs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/transformer-architecture-mechanics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Transformer Architecture & Mechanics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/foundation-model-families-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundation Model Families
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/llm-training-alignment-peft-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Training, Alignment & PEFT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../10-generative-ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 10 – Generative AI
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 10 – Generative AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/llm-application-engineering-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Application Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/enterprise-rag-systems-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Enterprise RAG Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/diffusion-models-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../11-ai-agents/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 11 – AI Agents
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 11 – AI Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/agent-architectures-patterns-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Agent Architectures & Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/multi-agent-systems-security-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Multi-Agent Systems & Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../12-mlops/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 12 – MLOps
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 12 – MLOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/production-tooling-containerization-cicd-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production Tooling, Containerization & CI/CD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/serving-pipelines-orchestration-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Serving, Pipelines & Distributed Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/model-monitoring-observability-retraining-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Monitoring, Observability & Automated Retraining
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../13-ai-system-design/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 13 – AI System Design
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_15" id="__nav_15_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 13 – AI System Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/ai-system-design-methodology-framework-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: AI System Design Methodology & Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/production-case-studies-system-design-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production AI System Design Case Studies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../14-projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 14 – Projects & Interview
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_16" id="__nav_16_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 14 – Projects & Interview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/foundational-applied-projects-tier-1-to-4-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundational Applied Projects (Tiers 1–4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/advanced-frontier-projects-tier-5-to-8-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced & Frontier Applied Projects (Tiers 5–8)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/staff-level-interview-question-banks-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Staff-Level Technical Interview Question Banks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-k-nearest-neighbors-knn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. K-Nearest Neighbors (KNN)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. K-Nearest Neighbors (KNN)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-geometric-intuition-voronoi-tessellation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Geometric Intuition &amp; Voronoi Tessellation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-distance-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Distance Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-the-curse-of-dimensionality-analytical-proof" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 The Curse of Dimensionality: Analytical Proof
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-spatial-search-indexing-kd-trees-ball-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Spatial Search Indexing: KD-Trees &amp; Ball-Trees
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-naive-bayes-classifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Naive Bayes Classifiers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Naive Bayes Classifiers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-bayes-rule-for-classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Bayes' Rule for Classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-the-conditional-independence-assumption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 The Conditional Independence Assumption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-three-classic-naive-bayes-formulations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Three Classic Naive Bayes Formulations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-the-zero-frequency-problem-laplace-lidstone-smoothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 The Zero-Frequency Problem &amp; Laplace / Lidstone Smoothing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-implementation-1-vectorized-kd-tree-knn-from-scratch-numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Implementation 1 — Vectorized KD-Tree KNN from Scratch (NumPy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-implementation-2-gaussian-multinomial-naive-bayes-from-scratch-numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Implementation 2 — Gaussian &amp; Multinomial Naive Bayes from Scratch (NumPy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-implementation-3-scikit-learn-benchmarking-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Implementation 3 — scikit-learn Benchmarking &amp; Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-common-errors-production-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Common Errors &amp; Production Debugging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Common Errors &amp; Production Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-unscaled-features-in-distance-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Unscaled Features in Distance Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-underflow-in-naive-bayes-likelihood-products" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Underflow in Naive Bayes Likelihood Products
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-zero-frequency-tokens-without-smoothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Zero-Frequency Tokens Without Smoothing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-staff-level-interview-questions-model-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Staff-Level Interview Questions &amp; Model Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Staff-Level Interview Questions &amp; Model Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-prove-how-the-curse-of-dimensionality-impacts-distance-metrics-in-knn-as-dimension-p-to-infty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Prove how the Curse of Dimensionality impacts distance metrics in KNN as dimension \(p \to \infty\).
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-why-does-naive-bayes-frequently-perform-exceptionally-well-in-practice-despite-its-conditional-independence-assumption-being-blatantly-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Why does Naive Bayes frequently perform exceptionally well in practice despite its conditional independence assumption being blatantly false?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-derive-the-decision-boundary-of-gaussian-naive-bayes-under-what-conditions-is-it-strictly-linear-vs-quadratic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: Derive the decision boundary of Gaussian Naive Bayes. Under what conditions is it strictly linear vs. quadratic?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-derive-laplace-and-lidstone-smoothing-from-a-bayesian-perspective-using-dirichlet-conjugate-priors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Derive Laplace and Lidstone smoothing from a Bayesian perspective using Dirichlet conjugate priors.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-compare-multinomial-naive-bayes-and-bernoulli-naive-bayes-for-text-classification-when-does-each-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: Compare Multinomial Naive Bayes and Bernoulli Naive Bayes for text classification. When does each fail?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q6-how-does-the-choice-of-k-in-knn-govern-the-bias-variance-tradeoff-what-happens-at-k1-and-kn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q6: How does the choice of \(k\) in KNN govern the bias-variance tradeoff? What happens at \(k=1\) and \(k=n\)?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="k-nearest-neighbors-naive-bayes-non-parametric-generative-classifiers">K-Nearest Neighbors &amp; Naive Bayes — Non-Parametric &amp; Generative Classifiers<a class="headerlink" href="#k-nearest-neighbors-naive-bayes-non-parametric-generative-classifiers" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>Bayes' theorem, probability density functions, vector norms, and tree data structures. Review <a href="../../02-mathematics/probability-statistics-deep-dive/">Probability &amp; Statistics</a>, <a href="../../02-mathematics/foundations-math-deep-dive/">Foundations of Math</a>, and <a href="../../00-computer-science/trees-deep-dive/">Trees (Binary, BST)</a>.</p>
+</div>
+<hr />
+<h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
+<p>Machine learning classifiers generally fall into two distinct philosophical paradigms:</p>
+<ol>
+<li><strong>Instance-Based / Non-Parametric (K-Nearest Neighbors)</strong>: Memorizes the entire training dataset without explicitly estimating functional parameters. It assumes that instances close to each other in metric space share the same label. The model's capacity grows automatically with the size of the dataset.</li>
+<li><strong>Generative / Probabilistic (Naive Bayes)</strong>: Learns the underlying data-generating distribution <span class="arithmatex">\(P(\mathbf{x} | y)\)</span> for each class, alongside the class prior <span class="arithmatex">\(P(y)\)</span>. By applying Bayes' rule with a conditional independence simplification, it computes posterior class probabilities <span class="arithmatex">\(P(y | \mathbf{x})\)</span>.</li>
+</ol>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Non-Parametric Paradigm: KNN
+        D1["Training Data memorized in Metric Space"] --&gt; MET["Distance Metric: Euclidean, Manhattan, Minkowski, Cosine"]
+        MET --&gt; SPAT["Spatial Partitioning: KD-Tree / Ball-Tree"]
+        SPAT --&gt; VOR["Voronoi Tessellation &amp; Local Voting"]
+    end
+
+    subgraph Generative Paradigm: Naive Bayes
+        D2["Training Data"] --&gt; BAY["Bayes' Rule: P(y|x) ∝ P(y) P(x|y)"]
+        BAY --&gt; IND["Conditional Independence: P(x|y) = ∏ P(xᵢ|y)"]
+        IND --&gt; GNB["Gaussian NB (Continuous Features)"]
+        IND --&gt; MNB["Multinomial NB (Word Counts / Bag-of-Words)"]
+        IND --&gt; BNB["Bernoulli NB (Binary Indicators)"]
+    end</code></pre>
+<hr />
+<h2 id="2-k-nearest-neighbors-knn">2. K-Nearest Neighbors (KNN)<a class="headerlink" href="#2-k-nearest-neighbors-knn" title="Permanent link">&para;</a></h2>
+<h3 id="21-geometric-intuition-voronoi-tessellation">2.1 Geometric Intuition &amp; Voronoi Tessellation<a class="headerlink" href="#21-geometric-intuition-voronoi-tessellation" title="Permanent link">&para;</a></h3>
+<p>In 1-Nearest Neighbor (<span class="arithmatex">\(k=1\)</span>), every query point <span class="arithmatex">\(\mathbf{x}_{\text{query}}\)</span> is assigned the label of its closest training instance <span class="arithmatex">\(\mathbf{x}^{(i)}\)</span>. This partitions the entire <span class="arithmatex">\(p\)</span>-dimensional feature space into convex polyhedral cells called a <strong>Voronoi Tessellation</strong>.</p>
+<p>For a training set <span class="arithmatex">\(\{\mathbf{x}^{(1)}, \dots, \mathbf{x}^{(n)}\}\)</span>, the Voronoi cell <span class="arithmatex">\(V_i\)</span> corresponding to sample <span class="arithmatex">\(\mathbf{x}^{(i)}\)</span> is:</p>
+<div class="arithmatex">\[
+V_i = \left\{ \mathbf{x} \in \mathbb{R}^p \;\Big|\; d(\mathbf{x}, \mathbf{x}^{(i)}) \le d(\mathbf{x}, \mathbf{x}^{(j)}) \quad \forall j \ne i \right\}
+\]</div>
+<p>The decision boundary is composed of hyperplanes that perpendicularly bisect the line segments connecting training points of opposing classes.</p>
+<pre class="mermaid"><code>flowchart LR
+    A["Query Point x_q"] --&gt; B["Compute metric distances to all points"]
+    B --&gt; C["Select k closest neighbors: N_k(x_q)"]
+    C --&gt; D["Classification: Plurality Vote y = mode(y_i)"]
+    C --&gt; E["Regression: Local Average y = (1/k) ∑ y_i"]</code></pre>
+<h3 id="22-distance-metrics">2.2 Distance Metrics<a class="headerlink" href="#22-distance-metrics" title="Permanent link">&para;</a></h3>
+<p>The geometry of the neighborhood is dictated entirely by the metric <span class="arithmatex">\(d(\mathbf{u}, \mathbf{v})\)</span>:</p>
+<ol>
+<li>
+<p><strong>Euclidean Distance (<span class="arithmatex">\(L_2\)</span> norm)</strong>:
+   $<span class="arithmatex">\(d_2(\mathbf{u}, \mathbf{v}) = \|\mathbf{u} - \mathbf{v}\|_2 = \sqrt{\sum_{j=1}^p (u_j - v_j)^2}\)</span>$
+   Measures direct straight-line distance; assumes isotropic variance across coordinates.</p>
+</li>
+<li>
+<p><strong>Manhattan Distance (<span class="arithmatex">\(L_1\)</span> norm / Taxicab)</strong>:
+   $<span class="arithmatex">\(d_1(\mathbf{u}, \mathbf{v}) = \|\mathbf{u} - \mathbf{v}\|_1 = \sum_{j=1}^p |u_j - v_j|\)</span>$
+   Measures axis-aligned grid distance; robust against coordinate-level outliers.</p>
+</li>
+<li>
+<p><strong>Minkowski Distance (<span class="arithmatex">\(L_q\)</span> norm)</strong>:
+   $<span class="arithmatex">\(d_q(\mathbf{u}, \mathbf{v}) = \left( \sum_{j=1}^p |u_j - v_j|^q \right)^{1/q}\)</span>$
+   Generalizes <span class="arithmatex">\(L_1\)</span> (<span class="arithmatex">\(q=1\)</span>), <span class="arithmatex">\(L_2\)</span> (<span class="arithmatex">\(q=2\)</span>), and Chebyshev / infinity norm (<span class="arithmatex">\(q \to \infty\)</span>: <span class="arithmatex">\(\max_j |u_j - v_j|\)</span>).</p>
+</li>
+<li>
+<p><strong>Cosine Distance</strong>:
+   $<span class="arithmatex">\(d_{\cos}(\mathbf{u}, \mathbf{v}) = 1 - \frac{\mathbf{u}^T \mathbf{v}}{\|\mathbf{u}\|_2 \|\mathbf{v}\|_2}\)</span>$
+   Measures angular divergence while ignoring vector magnitude; ideal for high-dimensional text TF-IDF and embedding vectors.</p>
+</li>
+</ol>
+<h3 id="23-the-curse-of-dimensionality-analytical-proof">2.3 The Curse of Dimensionality: Analytical Proof<a class="headerlink" href="#23-the-curse-of-dimensionality-analytical-proof" title="Permanent link">&para;</a></h3>
+<p>As the dimension <span class="arithmatex">\(p \to \infty\)</span>, the geometry of high-dimensional Euclidean space defies human intuition:</p>
+<h4 id="a-hypercube-volume-concentration">A. Hypercube Volume Concentration:<a class="headerlink" href="#a-hypercube-volume-concentration" title="Permanent link">&para;</a></h4>
+<p>Consider a unit hypercube <span class="arithmatex">\([0, 1]^p\)</span> with volume <span class="arithmatex">\(V_{\text{cube}} = 1\)</span>. To capture a fraction <span class="arithmatex">\(r \in (0, 1)\)</span> of the data points uniformly distributed inside the hypercube using a sub-cube of side length <span class="arithmatex">\(s\)</span>, the side length must satisfy:</p>
+<div class="arithmatex">\[
+s^p = r \implies s = r^{1/p}
+\]</div>
+<p>For <span class="arithmatex">\(r = 0.01\)</span> (capturing just 1% of the data):
+- In <span class="arithmatex">\(p = 1\)</span>: <span class="arithmatex">\(s = 0.01^1 = 0.01\)</span> (a tight local neighborhood).
+- In <span class="arithmatex">\(p = 10\)</span>: <span class="arithmatex">\(s = 0.01^{1/10} \approx 0.63\)</span> (requires covering 63% of each feature axis!).
+- In <span class="arithmatex">\(p = 100\)</span>: <span class="arithmatex">\(s = 0.01^{1/100} \approx 0.955\)</span> (requires spanning 95.5% of the entire domain).</p>
+<p><strong>Conclusion</strong>: In high dimensions, there are no "local" neighbors! Any neighborhood large enough to contain even a few points must span almost the entire range of every feature.</p>
+<h4 id="b-distance-metric-degeneration">B. Distance Metric Degeneration:<a class="headerlink" href="#b-distance-metric-degeneration" title="Permanent link">&para;</a></h4>
+<p>Beyer et al. (1999) proved that under broad distributional assumptions, the difference in distance between the nearest neighbor and farthest neighbor vanishes relative to the distance to the nearest neighbor:</p>
+<div class="arithmatex">\[
+\lim_{p \to \infty} \frac{d_{\max} - d_{\min}}{d_{\min}} = 0
+\]</div>
+<p>As dimension grows, all pairs of points become virtually equidistant from the query point. Distance-based classification degrades to random guessing unless dimensionality reduction is performed.</p>
+<h3 id="24-spatial-search-indexing-kd-trees-ball-trees">2.4 Spatial Search Indexing: KD-Trees &amp; Ball-Trees<a class="headerlink" href="#24-spatial-search-indexing-kd-trees-ball-trees" title="Permanent link">&para;</a></h3>
+<p>Brute-force KNN requires comparing <span class="arithmatex">\(\mathbf{x}_{\text{query}}\)</span> against all <span class="arithmatex">\(n\)</span> training points: <span class="arithmatex">\(\mathcal{O}(n \cdot p)\)</span> per query. Spatial data structures organize training points into hierarchical geometric trees to achieve <span class="arithmatex">\(\mathcal{O}(p \log n)\)</span> average query time.</p>
+<pre class="mermaid"><code>flowchart TD
+    ROOT["Root: Split on x-axis (median)"]
+    ROOT --&gt; L1["Left: x &lt; median"]
+    ROOT --&gt; R1["Right: x ≥ median"]
+    L1 --&gt; L2["Split on y-axis"]
+    L1 --&gt; R2["Split on y-axis"]
+    R1 --&gt; L3["Split on y-axis"]
+    R1 --&gt; R3["Split on y-axis"]</code></pre>
+<ul>
+<li><strong>KD-Tree (<span class="arithmatex">\(k\)</span>-dimensional Tree)</strong>:</li>
+<li>Recursively partitions space along coordinate axes rotating cycling through dimensions <span class="arithmatex">\(j = \text{depth} \pmod p\)</span>.</li>
+<li>Splits at the median value of feature <span class="arithmatex">\(j\)</span>.</li>
+<li>Query Pruning: During search, if the distance from <span class="arithmatex">\(\mathbf{x}_{\text{query}}\)</span> to the bounding splitting hyperplane is greater than the current <span class="arithmatex">\(k\)</span>-th best distance, the entire opposite branch is pruned.
+  <em>Limitation</em>: When <span class="arithmatex">\(p \ge 20\)</span>, the curse of dimensionality forces the search algorithm to inspect nearly every leaf, degrading to <span class="arithmatex">\(\mathcal{O}(n)\)</span>.</li>
+<li><strong>Ball-Tree</strong>:
+  Partitions space into nested hyperspheres (balls). Better suited for higher dimensions and arbitrary metric spaces where coordinate-aligned splitting is ineffective.</li>
+</ul>
+<hr />
+<h2 id="3-naive-bayes-classifiers">3. Naive Bayes Classifiers<a class="headerlink" href="#3-naive-bayes-classifiers" title="Permanent link">&para;</a></h2>
+<h3 id="31-bayes-rule-for-classification">3.1 Bayes' Rule for Classification<a class="headerlink" href="#31-bayes-rule-for-classification" title="Permanent link">&para;</a></h3>
+<p>Given an input feature vector <span class="arithmatex">\(\mathbf{x} = [x_1, x_2, \dots, x_p]^T\)</span>, we seek the class <span class="arithmatex">\(y \in \{1, \dots, K\}\)</span> maximizing the posterior probability <span class="arithmatex">\(P(y | \mathbf{x})\)</span>:</p>
+<div class="arithmatex">\[
+P(y | \mathbf{x}) = \frac{P(y) P(\mathbf{x} | y)}{P(\mathbf{x})} = \frac{P(y) P(\mathbf{x} | y)}{\sum_{c=1}^K P(y = c) P(\mathbf{x} | y = c)}
+\]</div>
+<p>Because the evidence denominator <span class="arithmatex">\(P(\mathbf{x})\)</span> is independent of the class label <span class="arithmatex">\(y\)</span>:</p>
+<div class="arithmatex">\[
+\hat{y} = \arg\max_{y} P(y) P(\mathbf{x} | y)
+\]</div>
+<h3 id="32-the-conditional-independence-assumption">3.2 The Conditional Independence Assumption<a class="headerlink" href="#32-the-conditional-independence-assumption" title="Permanent link">&para;</a></h3>
+<p>Modeling the full multivariate class-conditional joint probability <span class="arithmatex">\(P(x_1, x_2, \dots, x_p | y)\)</span> requires estimating an intractable number of parameters (<span class="arithmatex">\(\mathcal{O}(K \cdot S^p)\)</span> for discrete features of cardinality <span class="arithmatex">\(S\)</span>).</p>
+<p>The <strong>Naive Bayes assumption</strong> asserts that given the class label <span class="arithmatex">\(y\)</span>, all features <span class="arithmatex">\(x_1, \dots, x_p\)</span> are conditionally independent:</p>
+<div class="arithmatex">\[
+P(\mathbf{x} | y) = P(x_1, x_2, \dots, x_p | y) = \prod_{j=1}^p P(x_j | y)
+\]</div>
+<p>The classification decision rule in log-space (to prevent numerical underflow) is:</p>
+<div class="arithmatex">\[
+\hat{y} = \arg\max_{y} \left[ \ln P(y) + \sum_{j=1}^p \ln P(x_j | y) \right]
+\]</div>
+<pre class="mermaid"><code>flowchart TD
+    PRIOR["Class Prior: P(y) = N_y / N"]
+    FEAT["Class-Conditional Feature Densities: P(xⱼ | y)"]
+    PROD["Log Posterior: ln P(y) + ∑ ln P(xⱼ | y)"]
+    PRIOR &amp; FEAT --&gt; PROD
+    PROD --&gt; ARG["Argmax across classes y ∈ {1, ..., K}"]</code></pre>
+<h3 id="33-three-classic-naive-bayes-formulations">3.3 Three Classic Naive Bayes Formulations<a class="headerlink" href="#33-three-classic-naive-bayes-formulations" title="Permanent link">&para;</a></h3>
+<p>Depending on the nature of the feature variables, different distributions are assumed for <span class="arithmatex">\(P(x_j | y)\)</span>:</p>
+<h4 id="a-gaussian-naive-bayes-continuous-features">A. Gaussian Naive Bayes (Continuous Features):<a class="headerlink" href="#a-gaussian-naive-bayes-continuous-features" title="Permanent link">&para;</a></h4>
+<p>Assumes each feature within class <span class="arithmatex">\(y\)</span> follows a univariate normal distribution:</p>
+<div class="arithmatex">\[
+P(x_j | y) = \frac{1}{\sqrt{2\pi \sigma_{yj}^2}} \exp\left( -\frac{(x_j - \mu_{yj})^2}{2\sigma_{yj}^2} \right)
+\]</div>
+<p>Parameters are estimated via sample mean <span class="arithmatex">\(\hat{\mu}_{yj}\)</span> and sample variance <span class="arithmatex">\(\hat{\sigma}_{yj}^2\)</span> per class.</p>
+<h4 id="b-multinomial-naive-bayes-word-counts-frequencies">B. Multinomial Naive Bayes (Word Counts / Frequencies):<a class="headerlink" href="#b-multinomial-naive-bayes-word-counts-frequencies" title="Permanent link">&para;</a></h4>
+<p>Models integer count vectors <span class="arithmatex">\(\mathbf{x} = [x_1, \dots, x_p]^T\)</span> (e.g., word occurrences in document classification):</p>
+<div class="arithmatex">\[
+P(\mathbf{x} | y) = \frac{(\sum_j x_j)!}{\prod_j x_j!} \prod_{j=1}^p \theta_{yj}^{x_j}
+\]</div>
+<p>where <span class="arithmatex">\(\theta_{yj} = P(\text{feature } j | y)\)</span> is the probability that a token in class <span class="arithmatex">\(y\)</span> is feature <span class="arithmatex">\(j\)</span>.</p>
+<h4 id="c-bernoulli-naive-bayes-binary-indicators">C. Bernoulli Naive Bayes (Binary Indicators):<a class="headerlink" href="#c-bernoulli-naive-bayes-binary-indicators" title="Permanent link">&para;</a></h4>
+<p>Models binary presence/absence indicators <span class="arithmatex">\(x_j \in \{0, 1\}\)</span>:</p>
+<div class="arithmatex">\[
+P(\mathbf{x} | y) = \prod_{j=1}^p \theta_{yj}^{x_j} (1 - \theta_{yj})^{1 - x_j}
+\]</div>
+<p>Notice that unlike Multinomial NB, Bernoulli NB <strong>explicitly penalizes the absence of words</strong> (<span class="arithmatex">\(1 - \theta_{yj}\)</span>).</p>
+<h3 id="34-the-zero-frequency-problem-laplace-lidstone-smoothing">3.4 The Zero-Frequency Problem &amp; Laplace / Lidstone Smoothing<a class="headerlink" href="#34-the-zero-frequency-problem-laplace-lidstone-smoothing" title="Permanent link">&para;</a></h3>
+<p>If a word or feature value <span class="arithmatex">\(x_j\)</span> never appears in class <span class="arithmatex">\(y\)</span> during training, the Maximum Likelihood Estimate is <span class="arithmatex">\(\hat{\theta}_{yj} = 0\)</span>.
+Because probabilities are multiplied:</p>
+<div class="arithmatex">\[
+P(\mathbf{x} | y) = \hat{\theta}_{yj} \times \prod_{k \ne j} P(x_k | y) = 0 \times \dots = 0
+\]</div>
+<p>A single unseen word completely zeroes out the entire class probability regardless of all other evidence!</p>
+<p>To prevent this, <strong>Laplace smoothing</strong> (<span class="arithmatex">\(\alpha = 1\)</span>) or <strong>Lidstone smoothing</strong> (<span class="arithmatex">\(0 &lt; \alpha &lt; 1\)</span>) adds pseudo-counts:</p>
+<div class="arithmatex">\[
+\hat{\theta}_{yj} = \frac{N_{yj} + \alpha}{N_y + \alpha \cdot d}
+\]</div>
+<p>where <span class="arithmatex">\(N_{yj} = \sum_{i \in \text{class } y} X_{ij}\)</span> is the total count of feature <span class="arithmatex">\(j\)</span> in class <span class="arithmatex">\(y\)</span>, <span class="arithmatex">\(N_y = \sum_{j=1}^d N_{yj}\)</span> is the total count of all features in class <span class="arithmatex">\(y\)</span>, and <span class="arithmatex">\(d\)</span> is the vocabulary size.
+This corresponds to Bayesian MAP estimation under a symmetric <strong>Dirichlet prior</strong> <span class="arithmatex">\(\text{Dir}(\alpha, \dots, \alpha)\)</span>.</p>
+<hr />
+<h2 id="4-implementation-1-vectorized-kd-tree-knn-from-scratch-numpy">4. Implementation 1 — Vectorized KD-Tree KNN from Scratch (NumPy)<a class="headerlink" href="#4-implementation-1-vectorized-kd-tree-knn-from-scratch-numpy" title="Permanent link">&para;</a></h2>
+<p>Let us implement a complete KD-Tree spatial index and K-Nearest Neighbors classifier from scratch in pure Python and NumPy.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">KDNode</span><span class="p">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="sd">"""A single node in a k-dimensional tree."""</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">point</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="k">class</span><span class="w"> </span><span class="nc">ScratchKDTree</span><span class="p">:</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="sd">"""Recursive spatial partitioning tree for fast KNN queries."""</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_tree</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_build_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>            <span class="k">return</span> <span class="kc">None</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>        <span class="n">axis</span> <span class="o">=</span> <span class="n">depth</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="c1"># Sort by the current axis and pick median</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">axis</span><span class="p">])</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>        <span class="n">median_idx</span> <span class="o">=</span> <span class="n">n</span> <span class="o">//</span> <span class="mi">2</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        <span class="n">median_point</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">[</span><span class="n">median_idx</span><span class="p">]]</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="n">median_label</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">[</span><span class="n">median_idx</span><span class="p">]]</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>        <span class="n">left_idx</span> <span class="o">=</span> <span class="n">sorted_indices</span><span class="p">[:</span><span class="n">median_idx</span><span class="p">]</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>        <span class="n">right_idx</span> <span class="o">=</span> <span class="n">sorted_indices</span><span class="p">[</span><span class="n">median_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>        <span class="k">return</span> <span class="n">KDNode</span><span class="p">(</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>            <span class="n">point</span><span class="o">=</span><span class="n">median_point</span><span class="p">,</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>            <span class="n">label</span><span class="o">=</span><span class="n">median_label</span><span class="p">,</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>            <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>            <span class="n">left</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_build_tree</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">left_idx</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">left_idx</span><span class="p">],</span> <span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>            <span class="n">right</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_build_tree</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">right_idx</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">right_idx</span><span class="p">],</span> <span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>        <span class="p">)</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>        <span class="n">best_neighbors</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of tuples: (-distance, label)</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>        <span class="k">def</span><span class="w"> </span><span class="nf">_search</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>            <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>                <span class="k">return</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>            <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">point</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>            <span class="c1"># Maintain heap/sorted list of k best</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>            <span class="n">best_neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">dist</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>            <span class="n">best_neighbors</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">best_neighbors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">k</span><span class="p">:</span>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>                <span class="n">best_neighbors</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>            <span class="n">axis</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">axis</span>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>            <span class="n">diff</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">-</span> <span class="n">node</span><span class="o">.</span><span class="n">point</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>            <span class="c1"># Recurse down primary branch first</span>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>            <span class="n">near_branch</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span> <span class="k">if</span> <span class="n">diff</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>            <span class="n">far_branch</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span> <span class="k">if</span> <span class="n">diff</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>            <span class="n">_search</span><span class="p">(</span><span class="n">near_branch</span><span class="p">)</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>            <span class="c1"># Pruning check: Can the hypersphere centered at target reach across the boundary?</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>            <span class="n">worst_dist</span> <span class="o">=</span> <span class="n">best_neighbors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">best_neighbors</span><span class="p">)</span> <span class="o">==</span> <span class="n">k</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s1">'inf'</span><span class="p">)</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">worst_dist</span><span class="p">:</span>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>                <span class="n">_search</span><span class="p">(</span><span class="n">far_branch</span><span class="p">)</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>        <span class="n">_search</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>        <span class="k">return</span> <span class="n">best_neighbors</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>
+</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>
+</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a><span class="k">class</span><span class="w"> </span><span class="nc">ScratchKNNClassifier</span><span class="p">:</span>
+</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a><span class="w">    </span><span class="sd">"""K-Nearest Neighbors Classifier backed by a KD-Tree spatial index."""</span>
+</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">):</span>
+</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>
+</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a>        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">ScratchKDTree</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a>        <span class="k">return</span> <span class="bp">self</span>
+</span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>
+</span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>        <span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a>        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">:</span>
+</span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a>            <span class="n">neighbors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
+</span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a>            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">label</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">]</span>
+</span><span id="__span-0-95"><a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a>            <span class="c1"># Plurality vote</span>
+</span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a>            <span class="n">values</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a>            <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">counts</span><span class="p">)])</span>
+</span><span id="__span-0-98"><a id="__codelineno-0-98" name="__codelineno-0-98" href="#__codelineno-0-98"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="5-implementation-2-gaussian-multinomial-naive-bayes-from-scratch-numpy">5. Implementation 2 — Gaussian &amp; Multinomial Naive Bayes from Scratch (NumPy)<a class="headerlink" href="#5-implementation-2-gaussian-multinomial-naive-bayes-from-scratch-numpy" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">ScratchGaussianNB</span><span class="p">:</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="sd">"""Gaussian Naive Bayes for continuous features."""</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var_smoothing</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">):</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">var_smoothing</span> <span class="o">=</span> <span class="n">var_smoothing</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">priors_</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">vars_</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">priors_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_classes</span><span class="p">)</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">n_features</span><span class="p">))</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">vars_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">n_features</span><span class="p">))</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">):</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>            <span class="n">X_c</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="n">c</span><span class="p">]</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">priors_</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_c</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_samples</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X_c</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>            <span class="c1"># Add var_smoothing to prevent division by zero in zero-variance features</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">vars_</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">X_c</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_smoothing</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>        <span class="k">return</span> <span class="bp">self</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>        <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>        <span class="n">log_posteriors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">))</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_classes</span><span class="p">):</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>            <span class="n">prior_log</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">priors_</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>            <span class="n">mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>            <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars_</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>            <span class="c1"># Vectorized Gaussian log-density:</span>
+</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>            <span class="c1"># -0.5 * ln(2*pi*var) - ((x - mean)^2) / (2 * var)</span>
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>            <span class="n">log_likelihood</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">var</span><span class="p">))</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(((</span><span class="n">X</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">var</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>            <span class="n">log_posteriors</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">prior_log</span> <span class="o">+</span> <span class="n">log_likelihood</span>
+</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>
+</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>        <span class="c1"># Log-Sum-Exp trick for stable posterior probabilities</span>
+</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>        <span class="n">max_log</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">log_posteriors</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>        <span class="n">exp_post</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_posteriors</span> <span class="o">-</span> <span class="n">max_log</span><span class="p">)</span>
+</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>        <span class="k">return</span> <span class="n">exp_post</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">exp_post</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>
+</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>        <span class="n">probs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>
+</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>
+</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="k">class</span><span class="w"> </span><span class="nc">ScratchMultinomialNB</span><span class="p">:</span>
+</span><span id="__span-1-57"><a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a><span class="w">    </span><span class="sd">"""Multinomial Naive Bayes with Laplace smoothing."""</span>
+</span><span id="__span-1-58"><a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+</span><span id="__span-1-59"><a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+</span><span id="__span-1-60"><a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-1-61"><a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">class_log_prior_</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-1-62"><a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">feature_log_prob_</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-1-63"><a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>
+</span><span id="__span-1-64"><a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+</span><span id="__span-1-65"><a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>        <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-1-66"><a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</span><span id="__span-1-67"><a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+</span><span id="__span-1-68"><a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>
+</span><span id="__span-1-69"><a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">class_log_prior_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_classes</span><span class="p">)</span>
+</span><span id="__span-1-70"><a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">feature_log_prob_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">n_features</span><span class="p">))</span>
+</span><span id="__span-1-71"><a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>
+</span><span id="__span-1-72"><a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">):</span>
+</span><span id="__span-1-73"><a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>            <span class="n">X_c</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="n">c</span><span class="p">]</span>
+</span><span id="__span-1-74"><a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">class_log_prior_</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_c</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_samples</span><span class="p">)</span>
+</span><span id="__span-1-75"><a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>
+</span><span id="__span-1-76"><a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>            <span class="c1"># Laplace / Lidstone smoothed word probabilities:</span>
+</span><span id="__span-1-77"><a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>            <span class="c1"># (count(w, c) + alpha) / (total_tokens_in_c + alpha * d)</span>
+</span><span id="__span-1-78"><a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>            <span class="n">token_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">X_c</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-1-79"><a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>            <span class="n">total_tokens</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">token_counts</span><span class="p">)</span>
+</span><span id="__span-1-80"><a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a>            <span class="n">smoothed_prob</span> <span class="o">=</span> <span class="p">(</span><span class="n">token_counts</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">total_tokens</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">n_features</span><span class="p">)</span>
+</span><span id="__span-1-81"><a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">feature_log_prob_</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">smoothed_prob</span><span class="p">)</span>
+</span><span id="__span-1-82"><a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a>
+</span><span id="__span-1-83"><a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a>        <span class="k">return</span> <span class="bp">self</span>
+</span><span id="__span-1-84"><a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a>
+</span><span id="__span-1-85"><a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-1-86"><a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a>        <span class="c1"># log P(c|x) ∝ log P(c) + X @ (log P(w|c))^T</span>
+</span><span id="__span-1-87"><a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>        <span class="n">log_posteriors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_log_prior_</span> <span class="o">+</span> <span class="n">X</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_log_prob_</span><span class="o">.</span><span class="n">T</span>
+</span><span id="__span-1-88"><a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">log_posteriors</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+</span></code></pre></div>
+<hr />
+<h2 id="6-implementation-3-scikit-learn-benchmarking-verification">6. Implementation 3 — scikit-learn Benchmarking &amp; Verification<a class="headerlink" href="#6-implementation-3-scikit-learn-benchmarking-verification" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neighbors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNeighborsClassifier</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.naive_bayes</span><span class="w"> </span><span class="kn">import</span> <span class="n">GaussianNB</span><span class="p">,</span> <span class="n">MultinomialNB</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_classification</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># 1. Benchmark KNN with KD-Tree</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">X_knn</span><span class="p">,</span> <span class="n">y_knn</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">n_samples</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">n_informative</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">)</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="n">scratch_knn</span> <span class="o">=</span> <span class="n">ScratchKNNClassifier</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">scratch_knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_knn</span><span class="p">,</span> <span class="n">y_knn</span><span class="p">)</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">sk_knn</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">'kd_tree'</span><span class="p">)</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="n">sk_knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_knn</span><span class="p">,</span> <span class="n">y_knn</span><span class="p">)</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="n">acc_s_knn</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_knn</span><span class="p">,</span> <span class="n">scratch_knn</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_knn</span><span class="p">))</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="n">acc_sk_knn</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_knn</span><span class="p">,</span> <span class="n">sk_knn</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_knn</span><span class="p">))</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"KNN Comparison — Scratch KD-Tree Acc: </span><span class="si">{</span><span class="n">acc_s_knn</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | Sklearn Acc: </span><span class="si">{</span><span class="n">acc_sk_knn</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">acc_s_knn</span> <span class="o">-</span> <span class="n">acc_sk_knn</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="s2">"KD-Tree KNN predictions differ from scikit-learn!"</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># 2. Benchmark Gaussian Naive Bayes</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="n">X_gnb</span><span class="p">,</span> <span class="n">y_gnb</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>    <span class="n">n_samples</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_informative</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="p">)</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="n">scratch_gnb</span> <span class="o">=</span> <span class="n">ScratchGaussianNB</span><span class="p">()</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="n">scratch_gnb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_gnb</span><span class="p">,</span> <span class="n">y_gnb</span><span class="p">)</span>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="n">sk_gnb</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span>
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="n">sk_gnb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_gnb</span><span class="p">,</span> <span class="n">y_gnb</span><span class="p">)</span>
+</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>
+</span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="n">acc_s_gnb</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_gnb</span><span class="p">,</span> <span class="n">scratch_gnb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_gnb</span><span class="p">))</span>
+</span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="n">acc_sk_gnb</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_gnb</span><span class="p">,</span> <span class="n">sk_gnb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_gnb</span><span class="p">))</span>
+</span><span id="__span-2-34"><a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Gaussian NB Comparison — Scratch Acc: </span><span class="si">{</span><span class="n">acc_s_gnb</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | Sklearn Acc: </span><span class="si">{</span><span class="n">acc_sk_gnb</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-2-35"><a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">acc_s_gnb</span> <span class="o">-</span> <span class="n">acc_sk_gnb</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="s2">"Gaussian NB predictions differ from scikit-learn!"</span>
+</span><span id="__span-2-36"><a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>
+</span><span id="__span-2-37"><a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="c1"># 3. Benchmark Multinomial Naive Bayes (Non-negative count matrix)</span>
+</span><span id="__span-2-38"><a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-2-39"><a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="n">X_mnb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+</span><span id="__span-2-40"><a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="n">y_mnb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+</span><span id="__span-2-41"><a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>
+</span><span id="__span-2-42"><a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a><span class="n">scratch_mnb</span> <span class="o">=</span> <span class="n">ScratchMultinomialNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</span><span id="__span-2-43"><a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="n">scratch_mnb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_mnb</span><span class="p">,</span> <span class="n">y_mnb</span><span class="p">)</span>
+</span><span id="__span-2-44"><a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a><span class="n">sk_mnb</span> <span class="o">=</span> <span class="n">MultinomialNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</span><span id="__span-2-45"><a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a><span class="n">sk_mnb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_mnb</span><span class="p">,</span> <span class="n">y_mnb</span><span class="p">)</span>
+</span><span id="__span-2-46"><a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a>
+</span><span id="__span-2-47"><a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a><span class="n">acc_s_mnb</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_mnb</span><span class="p">,</span> <span class="n">scratch_mnb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_mnb</span><span class="p">))</span>
+</span><span id="__span-2-48"><a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a><span class="n">acc_sk_mnb</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_mnb</span><span class="p">,</span> <span class="n">sk_mnb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_mnb</span><span class="p">))</span>
+</span><span id="__span-2-49"><a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Multinomial NB Comparison — Scratch Acc: </span><span class="si">{</span><span class="n">acc_s_mnb</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | Sklearn Acc: </span><span class="si">{</span><span class="n">acc_sk_mnb</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-2-50"><a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a><span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">acc_s_mnb</span> <span class="o">-</span> <span class="n">acc_sk_mnb</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="s2">"Multinomial NB predictions differ from scikit-learn!"</span>
+</span></code></pre></div>
+<hr />
+<h2 id="7-common-errors-production-debugging">7. Common Errors &amp; Production Debugging<a class="headerlink" href="#7-common-errors-production-debugging" title="Permanent link">&para;</a></h2>
+<h3 id="71-unscaled-features-in-distance-metrics">7.1 Unscaled Features in Distance Metrics<a class="headerlink" href="#71-unscaled-features-in-distance-metrics" title="Permanent link">&para;</a></h3>
+<p>KNN computes Euclidean distance across all dimensions equally. If feature <span class="arithmatex">\(x_1\)</span> (salary) ranges from <span class="arithmatex">\(\$30,000\)</span> to <span class="arithmatex">\(\$200,000\)</span> and <span class="arithmatex">\(x_2\)</span> (age) ranges from <span class="arithmatex">\(18\)</span> to <span class="arithmatex">\(80\)</span>, the squared difference in salary <span class="arithmatex">\((x_{1a} - x_{1b})^2 \approx 10^9\)</span> completely drowns out age <span class="arithmatex">\((x_{2a} - x_{2b})^2 \approx 10^3\)</span>. The model effectively ignores age!</p>
+<p><strong>Production Rule</strong>: Always standardize features (<code>StandardScaler</code> or <code>MinMaxScaler</code>) before passing them to KNN.</p>
+<h3 id="72-underflow-in-naive-bayes-likelihood-products">7.2 Underflow in Naive Bayes Likelihood Products<a class="headerlink" href="#72-underflow-in-naive-bayes-likelihood-products" title="Permanent link">&para;</a></h3>
+<p>Evaluating <span class="arithmatex">\(P(\mathbf{x} | y) = \prod_{j=1}^{10,000} P(x_j | y)\)</span> by multiplying probabilities directly will cause immediate IEEE 754 underflow to <code>0.0</code>, resulting in <code>NaN</code> predictions.</p>
+<p><strong>Production Rule</strong>: Never multiply probabilities in Naive Bayes. Always sum log-likelihoods in log-space: <span class="arithmatex">\(\ln P(y) + \sum_{j} \ln P(x_j | y)\)</span>. When computing normalized posterior probabilities, apply the <strong>Log-Sum-Exp</strong> trick:
+$<span class="arithmatex">\(\ln \sum_k e^{z_k} = m + \ln \sum_k e^{z_k - m}, \quad \text{where } m = \max_k z_k\)</span>$</p>
+<h3 id="73-zero-frequency-tokens-without-smoothing">7.3 Zero-Frequency Tokens Without Smoothing<a class="headerlink" href="#73-zero-frequency-tokens-without-smoothing" title="Permanent link">&para;</a></h3>
+<p>Fitting <code>MultinomialNB</code> with <code>alpha=0.0</code> means any token in production that was not observed in a training class receives probability <span class="arithmatex">\(0\)</span>. If an email contains a single novel typo, its spam likelihood becomes <span class="arithmatex">\(0 \times \dots = 0\)</span>. Always retain Laplace smoothing <span class="arithmatex">\(\alpha \ge 1.0\)</span>.</p>
+<hr />
+<h2 id="8-staff-level-interview-questions-model-answers">8. Staff-Level Interview Questions &amp; Model Answers<a class="headerlink" href="#8-staff-level-interview-questions-model-answers" title="Permanent link">&para;</a></h2>
+<h3 id="q1-prove-how-the-curse-of-dimensionality-impacts-distance-metrics-in-knn-as-dimension-p-to-infty">Q1: Prove how the Curse of Dimensionality impacts distance metrics in KNN as dimension <span class="arithmatex">\(p \to \infty\)</span>.<a class="headerlink" href="#q1-prove-how-the-curse-of-dimensionality-impacts-distance-metrics-in-knn-as-dimension-p-to-infty" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Beyer et al. (1999) formalized the phenomenon that in high-dimensional spaces, nearest-neighbor query algorithms lose their discriminative power.
+Let <span class="arithmatex">\(\mathbf{x} \in \mathbb{R}^p\)</span> be a query point and <span class="arithmatex">\(\mathbf{x}^{(1)}, \dots, \mathbf{x}^{(n)}\)</span> be <span class="arithmatex">\(n\)</span> independent and identically distributed data points. Let <span class="arithmatex">\(d_{\min} = \min_{i} \|\mathbf{x} - \mathbf{x}^{(i)}\|_2\)</span> and <span class="arithmatex">\(d_{\max} = \max_{i} \|\mathbf{x} - \mathbf{x}^{(i)}\|_2\)</span>.
+Assume that the distance distribution satisfies:
+$<span class="arithmatex">\(\lim_{p \to \infty} \text{Var}\left( \frac{\|\mathbf{x} - \mathbf{x}^{(i)}\|_2}{\mathbb{E}[\|\mathbf{x} - \mathbf{x}^{(i)}\|_2]} \right) = 0\)</span>$
+Then:
+$<span class="arithmatex">\(\lim_{p \to \infty} \frac{d_{\max} - d_{\min}}{d_{\min}} = 0\)</span>$
+<strong>Proof Intuition:</strong>
+Let <span class="arithmatex">\(D_i = \|\mathbf{x} - \mathbf{x}^{(i)}\|_2^2 = \sum_{j=1}^p (x_j - x_j^{(i)})^2\)</span>. Under independent coordinates with mean coordinate distance <span class="arithmatex">\(\mu\)</span> and variance <span class="arithmatex">\(\sigma^2\)</span>, by the Central Limit Theorem:
+$<span class="arithmatex">\(\frac{D_i - p\mu}{\sqrt{p}\sigma} \xrightarrow{d} \mathcal{N}(0, 1)\)</span>$
+Notice that the mean of the squared distance grows linearly with dimension <span class="arithmatex">\(p\)</span> (<span class="arithmatex">\(\mathbb{E}[D_i] = p\mu\)</span>), while the standard deviation grows only with the square root of dimension (<span class="arithmatex">\(\sqrt{p}\sigma\)</span>).
+The relative standard deviation (coefficient of variation) is:
+$<span class="arithmatex">\(\frac{\sqrt{\text{Var}(D_i)}}{\mathbb{E}[D_i]} = \frac{\sqrt{p}\sigma}{p\mu} = \frac{\sigma}{\mu \sqrt{p}} \xrightarrow{p \to \infty} 0\)</span>$
+Because the relative spread around the mean collapses to zero, the distances from the query point to all <span class="arithmatex">\(n\)</span> data points cluster tightly around the mean distance <span class="arithmatex">\(\sqrt{p\mu}\)</span>. The ratio of distance to the nearest neighbor versus the farthest neighbor converges to <span class="arithmatex">\(1\)</span>. Consequently, proximity loses metric meaning, and nearest-neighbor classification degrades to a random draw.</p>
+<hr />
+<h3 id="q2-why-does-naive-bayes-frequently-perform-exceptionally-well-in-practice-despite-its-conditional-independence-assumption-being-blatantly-false">Q2: Why does Naive Bayes frequently perform exceptionally well in practice despite its conditional independence assumption being blatantly false?<a class="headerlink" href="#q2-why-does-naive-bayes-frequently-perform-exceptionally-well-in-practice-despite-its-conditional-independence-assumption-being-blatantly-false" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Domingos &amp; Pazzani (1997) proved that <strong>zero classification error does not require zero probability estimation error</strong>.
+In binary classification, the decision rule is:
+$<span class="arithmatex">\(\hat{y} = 1 \iff \frac{P(y=1|\mathbf{x})}{P(y=0|\mathbf{x})} \ge 1 \iff \ln \frac{P(y=1)}{P(y=0)} + \sum_{j=1}^p \ln \frac{P(x_j|y=1)}{P(x_j|y=0)} \ge 0\)</span>$
+Violations of the conditional independence assumption distort the estimated posterior probabilities—pushing them severely toward extreme values of <span class="arithmatex">\(0.0\)</span> or <span class="arithmatex">\(1.0\)</span> (overconfidence).
+However, classification accuracy depends strictly on whether the sign of the log-odds ratio agrees with the true Bayes optimal decision boundary. Even if the estimated probability is wildly inaccurate (e.g., estimating <span class="arithmatex">\(0.9999\)</span> when the true probability is <span class="arithmatex">\(0.60\)</span>), <strong>as long as the rank order of the classes is preserved, the classification decision is 100% correct</strong>.
+The decision boundary formed by Naive Bayes is a linear hyperplane (or quadratic surface for Gaussian NB with unequal variances). The classifier succeeds because its simple inductive bias prevents overfitting on small datasets, yielding remarkably low variance that often compensates for the bias introduced by independence violations.</p>
+<hr />
+<h3 id="q3-derive-the-decision-boundary-of-gaussian-naive-bayes-under-what-conditions-is-it-strictly-linear-vs-quadratic">Q3: Derive the decision boundary of Gaussian Naive Bayes. Under what conditions is it strictly linear vs. quadratic?<a class="headerlink" href="#q3-derive-the-decision-boundary-of-gaussian-naive-bayes-under-what-conditions-is-it-strictly-linear-vs-quadratic" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+In binary classification (<span class="arithmatex">\(y \in \{0, 1\}\)</span>), the log-odds ratio is:
+$<span class="arithmatex">\(\ln \frac{P(y=1|\mathbf{x})}{P(y=0|\mathbf{x})} = \ln \frac{P(y=1)}{P(y=0)} + \sum_{j=1}^p \ln \frac{\frac{1}{\sqrt{2\pi \sigma_{1j}^2}} \exp\left(-\frac{(x_j - \mu_{1j})^2}{2\sigma_{1j}^2}\right)}{\frac{1}{\sqrt{2\pi \sigma_{0j}^2}} \exp\left(-\frac{(x_j - \mu_{0j})^2}{2\sigma_{0j}^2}\right)}\)</span>$
+Expanding the sum:
+$<span class="arithmatex">\(\ln \frac{P(y=1|\mathbf{x})}{P(y=0|\mathbf{x})} = \ln \frac{P(y=1)}{P(y=0)} + \sum_{j=1}^p \ln \frac{\sigma_{0j}}{\sigma_{1j}} + \sum_{j=1}^p \left[ \frac{(x_j - \mu_{0j})^2}{2\sigma_{0j}^2} - \frac{(x_j - \mu_{1j})^2}{2\sigma_{1j}^2} \right]\)</span>$
+Expanding the quadratic terms inside the bracket:
+$<span class="arithmatex">\(\frac{x_j^2 - 2x_j\mu_{0j} + \mu_{0j}^2}{2\sigma_{0j}^2} - \frac{x_j^2 - 2x_j\mu_{1j} + \mu_{1j}^2}{2\sigma_{1j}^2} = x_j^2 \left( \frac{1}{2\sigma_{0j}^2} - \frac{1}{2\sigma_{1j}^2} \right) + x_j \left( \frac{\mu_{1j}}{\sigma_{1j}^2} - \frac{\mu_{0j}}{\sigma_{0j}^2} \right) + \text{const}\)</span>$</p>
+<p><strong>Two Distinct Cases:</strong>
+1. <strong>Equal Feature Variances (<span class="arithmatex">\(\sigma_{0j}^2 = \sigma_{1j}^2 = \sigma_j^2\)</span> for all <span class="arithmatex">\(j\)</span>):</strong>
+   The quadratic coefficient <span class="arithmatex">\(\left( \frac{1}{2\sigma_{0j}^2} - \frac{1}{2\sigma_{1j}^2} \right) = 0\)</span>. The squared terms <span class="arithmatex">\(x_j^2\)</span> cancel out completely! The log-odds becomes a strictly affine function:
+   $<span class="arithmatex">\(\ln \frac{P(y=1|\mathbf{x})}{P(y=0|\mathbf{x})} = \mathbf{w}^T \mathbf{x} + b\)</span>$
+   where <span class="arithmatex">\(w_j = \frac{\mu_{1j} - \mu_{0j}}{\sigma_j^2}\)</span>. The decision boundary is a <strong>strictly linear hyperplane</strong>, mathematically equivalent to Linear Discriminant Analysis (LDA) with a diagonal covariance matrix.
+2. <strong>Unequal Feature Variances (<span class="arithmatex">\(\sigma_{0j}^2 \ne \sigma_{1j}^2\)</span>):</strong>
+   The quadratic terms do not cancel out. The decision boundary is a <strong>quadratic hypersurface</strong> (ellipsoid, paraboloid, or hyperboloid), equivalent to Quadratic Discriminant Analysis (QDA) with diagonal covariance matrices.</p>
+<hr />
+<h3 id="q4-derive-laplace-and-lidstone-smoothing-from-a-bayesian-perspective-using-dirichlet-conjugate-priors">Q4: Derive Laplace and Lidstone smoothing from a Bayesian perspective using Dirichlet conjugate priors.<a class="headerlink" href="#q4-derive-laplace-and-lidstone-smoothing-from-a-bayesian-perspective-using-dirichlet-conjugate-priors" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Consider a categorical variable <span class="arithmatex">\(X\)</span> with <span class="arithmatex">\(d\)</span> discrete outcomes and class-conditional probabilities <span class="arithmatex">\(\boldsymbol{\theta} = [\theta_1, \dots, \theta_d]^T\)</span> where <span class="arithmatex">\(\sum \theta_j = 1\)</span>.
+The likelihood of observing counts <span class="arithmatex">\(\mathbf{c} = [c_1, \dots, c_d]^T\)</span> is Multinomial:
+$<span class="arithmatex">\(p(\mathbf{c} | \boldsymbol{\theta}) \propto \prod_{j=1}^d \theta_j^{c_j}\)</span>$
+The conjugate prior for the multinomial distribution is the <strong>Dirichlet distribution</strong> parameterised by hyperparameters <span class="arithmatex">\(\boldsymbol{\alpha} = [\alpha_1, \dots, \alpha_d]^T\)</span>:
+$<span class="arithmatex">\(p(\boldsymbol{\theta} | \boldsymbol{\alpha}) = \frac{1}{\text{B}(\boldsymbol{\alpha})} \prod_{j=1}^d \theta_j^{\alpha_j - 1}\)</span>$
+By Bayes' theorem, the posterior distribution is:
+$<span class="arithmatex">\(p(\boldsymbol{\theta} | \mathbf{c}) \propto p(\mathbf{c} | \boldsymbol{\theta}) p(\boldsymbol{\theta}) \propto \prod_{j=1}^d \theta_j^{c_j} \cdot \prod_{j=1}^d \theta_j^{\alpha_j - 1} = \prod_{j=1}^d \theta_j^{c_j + \alpha_j - 1}\)</span>$
+This is another Dirichlet distribution: <span class="arithmatex">\(\text{Dir}(\mathbf{c} + \boldsymbol{\alpha})\)</span>.
+The Bayes estimator under squared error loss is the posterior mean:
+$<span class="arithmatex">\(\hat{\theta}_j = \mathbb{E}[\theta_j | \mathbf{c}] = \frac{c_j + \alpha_j}{\sum_{k=1}^d (c_k + \alpha_k)}\)</span>$
+Under a symmetric prior where <span class="arithmatex">\(\alpha_j = \alpha\)</span> for all <span class="arithmatex">\(j\)</span>:
+$<span class="arithmatex">\(\hat{\theta}_j = \frac{c_j + \alpha}{\sum_{k=1}^d c_k + \alpha \cdot d} = \frac{N_{yj} + \alpha}{N_y + \alpha \cdot d}\)</span>$
+- Setting <span class="arithmatex">\(\alpha = 1\)</span> yields <strong>Laplace smoothing</strong>, equivalent to a uniform prior where every outcome was observed once before training.
+- Setting <span class="arithmatex">\(0 &lt; \alpha &lt; 1\)</span> yields <strong>Lidstone smoothing</strong>, representing weaker prior pseudo-evidence.</p>
+<hr />
+<h3 id="q5-compare-multinomial-naive-bayes-and-bernoulli-naive-bayes-for-text-classification-when-does-each-fail">Q5: Compare Multinomial Naive Bayes and Bernoulli Naive Bayes for text classification. When does each fail?<a class="headerlink" href="#q5-compare-multinomial-naive-bayes-and-bernoulli-naive-bayes-for-text-classification-when-does-each-fail" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+- <strong>Multinomial Naive Bayes (MNB):</strong>
+  Takes word count vectors <span class="arithmatex">\(\mathbf{x} = [x_1, \dots, x_d]^T\)</span> where <span class="arithmatex">\(x_j \in \{0, 1, 2, \dots\}\)</span>. The likelihood is <span class="arithmatex">\(P(\mathbf{x}|y) \propto \prod_j \theta_{yj}^{x_j}\)</span>.
+  <em>Characteristics:</em> Models document length and word repetition. A word appearing 10 times contributes 10 times to the log-likelihood (<span class="arithmatex">\(\sum x_j \ln \theta_{yj}\)</span>).
+  <em>Failure Mode:</em> Severely influenced by document length variations. Long documents accumulate much larger negative log-likelihoods than short ones unless normalized.
+- <strong>Bernoulli Naive Bayes (BNB):</strong>
+  Takes binary occurrence indicators <span class="arithmatex">\(\mathbf{x} = [b_1, \dots, b_d]^T\)</span> where <span class="arithmatex">\(b_j \in \{0, 1\}\)</span>. The likelihood is <span class="arithmatex">\(P(\mathbf{x}|y) = \prod_j \theta_{yj}^{b_j} (1 - \theta_{yj})^{1 - b_j}\)</span>.
+  <em>Characteristics:</em> Evaluates both presence AND absence of words. If a document does not contain word <span class="arithmatex">\(j\)</span>, BNB penalizes the class by <span class="arithmatex">\(\ln(1 - \theta_{yj})\)</span>.
+  <em>Failure Mode:</em> Highly sensitive to vocabulary size and short queries. If vocabulary <span class="arithmatex">\(d = 50,000\)</span> and a test tweet contains 10 words, BNB evaluates 49,990 "absence" terms (<span class="arithmatex">\(1 - \theta_{yj}\)</span>), which can easily overwhelm the signal from the words that actually appeared.</p>
+<hr />
+<h3 id="q6-how-does-the-choice-of-k-in-knn-govern-the-bias-variance-tradeoff-what-happens-at-k1-and-kn">Q6: How does the choice of <span class="arithmatex">\(k\)</span> in KNN govern the bias-variance tradeoff? What happens at <span class="arithmatex">\(k=1\)</span> and <span class="arithmatex">\(k=n\)</span>?<a class="headerlink" href="#q6-how-does-the-choice-of-k-in-knn-govern-the-bias-variance-tradeoff-what-happens-at-k1-and-kn" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+The parameter <span class="arithmatex">\(k\)</span> controls model flexibility and hypothesis capacity:
+- <strong>At <span class="arithmatex">\(k = 1\)</span> (Maximum Variance, Minimum Bias):</strong>
+  The model memorizes every training sample. Every training point lies in its own Voronoi cell with training error identically <span class="arithmatex">\(0\)</span>. The decision boundary is highly irregular, jagged, and sensitive to individual noisy labels or outliers. The model has maximum degrees of freedom (<span class="arithmatex">\(\text{effective df} = n\)</span>) and high variance.
+- <strong>At <span class="arithmatex">\(k = n\)</span> (Minimum Variance, Maximum Bias):</strong>
+  The model pools all <span class="arithmatex">\(n\)</span> training instances for every query. It predicts the majority class of the entire training dataset regardless of the input feature <span class="arithmatex">\(\mathbf{x}\)</span>. The decision boundary vanishes entirely. The model has minimum capacity (<span class="arithmatex">\(\text{effective df} = 1\)</span>), zero variance, and extreme bias (underfitting).
+- <strong>Optimal <span class="arithmatex">\(k\)</span> Selection:</strong>
+  Typically chosen via Stratified K-Fold Cross-Validation. A common heuristic starting point is <span class="arithmatex">\(k = \lfloor\sqrt{n}\rfloor\)</span> (often odd to avoid ties in binary voting). As <span class="arithmatex">\(n \to \infty\)</span>, Cover &amp; Hart (1967) proved that if <span class="arithmatex">\(k(n) \to \infty\)</span> and <span class="arithmatex">\(k(n)/n \to 0\)</span>, the <span class="arithmatex">\(k\)</span>-NN error rate asymptotically approaches the optimal Bayes risk <span class="arithmatex">\(\mathcal{R}^*\)</span>.</p>
+<hr />
+<h2 id="9-mastery-ladder">9. Mastery Ladder<a class="headerlink" href="#9-mastery-ladder" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] <strong>L1:</strong> You can state the difference between parametric (Naive Bayes) and non-parametric (KNN) classifiers.</li>
+<li>[ ] <strong>L2:</strong> You can write formulas for Euclidean, Manhattan, Minkowski, and Cosine distance metrics.</li>
+<li>[ ] <strong>L3:</strong> You can explain Voronoi tessellation and how <span class="arithmatex">\(k=1\)</span> yields zero training error.</li>
+<li>[ ] <strong>L4:</strong> You can prove the Curse of Dimensionality via hypercube volume shrinkage <span class="arithmatex">\(s = r^{1/p}\)</span>.</li>
+<li>[ ] <strong>L5:</strong> You can explain the KD-tree recursive partitioning algorithm and its pruning condition.</li>
+<li>[ ] <strong>L6:</strong> You can write Bayes' rule and state the conditional independence assumption.</li>
+<li>[ ] <strong>L7:</strong> You can derive Laplace/Lidstone smoothing as Bayesian MAP with a Dirichlet conjugate prior.</li>
+<li>[ ] <strong>L8:</strong> You can prove that Gaussian Naive Bayes produces a linear boundary when class feature variances are equal.</li>
+<li>[ ] <strong>L9:</strong> You can explain why Naive Bayes classifies accurately even when probabilities are badly miscalibrated.</li>
+<li>[ ] <strong>L10:</strong> You can implement a KD-Tree KNN classifier and Gaussian/Multinomial Naive Bayes from scratch in NumPy.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../logistic-regression-deep-dive/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deep-dive: Logistic Regression">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Logistic Regression
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../decision-trees-deep-dive/" class="md-footer__link md-footer__link--next" aria-label="Next: Deep-dive: Decision Trees">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Decision Trees
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

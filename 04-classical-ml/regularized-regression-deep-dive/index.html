@@ -1,0 +1,4892 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete, deep-dive AI/ML curriculum — from Python internals to production AI systems.">
+      
+      
+        <meta name="author" content="Sameer Karur">
+      
+      
+      
+        <link rel="prev" href="../linear-regression-deep-dive/">
+      
+      
+        <link rel="next" href="../logistic-regression-deep-dive/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Deep-dive: Regularized & Polynomial Regression - AI/ML Mastery Program</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#regularized-polynomial-regression-ridge-lasso-and-elastic-net" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI/ML Mastery Program" class="md-header__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI/ML Mastery Program
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Deep-dive: Regularized & Polynomial Regression
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../00-computer-science/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 0 – CS Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-python/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 1 – Python
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../02-mathematics/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 2 – Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../03-data-engineering/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 3 – Data Engineering
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 4 – Classical ML
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../05-ml-theory/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 5 – ML Theory & Evaluation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../06-deep-learning/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 6 – Deep Learning
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../07-computer-vision/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 7 – Computer Vision
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../08-nlp/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 8 – NLP
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../09-transformers-llms/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 9 – Transformers & LLMs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../10-generative-ai/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 10 – Generative AI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../11-ai-agents/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 11 – AI Agents
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../12-mlops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 12 – MLOps
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../13-ai-system-design/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 13 – AI System Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../14-projects/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 14 – Projects & Interview
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI/ML Mastery Program" class="md-nav__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI/ML Mastery Program
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../00-computer-science/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 0 – CS Foundations
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 0 – CS Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/how-computers-execute-programs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: How Computers Execute Programs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/arrays-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Arrays
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/linked-lists-stacks-queues-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linked Lists, Stacks & Queues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/hash-tables-sets-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hash Tables & Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Trees (Binary, BST, Heaps)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/graphs-tries-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Graphs & Tries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/algorithms-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Algorithms (Big-O, Searching, Sorting, Recursion, Greedy, DP, Graphs)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../01-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 1 – Python
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 1 – Python
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/fundamentals-control-flow-collections-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Fundamentals, Control Flow & Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/functions-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/oop-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: OOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/advanced-python-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced Python (Iterators, Generators, Async, Concurrency)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/internals-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Internals (CPython, Bytecode, GC, GIL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../02-mathematics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 2 – Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 2 – Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/foundations-math-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundations of Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/linear-algebra-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/calculus-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Calculus & Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/probability-statistics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Probability & Statistics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../03-data-engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 3 – Data Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 3 – Data Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-ecosystem-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Data Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-formats-storage-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Formats & Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-cleaning-preprocessing-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Cleaning & Preprocessing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/feature-engineering-selection-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Feature Engineering & Selection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 4 – Classical ML
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 4 – Classical ML
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linear-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Regularized & Polynomial Regression
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Regularized & Polynomial Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-polynomial-regression-capacity-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Polynomial Regression &amp; Capacity Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Polynomial Regression &amp; Capacity Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-polynomial-feature-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 The Polynomial Feature Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-runges-phenomenon-overfitting-dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Runge's Phenomenon &amp; Overfitting Dynamics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-ridge-regression-l_2-regularization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Ridge Regression (\(L_2\) Regularization)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Ridge Regression (\(L_2\) Regularization)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-objective-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Objective Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-mathematical-derivation-of-the-closed-form-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Mathematical Derivation of the Closed-Form Solution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-proof-of-guaranteed-invertibility-and-conditioning-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Proof of Guaranteed Invertibility and Conditioning Improvement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-svd-perspective-on-weight-shrinkage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 SVD Perspective on Weight Shrinkage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-lasso-regression-l_1-regularization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Lasso Regression (\(L_1\) Regularization)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Lasso Regression (\(L_1\) Regularization)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-objective-function-non-differentiability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Objective Function &amp; Non-Differentiability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-subgradient-calculus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Subgradient Calculus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-coordinate-descent-the-soft-thresholding-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Coordinate Descent &amp; The Soft-Thresholding Operator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-geometric-intuition-diamond-l_1-vs-circle-l_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Geometric Intuition: Diamond (\(L_1\)) vs. Circle (\(L_2\))
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-elastic-net-l_1-l_2-regularization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Elastic Net (\(L_1 + L_2\) Regularization)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Elastic Net (\(L_1 + L_2\) Regularization)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-limitations-of-lasso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Limitations of Lasso
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-objective-function-grouping-effect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Objective Function &amp; Grouping Effect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-mathematical-proof-of-the-grouping-effect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Mathematical Proof of the Grouping Effect
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-implementation-1-vectorized-coordinate-descent-from-scratch-numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Implementation 1 — Vectorized Coordinate Descent from Scratch (NumPy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-implementation-2-scikit-learn-benchmarking-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Implementation 2 — scikit-learn Benchmarking &amp; Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-common-errors-production-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Common Errors &amp; Production Debugging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Common Errors &amp; Production Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-regularizing-unstandardized-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Regularizing Unstandardized Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-regularizing-the-intercept-w_0-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Regularizing the Intercept (\(w_0\) / Bias)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-debugging-convergence-warnings-in-coordinate-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Debugging Convergence Warnings in Coordinate Descent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-staff-level-interview-questions-model-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Staff-Level Interview Questions &amp; Model Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Staff-Level Interview Questions &amp; Model Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-derive-the-closed-form-solution-of-ridge-regression-and-prove-why-detxt-x-lambda-i-0-for-any-lambda-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Derive the closed-form solution of Ridge regression and prove why \(\det(X^T X + \lambda I) &gt; 0\) for any \(\lambda &gt; 0\).
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-prove-geometrically-and-analytically-why-l_1-regularization-produces-exact-parameter-sparsity-while-l_2-only-shrinks-weights-asymptotically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Prove geometrically and analytically why \(L_1\) regularization produces exact parameter sparsity while \(L_2\) only shrinks weights asymptotically.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-explain-the-bayesian-interpretation-of-ridge-and-lasso-regression-what-prior-probability-distributions-do-they-place-on-the-model-weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: Explain the Bayesian interpretation of Ridge and Lasso regression. What prior probability distributions do they place on the model weights?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-why-does-lasso-struggle-when-two-features-are-highly-collinear-and-how-does-elastic-net-resolve-this-via-the-grouping-effect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Why does Lasso struggle when two features are highly collinear, and how does Elastic Net resolve this via the Grouping Effect?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-what-is-the-degrees-of-freedom-dof-for-ridge-regression-and-how-does-it-compare-to-ordinary-least-squares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: What is the Degrees of Freedom (DoF) for Ridge regression, and how does it compare to Ordinary Least Squares?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q6-can-coordinate-descent-be-used-for-ridge-regression-why-is-it-rarely-used-compared-to-closed-form-or-conjugate-gradient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q6: Can coordinate descent be used for Ridge regression? Why is it rarely used compared to closed-form or conjugate gradient?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logistic-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Logistic Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../knn-naive-bayes-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: KNN & Naive Bayes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decision-trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ensemble-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Ensemble Learning (Random Forests & GBDT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../svm-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Support Vector Machines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../05-ml-theory/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/model-validation-generalization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Validation & Generalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/evaluation-metrics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/hyperparameter-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hyperparameter Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../06-deep-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 6 – Deep Learning
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 6 – Deep Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/neural-network-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Neural Network Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/architecture-components-regularization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Architecture Components & Regularization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/deep-learning-optimizers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Deep Learning Optimizers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../07-computer-vision/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 7 – Computer Vision
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 7 – Computer Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/convolutional-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Convolutional Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/modern-cnn-architectures-transfer-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Modern CNN Architectures & Transfer Learning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/vision-tasks-transformers-multimodal-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Vision Tasks, ViT & Multimodal Vision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../08-nlp/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 8 – NLP
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 8 – NLP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/text-representation-word-embeddings-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Text Representation & Word Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/sequence-models-attention-transformers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Sequence Models, Attention & Transformers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../09-transformers-llms/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 9 – Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 9 – Transformers & LLMs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/transformer-architecture-mechanics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Transformer Architecture & Mechanics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/foundation-model-families-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundation Model Families
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/llm-training-alignment-peft-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Training, Alignment & PEFT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../10-generative-ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 10 – Generative AI
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 10 – Generative AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/llm-application-engineering-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Application Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/enterprise-rag-systems-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Enterprise RAG Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/diffusion-models-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../11-ai-agents/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 11 – AI Agents
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 11 – AI Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/agent-architectures-patterns-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Agent Architectures & Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/multi-agent-systems-security-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Multi-Agent Systems & Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../12-mlops/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 12 – MLOps
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 12 – MLOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/production-tooling-containerization-cicd-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production Tooling, Containerization & CI/CD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/serving-pipelines-orchestration-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Serving, Pipelines & Distributed Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/model-monitoring-observability-retraining-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Monitoring, Observability & Automated Retraining
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../13-ai-system-design/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 13 – AI System Design
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_15" id="__nav_15_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 13 – AI System Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/ai-system-design-methodology-framework-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: AI System Design Methodology & Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/production-case-studies-system-design-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production AI System Design Case Studies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../14-projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 14 – Projects & Interview
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_16" id="__nav_16_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 14 – Projects & Interview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/foundational-applied-projects-tier-1-to-4-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundational Applied Projects (Tiers 1–4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/advanced-frontier-projects-tier-5-to-8-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced & Frontier Applied Projects (Tiers 5–8)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/staff-level-interview-question-banks-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Staff-Level Technical Interview Question Banks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-polynomial-regression-capacity-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Polynomial Regression &amp; Capacity Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Polynomial Regression &amp; Capacity Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-polynomial-feature-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 The Polynomial Feature Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-runges-phenomenon-overfitting-dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Runge's Phenomenon &amp; Overfitting Dynamics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-ridge-regression-l_2-regularization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Ridge Regression (\(L_2\) Regularization)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Ridge Regression (\(L_2\) Regularization)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-objective-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Objective Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-mathematical-derivation-of-the-closed-form-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Mathematical Derivation of the Closed-Form Solution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-proof-of-guaranteed-invertibility-and-conditioning-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Proof of Guaranteed Invertibility and Conditioning Improvement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-svd-perspective-on-weight-shrinkage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 SVD Perspective on Weight Shrinkage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-lasso-regression-l_1-regularization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Lasso Regression (\(L_1\) Regularization)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Lasso Regression (\(L_1\) Regularization)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-objective-function-non-differentiability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Objective Function &amp; Non-Differentiability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-subgradient-calculus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Subgradient Calculus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-coordinate-descent-the-soft-thresholding-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Coordinate Descent &amp; The Soft-Thresholding Operator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-geometric-intuition-diamond-l_1-vs-circle-l_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Geometric Intuition: Diamond (\(L_1\)) vs. Circle (\(L_2\))
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-elastic-net-l_1-l_2-regularization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Elastic Net (\(L_1 + L_2\) Regularization)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Elastic Net (\(L_1 + L_2\) Regularization)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-limitations-of-lasso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Limitations of Lasso
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-objective-function-grouping-effect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Objective Function &amp; Grouping Effect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-mathematical-proof-of-the-grouping-effect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Mathematical Proof of the Grouping Effect
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-implementation-1-vectorized-coordinate-descent-from-scratch-numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Implementation 1 — Vectorized Coordinate Descent from Scratch (NumPy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-implementation-2-scikit-learn-benchmarking-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Implementation 2 — scikit-learn Benchmarking &amp; Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-common-errors-production-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Common Errors &amp; Production Debugging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Common Errors &amp; Production Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-regularizing-unstandardized-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Regularizing Unstandardized Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-regularizing-the-intercept-w_0-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Regularizing the Intercept (\(w_0\) / Bias)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-debugging-convergence-warnings-in-coordinate-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Debugging Convergence Warnings in Coordinate Descent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-staff-level-interview-questions-model-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Staff-Level Interview Questions &amp; Model Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Staff-Level Interview Questions &amp; Model Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-derive-the-closed-form-solution-of-ridge-regression-and-prove-why-detxt-x-lambda-i-0-for-any-lambda-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Derive the closed-form solution of Ridge regression and prove why \(\det(X^T X + \lambda I) &gt; 0\) for any \(\lambda &gt; 0\).
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-prove-geometrically-and-analytically-why-l_1-regularization-produces-exact-parameter-sparsity-while-l_2-only-shrinks-weights-asymptotically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Prove geometrically and analytically why \(L_1\) regularization produces exact parameter sparsity while \(L_2\) only shrinks weights asymptotically.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-explain-the-bayesian-interpretation-of-ridge-and-lasso-regression-what-prior-probability-distributions-do-they-place-on-the-model-weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: Explain the Bayesian interpretation of Ridge and Lasso regression. What prior probability distributions do they place on the model weights?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-why-does-lasso-struggle-when-two-features-are-highly-collinear-and-how-does-elastic-net-resolve-this-via-the-grouping-effect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Why does Lasso struggle when two features are highly collinear, and how does Elastic Net resolve this via the Grouping Effect?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-what-is-the-degrees-of-freedom-dof-for-ridge-regression-and-how-does-it-compare-to-ordinary-least-squares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: What is the Degrees of Freedom (DoF) for Ridge regression, and how does it compare to Ordinary Least Squares?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q6-can-coordinate-descent-be-used-for-ridge-regression-why-is-it-rarely-used-compared-to-closed-form-or-conjugate-gradient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q6: Can coordinate descent be used for Ridge regression? Why is it rarely used compared to closed-form or conjugate gradient?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="regularized-polynomial-regression-ridge-lasso-and-elastic-net">Regularized &amp; Polynomial Regression — Ridge, Lasso, and Elastic Net<a class="headerlink" href="#regularized-polynomial-regression-ridge-lasso-and-elastic-net" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>Ordinary Least Squares and matrix calculus. Review <a href="../linear-regression-deep-dive/">Linear Regression</a>, <a href="../../02-mathematics/linear-algebra-deep-dive/">Linear Algebra &amp; Matrix Inversion</a>, and <a href="../../02-mathematics/calculus-optimization-deep-dive/">Calculus &amp; Optimization</a>.</p>
+</div>
+<hr />
+<h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
+<p>Ordinary Least Squares (OLS) minimizes training residual sum of squares without constraint. While statistically optimal when the Gauss-Markov assumptions hold, unconstrained least squares suffers from two fatal vulnerabilities in production machine learning:</p>
+<ol>
+<li><strong>Multicollinearity &amp; Numerical Instability</strong>: When predictors are correlated, the Gram matrix <span class="arithmatex">\(X^T X\)</span> becomes ill-conditioned or non-invertible (<span class="arithmatex">\(\det(X^T X) \approx 0\)</span>). Estimated weights explode in magnitude with wildly oscillating signs and astronomical variance.</li>
+<li><strong>Overfitting in High Dimensions (<span class="arithmatex">\(p &gt; n\)</span>)</strong>: When the number of features <span class="arithmatex">\(p\)</span> approaches or exceeds the sample size <span class="arithmatex">\(n\)</span>, OLS memorizes noise. The system of normal equations is underdetermined, yielding infinitely many zero-loss solutions that fail catastrophically on test data.</li>
+</ol>
+<p><strong>Regularization</strong> injects a controlled inductive bias into the objective function. By penalizing parameter magnitude, we trade a small amount of training bias for a dramatic reduction in variance. <strong>Polynomial Regression</strong> increases model capacity to capture non-linear curvature, while <strong>Ridge (<span class="arithmatex">\(L_2\)</span>)</strong>, <strong>Lasso (<span class="arithmatex">\(L_1\)</span>)</strong>, and <strong>Elastic Net (<span class="arithmatex">\(L_1 + L_2\)</span>)</strong> rein in that capacity.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Problem Space
+        OLS["Ordinary Least Squares: min ||y - Xw||²"]
+        MC["Multicollinearity (det(XᵀX) ≈ 0)"]
+        HD["High Dimensions (p &gt; n)"]
+        NL["Non-linear Curvature"]
+    end
+
+    NL --&gt; POLY["Polynomial Feature Expansion: x ↦ [1, x, x², ..., xᵈ]"]
+    POLY --&gt; OVERFIT["High Capacity / Overfitting Hazard"]
+
+    OLS &amp; MC &amp; HD &amp; OVERFIT --&gt; REG["Regularization Penalty R(w)"]
+
+    REG --&gt; RIDGE["Ridge (L2 Penalty: λ||w||₂²)
+    Analytical Solution: (XᵀX + λI)⁻¹Xᵀy
+    Shrinks weights smoothly toward zero"]
+
+    REG --&gt; LASSO["Lasso (L1 Penalty: α||w||₁)
+    Non-differentiable at w=0
+    Induces exact parameter sparsity via Soft-Thresholding"]
+
+    REG --&gt; ELNET["Elastic Net (L1 + L2)
+    Combines feature selection with grouping effect
+    Robust to high collinearity"]</code></pre>
+<hr />
+<h2 id="2-polynomial-regression-capacity-control">2. Polynomial Regression &amp; Capacity Control<a class="headerlink" href="#2-polynomial-regression-capacity-control" title="Permanent link">&para;</a></h2>
+<h3 id="21-the-polynomial-feature-mapping">2.1 The Polynomial Feature Mapping<a class="headerlink" href="#21-the-polynomial-feature-mapping" title="Permanent link">&para;</a></h3>
+<p>Real-world physical, biological, and economic relationships are rarely strictly affine. For a scalar feature <span class="arithmatex">\(x \in \mathbb{R}\)</span>, a degree-<span class="arithmatex">\(d\)</span> polynomial model is:</p>
+<div class="arithmatex">\[
+\hat{y} = w_0 + w_1 x + w_2 x^2 + w_3 x^3 + \dots + w_d x^d = \sum_{j=0}^d w_j x^j
+\]</div>
+<p>Although the hypothesis is non-linear with respect to the input <span class="arithmatex">\(x\)</span>, it remains <strong>strictly linear with respect to the parameter vector <span class="arithmatex">\(\mathbf{w}\)</span></strong>. We define a non-linear feature mapping <span class="arithmatex">\(\phi: \mathbb{R} \to \mathbb{R}^{d+1}\)</span>:</p>
+<div class="arithmatex">\[
+\phi(x) = \begin{bmatrix} 1 &amp; x &amp; x^2 &amp; \dots &amp; x^d \end{bmatrix}^T
+\]</div>
+<p>The design matrix <span class="arithmatex">\(\Phi \in \mathbb{R}^{n \times (d+1)}\)</span> is a <strong>Vandermonde matrix</strong>:</p>
+<div class="arithmatex">\[
+\Phi = \begin{bmatrix}
+1 &amp; x_1 &amp; x_1^2 &amp; \dots &amp; x_1^d \\
+1 &amp; x_2 &amp; x_2^2 &amp; \dots &amp; x_2^d \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+1 &amp; x_n &amp; x_n^2 &amp; \dots &amp; x_n^d
+\end{bmatrix}
+\]</div>
+<p>For multivariate inputs <span class="arithmatex">\(\mathbf{x} \in \mathbb{R}^p\)</span>, degree-<span class="arithmatex">\(d\)</span> expansion generates all monomials <span class="arithmatex">\(\prod_{j=1}^p x_j^{k_j}\)</span> such that <span class="arithmatex">\(\sum_{j=1}^p k_j \le d\)</span>. The number of generated features scales combinatorially:</p>
+<div class="arithmatex">\[
+\dim(\phi(\mathbf{x})) = \binom{p + d}{d} = \frac{(p + d)!}{p! \, d!}
+\]</div>
+<p>For <span class="arithmatex">\(p = 100\)</span> features and degree <span class="arithmatex">\(d = 3\)</span>, the model creates <span class="arithmatex">\(\binom{103}{3} = 176,851\)</span> features!</p>
+<h3 id="22-runges-phenomenon-overfitting-dynamics">2.2 Runge's Phenomenon &amp; Overfitting Dynamics<a class="headerlink" href="#22-runges-phenomenon-overfitting-dynamics" title="Permanent link">&para;</a></h3>
+<p>As polynomial degree <span class="arithmatex">\(d\)</span> increases, the model's hypothesis space expands. While training error monotonically approaches zero, the polynomial develops violent high-frequency oscillations between interpolation nodes—an instability known in numerical analysis as <strong>Runge's phenomenon</strong>.</p>
+<pre class="mermaid"><code>flowchart LR
+    A["Degree d = 1 (High Bias, Underfitting)"] --&gt; B["Degree d = 3 (Optimal Generalization)"]
+    B --&gt; C["Degree d = 15 (High Variance, Runge Oscillations)"]
+    C --&gt; D["Degree d = 15 + Ridge/Lasso Regularization (Stabilized Generalization)"]</code></pre>
+<p>Without parameter regularization, fitting high-degree polynomials produces astronomical weights with alternating signs (e.g., <span class="arithmatex">\(w_4 = +10^6, w_5 = -10^6\)</span>) that delicately cancel out at the training points but explode in between.</p>
+<hr />
+<h2 id="3-ridge-regression-l_2-regularization">3. Ridge Regression (<span class="arithmatex">\(L_2\)</span> Regularization)<a class="headerlink" href="#3-ridge-regression-l_2-regularization" title="Permanent link">&para;</a></h2>
+<h3 id="31-objective-function">3.1 Objective Function<a class="headerlink" href="#31-objective-function" title="Permanent link">&para;</a></h3>
+<p>Ridge regression (also known as Tikhonov regularization) adds an <span class="arithmatex">\(L_2\)</span> squared Euclidean norm penalty to the Mean Squared Error:</p>
+<div class="arithmatex">\[
+\mathcal{L}_{\text{Ridge}}(\mathbf{w}) = \frac{1}{2n} \|\mathbf{y} - X\mathbf{w}\|_2^2 + \frac{\lambda}{2} \|\mathbf{w}\|_2^2
+\]</div>
+<p>where <span class="arithmatex">\(\lambda \ge 0\)</span> is the regularization hyperparameter:
+- <span class="arithmatex">\(\lambda = 0 \implies\)</span> Ordinary Least Squares.
+- <span class="arithmatex">\(\lambda \to \infty \implies \mathbf{w}^* \to \mathbf{0}\)</span>.</p>
+<p><em>(Note: The intercept <span class="arithmatex">\(w_0\)</span> / bias <span class="arithmatex">\(b\)</span> is never regularized; we assume features <span class="arithmatex">\(X\)</span> and target <span class="arithmatex">\(\mathbf{y}\)</span> are centered, or the bias is unpenalized).</em></p>
+<h3 id="32-mathematical-derivation-of-the-closed-form-solution">3.2 Mathematical Derivation of the Closed-Form Solution<a class="headerlink" href="#32-mathematical-derivation-of-the-closed-form-solution" title="Permanent link">&para;</a></h3>
+<p>Expanding the objective function in matrix notation:</p>
+<div class="arithmatex">\[
+\mathcal{L}_{\text{Ridge}}(\mathbf{w}) = \frac{1}{2n} \left( \mathbf{y}^T \mathbf{y} - 2 \mathbf{w}^T X^T \mathbf{y} + \mathbf{w}^T X^T X \mathbf{w} \right) + \frac{\lambda}{2} \mathbf{w}^T \mathbf{w}
+\]</div>
+<p>Taking the vector derivative with respect to <span class="arithmatex">\(\mathbf{w}\)</span> using matrix calculus rules:</p>
+<div class="arithmatex">\[
+\nabla_{\mathbf{w}} \mathcal{L}_{\text{Ridge}}(\mathbf{w}) = \frac{1}{n} \left( -X^T \mathbf{y} + X^T X \mathbf{w} \right) + \lambda \mathbf{w}
+\]</div>
+<p>Setting the gradient to zero to find the stationary point:</p>
+<div class="arithmatex">\[
+\frac{1}{n} X^T X \mathbf{w} + \lambda \mathbf{w} = \frac{1}{n} X^T \mathbf{y}
+\]</div>
+<p>Multiplying through by <span class="arithmatex">\(n\)</span> (absorbing <span class="arithmatex">\(n\lambda \to \lambda'\)</span> or adopting the unscaled objective <span class="arithmatex">\(\mathcal{L} = \|\mathbf{y} - X\mathbf{w}\|_2^2 + \lambda \|\mathbf{w}\|_2^2\)</span>):</p>
+<div class="arithmatex">\[
+(X^T X + \lambda I_p) \mathbf{w} = X^T \mathbf{y}
+\]</div>
+<p>Because <span class="arithmatex">\((X^T X + \lambda I_p)\)</span> is strictly positive definite for any <span class="arithmatex">\(\lambda &gt; 0\)</span>, it is invertible:</p>
+<div class="arithmatex">\[
+\mathbf{w}^*_{\text{Ridge}} = (X^T X + \lambda I_p)^{-1} X^T \mathbf{y}
+\]</div>
+<h3 id="33-proof-of-guaranteed-invertibility-and-conditioning-improvement">3.3 Proof of Guaranteed Invertibility and Conditioning Improvement<a class="headerlink" href="#33-proof-of-guaranteed-invertibility-and-conditioning-improvement" title="Permanent link">&para;</a></h3>
+<p>Let the eigendecomposition of the symmetric Gram matrix be:</p>
+<div class="arithmatex">\[
+X^T X = V \Lambda V^T, \quad \text{where } \Lambda = \text{diag}(\sigma_1^2, \sigma_2^2, \dots, \sigma_p^2), \; \sigma_j^2 \ge 0
+\]</div>
+<p>The regularized matrix is:</p>
+<div class="arithmatex">\[
+X^T X + \lambda I_p = V \Lambda V^T + \lambda V I_p V^T = V (\Lambda + \lambda I_p) V^T
+\]</div>
+<p>The eigenvalues of <span class="arithmatex">\((X^T X + \lambda I_p)\)</span> are:</p>
+<div class="arithmatex">\[
+\mu_j = \sigma_j^2 + \lambda
+\]</div>
+<p>Since <span class="arithmatex">\(\sigma_j^2 \ge 0\)</span> and <span class="arithmatex">\(\lambda &gt; 0\)</span>, every eigenvalue <span class="arithmatex">\(\mu_j \ge \lambda &gt; 0\)</span>. The determinant is:</p>
+<div class="arithmatex">\[
+\det(X^T X + \lambda I_p) = \prod_{j=1}^p (\sigma_j^2 + \lambda) \ge \lambda^p &gt; 0
+\]</div>
+<p>The matrix is <strong>guaranteed to be non-singular and invertible</strong>, even when <span class="arithmatex">\(p &gt; n\)</span> or when columns of <span class="arithmatex">\(X\)</span> are perfectly collinear!</p>
+<p>Furthermore, consider the matrix <strong>condition number</strong> <span class="arithmatex">\(\kappa(A) = \frac{\mu_{\max}}{\mu_{\min}}\)</span>:
+- For OLS: <span class="arithmatex">\(\kappa(X^T X) = \frac{\sigma_1^2}{\sigma_p^2} \to \infty\)</span> as <span class="arithmatex">\(\sigma_p \to 0\)</span>.
+- For Ridge: <span class="arithmatex">\(\kappa(X^T X + \lambda I) = \frac{\sigma_1^2 + \lambda}{\sigma_p^2 + \lambda} &lt; \frac{\sigma_1^2}{\sigma_p^2}\)</span>.</p>
+<p>Ridge directly bounds numerical error propagation during matrix inversion.</p>
+<h3 id="34-svd-perspective-on-weight-shrinkage">3.4 SVD Perspective on Weight Shrinkage<a class="headerlink" href="#34-svd-perspective-on-weight-shrinkage" title="Permanent link">&para;</a></h3>
+<p>Using the Singular Value Decomposition (SVD) of the design matrix <span class="arithmatex">\(X = U \Sigma V^T\)</span>:
+- <span class="arithmatex">\(U \in \mathbb{R}^{n \times p}\)</span> has orthonormal columns (<span class="arithmatex">\(U^T U = I_p\)</span>).
+- <span class="arithmatex">\(\Sigma = \text{diag}(\sigma_1, \dots, \sigma_p)\)</span> contains singular values.
+- <span class="arithmatex">\(V \in \mathbb{R}^{p \times p}\)</span> is an orthogonal matrix of right singular vectors (<span class="arithmatex">\(V^T V = V V^T = I_p\)</span>).</p>
+<p>Substituting <span class="arithmatex">\(X = U \Sigma V^T\)</span> into the Ridge formula:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mathbf{w}^*_{\text{Ridge}} &amp;= (V \Sigma^2 V^T + \lambda V I V^T)^{-1} V \Sigma U^T \mathbf{y} \\
+&amp;= \left[ V (\Sigma^2 + \lambda I) V^T \right]^{-1} V \Sigma U^T \mathbf{y} \\
+&amp;= V (\Sigma^2 + \lambda I)^{-1} V^T V \Sigma U^T \mathbf{y} \\
+&amp;= V (\Sigma^2 + \lambda I)^{-1} \Sigma U^T \mathbf{y} \\
+&amp;= \sum_{j=1}^p \mathbf{v}_j \left( \frac{\sigma_j}{\sigma_j^2 + \lambda} \right) \mathbf{u}_j^T \mathbf{y} = \sum_{j=1}^p \left( \frac{\sigma_j^2}{\sigma_j^2 + \lambda} \right) \frac{\mathbf{u}_j^T \mathbf{y}}{\sigma_j} \mathbf{v}_j
+\end{aligned}
+\]</div>
+<p>Recall that the unregularized OLS solution is:</p>
+<div class="arithmatex">\[
+\mathbf{w}^*_{\text{OLS}} = \sum_{j=1}^p \frac{\mathbf{u}_j^T \mathbf{y}}{\sigma_j} \mathbf{v}_j
+\]</div>
+<p>Therefore, along each principal direction <span class="arithmatex">\(\mathbf{v}_j\)</span>, Ridge applies a <strong>multiplicative shrinkage factor</strong>:</p>
+<div class="arithmatex">\[
+f_j = \frac{\sigma_j^2}{\sigma_j^2 + \lambda} &lt; 1
+\]</div>
+<ul>
+<li>For large singular values (<span class="arithmatex">\(\sigma_j^2 \gg \lambda\)</span>): <span class="arithmatex">\(f_j \approx 1\)</span>. High-variance, informative data directions are preserved untouched.</li>
+<li>For small singular values (<span class="arithmatex">\(\sigma_j^2 \ll \lambda\)</span>): <span class="arithmatex">\(f_j \approx \frac{\sigma_j^2}{\lambda} \approx 0\)</span>. Low-variance directions (noise, collinear axes) are crushed toward zero.</li>
+</ul>
+<hr />
+<h2 id="4-lasso-regression-l_1-regularization">4. Lasso Regression (<span class="arithmatex">\(L_1\)</span> Regularization)<a class="headerlink" href="#4-lasso-regression-l_1-regularization" title="Permanent link">&para;</a></h2>
+<h3 id="41-objective-function-non-differentiability">4.1 Objective Function &amp; Non-Differentiability<a class="headerlink" href="#41-objective-function-non-differentiability" title="Permanent link">&para;</a></h3>
+<p>Lasso (Least Absolute Shrinkage and Selection Operator) penalizes the <span class="arithmatex">\(L_1\)</span> norm of the parameter vector:</p>
+<div class="arithmatex">\[
+\mathcal{L}_{\text{Lasso}}(\mathbf{w}) = \frac{1}{2n} \|\mathbf{y} - X\mathbf{w}\|_2^2 + \alpha \|\mathbf{w}\|_1 = \frac{1}{2n} \sum_{i=1}^n \left( y_i - \sum_{j=1}^p X_{ij} w_j \right)^2 + \alpha \sum_{j=1}^p |w_j|
+\]</div>
+<p>Because the absolute value function <span class="arithmatex">\(|w_j|\)</span> has a sharp "kink" at <span class="arithmatex">\(w_j = 0\)</span>, the gradient <span class="arithmatex">\(\nabla_{\mathbf{w}} \mathcal{L}\)</span> does not exist when any weight is zero:</p>
+<div class="arithmatex">\[
+\frac{d}{dw_j} |w_j| = \begin{cases} +1 &amp; \text{if } w_j &gt; 0 \\ -1 &amp; \text{if } w_j &lt; 0 \\ \text{undefined} &amp; \text{if } w_j = 0 \end{cases}
+\]</div>
+<p>Consequently, <strong>Lasso has no closed-form solution</strong> for arbitrary design matrices <span class="arithmatex">\(X\)</span>. It requires convex non-smooth optimization algorithms.</p>
+<h3 id="42-subgradient-calculus">4.2 Subgradient Calculus<a class="headerlink" href="#42-subgradient-calculus" title="Permanent link">&para;</a></h3>
+<p>A vector <span class="arithmatex">\(\mathbf{g} \in \mathbb{R}^p\)</span> is a <strong>subgradient</strong> of a convex function <span class="arithmatex">\(f: \mathbb{R}^p \to \mathbb{R}\)</span> at <span class="arithmatex">\(\mathbf{w}\)</span> if for all <span class="arithmatex">\(\mathbf{u} \in \mathbb{R}^p\)</span>:</p>
+<div class="arithmatex">\[
+f(\mathbf{u}) \ge f(\mathbf{w}) + \mathbf{g}^T (\mathbf{u} - \mathbf{w})
+\]</div>
+<p>The set of all subgradients at <span class="arithmatex">\(\mathbf{w}\)</span> is the <strong>subdifferential</strong> <span class="arithmatex">\(\partial f(\mathbf{w})\)</span>.
+For <span class="arithmatex">\(f(w) = |w|\)</span>:</p>
+<div class="arithmatex">\[
+\partial |w| = \begin{cases} \{+1\} &amp; \text{if } w &gt; 0 \\ \{-1\} &amp; \text{if } w &lt; 0 \\ [-1, 1] &amp; \text{if } w = 0 \end{cases}
+\]</div>
+<p>A point <span class="arithmatex">\(\mathbf{w}^*\)</span> globally minimizes the convex objective if and only if:</p>
+<div class="arithmatex">\[
+\mathbf{0} \in \partial \mathcal{L}(\mathbf{w}^*)
+\]</div>
+<h3 id="43-coordinate-descent-the-soft-thresholding-operator">4.3 Coordinate Descent &amp; The Soft-Thresholding Operator<a class="headerlink" href="#43-coordinate-descent-the-soft-thresholding-operator" title="Permanent link">&para;</a></h3>
+<p>Coordinate Descent optimizes one coordinate <span class="arithmatex">\(w_j\)</span> at a time while holding all other coordinates <span class="arithmatex">\(\mathbf{w}_{-j}\)</span> fixed.</p>
+<p>Isolating the coordinate <span class="arithmatex">\(w_j\)</span> in the residual sum of squares:</p>
+<div class="arithmatex">\[
+\mathcal{L}(w_j) = \frac{1}{2n} \sum_{i=1}^n \left( y_i - \sum_{k \ne j} X_{ik} w_k - X_{ij} w_j \right)^2 + \alpha |w_j| + C
+\]</div>
+<p>Define the <strong>partial residual</strong> for feature <span class="arithmatex">\(j\)</span>:</p>
+<div class="arithmatex">\[
+r_i^{(j)} = y_i - \sum_{k \ne j} X_{ik} w_k
+\]</div>
+<p>The objective becomes:</p>
+<div class="arithmatex">\[
+\mathcal{L}(w_j) = \frac{1}{2n} \sum_{i=1}^n (r_i^{(j)} - X_{ij} w_j)^2 + \alpha |w_j| + C
+\]</div>
+<p>Assuming features are standardized such that <span class="arithmatex">\(\frac{1}{n} \sum_{i=1}^n X_{ij}^2 = 1\)</span>, expanding the square:</p>
+<div class="arithmatex">\[
+\mathcal{L}(w_j) = \frac{1}{2} w_j^2 - \left( \frac{1}{n} \sum_{i=1}^n X_{ij} r_i^{(j)} \right) w_j + \alpha |w_j| + \text{const}
+\]</div>
+<p>Let <span class="arithmatex">\(\rho_j = \frac{1}{n} \sum_{i=1}^n X_{ij} r_i^{(j)} = \frac{1}{n} \mathbf{x}_j^T \mathbf{r}^{(j)}\)</span>. Setting the subdifferential to include zero:</p>
+<div class="arithmatex">\[
+0 \in w_j - \rho_j + \alpha \, \partial |w_j| \implies \rho_j - w_j \in \alpha \, \partial |w_j|
+\]</div>
+<p>We evaluate the three piecewise cases:</p>
+<ol>
+<li><strong>If <span class="arithmatex">\(w_j &gt; 0\)</span></strong>: <span class="arithmatex">\(\partial |w_j| = \{1\}\)</span>, so <span class="arithmatex">\(\rho_j - w_j = \alpha \implies w_j = \rho_j - \alpha\)</span>. This requires <span class="arithmatex">\(\rho_j &gt; \alpha\)</span>.</li>
+<li><strong>If <span class="arithmatex">\(w_j &lt; 0\)</span></strong>: <span class="arithmatex">\(\partial |w_j| = \{-1\}\)</span>, so <span class="arithmatex">\(\rho_j - w_j = -\alpha \implies w_j = \rho_j + \alpha\)</span>. This requires <span class="arithmatex">\(\rho_j &lt; -\alpha\)</span>.</li>
+<li><strong>If <span class="arithmatex">\(w_j = 0\)</span></strong>: <span class="arithmatex">\(\partial |w_j| = [-1, 1]\)</span>, so <span class="arithmatex">\(\rho_j \in [-\alpha, \alpha] \implies |\rho_j| \le \alpha\)</span>.</li>
+</ol>
+<p>Combining all three conditions gives the celebrated <strong>Soft-Thresholding Operator</strong> <span class="arithmatex">\(S(\rho_j, \alpha)\)</span>:</p>
+<div class="arithmatex">\[
+w_j^* = \mathcal{S}(\rho_j, \alpha) = \text{sign}(\rho_j) \max(0, |\rho_j| - \alpha) = \begin{cases}
+\rho_j - \alpha &amp; \text{if } \rho_j &gt; \alpha \\
+0 &amp; \text{if } |\rho_j| \le \alpha \\
+\rho_j + \alpha &amp; \text{if } \rho_j &lt; -\alpha
+\end{cases}
+\]</div>
+<pre class="mermaid"><code>flowchart LR
+    A["Compute partial residual: r^(j) = y - X_{-j}w_{-j}"] --&gt; B["Compute correlation: ρ_j = (1/n) x_jᵀ r^(j)"]
+    B --&gt; C{"Is |ρ_j| ≤ α?"}
+    C -- Yes --&gt; D["w_j = 0 (Feature Zeroed Out!)"]
+    C -- No --&gt; E["w_j = sign(ρ_j)(|ρ_j| - α) (Shrunk)"]</code></pre>
+<p>Whenever the correlation between feature <span class="arithmatex">\(j\)</span> and the remaining residual is less than <span class="arithmatex">\(\alpha\)</span>, the weight is set to <strong>identically zero</strong>. Lasso performs <strong>automatic feature selection</strong>.</p>
+<h3 id="44-geometric-intuition-diamond-l_1-vs-circle-l_2">4.4 Geometric Intuition: Diamond (<span class="arithmatex">\(L_1\)</span>) vs. Circle (<span class="arithmatex">\(L_2\)</span>)<a class="headerlink" href="#44-geometric-intuition-diamond-l_1-vs-circle-l_2" title="Permanent link">&para;</a></h3>
+<p>Consider the constrained formulations:
+- <strong>Ridge</strong>: <span class="arithmatex">\(\min_{\mathbf{w}} \|\mathbf{y} - X\mathbf{w}\|_2^2\)</span> subject to <span class="arithmatex">\(w_1^2 + w_2^2 \le t^2\)</span> (a Euclidean circle/sphere).
+- <strong>Lasso</strong>: <span class="arithmatex">\(\min_{\mathbf{w}} \|\mathbf{y} - X\mathbf{w}\|_2^2\)</span> subject to <span class="arithmatex">\(|w_1| + |w_2| \le t\)</span> (a diamond/polytope).</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph L2 Ball (Ridge)
+        C["Smooth circular boundary: w₁² + w₂² ≤ t²"]
+        E1["Elliptical loss contours: (w - w_ols)ᵀ (XᵀX) (w - w_ols)"]
+        E1 -. Tangency Point .-&gt; C
+        T1["Tangency almost never occurs on coordinate axes (w₁ ≠ 0, w₂ ≠ 0)"]
+    end
+    subgraph L1 Diamond (Lasso)
+        D["Pointy diamond boundary: |w₁| + |w₂| ≤ t with sharp corners at axes"]
+        E2["Elliptical loss contours"]
+        E2 -. Tangency Point .-&gt; D
+        T2["Contours hit corners on coordinate axes: w₁ = 0 or w₂ = 0 (Exact Sparsity!)"]
+    end</code></pre>
+<p>The level curves of the squared error loss form ellipses centered at the unconstrained OLS solution <span class="arithmatex">\(\mathbf{w}^*_{\text{OLS}}\)</span>. The regularized solution occurs at the first point where the expanding loss ellipse touches the constraint region.</p>
+<p>Because the <span class="arithmatex">\(L_1\)</span> ball has sharp vertices lying directly on the coordinate axes (where one or more <span class="arithmatex">\(w_j = 0\)</span>), expanding elliptical contours are geometrically prone to touching a corner first. In contrast, the <span class="arithmatex">\(L_2\)</span> sphere is completely smooth everywhere, so the tangency point almost never aligns with a coordinate axis (<span class="arithmatex">\(P(w_j = 0) = 0\)</span>).</p>
+<hr />
+<h2 id="5-elastic-net-l_1-l_2-regularization">5. Elastic Net (<span class="arithmatex">\(L_1 + L_2\)</span> Regularization)<a class="headerlink" href="#5-elastic-net-l_1-l_2-regularization" title="Permanent link">&para;</a></h2>
+<h3 id="51-limitations-of-lasso">5.1 Limitations of Lasso<a class="headerlink" href="#51-limitations-of-lasso" title="Permanent link">&para;</a></h3>
+<p>While Lasso is powerful for sparse selection, it exhibits two structural flaws in real-world tabular data:
+1. <strong><span class="arithmatex">\(p &gt; n\)</span> Dimensionality Cap</strong>: If <span class="arithmatex">\(p &gt; n\)</span>, Lasso can select at most <span class="arithmatex">\(n\)</span> non-zero features before saturating, arbitrarily discarding remaining signals.
+2. <strong>Collinear Instability</strong>: If a group of features are highly correlated (e.g., Pearson <span class="arithmatex">\(r &gt; 0.95\)</span>), Lasso arbitrarily selects one feature from the cluster and sets all others to zero, causing massive variance across cross-validation splits.</p>
+<h3 id="52-objective-function-grouping-effect">5.2 Objective Function &amp; Grouping Effect<a class="headerlink" href="#52-objective-function-grouping-effect" title="Permanent link">&para;</a></h3>
+<p>Elastic Net combines both penalties to retain Lasso's sparsity while inheriting Ridge's grouping stability:</p>
+<div class="arithmatex">\[
+\mathcal{L}_{\text{ElasticNet}}(\mathbf{w}) = \frac{1}{2n} \|\mathbf{y} - X\mathbf{w}\|_2^2 + \alpha \rho \|\mathbf{w}\|_1 + \frac{\alpha(1-\rho)}{2} \|\mathbf{w}\|_2^2
+\]</div>
+<p>where <span class="arithmatex">\(\alpha\)</span> controls overall penalty strength and <span class="arithmatex">\(\rho \in [0, 1]\)</span> is the mixing ratio (<code>l1_ratio</code> in scikit-learn):
+- <span class="arithmatex">\(\rho = 1 \implies\)</span> Pure Lasso.
+- <span class="arithmatex">\(\rho = 0 \implies\)</span> Pure Ridge.</p>
+<h3 id="53-mathematical-proof-of-the-grouping-effect">5.3 Mathematical Proof of the Grouping Effect<a class="headerlink" href="#53-mathematical-proof-of-the-grouping-effect" title="Permanent link">&para;</a></h3>
+<p>Let features <span class="arithmatex">\(j\)</span> and <span class="arithmatex">\(k\)</span> be standardized (<span class="arithmatex">\(\|\mathbf{x}_j\|_2^2 = \|\mathbf{x}_k\|_2^2 = n\)</span>). Suppose they are highly correlated with sample correlation <span class="arithmatex">\(\rho_{jk} = \frac{1}{n} \mathbf{x}_j^T \mathbf{x}_k\)</span>.</p>
+<p>Assume <span class="arithmatex">\(\hat{w}_j \hat{w}_k &gt; 0\)</span> (both estimated coefficients share the same sign). Zou &amp; Hastie (2005) proved that the difference between their estimated weights satisfies:</p>
+<div class="arithmatex">\[
+|\hat{w}_j - \hat{w}_k| \le \frac{\|\mathbf{y}\|_2}{\alpha(1 - \rho)} \sqrt{2(1 - \rho_{jk})}
+\]</div>
+<p>As the correlation <span class="arithmatex">\(\rho_{jk} \to 1\)</span>, the right-hand side approaches zero:</p>
+<div class="arithmatex">\[
+\lim_{\rho_{jk} \to 1} |\hat{w}_j - \hat{w}_k| = 0
+\]</div>
+<p><strong>Theorem Takeaway</strong>: If two features are identical or perfectly correlated, their Elastic Net coefficients are identical (<span class="arithmatex">\(\hat{w}_j = \hat{w}_k\)</span>). Elastic Net distributes weights evenly across correlated clusters rather than discarding them arbitrarily!</p>
+<hr />
+<h2 id="6-implementation-1-vectorized-coordinate-descent-from-scratch-numpy">6. Implementation 1 — Vectorized Coordinate Descent from Scratch (NumPy)<a class="headerlink" href="#6-implementation-1-vectorized-coordinate-descent-from-scratch-numpy" title="Permanent link">&para;</a></h2>
+<p>Let us implement Elastic Net from scratch with pure NumPy. By setting <span class="arithmatex">\(\rho = 1.0\)</span> it executes pure Lasso; with <span class="arithmatex">\(\rho = 0.0\)</span> it solves Ridge.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">ScratchElasticNet</span><span class="p">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="sd">    Elastic Net Linear Regression trained via Coordinate Descent.</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="sd">    Objective:</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="sd">        (1 / (2n)) * ||y - Xw - b||_2^2 + alpha * l1_ratio * ||w||_1</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="sd">        + 0.5 * alpha * (1 - l1_ratio) * ||w||_2^2</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="sd">    """</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">l1_ratio</span><span class="p">)</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="n">tol</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">intercept_</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_soft_threshold</span><span class="p">(</span><span class="n">rho</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">        </span><span class="sd">"""Evaluates S(rho, gamma) = sign(rho) * max(0, |rho| - gamma)"""</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>        <span class="k">if</span> <span class="n">rho</span> <span class="o">&gt;</span> <span class="n">gamma</span><span class="p">:</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>            <span class="k">return</span> <span class="n">rho</span> <span class="o">-</span> <span class="n">gamma</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>        <span class="k">elif</span> <span class="n">rho</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">gamma</span><span class="p">:</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>            <span class="k">return</span> <span class="n">rho</span> <span class="o">+</span> <span class="n">gamma</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>            <span class="k">return</span> <span class="mf">0.0</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>        <span class="c1"># Step 1: Center y and X to avoid regularizing the intercept</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">x_mean_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">y_mean_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>        <span class="n">X_centered</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_mean_</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>        <span class="n">y_centered</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_mean_</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>        <span class="c1"># Precompute column norms (sum of squares per feature)</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>        <span class="c1"># s_j = (1 / n) * sum_i X_ij^2</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>        <span class="n">col_norm_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">X_centered</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_samples</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>        <span class="c1"># Initialize weights to zero</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>        <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>        <span class="c1"># Coordinate descent parameters</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>        <span class="n">l1_penalty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>        <span class="n">l2_penalty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">l1_ratio</span><span class="p">)</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>        <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">):</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>            <span class="n">w_max_change</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">):</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>                <span class="k">if</span> <span class="n">col_norm_sq</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>                    <span class="k">continue</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>                <span class="n">w_j_old</span> <span class="o">=</span> <span class="n">w</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>                <span class="c1"># Compute partial residual: r_partial = y_centered - (X_centered @ w - X_centered[:, j] * w[j])</span>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>                <span class="c1"># Efficient update without full O(n * p) matrix-vector product:</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>                <span class="n">y_pred</span> <span class="o">=</span> <span class="n">X_centered</span> <span class="o">@</span> <span class="n">w</span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>                <span class="n">residual_partial</span> <span class="o">=</span> <span class="n">y_centered</span> <span class="o">-</span> <span class="n">y_pred</span> <span class="o">+</span> <span class="n">X_centered</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">w_j_old</span>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>                <span class="c1"># Compute rho_j = (1 / n) * x_j^T * r_partial</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>                <span class="n">rho_j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X_centered</span><span class="p">[:,</span> <span class="n">j</span><span class="p">],</span> <span class="n">residual_partial</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_samples</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>                <span class="c1"># Apply Elastic Net coordinate update:</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>                <span class="c1"># w_j = S(rho_j, l1_penalty) / (col_norm_sq[j] + l2_penalty)</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>                <span class="n">denominator</span> <span class="o">=</span> <span class="n">col_norm_sq</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">l2_penalty</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>                <span class="n">w</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_soft_threshold</span><span class="p">(</span><span class="n">rho_j</span><span class="p">,</span> <span class="n">l1_penalty</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator</span>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>                <span class="n">change</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">w_j_old</span><span class="p">)</span>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>                <span class="k">if</span> <span class="n">change</span> <span class="o">&gt;</span> <span class="n">w_max_change</span><span class="p">:</span>
+</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>                    <span class="n">w_max_change</span> <span class="o">=</span> <span class="n">change</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>
+</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>            <span class="k">if</span> <span class="n">w_max_change</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">:</span>
+</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>                <span class="k">break</span>
+</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>
+</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span> <span class="o">=</span> <span class="n">w</span>
+</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">intercept_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_mean_</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_mean_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span>
+</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>        <span class="k">return</span> <span class="bp">self</span>
+</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>
+</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">intercept_</span>
+</span></code></pre></div>
+<hr />
+<h2 id="7-implementation-2-scikit-learn-benchmarking-verification">7. Implementation 2 — scikit-learn Benchmarking &amp; Verification<a class="headerlink" href="#7-implementation-2-scikit-learn-benchmarking-verification" title="Permanent link">&para;</a></h2>
+<p>Let us construct a synthetic problem with high multicollinearity and uninformative noise features to compare our scratch coordinate descent against scikit-learn's <code>Ridge</code>, <code>Lasso</code>, and <code>ElasticNet</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ridge</span><span class="p">,</span> <span class="n">Lasso</span><span class="p">,</span> <span class="n">ElasticNet</span><span class="p">,</span> <span class="n">LinearRegression</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">PolynomialFeatures</span><span class="p">,</span> <span class="n">StandardScaler</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_squared_error</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Generate synthetic dataset: 100 samples, 10 features</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Features 0, 1, 2 are strongly collinear</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">n_samples</span> <span class="o">=</span> <span class="mi">150</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">x_base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">x_collinear</span> <span class="o">=</span> <span class="n">x_base</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">x_independent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">x_base</span><span class="p">,</span> <span class="n">x_collinear</span><span class="p">,</span> <span class="n">x_independent</span><span class="p">])</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># True weights: only features 0, 1, 2 and 3 matter; rest are pure noise</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="n">true_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="n">y</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="n">true_w</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Split train/test</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="mi">100</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">100</span><span class="p">:]</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="mi">100</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">100</span><span class="p">:]</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># 1. Scratch Elastic Net (Lasso mode: l1_ratio=1.0)</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="n">scratch_lasso</span> <span class="o">=</span> <span class="n">ScratchElasticNet</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="n">scratch_lasso</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># 2. Scikit-learn Lasso</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="n">sk_lasso</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="n">sk_lasso</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1"># 3. Scikit-learn Ridge</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="n">sk_ridge</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="n">sk_ridge</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="c1"># 4. Scikit-learn ElasticNet</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="n">sk_enet</span> <span class="o">=</span> <span class="n">ElasticNet</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="n">sk_enet</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"=== Weights Comparison ==="</span><span class="p">)</span>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"True Weights:       "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">true_w</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"Scratch Lasso:      "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">scratch_lasso</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"Sklearn Lasso:      "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">sk_lasso</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"Sklearn Ridge:      "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">sk_ridge</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"Sklearn ElasticNet: "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">sk_enet</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>
+</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="c1"># Verify Scratch vs Sklearn agreement</span>
+</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">scratch_lasso</span><span class="o">.</span><span class="n">coef_</span> <span class="o">-</span> <span class="n">sk_lasso</span><span class="o">.</span><span class="n">coef_</span><span class="p">))</span>
+</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Max difference between Scratch Lasso &amp; Sklearn: </span><span class="si">{</span><span class="n">diff</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="k">assert</span> <span class="n">diff</span> <span class="o">&lt;</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="s2">"Scratch implementation diverges from reference!"</span>
+</span></code></pre></div>
+<hr />
+<h2 id="8-common-errors-production-debugging">8. Common Errors &amp; Production Debugging<a class="headerlink" href="#8-common-errors-production-debugging" title="Permanent link">&para;</a></h2>
+<h3 id="81-regularizing-unstandardized-features">8.1 Regularizing Unstandardized Features<a class="headerlink" href="#81-regularizing-unstandardized-features" title="Permanent link">&para;</a></h3>
+<p>If feature <span class="arithmatex">\(x_1\)</span> is measured in millimeters (<span class="arithmatex">\([0, 1000]\)</span>) and <span class="arithmatex">\(x_2\)</span> in meters (<span class="arithmatex">\([0, 1]\)</span>), an equivalent model requires <span class="arithmatex">\(w_1 = w_2 / 1000\)</span>.</p>
+<p>The regularizer penalizes <span class="arithmatex">\(w_2^2\)</span> a million times more severely than <span class="arithmatex">\(w_1^2\)</span>! As a result, the optimizer artificially suppresses <span class="arithmatex">\(w_2\)</span> simply due to unit scaling.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># BROKEN: Fitting Ridge or Lasso directly on unscaled features</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ridge</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_raw</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># CORRECT: Wrap within a Pipeline ensuring feature scaling</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_pipeline</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">pipeline</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">))</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_raw</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="82-regularizing-the-intercept-w_0-bias">8.2 Regularizing the Intercept (<span class="arithmatex">\(w_0\)</span> / Bias)<a class="headerlink" href="#82-regularizing-the-intercept-w_0-bias" title="Permanent link">&para;</a></h3>
+<p>The intercept represents the baseline target value when all features are zero (<span class="arithmatex">\(\mathbb{E}[y | \mathbf{x} = \mathbf{0}]\)</span>). Penalizing <span class="arithmatex">\(w_0\)</span> drags the model's predictions toward zero regardless of the actual data mean. If target values are shifted by a constant <span class="arithmatex">\(y \mapsto y + 1000\)</span>, a regularized intercept will fail to compensate, inducing severe systematic underestimation.</p>
+<p>Always center the target (<span class="arithmatex">\(\mathbf{y} - \bar{y}\)</span>) or configure <code>fit_intercept=True</code> (which solves for the bias unpenalized via <span class="arithmatex">\(\bar{y} - \bar{\mathbf{x}}^T \mathbf{w}\)</span>).</p>
+<h3 id="83-debugging-convergence-warnings-in-coordinate-descent">8.3 Debugging Convergence Warnings in Coordinate Descent<a class="headerlink" href="#83-debugging-convergence-warnings-in-coordinate-descent" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Duality gap: 142.3, tolerance: 0.12
+</span></code></pre></div>
+<p><strong>Root Causes &amp; Diagnosis:</strong>
+1. <strong>Unscaled Features</strong>: If features have widely differing variances, the Lipschitz constant varies across coordinates, slowing coordinate descent.
+2. <strong>Extremely Small <span class="arithmatex">\(\alpha\)</span></strong>: As <span class="arithmatex">\(\alpha \to 0\)</span>, the problem approaches ill-conditioned OLS where coordinate descent exhibits slow sublinear convergence.
+3. <strong>Severe Multicollinearity</strong>: When features are near-duplicates, coordinate descent zig-zags between them.</p>
+<p><strong>Fix</strong>:
+Increase <code>max_iter</code>, scale all features via <code>StandardScaler</code>, or use <code>ElasticNet</code> / <code>Ridge</code> instead of pure <code>Lasso</code>.</p>
+<hr />
+<h2 id="9-staff-level-interview-questions-model-answers">9. Staff-Level Interview Questions &amp; Model Answers<a class="headerlink" href="#9-staff-level-interview-questions-model-answers" title="Permanent link">&para;</a></h2>
+<h3 id="q1-derive-the-closed-form-solution-of-ridge-regression-and-prove-why-detxt-x-lambda-i-0-for-any-lambda-0">Q1: Derive the closed-form solution of Ridge regression and prove why <span class="arithmatex">\(\det(X^T X + \lambda I) &gt; 0\)</span> for any <span class="arithmatex">\(\lambda &gt; 0\)</span>.<a class="headerlink" href="#q1-derive-the-closed-form-solution-of-ridge-regression-and-prove-why-detxt-x-lambda-i-0-for-any-lambda-0" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+The Ridge objective function in matrix notation is:
+$<span class="arithmatex">\(\mathcal{L}(\mathbf{w}) = \frac{1}{2} (\mathbf{y} - X\mathbf{w})^T(\mathbf{y} - X\mathbf{w}) + \frac{\lambda}{2} \mathbf{w}^T \mathbf{w}\)</span>$</p>
+<p>Differentiating with respect to <span class="arithmatex">\(\mathbf{w}\)</span>:
+$<span class="arithmatex">\(\nabla_{\mathbf{w}} \mathcal{L} = -X^T (\mathbf{y} - X\mathbf{w}) + \lambda \mathbf{w} = (X^T X + \lambda I)\mathbf{w} - X^T \mathbf{y}\)</span>$</p>
+<p>Equating the gradient to zero yields the normal equation for Ridge:
+$<span class="arithmatex">\((X^T X + \lambda I)\mathbf{w} = X^T \mathbf{y} \implies \mathbf{w}^* = (X^T X + \lambda I)^{-1} X^T \mathbf{y}\)</span>$</p>
+<p>To prove positive definiteness and invertibility: The Gram matrix <span class="arithmatex">\(X^T X \in \mathbb{R}^{p \times p}\)</span> is real symmetric and positive semi-definite, meaning for any non-zero vector <span class="arithmatex">\(\mathbf{v} \in \mathbb{R}^p\)</span>, <span class="arithmatex">\(\mathbf{v}^T (X^T X) \mathbf{v} = \|X\mathbf{v}\|_2^2 \ge 0\)</span>.
+The identity matrix <span class="arithmatex">\(I\)</span> satisfies <span class="arithmatex">\(\mathbf{v}^T I \mathbf{v} = \|\mathbf{v}\|_2^2 &gt; 0\)</span> for all <span class="arithmatex">\(\mathbf{v} \ne \mathbf{0}\)</span>.
+Therefore:
+$<span class="arithmatex">\(\mathbf{v}^T (X^T X + \lambda I) \mathbf{v} = \mathbf{v}^T X^T X \mathbf{v} + \lambda \mathbf{v}^T \mathbf{v} = \|X\mathbf{v}\|_2^2 + \lambda \|\mathbf{v}\|_2^2 \ge 0 + \lambda \|\mathbf{v}\|_2^2 &gt; 0\)</span>$
+Since <span class="arithmatex">\(\mathbf{v}^T (X^T X + \lambda I) \mathbf{v} &gt; 0\)</span> for all non-zero <span class="arithmatex">\(\mathbf{v}\)</span>, the matrix is <strong>strictly positive definite</strong>.
+By the spectral theorem, its eigenvalues satisfy <span class="arithmatex">\(\mu_i = \sigma_i^2 + \lambda \ge \lambda &gt; 0\)</span>. Because all eigenvalues are strictly positive:
+$<span class="arithmatex">\(\det(X^T X + \lambda I) = \prod_{i=1}^p \mu_i \ge \lambda^p &gt; 0\)</span>$
+Thus, the matrix is guaranteed to be non-singular and invertible regardless of feature collinearity or whether <span class="arithmatex">\(p &gt; n\)</span>.</p>
+<hr />
+<h3 id="q2-prove-geometrically-and-analytically-why-l_1-regularization-produces-exact-parameter-sparsity-while-l_2-only-shrinks-weights-asymptotically">Q2: Prove geometrically and analytically why <span class="arithmatex">\(L_1\)</span> regularization produces exact parameter sparsity while <span class="arithmatex">\(L_2\)</span> only shrinks weights asymptotically.<a class="headerlink" href="#q2-prove-geometrically-and-analytically-why-l_1-regularization-produces-exact-parameter-sparsity-while-l_2-only-shrinks-weights-asymptotically" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+<strong>Analytically (via Subgradients and Soft-Thresholding):</strong>
+In coordinate descent with standardized features, the stationarity condition for coordinate <span class="arithmatex">\(w_j\)</span> under <span class="arithmatex">\(L_1\)</span> is <span class="arithmatex">\(0 \in w_j - \rho_j + \alpha \partial |w_j|\)</span>, where <span class="arithmatex">\(\rho_j = \frac{1}{n} \mathbf{x}_j^T \mathbf{r}^{(j)}\)</span>.
+Because the subdifferential <span class="arithmatex">\(\partial |w_j|\)</span> at zero is the entire interval <span class="arithmatex">\([-1, 1]\)</span>, any partial correlation falling inside <span class="arithmatex">\([-\alpha, \alpha]\)</span> allows <span class="arithmatex">\(0\)</span> to satisfy the stationarity condition:
+$<span class="arithmatex">\(\rho_j - 0 \in [-\alpha, \alpha] \implies w_j^* = 0\)</span>$
+There is a finite, non-zero measure interval of width <span class="arithmatex">\(2\alpha\)</span> where <span class="arithmatex">\(w_j^*\)</span> is set identically to zero.
+Under <span class="arithmatex">\(L_2\)</span>, the stationarity condition is <span class="arithmatex">\(w_j - \rho_j + \lambda w_j = 0 \implies w_j^* = \frac{\rho_j}{1 + \lambda}\)</span>.
+Here <span class="arithmatex">\(w_j^* = 0\)</span> if and only if <span class="arithmatex">\(\rho_j = 0\)</span> exactly (a set of Lebesgue measure zero). For any non-zero <span class="arithmatex">\(\rho_j\)</span>, <span class="arithmatex">\(w_j^*\)</span> is merely attenuated by <span class="arithmatex">\(\frac{1}{1 + \lambda}\)</span> but remains strictly non-zero.</p>
+<p><strong>Geometrically (Constraint Contours):</strong>
+In 2D parameter space, the <span class="arithmatex">\(L_1\)</span> constraint <span class="arithmatex">\(\|\mathbf{w}\|_1 \le t\)</span> forms a square tilted at <span class="arithmatex">\(45^\circ\)</span> with non-differentiable vertices (corners) lying directly on the coordinate axes (<span class="arithmatex">\(w_1 = 0, w_2 = \pm t\)</span> and vice-versa).
+The elliptical contours of the MSE loss function <span class="arithmatex">\(\frac{1}{2}(\mathbf{w} - \mathbf{w}_{\text{OLS}})^T X^T X (\mathbf{w} - \mathbf{w}_{\text{OLS}})\)</span> expand outwards from the unconstrained OLS minimum. Because corners protrude into the search space, the expanding ellipse is statistically far more likely to intersect a corner than a flat edge. At a corner, one or more coordinate values are precisely zero.
+Under <span class="arithmatex">\(L_2\)</span>, the constraint boundary <span class="arithmatex">\(\|\mathbf{w}\|_2^2 \le t^2\)</span> is a smooth circle. The surface normal vector exists everywhere and changes continuously. The probability that an arbitrary loss ellipse achieves tangency exactly at a coordinate axis point is zero.</p>
+<hr />
+<h3 id="q3-explain-the-bayesian-interpretation-of-ridge-and-lasso-regression-what-prior-probability-distributions-do-they-place-on-the-model-weights">Q3: Explain the Bayesian interpretation of Ridge and Lasso regression. What prior probability distributions do they place on the model weights?<a class="headerlink" href="#q3-explain-the-bayesian-interpretation-of-ridge-and-lasso-regression-what-prior-probability-distributions-do-they-place-on-the-model-weights" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Both Ridge and Lasso are Maximum A Posteriori (MAP) estimators of a linear regression model under different prior beliefs over the weight vector <span class="arithmatex">\(\mathbf{w}\)</span>.
+Under Gaussian noise <span class="arithmatex">\(\epsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span>, the data likelihood is:
+$<span class="arithmatex">\(p(\mathbf{y} | X, \mathbf{w}) = \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left( -\frac{(y_i - \mathbf{x}_i^T \mathbf{w})^2}{2\sigma^2} \right)\)</span>$
+By Bayes' theorem, the posterior distribution is:
+$<span class="arithmatex">\(p(\mathbf{w} | X, \mathbf{y}) \propto p(\mathbf{y} | X, \mathbf{w}) p(\mathbf{w})\)</span>$
+Taking the negative log-posterior:
+$<span class="arithmatex">\(-\ln p(\mathbf{w} | X, \mathbf{y}) = \frac{1}{2\sigma^2} \|\mathbf{y} - X\mathbf{w}\|_2^2 - \ln p(\mathbf{w}) + \text{const}\)</span>$</p>
+<ol>
+<li><strong>Ridge Regression <span class="arithmatex">\(\iff\)</span> Independent Gaussian Prior</strong>:
+   If we place a zero-mean isotropic Gaussian prior on weights <span class="arithmatex">\(w_j \sim \mathcal{N}(0, \tau^2)\)</span>:
+   $<span class="arithmatex">\(p(\mathbf{w}) = \prod_{j=1}^p \frac{1}{\sqrt{2\pi\tau^2}} \exp\left(-\frac{w_j^2}{2\tau^2}\right) \implies -\ln p(\mathbf{w}) = \frac{1}{2\tau^2} \|\mathbf{w}\|_2^2 + \text{const}\)</span>$
+   Setting <span class="arithmatex">\(\lambda = \frac{\sigma^2}{\tau^2}\)</span> exactly recovers the Ridge objective.</li>
+<li><strong>Lasso Regression <span class="arithmatex">\(\iff\)</span> Independent Laplace (Double Exponential) Prior</strong>:
+   If we place a zero-mean Laplace prior on weights <span class="arithmatex">\(p(w_j) = \frac{1}{2b} \exp\left(-\frac{|w_j|}{b}\right)\)</span>:
+   $<span class="arithmatex">\(-\ln p(\mathbf{w}) = \frac{1}{b} \|\mathbf{w}\|_1 + \text{const}\)</span>$
+   Setting <span class="arithmatex">\(\alpha = \frac{\sigma^2}{b}\)</span> yields the Lasso objective.
+   The Laplace prior has a sharp cusp at zero, reflecting the prior belief that most parameters are exactly zero.</li>
+</ol>
+<hr />
+<h3 id="q4-why-does-lasso-struggle-when-two-features-are-highly-collinear-and-how-does-elastic-net-resolve-this-via-the-grouping-effect">Q4: Why does Lasso struggle when two features are highly collinear, and how does Elastic Net resolve this via the Grouping Effect?<a class="headerlink" href="#q4-why-does-lasso-struggle-when-two-features-are-highly-collinear-and-how-does-elastic-net-resolve-this-via-the-grouping-effect" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Suppose features <span class="arithmatex">\(\mathbf{x}_1\)</span> and <span class="arithmatex">\(\mathbf{x}_2\)</span> are identical (<span class="arithmatex">\(\mathbf{x}_1 = \mathbf{x}_2\)</span>). In unregularized linear regression, the prediction is <span class="arithmatex">\(\hat{\mathbf{y}} = w_1 \mathbf{x}_1 + w_2 \mathbf{x}_2 = (w_1 + w_2)\mathbf{x}_1\)</span>. Any pair <span class="arithmatex">\((w_1, w_2)\)</span> satisfying <span class="arithmatex">\(w_1 + w_2 = c\)</span> achieves identical MSE.</p>
+<p>Under Lasso (<span class="arithmatex">\(L_1\)</span>), the penalty is <span class="arithmatex">\(|w_1| + |w_2|\)</span>. If <span class="arithmatex">\(c &gt; 0\)</span> and <span class="arithmatex">\(w_1, w_2 \ge 0\)</span>, then <span class="arithmatex">\(|w_1| + |w_2| = w_1 + w_2 = c\)</span>. Every point on the line segment connecting <span class="arithmatex">\((c, 0)\)</span> and <span class="arithmatex">\((0, c)\)</span> has the exact same total loss! Because the objective is not strictly convex along this line segment, the optimization problem has an infinite continuum of solutions. In practice, minor floating-point fluctuations or numerical noise in coordinate descent cause Lasso to arbitrarily pick one feature and assign it <span class="arithmatex">\(w=c\)</span> while zeroing the other. On different bootstrap splits, the selected feature can alternate chaotically.</p>
+<p>Under Elastic Net, the objective adds a strictly convex <span class="arithmatex">\(L_2\)</span> term <span class="arithmatex">\(\frac{\lambda_2}{2}(w_1^2 + w_2^2)\)</span>. Minimizing <span class="arithmatex">\(w_1^2 + w_2^2\)</span> subject to <span class="arithmatex">\(w_1 + w_2 = c\)</span> has a unique, strictly convex minimum at <span class="arithmatex">\(w_1 = w_2 = c/2\)</span>.
+Zou &amp; Hastie proved that for standardized features with correlation <span class="arithmatex">\(\rho_{jk}\)</span>, <span class="arithmatex">\(|\hat{w}_j - \hat{w}_k| \le \frac{\|\mathbf{y}\|_2}{\lambda_2} \sqrt{2(1 - \rho_{jk})}\)</span>. As <span class="arithmatex">\(\rho_{jk} \to 1\)</span>, the difference <span class="arithmatex">\(|\hat{w}_j - \hat{w}_k| \to 0\)</span>. Elastic Net groups collinear features together, assigning them equal weights.</p>
+<hr />
+<h3 id="q5-what-is-the-degrees-of-freedom-dof-for-ridge-regression-and-how-does-it-compare-to-ordinary-least-squares">Q5: What is the Degrees of Freedom (DoF) for Ridge regression, and how does it compare to Ordinary Least Squares?<a class="headerlink" href="#q5-what-is-the-degrees-of-freedom-dof-for-ridge-regression-and-how-does-it-compare-to-ordinary-least-squares" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+For any linear smoother where <span class="arithmatex">\(\hat{\mathbf{y}} = H \mathbf{y}\)</span> (<span class="arithmatex">\(H\)</span> is the hat or projection matrix), the effective degrees of freedom is defined as the trace of the projection matrix:
+$<span class="arithmatex">\(\text{df} = \text{tr}(H)\)</span>$</p>
+<p>For Ordinary Least Squares:
+$<span class="arithmatex">\(H_{\text{OLS}} = X (X^T X)^{-1} X^T \implies \text{tr}(H_{\text{OLS}}) = \text{tr}\left( X^T X (X^T X)^{-1} \right) = \text{tr}(I_p) = p\)</span>$
+OLS always uses exactly <span class="arithmatex">\(p\)</span> degrees of freedom (assuming full column rank).</p>
+<p>For Ridge regression:
+$<span class="arithmatex">\(H_{\text{Ridge}} = X (X^T X + \lambda I)^{-1} X^T\)</span>$
+Using the cyclic property of the trace <span class="arithmatex">\(\text{tr}(AB) = \text{tr}(BA)\)</span> and SVD <span class="arithmatex">\(X = U \Sigma V^T\)</span>:
+$<span class="arithmatex">\(\text{df}(\lambda) = \text{tr}\left( X^T X (X^T X + \lambda I)^{-1} \right) = \text{tr}\left( V \Sigma^2 (\Sigma^2 + \lambda I)^{-1} V^T \right) = \sum_{j=1}^p \frac{\sigma_j^2}{\sigma_j^2 + \lambda}\)</span>$
+Notice that:
+- As <span class="arithmatex">\(\lambda \to 0\)</span>: <span class="arithmatex">\(\frac{\sigma_j^2}{\sigma_j^2} = 1 \implies \text{df} \to p\)</span>.
+- As <span class="arithmatex">\(\lambda \to \infty\)</span>: <span class="arithmatex">\(\frac{\sigma_j^2}{\sigma_j^2 + \lambda} \to 0 \implies \text{df} \to 0\)</span>.
+The effective degrees of freedom decreases monotonically as <span class="arithmatex">\(\lambda\)</span> increases, providing a continuous measure of model complexity.</p>
+<hr />
+<h3 id="q6-can-coordinate-descent-be-used-for-ridge-regression-why-is-it-rarely-used-compared-to-closed-form-or-conjugate-gradient">Q6: Can coordinate descent be used for Ridge regression? Why is it rarely used compared to closed-form or conjugate gradient?<a class="headerlink" href="#q6-can-coordinate-descent-be-used-for-ridge-regression-why-is-it-rarely-used-compared-to-closed-form-or-conjugate-gradient" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Yes, coordinate descent can be derived for Ridge regression. Isolating coordinate <span class="arithmatex">\(w_j\)</span> in the Ridge objective:
+$<span class="arithmatex">\(\frac{\partial}{\partial w_j} \left[ \frac{1}{2n} \sum_{i=1}^n (r_i^{(j)} - X_{ij} w_j)^2 + \frac{\lambda}{2} w_j^2 \right] = 0 \implies w_j = \frac{\rho_j}{\frac{1}{n}\sum_i X_{ij}^2 + \lambda}\)</span>$
+However, coordinate descent is rarely preferred for Ridge for two reasons:
+1. <strong>Differentiability</strong>: Ridge is smooth and quadratic everywhere. Its gradient <span class="arithmatex">\(\nabla \mathcal{L} = X^T(X\mathbf{w} - \mathbf{y}) + \lambda \mathbf{w}\)</span> is Lipschitz continuous. Accelerated first-order methods (Conjugate Gradient, L-BFGS) update all coordinates simultaneously and converge in <span class="arithmatex">\(O(p)\)</span> iterations without coordinate-wise looping.
+2. <strong>Matrix Factorization</strong>: When <span class="arithmatex">\(n \ge p\)</span> and <span class="arithmatex">\(p\)</span> is moderate (<span class="arithmatex">\(p \le 10,000\)</span>), computing the Cholesky decomposition of <span class="arithmatex">\((X^T X + \lambda I)\)</span> takes <span class="arithmatex">\(O(p^3)\)</span> flops once, after which solutions for multiple regularization parameters or cross-validation folds can be computed via rapid triangular back-substitution in <span class="arithmatex">\(O(p^2)\)</span> time.</p>
+<hr />
+<h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] <strong>L1:</strong> You can write the objective functions for Ridge (<span class="arithmatex">\(L_2\)</span>), Lasso (<span class="arithmatex">\(L_1\)</span>), and Elastic Net (<span class="arithmatex">\(L_1 + L_2\)</span>).</li>
+<li>[ ] <strong>L2:</strong> You can explain Runge's phenomenon and why high-degree polynomial regression requires shrinkage.</li>
+<li>[ ] <strong>L3:</strong> You can derive the closed-form Ridge solution <span class="arithmatex">\(\mathbf{w}^* = (X^T X + \lambda I)^{-1} X^T \mathbf{y}\)</span> using matrix calculus.</li>
+<li>[ ] <strong>L4:</strong> You can prove why <span class="arithmatex">\((X^T X + \lambda I)\)</span> is strictly positive definite and invertible for <span class="arithmatex">\(\lambda &gt; 0\)</span>.</li>
+<li>[ ] <strong>L5:</strong> You can explain how SVD decomposes Ridge into principal shrinkage factors <span class="arithmatex">\(\frac{\sigma_j^2}{\sigma_j^2 + \lambda}\)</span>.</li>
+<li>[ ] <strong>L6:</strong> You can define a subgradient and compute the subdifferential of <span class="arithmatex">\(f(w) = |w|\)</span>.</li>
+<li>[ ] <strong>L7:</strong> You can derive the Soft-Thresholding operator <span class="arithmatex">\(S(\rho, \alpha)\)</span> using subgradient calculus on partial residuals.</li>
+<li>[ ] <strong>L8:</strong> You can explain the geometric diamond vs. circle intuition and the Bayesian Gaussian vs. Laplace prior equivalence.</li>
+<li>[ ] <strong>L9:</strong> You can explain the grouping effect of Elastic Net and state its mathematical bound under collinearity.</li>
+<li>[ ] <strong>L10:</strong> You can implement vectorized coordinate descent for Elastic Net from scratch in NumPy and debug convergence warnings.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../linear-regression-deep-dive/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deep-dive: Linear Regression">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Linear Regression
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../logistic-regression-deep-dive/" class="md-footer__link md-footer__link--next" aria-label="Next: Deep-dive: Logistic Regression">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Logistic Regression
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

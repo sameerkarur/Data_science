@@ -1,0 +1,4719 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete, deep-dive AI/ML curriculum — from Python internals to production AI systems.">
+      
+      
+        <meta name="author" content="Sameer Karur">
+      
+      
+      
+        <link rel="prev" href="../evaluation-metrics-deep-dive/">
+      
+      
+        <link rel="next" href="../../06-deep-learning/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Deep-dive: Hyperparameter Optimization - AI/ML Mastery Program</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hyperparameter-optimization-grid-random-bayesian-optuna" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI/ML Mastery Program" class="md-header__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI/ML Mastery Program
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Deep-dive: Hyperparameter Optimization
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../00-computer-science/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 0 – CS Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-python/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 1 – Python
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../02-mathematics/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 2 – Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../03-data-engineering/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 3 – Data Engineering
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../04-classical-ml/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 4 – Classical ML
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 5 – ML Theory & Evaluation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../06-deep-learning/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 6 – Deep Learning
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../07-computer-vision/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 7 – Computer Vision
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../08-nlp/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 8 – NLP
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../09-transformers-llms/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 9 – Transformers & LLMs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../10-generative-ai/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 10 – Generative AI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../11-ai-agents/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 11 – AI Agents
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../12-mlops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 12 – MLOps
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../13-ai-system-design/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 13 – AI System Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../14-projects/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 14 – Projects & Interview
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI/ML Mastery Program" class="md-nav__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI/ML Mastery Program
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../00-computer-science/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 0 – CS Foundations
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 0 – CS Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/how-computers-execute-programs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: How Computers Execute Programs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/arrays-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Arrays
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/linked-lists-stacks-queues-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linked Lists, Stacks & Queues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/hash-tables-sets-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hash Tables & Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Trees (Binary, BST, Heaps)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/graphs-tries-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Graphs & Tries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/algorithms-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Algorithms (Big-O, Searching, Sorting, Recursion, Greedy, DP, Graphs)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../01-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 1 – Python
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 1 – Python
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/fundamentals-control-flow-collections-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Fundamentals, Control Flow & Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/functions-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/oop-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: OOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/advanced-python-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced Python (Iterators, Generators, Async, Concurrency)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/internals-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Internals (CPython, Bytecode, GC, GIL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../02-mathematics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 2 – Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 2 – Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/foundations-math-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundations of Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/linear-algebra-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/calculus-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Calculus & Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/probability-statistics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Probability & Statistics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../03-data-engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 3 – Data Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 3 – Data Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-ecosystem-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Data Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-formats-storage-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Formats & Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-cleaning-preprocessing-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Cleaning & Preprocessing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/feature-engineering-selection-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Feature Engineering & Selection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../04-classical-ml/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 4 – Classical ML
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 4 – Classical ML
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/linear-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/regularized-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Regularized & Polynomial Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/logistic-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Logistic Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/knn-naive-bayes-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: KNN & Naive Bayes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/decision-trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/ensemble-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Ensemble Learning (Random Forests & GBDT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/svm-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Support Vector Machines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-validation-generalization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Validation & Generalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../evaluation-metrics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hyperparameter Optimization
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hyperparameter Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-grid-search-vs-random-search-the-bergstra-bengio-proof" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Grid Search vs. Random Search: The Bergstra-Bengio Proof
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Grid Search vs. Random Search: The Bergstra-Bengio Proof">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-grid-search-the-inefficiency-of-low-effective-dimensionality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Grid Search &amp; The Inefficiency of Low Effective Dimensionality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-mathematical-proof-of-random-search-sample-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Mathematical Proof of Random Search Sample Complexity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-bayesian-optimization-gaussian-process-regressors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Bayesian Optimization &amp; Gaussian Process Regressors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Bayesian Optimization &amp; Gaussian Process Regressors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-the-gaussian-process-gp-surrogate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 The Gaussian Process (GP) Surrogate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-acquisition-functions-formal-derivation-of-expected-improvement-ei" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Acquisition Functions: Formal Derivation of Expected Improvement (EI)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Acquisition Functions: Formal Derivation of Expected Improvement (EI)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-upper-confidence-bound-ucb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Upper Confidence Bound (UCB)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-expected-improvement-ei-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Expected Improvement (EI) Derivation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-tree-structured-parzen-estimators-tpe-optuna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Tree-Structured Parzen Estimators (TPE) &amp; Optuna
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Tree-Structured Parzen Estimators (TPE) &amp; Optuna">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-inverting-bayes-rule-modeling-pboldsymboltheta-mid-y" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Inverting Bayes' Rule: Modeling \(p(\boldsymbol{\theta} \mid y)\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-proof-maximizing-ei-is-equivalent-to-maximizing-the-likelihood-ratio-fracellboldsymbolthetagboldsymboltheta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Proof: Maximizing EI is Equivalent to Maximizing the Likelihood Ratio \(\frac{\ell(\boldsymbol{\theta})}{g(\boldsymbol{\theta})}\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-multi-fidelity-optimization-successive-halving-hyperband" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Multi-Fidelity Optimization: Successive Halving &amp; Hyperband
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Multi-Fidelity Optimization: Successive Halving &amp; Hyperband">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-successive-halving-sha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Successive Halving (SHA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-hyperband-resolving-the-explore-exploit-trade-off" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Hyperband: Resolving the Explore-Exploit Trade-off
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-implementation-1-1d-gaussian-process-expected-improvement-optimizer-from-scratch-numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Implementation 1 — 1D Gaussian Process Expected Improvement Optimizer from Scratch (NumPy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-implementation-2-production-hyperparameter-tuning-with-optuna-scikit-learn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Implementation 2 — Production Hyperparameter Tuning with Optuna &amp; Scikit-Learn
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-common-errors-production-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Common Errors &amp; Production Debugging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Common Errors &amp; Production Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-searching-exponential-knobs-on-a-linear-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Searching Exponential Knobs on a Linear Scale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-tuning-hyperparameters-on-the-final-test-set-data-snooping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Tuning Hyperparameters on the Final Test Set (Data Snooping)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-staff-level-interview-questions-model-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Staff-Level Interview Questions &amp; Model Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Staff-Level Interview Questions &amp; Model Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-prove-bergstra-and-bengios-theorem-on-the-sample-complexity-of-random-search-why-does-it-outperform-grid-search-in-high-dimensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Prove Bergstra and Bengio's theorem on the sample complexity of Random Search. Why does it outperform Grid Search in high dimensions?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-derive-the-expected-improvement-ei-acquisition-function-for-gaussian-process-regression-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Derive the Expected Improvement (EI) acquisition function for Gaussian Process regression step-by-step.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-how-does-the-tree-structured-parzen-estimator-tpe-algorithm-work-and-why-is-maximizing-ei-equivalent-to-maximizing-fracellboldsymbolthetagboldsymboltheta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: How does the Tree-structured Parzen Estimator (TPE) algorithm work, and why is maximizing EI equivalent to maximizing \(\frac{\ell(\boldsymbol{\theta})}{g(\boldsymbol{\theta})}\)?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-contrast-gaussian-process-bayesian-optimization-with-tree-structured-parzen-estimators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Contrast Gaussian Process Bayesian Optimization with Tree-structured Parzen Estimators.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-explain-the-mechanics-of-successive-halving-sha-and-hyperband" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: Explain the mechanics of Successive Halving (SHA) and Hyperband.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../06-deep-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 6 – Deep Learning
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 6 – Deep Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/neural-network-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Neural Network Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/architecture-components-regularization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Architecture Components & Regularization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/deep-learning-optimizers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Deep Learning Optimizers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../07-computer-vision/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 7 – Computer Vision
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 7 – Computer Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/convolutional-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Convolutional Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/modern-cnn-architectures-transfer-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Modern CNN Architectures & Transfer Learning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/vision-tasks-transformers-multimodal-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Vision Tasks, ViT & Multimodal Vision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../08-nlp/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 8 – NLP
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 8 – NLP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/text-representation-word-embeddings-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Text Representation & Word Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/sequence-models-attention-transformers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Sequence Models, Attention & Transformers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../09-transformers-llms/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 9 – Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 9 – Transformers & LLMs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/transformer-architecture-mechanics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Transformer Architecture & Mechanics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/foundation-model-families-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundation Model Families
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/llm-training-alignment-peft-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Training, Alignment & PEFT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../10-generative-ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 10 – Generative AI
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 10 – Generative AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/llm-application-engineering-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Application Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/enterprise-rag-systems-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Enterprise RAG Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/diffusion-models-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../11-ai-agents/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 11 – AI Agents
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 11 – AI Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/agent-architectures-patterns-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Agent Architectures & Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/multi-agent-systems-security-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Multi-Agent Systems & Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../12-mlops/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 12 – MLOps
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 12 – MLOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/production-tooling-containerization-cicd-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production Tooling, Containerization & CI/CD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/serving-pipelines-orchestration-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Serving, Pipelines & Distributed Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/model-monitoring-observability-retraining-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Monitoring, Observability & Automated Retraining
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../13-ai-system-design/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 13 – AI System Design
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_15" id="__nav_15_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 13 – AI System Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/ai-system-design-methodology-framework-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: AI System Design Methodology & Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/production-case-studies-system-design-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production AI System Design Case Studies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../14-projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 14 – Projects & Interview
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_16" id="__nav_16_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 14 – Projects & Interview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/foundational-applied-projects-tier-1-to-4-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundational Applied Projects (Tiers 1–4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/advanced-frontier-projects-tier-5-to-8-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced & Frontier Applied Projects (Tiers 5–8)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/staff-level-interview-question-banks-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Staff-Level Technical Interview Question Banks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-grid-search-vs-random-search-the-bergstra-bengio-proof" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Grid Search vs. Random Search: The Bergstra-Bengio Proof
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Grid Search vs. Random Search: The Bergstra-Bengio Proof">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-grid-search-the-inefficiency-of-low-effective-dimensionality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Grid Search &amp; The Inefficiency of Low Effective Dimensionality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-mathematical-proof-of-random-search-sample-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Mathematical Proof of Random Search Sample Complexity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-bayesian-optimization-gaussian-process-regressors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Bayesian Optimization &amp; Gaussian Process Regressors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Bayesian Optimization &amp; Gaussian Process Regressors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-the-gaussian-process-gp-surrogate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 The Gaussian Process (GP) Surrogate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-acquisition-functions-formal-derivation-of-expected-improvement-ei" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Acquisition Functions: Formal Derivation of Expected Improvement (EI)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Acquisition Functions: Formal Derivation of Expected Improvement (EI)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-upper-confidence-bound-ucb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Upper Confidence Bound (UCB)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-expected-improvement-ei-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Expected Improvement (EI) Derivation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-tree-structured-parzen-estimators-tpe-optuna" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Tree-Structured Parzen Estimators (TPE) &amp; Optuna
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Tree-Structured Parzen Estimators (TPE) &amp; Optuna">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-inverting-bayes-rule-modeling-pboldsymboltheta-mid-y" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Inverting Bayes' Rule: Modeling \(p(\boldsymbol{\theta} \mid y)\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-proof-maximizing-ei-is-equivalent-to-maximizing-the-likelihood-ratio-fracellboldsymbolthetagboldsymboltheta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Proof: Maximizing EI is Equivalent to Maximizing the Likelihood Ratio \(\frac{\ell(\boldsymbol{\theta})}{g(\boldsymbol{\theta})}\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-multi-fidelity-optimization-successive-halving-hyperband" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Multi-Fidelity Optimization: Successive Halving &amp; Hyperband
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Multi-Fidelity Optimization: Successive Halving &amp; Hyperband">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-successive-halving-sha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Successive Halving (SHA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-hyperband-resolving-the-explore-exploit-trade-off" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Hyperband: Resolving the Explore-Exploit Trade-off
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-implementation-1-1d-gaussian-process-expected-improvement-optimizer-from-scratch-numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Implementation 1 — 1D Gaussian Process Expected Improvement Optimizer from Scratch (NumPy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-implementation-2-production-hyperparameter-tuning-with-optuna-scikit-learn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Implementation 2 — Production Hyperparameter Tuning with Optuna &amp; Scikit-Learn
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-common-errors-production-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Common Errors &amp; Production Debugging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Common Errors &amp; Production Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-searching-exponential-knobs-on-a-linear-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Searching Exponential Knobs on a Linear Scale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-tuning-hyperparameters-on-the-final-test-set-data-snooping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Tuning Hyperparameters on the Final Test Set (Data Snooping)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-staff-level-interview-questions-model-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Staff-Level Interview Questions &amp; Model Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Staff-Level Interview Questions &amp; Model Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-prove-bergstra-and-bengios-theorem-on-the-sample-complexity-of-random-search-why-does-it-outperform-grid-search-in-high-dimensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Prove Bergstra and Bengio's theorem on the sample complexity of Random Search. Why does it outperform Grid Search in high dimensions?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-derive-the-expected-improvement-ei-acquisition-function-for-gaussian-process-regression-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Derive the Expected Improvement (EI) acquisition function for Gaussian Process regression step-by-step.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-how-does-the-tree-structured-parzen-estimator-tpe-algorithm-work-and-why-is-maximizing-ei-equivalent-to-maximizing-fracellboldsymbolthetagboldsymboltheta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: How does the Tree-structured Parzen Estimator (TPE) algorithm work, and why is maximizing EI equivalent to maximizing \(\frac{\ell(\boldsymbol{\theta})}{g(\boldsymbol{\theta})}\)?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-contrast-gaussian-process-bayesian-optimization-with-tree-structured-parzen-estimators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Contrast Gaussian Process Bayesian Optimization with Tree-structured Parzen Estimators.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-explain-the-mechanics-of-successive-halving-sha-and-hyperband" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: Explain the mechanics of Successive Halving (SHA) and Hyperband.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="hyperparameter-optimization-grid-random-bayesian-optuna">Hyperparameter Optimization — Grid, Random, Bayesian &amp; Optuna<a class="headerlink" href="#hyperparameter-optimization-grid-random-bayesian-optuna" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>Gaussian processes, multivariate normal distributions, and probability calculus. Review <a href="../../02-mathematics/probability-statistics-deep-dive/">Probability &amp; Statistics</a>, <a href="../../02-mathematics/calculus-optimization-deep-dive/">Calculus &amp; Optimization</a>, and <a href="../model-validation-generalization-deep-dive/">Model Validation &amp; Generalization</a>.</p>
+</div>
+<hr />
+<h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
+<p>Machine learning models have two distinct tiers of parameters:
+1. <strong>Model Parameters (<span class="arithmatex">\(\mathbf{w}, b\)</span>)</strong>: Learned automatically during training by minimizing the loss function on the training dataset via gradient descent or closed-form equations.
+2. <strong>Hyperparameters (<span class="arithmatex">\(\boldsymbol{\theta}\)</span>)</strong>: Structural knobs chosen <em>before</em> training begins (learning rate <span class="arithmatex">\(\eta\)</span>, regularization weight <span class="arithmatex">\(\lambda\)</span>, tree depth <span class="arithmatex">\(d\)</span>, kernel width <span class="arithmatex">\(\gamma\)</span>, network layers).</p>
+<p>Hyperparameter optimization (HPO) treats the entire training and cross-validation pipeline as a noisy, expensive <strong>black-box function</strong>:</p>
+<div class="arithmatex">\[
+\boldsymbol{\theta}^* = \arg\max_{\boldsymbol{\theta} \in \Theta} f(\boldsymbol{\theta})
+\]</div>
+<p>Evaluating <span class="arithmatex">\(f(\boldsymbol{\theta})\)</span> requires training a complete model and calculating its holdout cross-validation score—an operation that costs minutes, hours, or thousands of dollars in GPU compute. HPO algorithms seek to find the global optimum <span class="arithmatex">\(\boldsymbol{\theta}^*\)</span> with the <strong>minimum number of function evaluations</strong>.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph HPO Search Paradigms
+        BB["Black-Box Objective: f(θ) = Cross-Validation Score"]
+        BB --&gt; GRID["Grid Search: Uniform Lattice O(Gᵈ)
+        Suffers combinatorial explosion"]
+        BB --&gt; RAND["Random Search: Uniform Independent Draws
+        Bergstra-Bengio: 60 draws guarantee top 5%"]
+        BB --&gt; BAYES["Bayesian Optimization: Sequential Surrogate Modeling"]
+        BB --&gt; MF["Multi-Fidelity: Successive Halving &amp; Hyperband
+        Prunes underperforming trials early"]
+    end
+
+    subgraph Bayesian Optimization Mechanics
+        BAYES --&gt; GP["Gaussian Process BO: Surrogate μ(θ), σ²(θ)"]
+        BAYES --&gt; TPE["Tree-Structured Parzen Estimator: Models p(θ|y) via ℓ(θ)/g(θ)"]
+        GP --&gt; ACQ["Acquisition Functions: EI, UCB, PI
+        Balances Exploration vs Exploitation"]
+    end</code></pre>
+<hr />
+<h2 id="2-grid-search-vs-random-search-the-bergstra-bengio-proof">2. Grid Search vs. Random Search: The Bergstra-Bengio Proof<a class="headerlink" href="#2-grid-search-vs-random-search-the-bergstra-bengio-proof" title="Permanent link">&para;</a></h2>
+<h3 id="21-grid-search-the-inefficiency-of-low-effective-dimensionality">2.1 Grid Search &amp; The Inefficiency of Low Effective Dimensionality<a class="headerlink" href="#21-grid-search-the-inefficiency-of-low-effective-dimensionality" title="Permanent link">&para;</a></h3>
+<p>Grid Search evaluates a Cartesian product of predefined parameter values: <span class="arithmatex">\(\Theta = G_1 \times G_2 \times \dots \times G_d\)</span>.
+If each of <span class="arithmatex">\(d\)</span> hyperparameters is tested at <span class="arithmatex">\(k\)</span> distinct values, the total number of required training runs is:</p>
+<div class="arithmatex">\[
+N_{\text{grid}} = k^d
+\]</div>
+<p>This exhibits severe <strong>exponential combinatorial explosion</strong> (<span class="arithmatex">\(k = 10, d = 6 \implies 1,000,000\)</span> model fits!).</p>
+<p>Furthermore, Bergstra &amp; Bengio (2012) proved that in real-world ML problems, <strong>most hyperparameters have low effective dimensionality</strong>—only a tiny subset (often 1 or 2, such as the learning rate) significantly drive model performance, while others (e.g., random seed or momentum) have negligible impact.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Grid Search (9 Evaluations on 2D Grid)
+        G1["Only 3 unique values tested for the Important Feature! (Redundant columns)"]
+    end
+    subgraph Random Search (9 Random Evaluations)
+        R1["9 distinct values tested for the Important Feature! (3x higher resolution)"]
+    end</code></pre>
+<p>In a <span class="arithmatex">\(3 \times 3\)</span> grid where only the horizontal parameter matters, Grid Search tests only <strong>3 unique values</strong> of the important parameter, repeating each test 3 times redundantly. Random search with 9 evaluations tests <strong>9 unique values</strong> across the important dimension!</p>
+<h3 id="22-mathematical-proof-of-random-search-sample-complexity">2.2 Mathematical Proof of Random Search Sample Complexity<a class="headerlink" href="#22-mathematical-proof-of-random-search-sample-complexity" title="Permanent link">&para;</a></h3>
+<p>Suppose we define the "top <span class="arithmatex">\(q\)</span>" fraction of the search space as the region where <span class="arithmatex">\(f(\boldsymbol{\theta})\)</span> achieves near-optimal performance (e.g., <span class="arithmatex">\(q = 0.05\)</span>, representing the top <span class="arithmatex">\(5\%\)</span>).</p>
+<p>Let <span class="arithmatex">\(n\)</span> independent and identically distributed random samples <span class="arithmatex">\(\boldsymbol{\theta}_1, \dots, \boldsymbol{\theta}_n\)</span> be drawn uniformly from <span class="arithmatex">\(\Theta\)</span>.
+The probability that a single random sample <strong>misses</strong> the top <span class="arithmatex">\(q\)</span> region is:</p>
+<div class="arithmatex">\[
+P(\text{miss}) = 1 - q
+\]</div>
+<p>Because draws are independent, the probability that all <span class="arithmatex">\(n\)</span> random samples fail to land in the top <span class="arithmatex">\(q\)</span> region is:</p>
+<div class="arithmatex">\[
+P(\text{all } n \text{ miss}) = (1 - q)^n
+\]</div>
+<p>The probability that <strong>at least one</strong> random sample lands in the top <span class="arithmatex">\(q\)</span> region is:</p>
+<div class="arithmatex">\[
+P(\text{at least one success}) = 1 - (1 - q)^n
+\]</div>
+<p>To achieve a desired confidence level <span class="arithmatex">\(1 - \delta\)</span> (e.g., <span class="arithmatex">\(95\%\)</span> confidence, so <span class="arithmatex">\(\delta = 0.05\)</span>):</p>
+<div class="arithmatex">\[
+1 - (1 - q)^n \ge 1 - \delta \iff (1 - q)^n \le \delta
+\]</div>
+<p>Taking the natural logarithm on both sides:</p>
+<div class="arithmatex">\[
+n \ln(1 - q) \le \ln(\delta) \implies n \ge \frac{\ln(\delta)}{\ln(1 - q)} \quad (\text{since } \ln(1-q) &lt; 0)
+\]</div>
+<p>For <span class="arithmatex">\(q = 0.05\)</span> (top 5%) and <span class="arithmatex">\(\delta = 0.05\)</span> (95% confidence):</p>
+<div class="arithmatex">\[
+n \ge \frac{\ln(0.05)}{\ln(1 - 0.05)} = \frac{-2.99573}{-0.05129} \approx 58.4 \implies n = 59
+\]</div>
+<div class="arithmatex">\[n \ge \frac{\ln(\delta)}{\ln(1 - q)}\]</div>
+<p><strong>Profound Insight</strong>: <strong>Exactly 60 random trials are guaranteed with 95% confidence to find a parameter configuration in the top 5% of the search space—completely independent of the dimensionality <span class="arithmatex">\(d\)</span>!</strong></p>
+<hr />
+<h2 id="3-bayesian-optimization-gaussian-process-regressors">3. Bayesian Optimization &amp; Gaussian Process Regressors<a class="headerlink" href="#3-bayesian-optimization-gaussian-process-regressors" title="Permanent link">&para;</a></h2>
+<p>Random Search is memoryless: trial 60 ignores all successes and failures from trials 1 through 59.
+<strong>Bayesian Optimization (BO)</strong> constructs a probabilistic <strong>surrogate model</strong> of the unknown objective function <span class="arithmatex">\(f(\boldsymbol{\theta})\)</span> and uses an <strong>acquisition function</strong> to actively balance <strong>exploration</strong> (searching uncertain regions) and <strong>exploitation</strong> (refining known high-performing regions).</p>
+<pre class="mermaid"><code>flowchart TD
+    A["Initial observations: D = {(θ₁, y₁), ..., (θₖ, yₖ)}"] --&gt; B["Fit Probabilistic Surrogate (Gaussian Process)"]
+    B --&gt; C["Compute Mean μ(θ) and Uncertainty σ(θ) across space"]
+    C --&gt; D["Maximize Acquisition Function: θ* = argmax α(θ)"]
+    D --&gt; E["Evaluate expensive black-box: y* = f(θ*)"]
+    E --&gt; F["Augment Dataset: D ← D ∪ {(θ*, y*)}"]
+    F --&gt; G{Budget Exceeded?}
+    G -- No --&gt; B
+    G -- Yes --&gt; H["Optimal Configuration θ*"]</code></pre>
+<h3 id="31-the-gaussian-process-gp-surrogate">3.1 The Gaussian Process (GP) Surrogate<a class="headerlink" href="#31-the-gaussian-process-gp-surrogate" title="Permanent link">&para;</a></h3>
+<p>A Gaussian Process is a collection of infinitely many random variables, any finite subset of which has a joint Gaussian distribution:</p>
+<div class="arithmatex">\[
+f(\boldsymbol{\theta}) \sim \mathcal{GP}\left( m(\boldsymbol{\theta}), \, k(\boldsymbol{\theta}, \boldsymbol{\theta}') \right)
+\]</div>
+<p>Given previous observations <span class="arithmatex">\(\mathcal{D}_{1:t} = \{(\boldsymbol{\theta}_i, y_i)\}_{i=1}^t\)</span>, the posterior predictive distribution at an unseen candidate point <span class="arithmatex">\(\boldsymbol{\theta}\)</span> is Gaussian:</p>
+<div class="arithmatex">\[
+f(\boldsymbol{\theta}) \mid \mathcal{D}_{1:t} \sim \mathcal{N}\left( \mu(\boldsymbol{\theta}), \, \sigma^2(\boldsymbol{\theta}) \right)
+\]</div>
+<p>where:
+- <span class="arithmatex">\(\mu(\boldsymbol{\theta}) = \mathbf{k}^T (K + \sigma_{\text{noise}}^2 I)^{-1} \mathbf{y}\)</span> (the expected performance).
+- <span class="arithmatex">\(\sigma^2(\boldsymbol{\theta}) = k(\boldsymbol{\theta}, \boldsymbol{\theta}) - \mathbf{k}^T (K + \sigma_{\text{noise}}^2 I)^{-1} \mathbf{k}\)</span> (the epistemic model uncertainty).</p>
+<hr />
+<h2 id="4-acquisition-functions-formal-derivation-of-expected-improvement-ei">4. Acquisition Functions: Formal Derivation of Expected Improvement (EI)<a class="headerlink" href="#4-acquisition-functions-formal-derivation-of-expected-improvement-ei" title="Permanent link">&para;</a></h2>
+<p>The acquisition function <span class="arithmatex">\(\alpha(\boldsymbol{\theta})\)</span> quantifies the expected utility of evaluating point <span class="arithmatex">\(\boldsymbol{\theta}\)</span>.</p>
+<h3 id="41-upper-confidence-bound-ucb">4.1 Upper Confidence Bound (UCB)<a class="headerlink" href="#41-upper-confidence-bound-ucb" title="Permanent link">&para;</a></h3>
+<p>Balances mean and uncertainty via a scalar trade-off parameter <span class="arithmatex">\(\kappa \ge 0\)</span>:</p>
+<div class="arithmatex">\[
+\alpha_{\text{UCB}}(\boldsymbol{\theta}) = \mu(\boldsymbol{\theta}) + \kappa \cdot \sigma(\boldsymbol{\theta})
+\]</div>
+<ul>
+<li><span class="arithmatex">\(\kappa \to 0\)</span>: Pure exploitation (picks points with highest predicted mean).</li>
+<li>Large <span class="arithmatex">\(\kappa\)</span>: Pure exploration (picks points with highest uncertainty).</li>
+</ul>
+<h3 id="42-expected-improvement-ei-derivation">4.2 Expected Improvement (EI) Derivation<a class="headerlink" href="#42-expected-improvement-ei-derivation" title="Permanent link">&para;</a></h3>
+<p>Let <span class="arithmatex">\(y^+ = \max_{i=1, \dots, t} y_i\)</span> be the best observed target value so far.
+The improvement function at an unevaluated point <span class="arithmatex">\(\boldsymbol{\theta}\)</span> is:</p>
+<div class="arithmatex">\[
+I(\boldsymbol{\theta}) = \max\left( 0, \, f(\boldsymbol{\theta}) - y^+ - \xi \right)
+\]</div>
+<p>where <span class="arithmatex">\(\xi \ge 0\)</span> is a small exploration jitter parameter.
+Because <span class="arithmatex">\(f(\boldsymbol{\theta}) \sim \mathcal{N}(\mu, \sigma^2)\)</span>, let <span class="arithmatex">\(y = f(\boldsymbol{\theta})\)</span> and <span class="arithmatex">\(\mu = \mu(\boldsymbol{\theta}), \sigma = \sigma(\boldsymbol{\theta})\)</span>.
+The Expected Improvement is the expectation over the Gaussian density <span class="arithmatex">\(p(y) = \frac{1}{\sqrt{2\pi}\sigma} \exp\left( -\frac{(y - \mu)^2}{2\sigma^2} \right)\)</span>:</p>
+<div class="arithmatex">\[
+\text{EI}(\boldsymbol{\theta}) = \mathbb{E}[I(\boldsymbol{\theta})] = \int_{y^+ + \xi}^{\infty} (y - y^+ - \xi) \frac{1}{\sqrt{2\pi}\sigma} \exp\left( -\frac{(y - \mu)^2}{2\sigma^2} \right) dy
+\]</div>
+<p>Perform the standard normal substitution <span class="arithmatex">\(z = \frac{y - \mu}{\sigma} \implies y = \mu + \sigma z, \; dy = \sigma dz\)</span>.
+The lower limit of integration becomes:</p>
+<div class="arithmatex">\[
+Z = \frac{\mu - y^+ - \xi}{\sigma}
+\]</div>
+<p>The integral transforms to:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\text{EI}(\boldsymbol{\theta}) &amp;= \int_{-Z}^{\infty} (\mu + \sigma z - y^+ - \xi) \phi(z) dz \\
+&amp;= (\mu - y^+ - \xi) \int_{-Z}^{\infty} \phi(z) dz + \sigma \int_{-Z}^{\infty} z \phi(z) dz
+\end{aligned}
+\]</div>
+<p>Evaluating both integrals:
+1. By symmetry of the standard normal density <span class="arithmatex">\(\phi(z)\)</span>:
+   $<span class="arithmatex">\(\int_{-Z}^{\infty} \phi(z) dz = \int_{-\infty}^{Z} \phi(z) dz = \Phi(Z)\)</span>$
+2. Because <span class="arithmatex">\(\phi'(z) = -z \phi(z)\)</span>, the second integrand is an exact derivative:
+   $<span class="arithmatex">\(\int_{-Z}^{\infty} z \phi(z) dz = \left[ -\phi(z) \right]_{-Z}^{\infty} = 0 - (-\phi(-Z)) = \phi(Z)\)</span>$</p>
+<p>Combining both terms gives the celebrated <strong>analytic Expected Improvement formula</strong>:</p>
+<div class="arithmatex">\[
+\text{EI}(\boldsymbol{\theta}) = (\mu(\boldsymbol{\theta}) - y^+ - \xi) \Phi(Z) + \sigma(\boldsymbol{\theta}) \phi(Z)
+\]</div>
+<p>where <span class="arithmatex">\(\Phi(\cdot)\)</span> and <span class="arithmatex">\(\phi(\cdot)\)</span> are the standard Gaussian CDF and PDF, and <span class="arithmatex">\(Z = \frac{\mu(\boldsymbol{\theta}) - y^+ - \xi}{\sigma(\boldsymbol{\theta})}\)</span>.</p>
+<div class="arithmatex">\[\text{EI}(\boldsymbol{\theta}) = \underbrace{(\mu(\boldsymbol{\theta}) - y^+ - \xi) \Phi(Z)}_{\text{Exploitation Term: High predicted mean}} + \underbrace{\sigma(\boldsymbol{\theta}) \phi(Z)}_{\text{Exploration Term: High uncertainty}}\]</div>
+<hr />
+<h2 id="5-tree-structured-parzen-estimators-tpe-optuna">5. Tree-Structured Parzen Estimators (TPE) &amp; Optuna<a class="headerlink" href="#5-tree-structured-parzen-estimators-tpe-optuna" title="Permanent link">&para;</a></h2>
+<p>While Gaussian Processes provide elegant closed-form acquisition functions, they scale with cubic complexity <span class="arithmatex">\(\mathcal{O}(t^3)\)</span> in the number of trials and struggle with discrete, categorical, and conditional search spaces.</p>
+<p>Bergstra et al. (2011) introduced the <strong>Tree-structured Parzen Estimator (TPE)</strong>, the default engine in modern frameworks like <strong>Optuna</strong>.</p>
+<pre class="mermaid"><code>flowchart TD
+    A["Collection of historical trials (θ, y)"] --&gt; B["Split trials at quantile γ into 'Good' and 'Bad'"]
+    B --&gt; C["Fit Kernel Density Estimator ℓ(θ) = p(θ | y &lt; y*) on Good"]
+    B --&gt; D["Fit Kernel Density Estimator g(θ) = p(θ | y ≥ y*) on Bad"]
+    C &amp; D --&gt; E["Evaluate Likelihood Ratio: ℓ(θ) / g(θ)"]
+    E --&gt; F["Pick θ* maximizing ℓ(θ) / g(θ)"]</code></pre>
+<h3 id="51-inverting-bayes-rule-modeling-pboldsymboltheta-mid-y">5.1 Inverting Bayes' Rule: Modeling <span class="arithmatex">\(p(\boldsymbol{\theta} \mid y)\)</span><a class="headerlink" href="#51-inverting-bayes-rule-modeling-pboldsymboltheta-mid-y" title="Permanent link">&para;</a></h3>
+<p>Standard GP Bayesian optimization models the posterior <span class="arithmatex">\(p(y \mid \boldsymbol{\theta})\)</span> directly.
+TPE inverts the modeling by estimating the density of hyperparameter configurations <strong>conditioned on objective performance</strong>:</p>
+<div class="arithmatex">\[
+p(\boldsymbol{\theta} \mid y) = \begin{cases} \ell(\boldsymbol{\theta}) &amp; \text{if } y &lt; y^* \quad (\text{Top } \gamma \text{ percentile of trials}) \\ g(\boldsymbol{\theta}) &amp; \text{if } y \ge y^* \quad (\text{Remaining trials}) \end{cases}
+\]</div>
+<p>where <span class="arithmatex">\(y^*\)</span> is chosen such that <span class="arithmatex">\(P(y &lt; y^*) = \gamma\)</span> (typically <span class="arithmatex">\(\gamma = 0.15\)</span>, targeting the best 15% of models).
+<span class="arithmatex">\(\ell(\boldsymbol{\theta})\)</span> and <span class="arithmatex">\(g(\boldsymbol{\theta})\)</span> are modeled using Parzen window Kernel Density Estimation (KDE).</p>
+<h3 id="52-proof-maximizing-ei-is-equivalent-to-maximizing-the-likelihood-ratio-fracellboldsymbolthetagboldsymboltheta">5.2 Proof: Maximizing EI is Equivalent to Maximizing the Likelihood Ratio <span class="arithmatex">\(\frac{\ell(\boldsymbol{\theta})}{g(\boldsymbol{\theta})}\)</span><a class="headerlink" href="#52-proof-maximizing-ei-is-equivalent-to-maximizing-the-likelihood-ratio-fracellboldsymbolthetagboldsymboltheta" title="Permanent link">&para;</a></h3>
+<p>Bergstra et al. proved that:</p>
+<div class="arithmatex">\[
+\text{EI}(\boldsymbol{\theta}) = \int_{-\infty}^{y^*} (y^* - y) p(y \mid \boldsymbol{\theta}) dy = \frac{\gamma y^* \ell(\boldsymbol{\theta}) - \ell(\boldsymbol{\theta}) \int_{-\infty}^{y^*} P(y) dy}{\gamma \ell(\boldsymbol{\theta}) + (1 - \gamma) g(\boldsymbol{\theta})} \propto \left( \gamma + \frac{1 - \gamma}{\gamma} \frac{g(\boldsymbol{\theta})}{\ell(\boldsymbol{\theta})} \right)^{-1}
+\]</div>
+<p>Therefore:</p>
+<div class="arithmatex">\[
+\arg\max_{\boldsymbol{\theta}} \text{EI}(\boldsymbol{\theta}) \equiv \arg\max_{\boldsymbol{\theta}} \frac{\ell(\boldsymbol{\theta})}{g(\boldsymbol{\theta})}
+\]</div>
+<div class="arithmatex">\[\arg\max_{\boldsymbol{\theta}} \text{EI}(\boldsymbol{\theta}) \equiv \arg\max_{\boldsymbol{\theta}} \frac{\ell(\boldsymbol{\theta})}{g(\boldsymbol{\theta})}\]</div>
+<p><strong>Intuitive Takeaway</strong>: To maximize Expected Improvement, simply sample points that have <strong>high probability of belonging to the top performing group <span class="arithmatex">\(\ell(\boldsymbol{\theta})\)</span></strong> and <strong>low probability of belonging to the bad group <span class="arithmatex">\(g(\boldsymbol{\theta})\)</span></strong>!</p>
+<hr />
+<h2 id="6-multi-fidelity-optimization-successive-halving-hyperband">6. Multi-Fidelity Optimization: Successive Halving &amp; Hyperband<a class="headerlink" href="#6-multi-fidelity-optimization-successive-halving-hyperband" title="Permanent link">&para;</a></h2>
+<p>Evaluating every hyperparameter trial to full convergence (e.g., training a deep neural network for 200 epochs) is tremendously wasteful when poor configurations can be diagnosed after 5 epochs.
+<strong>Multi-Fidelity HPO</strong> allocates small computational budgets (few epochs, small data subsets) to many candidates, progressively discarding underperformers.</p>
+<h3 id="61-successive-halving-sha">6.1 Successive Halving (SHA)<a class="headerlink" href="#61-successive-halving-sha" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Begin with <span class="arithmatex">\(N\)</span> configurations and evaluate each for budget <span class="arithmatex">\(R\)</span> (e.g., 2 epochs).</li>
+<li>Rank all configurations; retain the top <span class="arithmatex">\(1 / \eta\)</span> fraction (typically <span class="arithmatex">\(\eta = 3\)</span>).</li>
+<li>Multiply the budget per surviving configuration by <span class="arithmatex">\(\eta\)</span> (e.g., 6 epochs).</li>
+<li>Repeat until only the single best configuration reaches the maximum budget.</li>
+</ol>
+<h3 id="62-hyperband-resolving-the-explore-exploit-trade-off">6.2 Hyperband: Resolving the Explore-Exploit Trade-off<a class="headerlink" href="#62-hyperband-resolving-the-explore-exploit-trade-off" title="Permanent link">&para;</a></h3>
+<p>Successive Halving requires picking initial trial count <span class="arithmatex">\(N\)</span> and minimum budget <span class="arithmatex">\(R\)</span>:
+- If <span class="arithmatex">\(R\)</span> is too small: Good configurations that learn slowly are discarded prematurely.
+- If <span class="arithmatex">\(R\)</span> is too large: We cannot afford to explore many configurations <span class="arithmatex">\(N\)</span>.</p>
+<p>Li et al. (2018) developed <strong>Hyperband</strong>, which runs an outer loop over different trade-offs of <span class="arithmatex">\(N\)</span> vs. <span class="arithmatex">\(R\)</span>, pairing pure random exploration with aggressive early stopping.
+In Optuna, this is implemented natively via the <code>HyperbandPruner</code> and <code>MedianPruner</code>.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Iteration 1: 81 Configurations (Budget: 1 epoch)
+        A1["81 Candidates"] --&gt; B1["Prune bottom 2/3"]
+    end
+    subgraph Iteration 2: 27 Survivors (Budget: 3 epochs)
+        B1 --&gt; A2["27 Candidates"] --&gt; B2["Prune bottom 2/3"]
+    end
+    subgraph Iteration 3: 9 Survivors (Budget: 9 epochs)
+        B2 --&gt; A3["9 Candidates"] --&gt; B3["Prune bottom 2/3"]
+    end
+    subgraph Final Round: 3 Survivors (Budget: 27 epochs)
+        B3 --&gt; A4["3 Candidates"] --&gt; BEST["Winner Evaluated to Full Budget (81 epochs)"]
+    end</code></pre>
+<hr />
+<h2 id="7-implementation-1-1d-gaussian-process-expected-improvement-optimizer-from-scratch-numpy">7. Implementation 1 — 1D Gaussian Process Expected Improvement Optimizer from Scratch (NumPy)<a class="headerlink" href="#7-implementation-1-1d-gaussian-process-expected-improvement-optimizer-from-scratch-numpy" title="Permanent link">&para;</a></h2>
+<p>Let us implement a complete 1D Bayesian Optimizer backed by an analytical Gaussian Process regressor and Expected Improvement acquisition function in pure NumPy.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">ScratchGPRegressor</span><span class="p">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="sd">"""Gaussian Process Regressor with RBF Kernel for 1D Bayesian Optimization."""</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">l</span> <span class="o">=</span> <span class="n">length_scale</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="n">noise_level</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">X_train</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">y_train</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">K_inv</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_rbf_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">x2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        <span class="n">dist_sq</span> <span class="o">=</span> <span class="p">(</span><span class="n">x1</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">x2</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span> <span class="o">**</span> <span class="mi">2</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">dist_sq</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>        <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rbf_kernel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_train</span><span class="p">))</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">K_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>        <span class="k">return</span> <span class="bp">self</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>        <span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>        <span class="n">K_trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rbf_kernel</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train</span><span class="p">)</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="n">K_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rbf_kernel</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">X_test</span><span class="p">)</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>        <span class="c1"># Posterior Mean: mu = K_* K^-1 y</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="n">mu</span> <span class="o">=</span> <span class="n">K_trans</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">K_inv</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="c1"># Posterior Variance: sigma^2 = K_** - K_* K^-1 K_*^T</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>        <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">K_test</span> <span class="o">-</span> <span class="n">K_trans</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">K_inv</span> <span class="o">@</span> <span class="n">K_trans</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>        <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="mf">1e-10</span><span class="p">))</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>        <span class="k">return</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="k">class</span><span class="w"> </span><span class="nc">ScratchBayesianOptimization</span><span class="p">:</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">    </span><span class="sd">"""Bayesian Optimization using Expected Improvement acquisition function."""</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objective_fn</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">xi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">objective_fn</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="n">bounds</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">n_init</span> <span class="o">=</span> <span class="n">n_init</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">xi</span> <span class="o">=</span> <span class="n">xi</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">gp</span> <span class="o">=</span> <span class="n">ScratchGPRegressor</span><span class="p">(</span><span class="n">length_scale</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">X_history</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">y_history</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_phi</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a><span class="w">        </span><span class="sd">"""Standard Normal PDF."""</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">z</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_Phi</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a><span class="w">        </span><span class="sd">"""Standard Normal CDF approximation (erf-based)."""</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">erf</span>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">erf</span><span class="p">(</span><span class="n">z</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)))</span>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_expected_improvement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_candidates</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>        <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_candidates</span><span class="p">)</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>        <span class="n">y_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_history</span><span class="p">)</span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>        <span class="n">improvement</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">y_max</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">xi</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>        <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sigma</span> <span class="o">&gt;</span> <span class="mf">1e-8</span><span class="p">,</span> <span class="n">improvement</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>        <span class="n">ei</span> <span class="o">=</span> <span class="n">improvement</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Phi</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phi</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>        <span class="n">ei</span><span class="p">[</span><span class="n">sigma</span> <span class="o">&lt;=</span> <span class="mf">1e-8</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>        <span class="k">return</span> <span class="n">ei</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>        <span class="c1"># Initial random evaluations</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>        <span class="n">init_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_init</span><span class="p">)</span>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">init_X</span><span class="p">:</span>
+</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">X_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">y_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>
+</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>        <span class="c1"># Optimization loop</span>
+</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>        <span class="n">candidates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1000</span><span class="p">)</span>
+</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iter</span><span class="p">):</span>
+</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_history</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_history</span><span class="p">))</span>
+</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>            <span class="n">ei</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expected_improvement</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>
+</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>            <span class="c1"># Select candidate maximizing Expected Improvement</span>
+</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>            <span class="n">best_x</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">ei</span><span class="p">)]</span>
+</span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a>
+</span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">X_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_x</span><span class="p">)</span>
+</span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">y_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">(</span><span class="n">best_x</span><span class="p">))</span>
+</span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>
+</span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>        <span class="n">best_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_history</span><span class="p">)</span>
+</span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_history</span><span class="p">[</span><span class="n">best_idx</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_history</span><span class="p">[</span><span class="n">best_idx</span><span class="p">]</span>
+</span></code></pre></div>
+<hr />
+<h2 id="8-implementation-2-production-hyperparameter-tuning-with-optuna-scikit-learn">8. Implementation 2 — Production Hyperparameter Tuning with Optuna &amp; Scikit-Learn<a class="headerlink" href="#8-implementation-2-production-hyperparameter-tuning-with-optuna-scikit-learn" title="Permanent link">&para;</a></h2>
+<p>Below is a production-grade hyperparameter optimization script using <strong>Optuna (TPE engine)</strong> with early stopping pruning, benchmarked against scikit-learn's <code>RandomizedSearchCV</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_classification</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">HistGradientBoostingClassifier</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">cross_val_score</span><span class="p">,</span> <span class="n">StratifiedKFold</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">optuna</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Suppress verbose Optuna logging in script</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">optuna</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">set_verbosity</span><span class="p">(</span><span class="n">optuna</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Generate synthetic dataset</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">n_informative</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="c1"># Suggest continuous parameter on log scale</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="n">learning_rate</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s1">'learning_rate'</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="c1"># Suggest integer parameters</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="n">max_iter</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s1">'max_iter'</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="n">max_leaf_nodes</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s1">'max_leaf_nodes'</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">63</span><span class="p">)</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="c1"># Suggest continuous regularization</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    <span class="n">l2_reg</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s1">'l2_regularization'</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    <span class="n">clf</span> <span class="o">=</span> <span class="n">HistGradientBoostingClassifier</span><span class="p">(</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>        <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>        <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>        <span class="n">max_leaf_nodes</span><span class="o">=</span><span class="n">max_leaf_nodes</span><span class="p">,</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>        <span class="n">l2_regularization</span><span class="o">=</span><span class="n">l2_reg</span><span class="p">,</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    <span class="p">)</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">'accuracy'</span><span class="p">)</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">))</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="c1"># Run Optuna Study using TPE Sampler and Median Pruning</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="n">study</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>    <span class="n">direction</span><span class="o">=</span><span class="s1">'maximize'</span><span class="p">,</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    <span class="n">sampler</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">samplers</span><span class="o">.</span><span class="n">TPESampler</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    <span class="n">pruner</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">pruners</span><span class="o">.</span><span class="n">MedianPruner</span><span class="p">()</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="p">)</span>
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>
+</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"=== Optuna TPE Results ==="</span><span class="p">)</span>
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Best Accuracy: </span><span class="si">{</span><span class="n">study</span><span class="o">.</span><span class="n">best_value</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Best Parameters: </span><span class="si">{</span><span class="n">study</span><span class="o">.</span><span class="n">best_params</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="9-common-errors-production-debugging">9. Common Errors &amp; Production Debugging<a class="headerlink" href="#9-common-errors-production-debugging" title="Permanent link">&para;</a></h2>
+<h3 id="91-searching-exponential-knobs-on-a-linear-scale">9.1 Searching Exponential Knobs on a Linear Scale<a class="headerlink" href="#91-searching-exponential-knobs-on-a-linear-scale" title="Permanent link">&para;</a></h3>
+<p>Parameters like learning rate <span class="arithmatex">\(\eta \in [10^{-4}, 10^{-1}]\)</span> or regularization <span class="arithmatex">\(\lambda \in [10^{-3}, 10^2]\)</span> span several orders of magnitude.
+If sampled uniformly on a linear scale <span class="arithmatex">\([0.0001, 0.1]\)</span>:
+- <span class="arithmatex">\(90\%\)</span> of all random trials fall in <span class="arithmatex">\([0.01, 0.1]\)</span>.
+- Only <span class="arithmatex">\(1\%\)</span> of trials test the critical small regime <span class="arithmatex">\([0.0001, 0.001]\)</span>!
+<strong>Fix</strong>: Always configure <code>log=True</code> (in Optuna) or sample via <code>scipy.stats.loguniform</code>.</p>
+<h3 id="92-tuning-hyperparameters-on-the-final-test-set-data-snooping">9.2 Tuning Hyperparameters on the Final Test Set (Data Snooping)<a class="headerlink" href="#92-tuning-hyperparameters-on-the-final-test-set-data-snooping" title="Permanent link">&para;</a></h3>
+<p>If you tune hyperparameters by maximizing score on the test set, information leaks from the test set into the hyperparameter selection. The model will overfit the test set, creating a dangerously biased estimate of production performance.
+<strong>Fix</strong>: Always employ a 3-way split (Train / Validation / Test) or use <strong>Nested Cross-Validation</strong> (inner CV loop selects hyperparameters; outer CV loop assesses unbiased generalization error).</p>
+<hr />
+<h2 id="10-staff-level-interview-questions-model-answers">10. Staff-Level Interview Questions &amp; Model Answers<a class="headerlink" href="#10-staff-level-interview-questions-model-answers" title="Permanent link">&para;</a></h2>
+<h3 id="q1-prove-bergstra-and-bengios-theorem-on-the-sample-complexity-of-random-search-why-does-it-outperform-grid-search-in-high-dimensions">Q1: Prove Bergstra and Bengio's theorem on the sample complexity of Random Search. Why does it outperform Grid Search in high dimensions?<a class="headerlink" href="#q1-prove-bergstra-and-bengios-theorem-on-the-sample-complexity-of-random-search-why-does-it-outperform-grid-search-in-high-dimensions" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Let the hyperparameter space be <span class="arithmatex">\(\Theta \subset \mathbb{R}^d\)</span>. Suppose the true performance function <span class="arithmatex">\(f(\boldsymbol{\theta})\)</span> has a low effective dimensionality (only <span class="arithmatex">\(d_{\text{eff}} \ll d\)</span> dimensions materially impact <span class="arithmatex">\(f\)</span>).
+Define the optimal region <span class="arithmatex">\(S^* \subset \Theta\)</span> as the subset of parameters achieving performance in the top <span class="arithmatex">\(q \in (0, 1)\)</span> quantile of the entire distribution (e.g., <span class="arithmatex">\(q = 0.05\)</span>). The volume ratio is <span class="arithmatex">\(\frac{\text{Vol}(S^*)}{\text{Vol}(\Theta)} = q\)</span>.</p>
+<p>If we evaluate <span class="arithmatex">\(n\)</span> independent random trials drawn uniformly from <span class="arithmatex">\(\Theta\)</span>:
+The probability that any single trial misses <span class="arithmatex">\(S^*\)</span> is <span class="arithmatex">\(1 - q\)</span>.
+Because draws are independent, the probability that all <span class="arithmatex">\(n\)</span> trials miss <span class="arithmatex">\(S^*\)</span> is <span class="arithmatex">\((1 - q)^n\)</span>.
+Therefore, the probability that at least one trial lands in the top <span class="arithmatex">\(q\)</span> region is:
+$<span class="arithmatex">\(P(\text{success}) = 1 - (1 - q)^n\)</span>$
+To achieve this with confidence <span class="arithmatex">\(1 - \delta\)</span>:
+$<span class="arithmatex">\(1 - (1 - q)^n \ge 1 - \delta \implies (1 - q)^n \le \delta \implies n \ge \frac{\ln \delta}{\ln(1 - q)}\)</span>$
+Notice that <strong>the dimension <span class="arithmatex">\(d\)</span> does not appear anywhere in this formula!</strong>
+Evaluating <span class="arithmatex">\(n = \frac{\ln(0.05)}{\ln(0.95)} \approx 59\)</span> trials yields a 95% probability of discovering a top 5% model regardless of whether <span class="arithmatex">\(d = 2\)</span> or <span class="arithmatex">\(d = 200\)</span>.
+In contrast, Grid Search requires <span class="arithmatex">\(k^d\)</span> evaluations. If <span class="arithmatex">\(d = 10\)</span> and <span class="arithmatex">\(k = 3\)</span>, Grid Search requires <span class="arithmatex">\(3^{10} = 59,049\)</span> runs, but evaluates only <span class="arithmatex">\(3\)</span> distinct values for any single feature along an axis, wasting <span class="arithmatex">\(99.9\%\)</span> of its compute evaluating duplicate projections.</p>
+<hr />
+<h3 id="q2-derive-the-expected-improvement-ei-acquisition-function-for-gaussian-process-regression-step-by-step">Q2: Derive the Expected Improvement (EI) acquisition function for Gaussian Process regression step-by-step.<a class="headerlink" href="#q2-derive-the-expected-improvement-ei-acquisition-function-for-gaussian-process-regression-step-by-step" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Let the best observed objective value so far be <span class="arithmatex">\(y^+ = \max_{i=1, \dots, t} y_i\)</span>.
+At an unevaluated candidate point <span class="arithmatex">\(\boldsymbol{\theta}\)</span>, the GP surrogate predicts <span class="arithmatex">\(y \sim \mathcal{N}(\mu, \sigma^2)\)</span>, where <span class="arithmatex">\(\mu = \mu(\boldsymbol{\theta})\)</span> and <span class="arithmatex">\(\sigma = \sigma(\boldsymbol{\theta})\)</span>.
+Define the Improvement utility function:
+$<span class="arithmatex">\(I(y) = \max(0, y - y^+ - \xi) = \begin{cases} y - y^+ - \xi &amp; \text{if } y &gt; y^+ + \xi \\ 0 &amp; \text{otherwise} \end{cases}\)</span>$
+The Expected Improvement is the expectation of <span class="arithmatex">\(I(y)\)</span> over the Gaussian density <span class="arithmatex">\(p(y) = \frac{1}{\sqrt{2\pi}\sigma} \exp\left(-\frac{(y - \mu)^2}{2\sigma^2}\right)\)</span>:
+$<span class="arithmatex">\(\text{EI}(\boldsymbol{\theta}) = \int_{y^+ + \xi}^{\infty} (y - y^+ - \xi) \frac{1}{\sqrt{2\pi}\sigma} \exp\left(-\frac{(y - \mu)^2}{2\sigma^2}\right) dy\)</span>$
+Substitute the standard normal variable <span class="arithmatex">\(z = \frac{y - \mu}{\sigma} \implies y = \mu + \sigma z, \; dy = \sigma dz\)</span>.
+The lower integration limit becomes <span class="arithmatex">\(z_{\min} = \frac{y^+ + \xi - \mu}{\sigma} = -Z\)</span>, where <span class="arithmatex">\(Z = \frac{\mu - y^+ - \xi}{\sigma}\)</span>.
+The integral decomposes into two terms:
+$<span class="arithmatex">\(\text{EI}(\boldsymbol{\theta}) = \int_{-Z}^{\infty} (\mu - y^+ - \xi) \phi(z) dz + \sigma \int_{-Z}^{\infty} z \phi(z) dz\)</span>$
+1. For the first term, by standard normal symmetry <span class="arithmatex">\(\int_{-Z}^\infty \phi(z) dz = \int_{-\infty}^Z \phi(z) dz = \Phi(Z)\)</span>.
+2. For the second term, using <span class="arithmatex">\(\frac{d}{dz} \phi(z) = -z \phi(z)\)</span>:
+   $<span class="arithmatex">\(\int_{-Z}^{\infty} z \phi(z) dz = [-\phi(z)]_{-Z}^{\infty} = -\lim_{z \to \infty} \phi(z) - (-\phi(-Z)) = 0 + \phi(Z) = \phi(Z)\)</span>$
+Combining both terms yields the closed-form analytic solution:
+$<span class="arithmatex">\(\text{EI}(\boldsymbol{\theta}) = (\mu(\boldsymbol{\theta}) - y^+ - \xi) \Phi(Z) + \sigma(\boldsymbol{\theta}) \phi(Z)\)</span>$</p>
+<hr />
+<h3 id="q3-how-does-the-tree-structured-parzen-estimator-tpe-algorithm-work-and-why-is-maximizing-ei-equivalent-to-maximizing-fracellboldsymbolthetagboldsymboltheta">Q3: How does the Tree-structured Parzen Estimator (TPE) algorithm work, and why is maximizing EI equivalent to maximizing <span class="arithmatex">\(\frac{\ell(\boldsymbol{\theta})}{g(\boldsymbol{\theta})}\)</span>?<a class="headerlink" href="#q3-how-does-the-tree-structured-parzen-estimator-tpe-algorithm-work-and-why-is-maximizing-ei-equivalent-to-maximizing-fracellboldsymbolthetagboldsymboltheta" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Instead of modeling the conditional probability of performance given hyperparameters <span class="arithmatex">\(p(y \mid \boldsymbol{\theta})\)</span>, TPE inverts the conditioning by estimating two densities over the hyperparameter space:
+$<span class="arithmatex">\(p(\boldsymbol{\theta} \mid y) = \begin{cases} \ell(\boldsymbol{\theta}) &amp; \text{if } y &lt; y^* \\ g(\boldsymbol{\theta}) &amp; \text{if } y \ge y^* \end{cases}\)</span>$
+where <span class="arithmatex">\(y^*\)</span> is the <span class="arithmatex">\(\gamma\)</span>-quantile of observed scores (<span class="arithmatex">\(P(y &lt; y^*) = \gamma\)</span>, typically <span class="arithmatex">\(\gamma = 0.15\)</span>).
+<span class="arithmatex">\(\ell(\boldsymbol{\theta})\)</span> is the density of "good" configurations, and <span class="arithmatex">\(g(\boldsymbol{\theta})\)</span> is the density of "bad" configurations.
+By definition of conditional probability:
+$<span class="arithmatex">\(p(y \mid \boldsymbol{\theta}) = \frac{p(\boldsymbol{\theta} \mid y) p(y)}{p(\boldsymbol{\theta})} = \frac{p(\boldsymbol{\theta} \mid y) p(y)}{\gamma \ell(\boldsymbol{\theta}) + (1 - \gamma) g(\boldsymbol{\theta})}\)</span>$
+The Expected Improvement is:
+$<span class="arithmatex">\(\text{EI}(\boldsymbol{\theta}) = \int_{-\infty}^{y^*} (y^* - y) p(y \mid \boldsymbol{\theta}) dy = \frac{\int_{-\infty}^{y^*} (y^* - y) \ell(\boldsymbol{\theta}) p(y) dy}{\gamma \ell(\boldsymbol{\theta}) + (1 - \gamma) g(\boldsymbol{\theta})}\)</span>$
+Factoring <span class="arithmatex">\(\ell(\boldsymbol{\theta})\)</span> out of the numerator:
+$<span class="arithmatex">\(\text{EI}(\boldsymbol{\theta}) = \frac{\ell(\boldsymbol{\theta}) \cdot C}{\gamma \ell(\boldsymbol{\theta}) + (1 - \gamma) g(\boldsymbol{\theta})} = \frac{C}{\gamma + (1 - \gamma) \frac{g(\boldsymbol{\theta})}{\ell(\boldsymbol{\theta})}}\)</span>$
+where <span class="arithmatex">\(C = \int_{-\infty}^{y^*} (y^* - y) p(y) dy\)</span> is a constant independent of <span class="arithmatex">\(\boldsymbol{\theta}\)</span>.
+Notice that <span class="arithmatex">\(\text{EI}(\boldsymbol{\theta})\)</span> is maximized when the denominator is minimized.
+The denominator <span class="arithmatex">\(\gamma + (1 - \gamma) \frac{g(\boldsymbol{\theta})}{\ell(\boldsymbol{\theta})}\)</span> is minimized precisely when the ratio <span class="arithmatex">\(\frac{g(\boldsymbol{\theta})}{\ell(\boldsymbol{\theta})}\)</span> is minimized, which is equivalent to <strong>maximizing the likelihood ratio <span class="arithmatex">\(\frac{\ell(\boldsymbol{\theta})}{g(\boldsymbol{\theta})}\)</span></strong>.</p>
+<hr />
+<h3 id="q4-contrast-gaussian-process-bayesian-optimization-with-tree-structured-parzen-estimators">Q4: Contrast Gaussian Process Bayesian Optimization with Tree-structured Parzen Estimators.<a class="headerlink" href="#q4-contrast-gaussian-process-bayesian-optimization-with-tree-structured-parzen-estimators" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+| Dimension | Gaussian Process BO | Tree-Structured Parzen Estimator (TPE) |
+|---|---|---|
+| <strong>Underlying Approach</strong> | Discriminative: Models <span class="arithmatex">\(p(y \mid \boldsymbol{\theta})\)</span> directly | Generative: Models <span class="arithmatex">\(p(\boldsymbol{\theta} \mid y)\)</span> via KDEs |
+| <strong>Computational Complexity</strong> | <span class="arithmatex">\(\mathcal{O}(t^3)\)</span> matrix inversion (fails when <span class="arithmatex">\(t &gt; 500\)</span>) | <span class="arithmatex">\(\mathcal{O}(t \log t)\)</span> KDE evaluation (scales to 10,000+ trials) |
+| <strong>Search Space Flexibility</strong> | Continuous Euclidean vectors only | Natively handles mixed continuous, integer, and categorical |
+| <strong>Conditional Spaces</strong> | Very difficult to model tree-structured dependencies | Natively models conditional branches (<code>if model == 'rf'</code>) |
+| <strong>Sample Efficiency (<span class="arithmatex">\(t &lt; 50\)</span>)</strong> | Extremely high; optimal for tiny sample budgets | Moderate; requires initial random seeds to fit KDEs |
+| <strong>Primary Frameworks</strong> | BoTorch, GPyOpt, Scikit-Optimize | Optuna, Hyperopt |</p>
+<hr />
+<h3 id="q5-explain-the-mechanics-of-successive-halving-sha-and-hyperband">Q5: Explain the mechanics of Successive Halving (SHA) and Hyperband.<a class="headerlink" href="#q5-explain-the-mechanics-of-successive-halving-sha-and-hyperband" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+- <strong>Successive Halving (SHA):</strong>
+  Given a total budget and <span class="arithmatex">\(N\)</span> hyperparameter candidates:
+  1. Allocate a minimum resource <span class="arithmatex">\(r\)</span> (e.g., 1 training epoch) to all <span class="arithmatex">\(N\)</span> configurations.
+  2. Rank all <span class="arithmatex">\(N\)</span> configurations by validation score.
+  3. Discard the bottom <span class="arithmatex">\(1 - 1/\eta\)</span> fraction (typically <span class="arithmatex">\(\eta = 3\)</span>, pruning bottom 67%).
+  4. Increase the resource allocation for survivors by factor <span class="arithmatex">\(\eta\)</span> (e.g., 3 epochs).
+  5. Repeat until the final winning configuration reaches the maximum budget <span class="arithmatex">\(R\)</span>.
+  <em>Flaw:</em> If the initial minimum budget <span class="arithmatex">\(r\)</span> is too small, configurations that start slowly but have high asymptotic performance are discarded.
+- <strong>Hyperband:</strong>
+  Wraps SHA in an outer loop over different values of <span class="arithmatex">\(N\)</span> and <span class="arithmatex">\(r\)</span>. It systematically tests various balances of the exploration-exploitation spectrum:
+  - Bracket 0: Classic SHA with many configurations evaluated on tiny initial budgets (aggressive exploration).
+  - Bracket <span class="arithmatex">\(s\)</span>: Fewer configurations evaluated on larger initial budgets (safer exploitation).
+  By hedging across multiple brackets, Hyperband guarantees that slow-converging models are not discarded while still pruning obvious failures rapidly.</p>
+<hr />
+<h2 id="11-mastery-ladder">11. Mastery Ladder<a class="headerlink" href="#11-mastery-ladder" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] <strong>L1:</strong> You can state the black-box HPO problem <span class="arithmatex">\(\boldsymbol{\theta}^* = \arg\max_{\boldsymbol{\theta}} f(\boldsymbol{\theta})\)</span>.</li>
+<li>[ ] <strong>L2:</strong> You can explain the exponential explosion of Grid Search <span class="arithmatex">\(k^d\)</span> vs. Random Search.</li>
+<li>[ ] <strong>L3:</strong> You can prove Bergstra-Bengio's sample complexity theorem <span class="arithmatex">\(n \ge \frac{\ln \delta}{\ln(1 - q)}\)</span>.</li>
+<li>[ ] <strong>L4:</strong> You can explain how Gaussian Processes model uncertainty via <span class="arithmatex">\(\mu(\boldsymbol{\theta})\)</span> and <span class="arithmatex">\(\sigma^2(\boldsymbol{\theta})\)</span>.</li>
+<li>[ ] <strong>L5:</strong> You can state the UCB acquisition function and explain the role of <span class="arithmatex">\(\kappa\)</span>.</li>
+<li>[ ] <strong>L6:</strong> You can mathematically derive the Expected Improvement (EI) formula step-by-step.</li>
+<li>[ ] <strong>L7:</strong> You can explain how TPE inverts Bayes' rule and prove why maximizing EI is equivalent to maximizing <span class="arithmatex">\(\frac{\ell(\boldsymbol{\theta})}{g(\boldsymbol{\theta})}\)</span>.</li>
+<li>[ ] <strong>L8:</strong> You can explain Successive Halving and Hyperband multi-fidelity budgeting.</li>
+<li>[ ] <strong>L9:</strong> You can explain why log-scale sampling is mandatory for learning rate and regularization parameters.</li>
+<li>[ ] <strong>L10:</strong> You can implement a Gaussian Process Expected Improvement optimizer from scratch in NumPy and configure production Optuna studies.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../evaluation-metrics-deep-dive/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deep-dive: Evaluation Metrics">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Evaluation Metrics
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../06-deep-learning/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

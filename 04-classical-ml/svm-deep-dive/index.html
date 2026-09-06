@@ -1,0 +1,4815 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete, deep-dive AI/ML curriculum — from Python internals to production AI systems.">
+      
+      
+        <meta name="author" content="Sameer Karur">
+      
+      
+      
+        <link rel="prev" href="../ensemble-learning-deep-dive/">
+      
+      
+        <link rel="next" href="../../05-ml-theory/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Deep-dive: Support Vector Machines - AI/ML Mastery Program</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#support-vector-machines-duality-kernels-smo" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI/ML Mastery Program" class="md-header__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI/ML Mastery Program
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Deep-dive: Support Vector Machines
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../00-computer-science/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 0 – CS Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-python/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 1 – Python
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../02-mathematics/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 2 – Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../03-data-engineering/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 3 – Data Engineering
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 4 – Classical ML
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../05-ml-theory/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 5 – ML Theory & Evaluation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../06-deep-learning/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 6 – Deep Learning
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../07-computer-vision/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 7 – Computer Vision
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../08-nlp/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 8 – NLP
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../09-transformers-llms/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 9 – Transformers & LLMs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../10-generative-ai/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 10 – Generative AI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../11-ai-agents/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 11 – AI Agents
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../12-mlops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 12 – MLOps
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../13-ai-system-design/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 13 – AI System Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../14-projects/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 14 – Projects & Interview
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI/ML Mastery Program" class="md-nav__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI/ML Mastery Program
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../00-computer-science/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 0 – CS Foundations
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 0 – CS Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/how-computers-execute-programs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: How Computers Execute Programs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/arrays-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Arrays
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/linked-lists-stacks-queues-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linked Lists, Stacks & Queues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/hash-tables-sets-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hash Tables & Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Trees (Binary, BST, Heaps)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/graphs-tries-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Graphs & Tries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/algorithms-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Algorithms (Big-O, Searching, Sorting, Recursion, Greedy, DP, Graphs)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../01-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 1 – Python
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 1 – Python
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/fundamentals-control-flow-collections-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Fundamentals, Control Flow & Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/functions-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/oop-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: OOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/advanced-python-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced Python (Iterators, Generators, Async, Concurrency)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/internals-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Internals (CPython, Bytecode, GC, GIL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../02-mathematics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 2 – Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 2 – Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/foundations-math-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundations of Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/linear-algebra-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/calculus-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Calculus & Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/probability-statistics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Probability & Statistics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../03-data-engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 3 – Data Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 3 – Data Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-ecosystem-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Data Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-formats-storage-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Formats & Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-cleaning-preprocessing-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Cleaning & Preprocessing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/feature-engineering-selection-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Feature Engineering & Selection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 4 – Classical ML
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 4 – Classical ML
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linear-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../regularized-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Regularized & Polynomial Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logistic-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Logistic Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../knn-naive-bayes-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: KNN & Naive Bayes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decision-trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ensemble-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Ensemble Learning (Random Forests & GBDT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Support Vector Machines
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Support Vector Machines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-maximal-margin-hyperplane-margins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Maximal Margin Hyperplane &amp; Margins
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The Maximal Margin Hyperplane &amp; Margins">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-hyperplane-geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Hyperplane Geometry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-functional-vs-geometric-margin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Functional vs. Geometric Margin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-hard-soft-margin-formulations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Hard &amp; Soft Margin Formulations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Hard &amp; Soft Margin Formulations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-hard-margin-svm-linearly-separable-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Hard Margin SVM (Linearly Separable Data)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-soft-margin-svm-slack-variables-penalty-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Soft Margin SVM: Slack Variables &amp; Penalty \(C\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-the-hinge-loss-perspective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 The Hinge Loss Perspective
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-primal-to-dual-derivation-kkt-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Primal to Dual Derivation &amp; KKT Conditions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Primal to Dual Derivation &amp; KKT Conditions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-the-primal-lagrangian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 The Primal Lagrangian
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-karush-kuhn-tucker-kkt-stationarity-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Karush-Kuhn-Tucker (KKT) Stationarity Conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-kkt-complementary-slackness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 KKT Complementary Slackness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-the-wolfe-dual-optimization-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 The Wolfe Dual Optimization Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-kernel-trick-mercers-theorem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. The Kernel Trick &amp; Mercer's Theorem
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. The Kernel Trick &amp; Mercer&#39;s Theorem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-mercers-theorem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Mercer's Theorem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-common-kernels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Common Kernels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-proof-the-rbf-kernel-corresponds-to-an-infinite-dimensional-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Proof: The RBF Kernel Corresponds to an Infinite-Dimensional Space
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-sequential-minimal-optimization-smo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Sequential Minimal Optimization (SMO)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-implementation-1-vectorized-linear-rbf-svm-via-subgradient-descent-numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Implementation 1 — Vectorized Linear &amp; RBF SVM via Subgradient Descent (NumPy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-implementation-2-scikit-learn-benchmarking-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Implementation 2 — scikit-learn Benchmarking &amp; Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-common-errors-production-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Common Errors &amp; Production Debugging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Common Errors &amp; Production Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-unscaled-features-with-rbf-kernel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Unscaled Features with RBF Kernel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-the-gamma-c-interplay-in-rbf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 The Gamma-C Interplay in RBF
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-computational-bottleneck-on-large-datasets-n-100000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 Computational Bottleneck on Large Datasets (\(n &gt; 100,000\))
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-staff-level-interview-questions-model-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Staff-Level Interview Questions &amp; Model Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Staff-Level Interview Questions &amp; Model Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-derive-the-dual-formulation-of-the-soft-margin-svm-from-the-primal-lagrangian-using-the-karush-kuhn-tucker-kkt-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Derive the dual formulation of the soft-margin SVM from the primal Lagrangian using the Karush-Kuhn-Tucker (KKT) conditions.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-classify-the-three-regimes-of-support-vectors-using-the-kkt-complementary-slackness-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Classify the three regimes of support vectors using the KKT complementary slackness conditions.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-prove-that-the-gaussian-rbf-kernel-corresponds-to-an-inner-product-in-an-infinite-dimensional-hilbert-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: Prove that the Gaussian RBF kernel corresponds to an inner product in an infinite-dimensional Hilbert space.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-explain-the-sequential-minimal-optimization-smo-algorithm-and-why-at-least-two-lagrange-multipliers-must-be-updated-simultaneously" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Explain the Sequential Minimal Optimization (SMO) algorithm and why at least two Lagrange multipliers must be updated simultaneously.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-how-is-the-intercept-b-recovered-from-the-dual-solution-using-complementary-slackness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: How is the intercept \(b\) recovered from the dual solution using complementary slackness?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../05-ml-theory/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/model-validation-generalization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Validation & Generalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/evaluation-metrics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/hyperparameter-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hyperparameter Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../06-deep-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 6 – Deep Learning
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 6 – Deep Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/neural-network-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Neural Network Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/architecture-components-regularization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Architecture Components & Regularization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/deep-learning-optimizers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Deep Learning Optimizers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../07-computer-vision/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 7 – Computer Vision
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 7 – Computer Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/convolutional-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Convolutional Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/modern-cnn-architectures-transfer-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Modern CNN Architectures & Transfer Learning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/vision-tasks-transformers-multimodal-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Vision Tasks, ViT & Multimodal Vision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../08-nlp/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 8 – NLP
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 8 – NLP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/text-representation-word-embeddings-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Text Representation & Word Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/sequence-models-attention-transformers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Sequence Models, Attention & Transformers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../09-transformers-llms/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 9 – Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 9 – Transformers & LLMs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/transformer-architecture-mechanics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Transformer Architecture & Mechanics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/foundation-model-families-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundation Model Families
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/llm-training-alignment-peft-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Training, Alignment & PEFT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../10-generative-ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 10 – Generative AI
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 10 – Generative AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/llm-application-engineering-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Application Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/enterprise-rag-systems-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Enterprise RAG Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/diffusion-models-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../11-ai-agents/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 11 – AI Agents
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 11 – AI Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/agent-architectures-patterns-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Agent Architectures & Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/multi-agent-systems-security-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Multi-Agent Systems & Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../12-mlops/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 12 – MLOps
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 12 – MLOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/production-tooling-containerization-cicd-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production Tooling, Containerization & CI/CD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/serving-pipelines-orchestration-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Serving, Pipelines & Distributed Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/model-monitoring-observability-retraining-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Monitoring, Observability & Automated Retraining
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../13-ai-system-design/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 13 – AI System Design
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_15" id="__nav_15_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 13 – AI System Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/ai-system-design-methodology-framework-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: AI System Design Methodology & Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/production-case-studies-system-design-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production AI System Design Case Studies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../14-projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 14 – Projects & Interview
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_16" id="__nav_16_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 14 – Projects & Interview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/foundational-applied-projects-tier-1-to-4-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundational Applied Projects (Tiers 1–4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/advanced-frontier-projects-tier-5-to-8-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced & Frontier Applied Projects (Tiers 5–8)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/staff-level-interview-question-banks-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Staff-Level Technical Interview Question Banks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-maximal-margin-hyperplane-margins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Maximal Margin Hyperplane &amp; Margins
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The Maximal Margin Hyperplane &amp; Margins">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-hyperplane-geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Hyperplane Geometry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-functional-vs-geometric-margin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Functional vs. Geometric Margin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-hard-soft-margin-formulations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Hard &amp; Soft Margin Formulations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Hard &amp; Soft Margin Formulations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-hard-margin-svm-linearly-separable-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Hard Margin SVM (Linearly Separable Data)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-soft-margin-svm-slack-variables-penalty-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Soft Margin SVM: Slack Variables &amp; Penalty \(C\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-the-hinge-loss-perspective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 The Hinge Loss Perspective
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-primal-to-dual-derivation-kkt-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Primal to Dual Derivation &amp; KKT Conditions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Primal to Dual Derivation &amp; KKT Conditions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-the-primal-lagrangian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 The Primal Lagrangian
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-karush-kuhn-tucker-kkt-stationarity-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Karush-Kuhn-Tucker (KKT) Stationarity Conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-kkt-complementary-slackness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 KKT Complementary Slackness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-the-wolfe-dual-optimization-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 The Wolfe Dual Optimization Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-kernel-trick-mercers-theorem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. The Kernel Trick &amp; Mercer's Theorem
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. The Kernel Trick &amp; Mercer&#39;s Theorem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-mercers-theorem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Mercer's Theorem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-common-kernels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Common Kernels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-proof-the-rbf-kernel-corresponds-to-an-infinite-dimensional-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Proof: The RBF Kernel Corresponds to an Infinite-Dimensional Space
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-sequential-minimal-optimization-smo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Sequential Minimal Optimization (SMO)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-implementation-1-vectorized-linear-rbf-svm-via-subgradient-descent-numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Implementation 1 — Vectorized Linear &amp; RBF SVM via Subgradient Descent (NumPy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-implementation-2-scikit-learn-benchmarking-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Implementation 2 — scikit-learn Benchmarking &amp; Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-common-errors-production-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Common Errors &amp; Production Debugging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Common Errors &amp; Production Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-unscaled-features-with-rbf-kernel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Unscaled Features with RBF Kernel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-the-gamma-c-interplay-in-rbf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 The Gamma-C Interplay in RBF
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-computational-bottleneck-on-large-datasets-n-100000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 Computational Bottleneck on Large Datasets (\(n &gt; 100,000\))
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-staff-level-interview-questions-model-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Staff-Level Interview Questions &amp; Model Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Staff-Level Interview Questions &amp; Model Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-derive-the-dual-formulation-of-the-soft-margin-svm-from-the-primal-lagrangian-using-the-karush-kuhn-tucker-kkt-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Derive the dual formulation of the soft-margin SVM from the primal Lagrangian using the Karush-Kuhn-Tucker (KKT) conditions.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-classify-the-three-regimes-of-support-vectors-using-the-kkt-complementary-slackness-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Classify the three regimes of support vectors using the KKT complementary slackness conditions.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-prove-that-the-gaussian-rbf-kernel-corresponds-to-an-inner-product-in-an-infinite-dimensional-hilbert-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: Prove that the Gaussian RBF kernel corresponds to an inner product in an infinite-dimensional Hilbert space.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-explain-the-sequential-minimal-optimization-smo-algorithm-and-why-at-least-two-lagrange-multipliers-must-be-updated-simultaneously" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Explain the Sequential Minimal Optimization (SMO) algorithm and why at least two Lagrange multipliers must be updated simultaneously.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-how-is-the-intercept-b-recovered-from-the-dual-solution-using-complementary-slackness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: How is the intercept \(b\) recovered from the dual solution using complementary slackness?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="support-vector-machines-duality-kernels-smo">Support Vector Machines — Duality, Kernels &amp; SMO<a class="headerlink" href="#support-vector-machines-duality-kernels-smo" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>Constrained optimization, Lagrangian multipliers, and Hilbert space inner products. Review <a href="../../02-mathematics/linear-algebra-deep-dive/">Linear Algebra</a>, <a href="../../02-mathematics/calculus-optimization-deep-dive/">Calculus &amp; Optimization</a>, and <a href="../linear-regression-deep-dive/">Linear Regression</a>.</p>
+</div>
+<hr />
+<h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
+<p>Many linear classifiers (e.g., the Perceptron) find <em>any</em> arbitrary hyperplane that separates positive from negative training samples. However, an arbitrary hyperplane that passes microscopically close to a training instance has a narrow margin of safety, making it vulnerable to noise and generalization error.</p>
+<p><strong>Support Vector Machines (SVM)</strong>, developed by Vladimir Vapnik, identify the unique <strong>Maximal Margin Hyperplane</strong> that maximizes the geometric distance to the closest training points of either class. Furthermore, by formulating the problem through <strong>Lagrangian Duality</strong>, SVMs decouple the optimization algorithm from feature dimensionality, enabling non-linear classification in <strong>infinite-dimensional feature spaces</strong> via the <strong>Kernel Trick</strong>.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Primal Space
+        SEP["Linearly Separable Data"] --&gt; MAXM["Max Margin Hyperplane: min 0.5 ||w||²"]
+        NOISY["Non-separable / Outliers"] --&gt; SOFT["Soft Margin: Slack Variables ξᵢ &amp; Penalty C"]
+    end
+
+    subgraph Dual Space via KKT Conditions
+        MAXM &amp; SOFT --&gt; LAGR["Primal Lagrangian: L_P(w, b, ξ, α, μ)"]
+        LAGR --&gt; DUAL["Wolfe Dual: max ∑ αᵢ - 0.5 ∑ αᵢαⱼ yᵢyⱼ (xᵢᵀ xⱼ)
+        subject to 0 ≤ αᵢ ≤ C and ∑ αᵢ yᵢ = 0"]
+    end
+
+    subgraph Non-Linear Generalization
+        DUAL --&gt; KERN["Kernel Trick: Replace xᵢᵀ xⱼ with K(xᵢ, xⱼ)"]
+        KERN --&gt; RBF["Gaussian RBF Kernel: exp(-γ ||x - z||²)
+        Infinite-Dimensional Hilbert Space Mapping"]
+    end
+
+    subgraph Solvers
+        DUAL --&gt; SMO["Sequential Minimal Optimization (SMO)
+        Analytic 2-variable updates"]
+    end</code></pre>
+<hr />
+<h2 id="2-the-maximal-margin-hyperplane-margins">2. The Maximal Margin Hyperplane &amp; Margins<a class="headerlink" href="#2-the-maximal-margin-hyperplane-margins" title="Permanent link">&para;</a></h2>
+<h3 id="21-hyperplane-geometry">2.1 Hyperplane Geometry<a class="headerlink" href="#21-hyperplane-geometry" title="Permanent link">&para;</a></h3>
+<p>A linear separating hyperplane in <span class="arithmatex">\(\mathbb{R}^p\)</span> is defined as:</p>
+<div class="arithmatex">\[
+\mathbf{w}^T \mathbf{x} + b = 0
+\]</div>
+<p>where <span class="arithmatex">\(\mathbf{w} \in \mathbb{R}^p\)</span> is the normal vector perpendicular to the hyperplane and <span class="arithmatex">\(b \in \mathbb{R}\)</span> is the intercept offset.
+The decision rule for binary classification (<span class="arithmatex">\(y \in \{-1, +1\}\)</span>) is:</p>
+<div class="arithmatex">\[
+h(\mathbf{x}) = \text{sign}(\mathbf{w}^T \mathbf{x} + b)
+\]</div>
+<h3 id="22-functional-vs-geometric-margin">2.2 Functional vs. Geometric Margin<a class="headerlink" href="#22-functional-vs-geometric-margin" title="Permanent link">&para;</a></h3>
+<p>For a training sample <span class="arithmatex">\((\mathbf{x}_i, y_i)\)</span>:</p>
+<ol>
+<li><strong>Functional Margin (<span class="arithmatex">\(\hat{\gamma}_i\)</span>)</strong>:
+   $<span class="arithmatex">\(\hat{\gamma}_i = y_i (\mathbf{w}^T \mathbf{x}_i + b)\)</span>$
+   A positive functional margin implies correct classification. However, <span class="arithmatex">\(\hat{\gamma}_i\)</span> is scale-invariant: scaling <span class="arithmatex">\(\mathbf{w} \to 2\mathbf{w}\)</span> and <span class="arithmatex">\(b \to 2b\)</span> doubles <span class="arithmatex">\(\hat{\gamma}_i\)</span> without altering the physical hyperplane.</li>
+<li><strong>Geometric Margin (<span class="arithmatex">\(\gamma_i\)</span>)</strong>:
+   The Euclidean perpendicular distance from point <span class="arithmatex">\(\mathbf{x}_i\)</span> to the hyperplane:
+   $<span class="arithmatex">\(\gamma_i = \frac{y_i (\mathbf{w}^T \mathbf{x}_i + b)}{\|\mathbf{w}\|_2}\)</span>$
+   The geometric margin is strictly invariant to parameter re-scaling.</li>
+</ol>
+<p>The geometric margin of the dataset is the distance to the closest training sample:</p>
+<div class="arithmatex">\[
+\gamma = \min_{i=1, \dots, n} \gamma_i
+\]</div>
+<pre class="mermaid"><code>flowchart LR
+    H1["Negative Margin Boundary: wᵀx + b = -1"]
+    H0["Decision Boundary: wᵀx + b = 0"]
+    H2["Positive Margin Boundary: wᵀx + b = +1"]
+    H1 --- H0 --- H2
+    H1 -. Total Margin Width = 2 / ||w|| .-&gt; H2</code></pre>
+<p>The perpendicular distance between the two bounding margin planes (<span class="arithmatex">\(\mathbf{w}^T \mathbf{x} + b = +1\)</span> and <span class="arithmatex">\(\mathbf{w}^T \mathbf{x} + b = -1\)</span>) is:</p>
+<div class="arithmatex">\[
+\text{Margin Width} = \frac{2}{\|\mathbf{w}\|_2}
+\]</div>
+<p>Maximizing the margin width <span class="arithmatex">\(\frac{2}{\|\mathbf{w}\|_2}\)</span> is mathematically equivalent to minimizing <span class="arithmatex">\(\frac{1}{2}\|\mathbf{w}\|_2^2\)</span>.</p>
+<hr />
+<h2 id="3-hard-soft-margin-formulations">3. Hard &amp; Soft Margin Formulations<a class="headerlink" href="#3-hard-soft-margin-formulations" title="Permanent link">&para;</a></h2>
+<h3 id="31-hard-margin-svm-linearly-separable-data">3.1 Hard Margin SVM (Linearly Separable Data)<a class="headerlink" href="#31-hard-margin-svm-linearly-separable-data" title="Permanent link">&para;</a></h3>
+<p>When the training data is strictly linearly separable:</p>
+<div class="arithmatex">\[
+\min_{\mathbf{w}, b} \frac{1}{2} \|\mathbf{w}\|_2^2 \quad \text{subject to } y_i (\mathbf{w}^T \mathbf{x}_i + b) \ge 1, \quad \forall i \in \{1, \dots, n\}
+\]</div>
+<p>If a single outlier violates linear separability, the feasible set becomes empty, and hard-margin optimization fails completely.</p>
+<h3 id="32-soft-margin-svm-slack-variables-penalty-c">3.2 Soft Margin SVM: Slack Variables &amp; Penalty <span class="arithmatex">\(C\)</span><a class="headerlink" href="#32-soft-margin-svm-slack-variables-penalty-c" title="Permanent link">&para;</a></h3>
+<p>Cortes &amp; Vapnik (1995) introduced non-negative <strong>slack variables</strong> <span class="arithmatex">\(\xi_i \ge 0\)</span> to tolerate margin violations:</p>
+<div class="arithmatex">\[
+y_i (\mathbf{w}^T \mathbf{x}_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0
+\]</div>
+<ul>
+<li><span class="arithmatex">\(\xi_i = 0\)</span>: Point lies on or outside the correct margin boundary (correctly classified).</li>
+<li><span class="arithmatex">\(0 &lt; \xi_i \le 1\)</span>: Point violates the margin but lies on the correct side of the decision boundary.</li>
+<li><span class="arithmatex">\(\xi_i &gt; 1\)</span>: Point crosses the decision boundary and is misclassified.</li>
+</ul>
+<p>The <strong>Soft Margin Optimization Problem</strong> is:</p>
+<div class="arithmatex">\[
+\min_{\mathbf{w}, b, \boldsymbol{\xi}} \frac{1}{2} \|\mathbf{w}\|_2^2 + C \sum_{i=1}^n \xi_i \quad \text{s.t. } y_i (\mathbf{w}^T \mathbf{x}_i + b) \ge 1 - \xi_i, \quad \xi_i \ge 0 \quad \forall i
+\]</div>
+<p>The hyperparameter <span class="arithmatex">\(C &gt; 0\)</span> governs the trade-off between margin width and violation penalty:
+- <strong>Large <span class="arithmatex">\(C\)</span></strong>: Heavy penalty on slack violations. Forces a narrow margin to minimize training errors (high variance, risk of overfitting).
+- <strong>Small <span class="arithmatex">\(C\)</span></strong>: Tolerates many slack violations in exchange for a wider margin (high bias, robust to noise).</p>
+<h3 id="33-the-hinge-loss-perspective">3.3 The Hinge Loss Perspective<a class="headerlink" href="#33-the-hinge-loss-perspective" title="Permanent link">&para;</a></h3>
+<p>Notice that the slack constraint requires <span class="arithmatex">\(\xi_i \ge 1 - y_i f(\mathbf{x}_i)\)</span>. Since <span class="arithmatex">\(\xi_i \ge 0\)</span>:</p>
+<div class="arithmatex">\[
+\xi_i = \max(0, 1 - y_i f(\mathbf{x}_i)) \equiv \mathcal{L}_{\text{hinge}}(y_i, f(\mathbf{x}_i))
+\]</div>
+<p>The soft-margin SVM can be rewritten as unconstrained Empirical Risk Minimization with <strong>Hinge Loss</strong> and <span class="arithmatex">\(L_2\)</span> regularization:</p>
+<div class="arithmatex">\[
+\min_{\mathbf{w}, b} \sum_{i=1}^n \max\left(0, 1 - y_i (\mathbf{w}^T \mathbf{x}_i + b)\right) + \frac{1}{2C} \|\mathbf{w}\|_2^2
+\]</div>
+<pre class="mermaid"><code>flowchart TD
+    HL["Hinge Loss: max(0, 1 - yf(x))"]
+    HL --&gt; P1["If yf(x) ≥ 1: Loss = 0 (Sparse Gradients!)"]
+    HL --&gt; P2["If yf(x) &lt; 1: Loss = 1 - yf(x) (Linear Penalty)"]</code></pre>
+<hr />
+<h2 id="4-primal-to-dual-derivation-kkt-conditions">4. Primal to Dual Derivation &amp; KKT Conditions<a class="headerlink" href="#4-primal-to-dual-derivation-kkt-conditions" title="Permanent link">&para;</a></h2>
+<h3 id="41-the-primal-lagrangian">4.1 The Primal Lagrangian<a class="headerlink" href="#41-the-primal-lagrangian" title="Permanent link">&para;</a></h3>
+<p>To derive the dual, we introduce Lagrange multipliers <span class="arithmatex">\(\alpha_i \ge 0\)</span> for the margin constraints and <span class="arithmatex">\(\mu_i \ge 0\)</span> for the non-negativity constraints <span class="arithmatex">\(\xi_i \ge 0\)</span>:</p>
+<div class="arithmatex">\[
+\mathcal{L}_P(\mathbf{w}, b, \boldsymbol{\xi}, \boldsymbol{\alpha}, \boldsymbol{\mu}) = \frac{1}{2} \|\mathbf{w}\|_2^2 + C \sum_{i=1}^n \xi_i - \sum_{i=1}^n \alpha_i \left[ y_i (\mathbf{w}^T \mathbf{x}_i + b) - 1 + \xi_i \right] - \sum_{i=1}^n \mu_i \xi_i
+\]</div>
+<h3 id="42-karush-kuhn-tucker-kkt-stationarity-conditions">4.2 Karush-Kuhn-Tucker (KKT) Stationarity Conditions<a class="headerlink" href="#42-karush-kuhn-tucker-kkt-stationarity-conditions" title="Permanent link">&para;</a></h3>
+<p>Setting the partial derivatives with respect to the primal variables <span class="arithmatex">\((\mathbf{w}, b, \boldsymbol{\xi})\)</span> to zero:</p>
+<ol>
+<li><strong>Stationarity with respect to <span class="arithmatex">\(\mathbf{w}\)</span></strong>:
+   $<span class="arithmatex">\(\nabla_{\mathbf{w}} \mathcal{L}_P = \mathbf{w} - \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i = \mathbf{0} \implies \mathbf{w} = \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i\)</span>$</li>
+<li><strong>Stationarity with respect to <span class="arithmatex">\(b\)</span></strong>:
+   $<span class="arithmatex">\(\frac{\partial \mathcal{L}_P}{\partial b} = -\sum_{i=1}^n \alpha_i y_i = 0 \implies \sum_{i=1}^n \alpha_i y_i = 0\)</span>$</li>
+<li><strong>Stationarity with respect to <span class="arithmatex">\(\xi_i\)</span></strong>:
+   $<span class="arithmatex">\(\frac{\partial \mathcal{L}_P}{\partial \xi_i} = C - \alpha_i - \mu_i = 0 \implies C = \alpha_i + \mu_i\)</span>$</li>
+</ol>
+<p>Since <span class="arithmatex">\(\mu_i \ge 0\)</span> and <span class="arithmatex">\(\alpha_i \ge 0\)</span>, this implies the <strong>box constraint</strong>:</p>
+<div class="arithmatex">\[
+0 \le \alpha_i \le C
+\]</div>
+<h3 id="43-kkt-complementary-slackness">4.3 KKT Complementary Slackness<a class="headerlink" href="#43-kkt-complementary-slackness" title="Permanent link">&para;</a></h3>
+<p>The complementary slackness conditions at the global optimum are:</p>
+<div class="arithmatex">\[
+\alpha_i \left[ y_i (\mathbf{w}^T \mathbf{x}_i + b) - 1 + \xi_i \right] = 0
+\]</div>
+<div class="arithmatex">\[
+\mu_i \xi_i = (C - \alpha_i) \xi_i = 0
+\]</div>
+<h4 id="three-distinct-regimes-of-training-points">Three Distinct Regimes of Training Points:<a class="headerlink" href="#three-distinct-regimes-of-training-points" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Non-Support Vectors (<span class="arithmatex">\(\alpha_i = 0\)</span>)</strong>:
+   <span class="arithmatex">\(y_i(\mathbf{w}^T \mathbf{x}_i + b) &gt; 1\)</span> and <span class="arithmatex">\(\xi_i = 0\)</span>. The sample lies strictly outside the margin. It contributes <strong>zero weight</strong> to <span class="arithmatex">\(\mathbf{w}\)</span> and can be deleted from the dataset with zero effect on the model!</li>
+<li><strong>Free Support Vectors on the Margin (<span class="arithmatex">\(0 &lt; \alpha_i &lt; C\)</span>)</strong>:
+   Since <span class="arithmatex">\(\alpha_i &lt; C\)</span>, <span class="arithmatex">\(\mu_i = C - \alpha_i &gt; 0\)</span>, forcing <span class="arithmatex">\(\xi_i = 0\)</span>.
+   Therefore, <span class="arithmatex">\(y_i(\mathbf{w}^T \mathbf{x}_i + b) = 1\)</span>. These points lie <strong>exactly on the margin boundaries</strong>. They uniquely determine the intercept <span class="arithmatex">\(b\)</span>.</li>
+<li><strong>Bounded Support Vectors Violating the Margin (<span class="arithmatex">\(\alpha_i = C\)</span>)</strong>:
+   <span class="arithmatex">\(\mu_i = 0\)</span>, so <span class="arithmatex">\(\xi_i \ge 0\)</span>. The sample is either inside the margin or misclassified.</li>
+</ol>
+<h3 id="44-the-wolfe-dual-optimization-problem">4.4 The Wolfe Dual Optimization Problem<a class="headerlink" href="#44-the-wolfe-dual-optimization-problem" title="Permanent link">&para;</a></h3>
+<p>Substituting <span class="arithmatex">\(\mathbf{w} = \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i\)</span> and <span class="arithmatex">\(\sum_{i=1}^n \alpha_i y_i = 0\)</span> back into <span class="arithmatex">\(\mathcal{L}_P\)</span>:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mathcal{L}_D(\boldsymbol{\alpha}) &amp;= \frac{1}{2} \left( \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i \right)^T \left( \sum_{j=1}^n \alpha_j y_j \mathbf{x}_j \right) + C \sum_{i=1}^n \xi_i \\
+&amp;\quad - \sum_{i=1}^n \alpha_i y_i \left( \sum_{j=1}^n \alpha_j y_j \mathbf{x}_j^T \mathbf{x}_i \right) - b \sum_{i=1}^n \alpha_i y_i + \sum_{i=1}^n \alpha_i - \sum_{i=1}^n \alpha_i \xi_i - \sum_{i=1}^n \mu_i \xi_i \\
+&amp;= \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j (\mathbf{x}_i^T \mathbf{x}_j) - \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j (\mathbf{x}_i^T \mathbf{x}_j) + \sum_{i=1}^n \alpha_i \\
+&amp;\quad + \sum_{i=1}^n \xi_i (C - \alpha_i - \mu_i) \\
+&amp;= \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j (\mathbf{x}_i^T \mathbf{x}_j)
+\end{aligned}
+\]</div>
+<p>The <strong>Wolfe Dual Problem</strong> is:</p>
+<div class="arithmatex">\[
+\max_{\boldsymbol{\alpha}} \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j (\mathbf{x}_i^T \mathbf{x}_j)
+\]</div>
+<div class="arithmatex">\[
+\text{subject to } \quad 0 \le \alpha_i \le C \quad \forall i, \qquad \sum_{i=1}^n \alpha_i y_i = 0
+\]</div>
+<p><strong>Remarkable Property</strong>: The data instances <span class="arithmatex">\(\mathbf{x}_i\)</span> appear <strong>exclusively as inner products <span class="arithmatex">\(\mathbf{x}_i^T \mathbf{x}_j\)</span></strong>!</p>
+<hr />
+<h2 id="5-the-kernel-trick-mercers-theorem">5. The Kernel Trick &amp; Mercer's Theorem<a class="headerlink" href="#5-the-kernel-trick-mercers-theorem" title="Permanent link">&para;</a></h2>
+<p>If data is not linearly separable in the original space <span class="arithmatex">\(\mathbb{R}^p\)</span>, we map instances to a higher-dimensional Hilbert feature space <span class="arithmatex">\(\mathcal{H}\)</span> via non-linear mapping <span class="arithmatex">\(\phi(\mathbf{x}): \mathbb{R}^p \to \mathcal{H}\)</span>.</p>
+<p>Evaluating <span class="arithmatex">\(\phi(\mathbf{x}_i)^T \phi(\mathbf{x}_j)\)</span> directly in a billion-dimensional space is computationally impossible.
+The <strong>Kernel Trick</strong> replaces the inner product with a closed-form bivariate <strong>Kernel Function</strong>:</p>
+<div class="arithmatex">\[
+K(\mathbf{x}, \mathbf{z}) = \langle \phi(\mathbf{x}), \phi(\mathbf{z}) \rangle_{\mathcal{H}}
+\]</div>
+<pre class="mermaid"><code>flowchart LR
+    A["Input Space ℝ² (Non-separable)"] --&gt;|Implicit Mapping φ| B["Feature Space ℋ (Linearly Separable)"]
+    A --&gt;|Kernel Function K(x, z)| C["Direct Inner Product in ℋ without computing φ(x)!"]</code></pre>
+<h3 id="51-mercers-theorem">5.1 Mercer's Theorem<a class="headerlink" href="#51-mercers-theorem" title="Permanent link">&para;</a></h3>
+<p>A symmetric bivariate function <span class="arithmatex">\(K: \mathcal{X} \times \mathcal{X} \to \mathbb{R}\)</span> is a valid Mercer kernel if and only if for any finite set of points <span class="arithmatex">\(\{\mathbf{x}_1, \dots, \mathbf{x}_n\}\)</span>, the resulting <strong>Gram matrix</strong> <span class="arithmatex">\(K_{ij} = K(\mathbf{x}_i, \mathbf{x}_j)\)</span> is <strong>positive semi-definite</strong>:</p>
+<div class="arithmatex">\[
+\mathbf{c}^T K \mathbf{c} = \sum_{i=1}^n \sum_{j=1}^n c_i c_j K(\mathbf{x}_i, \mathbf{x}_j) \ge 0 \quad \forall \mathbf{c} \in \mathbb{R}^n
+\]</div>
+<h3 id="52-common-kernels">5.2 Common Kernels<a class="headerlink" href="#52-common-kernels" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Linear Kernel</strong>: <span class="arithmatex">\(K(\mathbf{x}, \mathbf{z}) = \mathbf{x}^T \mathbf{z}\)</span></li>
+<li><strong>Polynomial Kernel</strong>: <span class="arithmatex">\(K(\mathbf{x}, \mathbf{z}) = (\mathbf{x}^T \mathbf{z} + c)^d\)</span></li>
+<li><strong>Radial Basis Function (RBF / Gaussian) Kernel</strong>:
+   $<span class="arithmatex">\(K(\mathbf{x}, \mathbf{z}) = \exp\left(-\gamma \|\mathbf{x} - \mathbf{z}\|_2^2\right), \quad \gamma &gt; 0\)</span>$</li>
+</ol>
+<h3 id="53-proof-the-rbf-kernel-corresponds-to-an-infinite-dimensional-space">5.3 Proof: The RBF Kernel Corresponds to an Infinite-Dimensional Space<a class="headerlink" href="#53-proof-the-rbf-kernel-corresponds-to-an-infinite-dimensional-space" title="Permanent link">&para;</a></h3>
+<p>Let <span class="arithmatex">\(x, z \in \mathbb{R}\)</span> with <span class="arithmatex">\(\gamma = 1\)</span>. The Gaussian kernel is:</p>
+<div class="arithmatex">\[
+K(x, z) = \exp(-(x - z)^2) = \exp(-x^2) \exp(-z^2) \exp(2xz)
+\]</div>
+<p>Using the Taylor series expansion of the exponential function <span class="arithmatex">\(e^u = \sum_{k=0}^\infty \frac{u^k}{k!}\)</span>:</p>
+<div class="arithmatex">\[
+\exp(2xz) = \sum_{k=0}^\infty \frac{(2xz)^k}{k!} = \sum_{k=0}^\infty \frac{2^k}{\sqrt{k!} \sqrt{k!}} x^k z^k
+\]</div>
+<p>Substituting this back into the kernel expression:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+K(x, z) &amp;= \exp(-x^2) \exp(-z^2) \sum_{k=0}^\infty \left( \sqrt{\frac{2^k}{k!}} x^k \right) \left( \sqrt{\frac{2^k}{k!}} z^k \right) \\
+&amp;= \sum_{k=0}^\infty \left( e^{-x^2} \sqrt{\frac{2^k}{k!}} x^k \right) \left( e^{-z^2} \sqrt{\frac{2^k}{k!}} z^k \right) \\
+&amp;= \langle \phi(x), \phi(z) \rangle
+\end{aligned}
+\]</div>
+<p>where the feature mapping is an <strong>infinite-dimensional vector</strong>:</p>
+<div class="arithmatex">\[
+\phi(x) = e^{-x^2} \begin{bmatrix} 1, &amp; \sqrt{2} x, &amp; \sqrt{\frac{2^2}{2!}} x^2, &amp; \dots, &amp; \sqrt{\frac{2^k}{k!}} x^k, &amp; \dots \end{bmatrix}^T
+\]</div>
+<p>The RBF kernel computes the exact inner product in an <strong>infinite-dimensional polynomial feature space</strong> in <span class="arithmatex">\(\mathcal{O}(p)\)</span> time!</p>
+<hr />
+<h2 id="6-sequential-minimal-optimization-smo">6. Sequential Minimal Optimization (SMO)<a class="headerlink" href="#6-sequential-minimal-optimization-smo" title="Permanent link">&para;</a></h2>
+<p>John Platt (1998) introduced <strong>Sequential Minimal Optimization (SMO)</strong>. Standard quadratic programming packages require storing the <span class="arithmatex">\(n \times n\)</span> kernel matrix, costing <span class="arithmatex">\(\mathcal{O}(n^2)\)</span> memory and <span class="arithmatex">\(\mathcal{O}(n^3)\)</span> flops.</p>
+<p>SMO exploits the linear equality constraint <span class="arithmatex">\(\sum_{i=1}^n \alpha_i y_i = 0\)</span>:
+- We cannot update a single multiplier <span class="arithmatex">\(\alpha_1\)</span> alone, because <span class="arithmatex">\(\alpha_1 = -\frac{1}{y_1}\sum_{i=2}^n \alpha_i y_i\)</span> is completely locked.
+- The smallest subproblem that can be optimized while satisfying the constraint involves <strong>two Lagrange multipliers <span class="arithmatex">\((\alpha_1, \alpha_2)\)</span> simultaneously</strong>.</p>
+<pre class="mermaid"><code>flowchart TD
+    A["Select pair (α₁, α₂) violating KKT conditions"] --&gt; B["Compute bounds: L ≤ α₂ ≤ H based on box constraint 0 ≤ α ≤ C"]
+    B --&gt; C["Compute second derivative: η = 2K₁₂ - K₁₁ - K₂₂"]
+    C --&gt; D["Analytic update: α₂^new = α₂^old - y₂(E₁ - E₂) / η"]
+    D --&gt; E["Clip α₂ into [L, H]"]
+    E --&gt; F["Update α₁: α₁^new = α₁^old + y₁y₂(α₂^old - α₂^new)"]
+    F --&gt; G["Update threshold b and error cache"]</code></pre>
+<p>At every step, SMO solves the 2-variable quadratic programming subproblem <strong>analytically</strong> without numerical matrix inversion, converging orders of magnitude faster.</p>
+<hr />
+<h2 id="7-implementation-1-vectorized-linear-rbf-svm-via-subgradient-descent-numpy">7. Implementation 1 — Vectorized Linear &amp; RBF SVM via Subgradient Descent (NumPy)<a class="headerlink" href="#7-implementation-1-vectorized-linear-rbf-svm-via-subgradient-descent-numpy" title="Permanent link">&para;</a></h2>
+<p>Below is a complete, from-scratch implementation of an SVM supporting both Linear and RBF Kernels trained via vectorized Pegasos-style subgradient descent on the primal hinge loss.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">ScratchSVM</span><span class="p">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="sd">    Support Vector Machine trained via Subgradient Descent on Hinge Loss.</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="sd">    Supports both Linear and RBF kernels.</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="sd">    """</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">'rbf'</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">kernel</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">gamma</span><span class="p">)</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">lr</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">support_vectors_</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">support_vector_labels_</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_kernel_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">X2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">==</span> <span class="s1">'linear'</span><span class="p">:</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>            <span class="k">return</span> <span class="n">X1</span> <span class="o">@</span> <span class="n">X2</span><span class="o">.</span><span class="n">T</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">==</span> <span class="s1">'rbf'</span><span class="p">:</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>            <span class="c1"># Pairwise squared Euclidean distance: ||x - z||^2 = ||x||^2 + ||z||^2 - 2 x^T z</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>            <span class="n">x1_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">X1</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>            <span class="n">x2_sq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">X2</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>            <span class="n">dists</span> <span class="o">=</span> <span class="n">x1_sq</span> <span class="o">+</span> <span class="n">x2_sq</span><span class="o">.</span><span class="n">T</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">X1</span> <span class="o">@</span> <span class="n">X2</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">dists</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported kernel: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>        <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        <span class="c1"># Convert labels to {-1, +1}</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">==</span> <span class="s1">'linear'</span><span class="p">:</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>            <span class="c1"># Primal subgradient descent for linear SVM</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_features</span><span class="p">)</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>            <span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>            <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>                <span class="n">eta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>                <span class="n">margins</span> <span class="o">=</span> <span class="n">y</span> <span class="o">*</span> <span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="n">w</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>                <span class="c1"># Subgradient of hinge loss</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>                <span class="n">misclassified</span> <span class="o">=</span> <span class="n">margins</span> <span class="o">&lt;</span> <span class="mf">1.0</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>                <span class="c1"># Gradient w: (1 / C) * w - sum_{i: margin &lt; 1} y_i x_i</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>                <span class="n">grad_w</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">)</span> <span class="o">*</span> <span class="n">w</span> <span class="o">-</span> <span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">misclassified</span><span class="p">))</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>                <span class="n">grad_b</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">misclassified</span><span class="p">)</span>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>                <span class="n">w</span> <span class="o">-=</span> <span class="n">eta</span> <span class="o">*</span> <span class="n">grad_w</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>                <span class="n">b</span> <span class="o">-=</span> <span class="n">eta</span> <span class="o">*</span> <span class="n">grad_b</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">w</span>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">==</span> <span class="s1">'rbf'</span><span class="p">:</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>            <span class="c1"># Dual subgradient optimization over alpha</span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>            <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kernel_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>            <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>            <span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>            <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>                <span class="n">eta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>                <span class="n">preds</span> <span class="o">=</span> <span class="p">(</span><span class="n">K</span> <span class="o">@</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">y</span><span class="p">))</span> <span class="o">+</span> <span class="n">b</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>                <span class="n">margins</span> <span class="o">=</span> <span class="n">y</span> <span class="o">*</span> <span class="n">preds</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>                <span class="c1"># Misclassified points violating margin</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>                <span class="n">violators</span> <span class="o">=</span> <span class="n">margins</span> <span class="o">&lt;</span> <span class="mf">1.0</span>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>
+</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>                <span class="c1"># Dual subgradient updates</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>                <span class="n">alpha</span><span class="p">[</span><span class="n">violators</span><span class="p">]</span> <span class="o">+=</span> <span class="n">eta</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span>
+</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>                <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">)</span>
+</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>
+</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>                <span class="n">b</span> <span class="o">+=</span> <span class="n">eta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">violators</span><span class="p">])</span>
+</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>
+</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a>            <span class="n">sv_mask</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">&gt;</span> <span class="mf">1e-4</span>
+</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span><span class="p">[</span><span class="n">sv_mask</span><span class="p">]</span>
+</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">support_vectors_</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">sv_mask</span><span class="p">]</span>
+</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">support_vector_labels_</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">sv_mask</span><span class="p">]</span>
+</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span>
+</span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a>
+</span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>        <span class="k">return</span> <span class="bp">self</span>
+</span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a>
+</span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">decision_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">==</span> <span class="s1">'linear'</span><span class="p">:</span>
+</span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a>            <span class="k">return</span> <span class="n">X</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span>
+</span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a>            <span class="n">K_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kernel_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">support_vectors_</span><span class="p">)</span>
+</span><span id="__span-0-95"><a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a>            <span class="k">return</span> <span class="p">(</span><span class="n">K_test</span> <span class="o">@</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">support_vector_labels_</span><span class="p">))</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span>
+</span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a>
+</span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-0-98"><a id="__codelineno-0-98" name="__codelineno-0-98" href="#__codelineno-0-98"></a>        <span class="n">scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span><span id="__span-0-99"><a id="__codelineno-0-99" name="__codelineno-0-99" href="#__codelineno-0-99"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">scores</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="8-implementation-2-scikit-learn-benchmarking-verification">8. Implementation 2 — scikit-learn Benchmarking &amp; Verification<a class="headerlink" href="#8-implementation-2-scikit-learn-benchmarking-verification" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_moons</span><span class="p">,</span> <span class="n">make_classification</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># 1. Non-Linear Moon Dataset Benchmark (RBF Kernel)</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">X_m</span><span class="p">,</span> <span class="n">y_m</span> <span class="o">=</span> <span class="n">make_moons</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">scratch_svm</span> <span class="o">=</span> <span class="n">ScratchSVM</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">'rbf'</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">scratch_svm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_m</span><span class="p">,</span> <span class="n">y_m</span><span class="p">)</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">sk_svm</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">'rbf'</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">sk_svm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_m</span><span class="p">,</span> <span class="n">y_m</span><span class="p">)</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="n">acc_scratch_rbf</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_m</span><span class="p">,</span> <span class="n">scratch_svm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_m</span><span class="p">))</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">acc_sk_rbf</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_m</span><span class="p">,</span> <span class="n">sk_svm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_m</span><span class="p">))</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"RBF Kernel Comparison — Scratch Acc: </span><span class="si">{</span><span class="n">acc_scratch_rbf</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | Sklearn Acc: </span><span class="si">{</span><span class="n">acc_sk_rbf</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">acc_scratch_rbf</span> <span class="o">-</span> <span class="n">acc_sk_rbf</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">,</span> <span class="s2">"RBF SVM accuracy diverges from scikit-learn!"</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># 2. Linearly Separable Benchmark (Linear Kernel)</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="n">X_l</span><span class="p">,</span> <span class="n">y_l</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_informative</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="n">scratch_linear</span> <span class="o">=</span> <span class="n">ScratchSVM</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="n">scratch_linear</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_l</span><span class="p">,</span> <span class="n">y_l</span><span class="p">)</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="n">sk_linear</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">)</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="n">sk_linear</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_l</span><span class="p">,</span> <span class="n">y_l</span><span class="p">)</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="n">acc_scratch_lin</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_l</span><span class="p">,</span> <span class="n">scratch_linear</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_l</span><span class="p">))</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="n">acc_sk_lin</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_l</span><span class="p">,</span> <span class="n">sk_linear</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_l</span><span class="p">))</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Linear Kernel Comparison — Scratch Acc: </span><span class="si">{</span><span class="n">acc_scratch_lin</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | Sklearn Acc: </span><span class="si">{</span><span class="n">acc_sk_lin</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="9-common-errors-production-debugging">9. Common Errors &amp; Production Debugging<a class="headerlink" href="#9-common-errors-production-debugging" title="Permanent link">&para;</a></h2>
+<h3 id="91-unscaled-features-with-rbf-kernel">9.1 Unscaled Features with RBF Kernel<a class="headerlink" href="#91-unscaled-features-with-rbf-kernel" title="Permanent link">&para;</a></h3>
+<p>The RBF kernel computes <span class="arithmatex">\(K(\mathbf{x}, \mathbf{z}) = \exp(-\gamma \|\mathbf{x} - \mathbf{z}\|_2^2)\)</span>.
+If feature <span class="arithmatex">\(x_1\)</span> spans <span class="arithmatex">\([0, 100,000]\)</span> and <span class="arithmatex">\(x_2\)</span> spans <span class="arithmatex">\([0, 1]\)</span>, the squared distance is dominated by <span class="arithmatex">\(x_1\)</span>. For any two distinct points, <span class="arithmatex">\(\|\mathbf{x} - \mathbf{z}\|^2 \gg 10^8 \implies K(\mathbf{x}, \mathbf{z}) = \exp(-10^7) = 0\)</span>.
+The Gram matrix collapses to the identity matrix (<span class="arithmatex">\(K \approx I\)</span>), causing every training point to become its own isolated island (100% memorization on train, 50% random guessing on test).</p>
+<p><strong>Remedy</strong>: Always apply <code>StandardScaler</code> to zero-mean and unit-variance all features prior to fitting SVM.</p>
+<h3 id="92-the-gamma-c-interplay-in-rbf">9.2 The Gamma-C Interplay in RBF<a class="headerlink" href="#92-the-gamma-c-interplay-in-rbf" title="Permanent link">&para;</a></h3>
+<p>In the RBF kernel:
+- <span class="arithmatex">\(\gamma\)</span> controls the radius of influence of each support vector: <span class="arithmatex">\(\sigma = \frac{1}{\sqrt{2\gamma}}\)</span>.
+  - If <span class="arithmatex">\(\gamma\)</span> is excessively large: Each support vector has a tiny Gaussian bell. The decision boundary creates tight concentric bubbles around individual training points (extreme overfitting).
+  - If <span class="arithmatex">\(\gamma\)</span> is excessively small: The Gaussian bell is nearly flat. The kernel behaves like a linear model (underfitting).
+- Pairwise grid search across logarithmic scales (<span class="arithmatex">\(\gamma \in [10^{-4}, 10^1], C \in [10^{-2}, 10^3]\)</span>) is strictly necessary.</p>
+<h3 id="93-computational-bottleneck-on-large-datasets-n-100000">9.3 Computational Bottleneck on Large Datasets (<span class="arithmatex">\(n &gt; 100,000\)</span>)<a class="headerlink" href="#93-computational-bottleneck-on-large-datasets-n-100000" title="Permanent link">&para;</a></h3>
+<p>Kernel SVM solvers like LibSVM require <span class="arithmatex">\(\mathcal{O}(n^2)\)</span> memory to cache the Gram matrix and <span class="arithmatex">\(\mathcal{O}(n^2 \text{ to } n^3)\)</span> training time. Fitting an RBF SVM on <span class="arithmatex">\(n = 500,000\)</span> will hang or exhaust RAM.</p>
+<p><strong>Remedy</strong>: For large datasets, use <strong>Linear SVM</strong> via <code>LinearSVC</code> (LibLinear, <span class="arithmatex">\(\mathcal{O}(n \cdot p)\)</span>) or use Random Fourier Features (<code>RBFSampler</code>) to approximate the RBF kernel via explicit linear features.</p>
+<hr />
+<h2 id="10-staff-level-interview-questions-model-answers">10. Staff-Level Interview Questions &amp; Model Answers<a class="headerlink" href="#10-staff-level-interview-questions-model-answers" title="Permanent link">&para;</a></h2>
+<h3 id="q1-derive-the-dual-formulation-of-the-soft-margin-svm-from-the-primal-lagrangian-using-the-karush-kuhn-tucker-kkt-conditions">Q1: Derive the dual formulation of the soft-margin SVM from the primal Lagrangian using the Karush-Kuhn-Tucker (KKT) conditions.<a class="headerlink" href="#q1-derive-the-dual-formulation-of-the-soft-margin-svm-from-the-primal-lagrangian-using-the-karush-kuhn-tucker-kkt-conditions" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+The primal soft-margin SVM problem is:
+$<span class="arithmatex">\(\min_{\mathbf{w}, b, \boldsymbol{\xi}} \frac{1}{2}\|\mathbf{w}\|_2^2 + C\sum_{i=1}^n \xi_i \quad \text{s.t. } y_i(\mathbf{w}^T \mathbf{x}_i + b) \ge 1 - \xi_i, \; \xi_i \ge 0\)</span>$
+Forming the primal Lagrangian with multipliers <span class="arithmatex">\(\alpha_i \ge 0\)</span> and <span class="arithmatex">\(\mu_i \ge 0\)</span>:
+$<span class="arithmatex">\(\mathcal{L}_P(\mathbf{w}, b, \boldsymbol{\xi}, \boldsymbol{\alpha}, \boldsymbol{\mu}) = \frac{1}{2}\|\mathbf{w}\|_2^2 + C\sum_{i=1}^n \xi_i - \sum_{i=1}^n \alpha_i \left[ y_i(\mathbf{w}^T \mathbf{x}_i + b) - 1 + \xi_i \right] - \sum_{i=1}^n \mu_i \xi_i\)</span>$
+Setting partial derivatives with respect to primal variables to zero:
+1. <span class="arithmatex">\(\nabla_{\mathbf{w}} \mathcal{L}_P = \mathbf{w} - \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i = \mathbf{0} \implies \mathbf{w} = \sum_{i=1}^n \alpha_i y_i \mathbf{x}_i\)</span>
+2. <span class="arithmatex">\(\frac{\partial \mathcal{L}_P}{\partial b} = -\sum_{i=1}^n \alpha_i y_i = 0 \implies \sum_{i=1}^n \alpha_i y_i = 0\)</span>
+3. <span class="arithmatex">\(\frac{\partial \mathcal{L}_P}{\partial \xi_i} = C - \alpha_i - \mu_i = 0 \implies C = \alpha_i + \mu_i\)</span>
+Because <span class="arithmatex">\(\mu_i \ge 0\)</span>, this enforces <span class="arithmatex">\(0 \le \alpha_i \le C\)</span>.
+Substituting <span class="arithmatex">\(\mathbf{w}\)</span> into <span class="arithmatex">\(\mathcal{L}_P\)</span>:
+$<span class="arithmatex">\(\begin{aligned}
+\mathcal{L}_D &amp;= \frac{1}{2}\left(\sum_{i=1}^n \alpha_i y_i \mathbf{x}_i\right)^T \left(\sum_{j=1}^n \alpha_j y_j \mathbf{x}_j\right) + \sum_{i=1}^n \xi_i(C - \alpha_i - \mu_i) \\
+&amp;\quad - \sum_{i=1}^n \alpha_i y_i \left(\sum_{j=1}^n \alpha_j y_j \mathbf{x}_j^T \mathbf{x}_i\right) - b\sum_{i=1}^n \alpha_i y_i + \sum_{i=1}^n \alpha_i \\
+&amp;= \sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j (\mathbf{x}_i^T \mathbf{x}_j)
+\end{aligned}\)</span>$
+Thus, the dual problem is:
+$<span class="arithmatex">\(\max_{\boldsymbol{\alpha}} \sum_{i=1}^n \alpha_i - \frac{1}{2}\sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j (\mathbf{x}_i^T \mathbf{x}_j) \quad \text{s.t. } 0 \le \alpha_i \le C, \; \sum_{i=1}^n \alpha_i y_i = 0\)</span>$</p>
+<hr />
+<h3 id="q2-classify-the-three-regimes-of-support-vectors-using-the-kkt-complementary-slackness-conditions">Q2: Classify the three regimes of support vectors using the KKT complementary slackness conditions.<a class="headerlink" href="#q2-classify-the-three-regimes-of-support-vectors-using-the-kkt-complementary-slackness-conditions" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+The KKT complementary slackness conditions state:
+1. <span class="arithmatex">\(\alpha_i \left[ y_i(\mathbf{w}^T \mathbf{x}_i + b) - 1 + \xi_i \right] = 0\)</span>
+2. <span class="arithmatex">\(\mu_i \xi_i = (C - \alpha_i) \xi_i = 0\)</span></p>
+<p>This categorizes all training samples into three distinct regimes:
+- <strong>Case 1: <span class="arithmatex">\(\alpha_i = 0\)</span> (Non-Support Vectors)</strong>:
+  From condition 2, since <span class="arithmatex">\(\alpha_i &lt; C\)</span>, <span class="arithmatex">\(\mu_i &gt; 0 \implies \xi_i = 0\)</span>.
+  From the primal constraint, <span class="arithmatex">\(y_i(\mathbf{w}^T \mathbf{x}_i + b) \ge 1\)</span>. Since condition 1 is satisfied with <span class="arithmatex">\(\alpha_i = 0\)</span>, <span class="arithmatex">\(y_i(\mathbf{w}^T \mathbf{x}_i + b) &gt; 1\)</span>.
+  These samples lie strictly outside the margin on the correct side. They contribute nothing to the weight vector (<span class="arithmatex">\(\mathbf{w} = \sum \alpha_i y_i \mathbf{x}_i\)</span>) and have zero influence on the decision boundary.
+- <strong>Case 2: <span class="arithmatex">\(0 &lt; \alpha_i &lt; C\)</span> (Free / Unbounded Support Vectors)</strong>:
+  Since <span class="arithmatex">\(\alpha_i &lt; C\)</span>, <span class="arithmatex">\(\mu_i = C - \alpha_i &gt; 0 \implies \xi_i = 0\)</span>.
+  Since <span class="arithmatex">\(\alpha_i &gt; 0\)</span>, condition 1 requires <span class="arithmatex">\(y_i(\mathbf{w}^T \mathbf{x}_i + b) - 1 + 0 = 0 \implies y_i(\mathbf{w}^T \mathbf{x}_i + b) = 1\)</span>.
+  These points lie <strong>exactly on the margin boundaries</strong>. They physically anchor the separating slab and are used to solve for the intercept <span class="arithmatex">\(b\)</span>.
+- <strong>Case 3: <span class="arithmatex">\(\alpha_i = C\)</span> (Bounded Support Vectors)</strong>:
+  Here <span class="arithmatex">\(\mu_i = C - \alpha_i = 0\)</span>, so <span class="arithmatex">\(\xi_i \ge 0\)</span>.
+  Condition 1 requires <span class="arithmatex">\(y_i(\mathbf{w}^T \mathbf{x}_i + b) = 1 - \xi_i\)</span>.
+  These points violate the margin: if <span class="arithmatex">\(0 &lt; \xi_i \le 1\)</span>, they fall inside the margin band; if <span class="arithmatex">\(\xi_i &gt; 1\)</span>, they are misclassified.</p>
+<hr />
+<h3 id="q3-prove-that-the-gaussian-rbf-kernel-corresponds-to-an-inner-product-in-an-infinite-dimensional-hilbert-space">Q3: Prove that the Gaussian RBF kernel corresponds to an inner product in an infinite-dimensional Hilbert space.<a class="headerlink" href="#q3-prove-that-the-gaussian-rbf-kernel-corresponds-to-an-inner-product-in-an-infinite-dimensional-hilbert-space" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Let <span class="arithmatex">\(\mathbf{x}, \mathbf{z} \in \mathbb{R}^p\)</span> and consider the RBF kernel with <span class="arithmatex">\(\gamma &gt; 0\)</span>:
+$<span class="arithmatex">\(K(\mathbf{x}, \mathbf{z}) = \exp\left(-\gamma \|\mathbf{x} - \mathbf{z}\|_2^2\right) = \exp\left(-\gamma \|\mathbf{x}\|^2\right) \exp\left(-\gamma \|\mathbf{z}\|^2\right) \exp\left(2\gamma \mathbf{x}^T \mathbf{z}\right)\)</span>$
+Expanding <span class="arithmatex">\(\exp(2\gamma \mathbf{x}^T \mathbf{z})\)</span> via its Maclaurin series:
+$<span class="arithmatex">\(\exp(2\gamma \mathbf{x}^T \mathbf{z}) = \sum_{k=0}^\infty \frac{(2\gamma)^k}{k!} (\mathbf{x}^T \mathbf{z})^k\)</span>$
+For any integer power <span class="arithmatex">\(k\)</span>, <span class="arithmatex">\((\mathbf{x}^T \mathbf{z})^k\)</span> can be expressed as the inner product of all <span class="arithmatex">\(k\)</span>-th degree monomial combinations of the coordinates of <span class="arithmatex">\(\mathbf{x}\)</span> and <span class="arithmatex">\(\mathbf{z}\)</span>:
+$<span class="arithmatex">\((\mathbf{x}^T \mathbf{z})^k = \langle \psi_k(\mathbf{x}), \psi_k(\mathbf{z}) \rangle\)</span>$
+where <span class="arithmatex">\(\psi_k(\mathbf{x})\)</span> is a vector of dimension <span class="arithmatex">\(\binom{p+k-1}{k}\)</span> containing all degree-<span class="arithmatex">\(k\)</span> polynomial interactions.
+Substituting this expansion back:
+$<span class="arithmatex">\(K(\mathbf{x}, \mathbf{z}) = \sum_{k=0}^\infty \left[ e^{-\gamma \|\mathbf{x}\|^2} \sqrt{\frac{(2\gamma)^k}{k!}} \psi_k(\mathbf{x}) \right]^T \left[ e^{-\gamma \|\mathbf{z}\|^2} \sqrt{\frac{(2\gamma)^k}{k!}} \psi_k(\mathbf{z}) \right]\)</span>$
+Define the infinite-dimensional concatenation:
+$<span class="arithmatex">\(\phi(\mathbf{x}) = e^{-\gamma \|\mathbf{x}\|^2} \begin{bmatrix} 1, &amp; \sqrt{2\gamma} \psi_1(\mathbf{x}), &amp; \sqrt{\frac{(2\gamma)^2}{2!}} \psi_2(\mathbf{x}), &amp; \dots, &amp; \sqrt{\frac{(2\gamma)^k}{k!}} \psi_k(\mathbf{x}), &amp; \dots \end{bmatrix}^T\)</span>$
+Then:
+$<span class="arithmatex">\(K(\mathbf{x}, \mathbf{z}) = \langle \phi(\mathbf{x}), \phi(\mathbf{z}) \rangle_{\ell^2}\)</span>$
+Since the sum contains terms for all <span class="arithmatex">\(k \in \{0, 1, 2, \dots, \infty\}\)</span>, <span class="arithmatex">\(\phi(\mathbf{x})\)</span> is an element of <span class="arithmatex">\(\ell^2\)</span>, the infinite-dimensional Hilbert space of square-summable sequences.</p>
+<hr />
+<h3 id="q4-explain-the-sequential-minimal-optimization-smo-algorithm-and-why-at-least-two-lagrange-multipliers-must-be-updated-simultaneously">Q4: Explain the Sequential Minimal Optimization (SMO) algorithm and why at least two Lagrange multipliers must be updated simultaneously.<a class="headerlink" href="#q4-explain-the-sequential-minimal-optimization-smo-algorithm-and-why-at-least-two-lagrange-multipliers-must-be-updated-simultaneously" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+The dual SVM problem features a linear equality constraint:
+$<span class="arithmatex">\(\sum_{i=1}^n \alpha_i y_i = 0\)</span>$
+Suppose we attempt coordinate ascent by choosing a single multiplier <span class="arithmatex">\(\alpha_1\)</span> while keeping <span class="arithmatex">\(\alpha_2, \dots, \alpha_n\)</span> fixed.
+The constraint dictates:
+$<span class="arithmatex">\(\alpha_1 y_1 + \sum_{i=2}^n \alpha_i y_i = 0 \implies \alpha_1 = -y_1 \sum_{i=2}^n \alpha_i y_i\)</span>$
+Because <span class="arithmatex">\(y_1 \in \{-1, +1\}\)</span> and all other <span class="arithmatex">\(\alpha_i\)</span> are fixed, <span class="arithmatex">\(\alpha_1\)</span> is strictly locked to a single constant value. It has zero degrees of freedom! It is mathematically impossible to update a single multiplier without violating the equality constraint.
+Therefore, the smallest possible subproblem requires selecting <strong>two multipliers <span class="arithmatex">\((\alpha_1, \alpha_2)\)</span> simultaneously</strong>.
+Let <span class="arithmatex">\(\alpha_1 y_1 + \alpha_2 y_2 = \zeta\)</span>, where <span class="arithmatex">\(\zeta = -\sum_{i=3}^n \alpha_i y_i\)</span> is constant.
+Then <span class="arithmatex">\(\alpha_1 = y_1 (\zeta - \alpha_2 y_2)\)</span>.
+Substituting this linear relationship into the dual objective reduces it to a <strong>univariate quadratic function of <span class="arithmatex">\(\alpha_2\)</span> alone</strong>:
+$<span class="arithmatex">\(f(\alpha_2) = A \alpha_2^2 + B \alpha_2 + C\)</span>$
+SMO differentiates <span class="arithmatex">\(f(\alpha_2)\)</span>, solves for the unconstrained optimum <span class="arithmatex">\(\alpha_2^{\text{new, unclipped}}\)</span>, clips it to the interval <span class="arithmatex">\([L, H]\)</span> defined by the box constraints <span class="arithmatex">\(0 \le \alpha_i \le C\)</span>, and solves for <span class="arithmatex">\(\alpha_1^{\text{new}}\)</span> via <span class="arithmatex">\(\alpha_1^{\text{new}} = \alpha_1^{\text{old}} + y_1 y_2 (\alpha_2^{\text{old}} - \alpha_2^{\text{new}})\)</span>.
+This is repeated iteratively using heuristic selection rules until all points satisfy the KKT conditions within tolerance.</p>
+<hr />
+<h3 id="q5-how-is-the-intercept-b-recovered-from-the-dual-solution-using-complementary-slackness">Q5: How is the intercept <span class="arithmatex">\(b\)</span> recovered from the dual solution using complementary slackness?<a class="headerlink" href="#q5-how-is-the-intercept-b-recovered-from-the-dual-solution-using-complementary-slackness" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Once the optimal dual multipliers <span class="arithmatex">\(\boldsymbol{\alpha}^*\)</span> have been found, the weight vector is <span class="arithmatex">\(\mathbf{w}^* = \sum_{i=1}^n \alpha_i^* y_i \mathbf{x}_i\)</span>.
+To determine the intercept <span class="arithmatex">\(b\)</span>, we locate any <strong>free support vector</strong> <span class="arithmatex">\(k\)</span> satisfying <span class="arithmatex">\(0 &lt; \alpha_k^* &lt; C\)</span>.
+By KKT complementary slackness, for this point the slack variable is zero (<span class="arithmatex">\(\xi_k = 0\)</span>) and the point lies precisely on the margin boundary:
+$<span class="arithmatex">\(y_k (\mathbf{w}^{*T} \mathbf{x}_k + b) = 1\)</span>$
+Multiplying both sides by <span class="arithmatex">\(y_k\)</span> (since <span class="arithmatex">\(y_k \in \{-1, +1\} \implies y_k^2 = 1\)</span>):
+$<span class="arithmatex">\(\mathbf{w}^{*T} \mathbf{x}_k + b = y_k \implies b = y_k - \mathbf{w}^{*T} \mathbf{x}_k\)</span>$
+In terms of the kernel function:
+$<span class="arithmatex">\(b = y_k - \sum_{i \in \text{SV}} \alpha_i^* y_i K(\mathbf{x}_i, \mathbf{x}_k)\)</span>$
+To maximize numerical stability against floating-point inaccuracies, production libraries average <span class="arithmatex">\(b\)</span> across all <span class="arithmatex">\(M\)</span> free support vectors:
+$<span class="arithmatex">\(b^* = \frac{1}{|S_{\text{free}}|} \sum_{k \in S_{\text{free}}} \left[ y_k - \sum_{i \in \text{SV}} \alpha_i^* y_i K(\mathbf{x}_i, \mathbf{x}_k) \right]\)</span>$</p>
+<hr />
+<h2 id="11-mastery-ladder">11. Mastery Ladder<a class="headerlink" href="#11-mastery-ladder" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] <strong>L1:</strong> You can write the hyperplane formula <span class="arithmatex">\(\mathbf{w}^T \mathbf{x} + b = 0\)</span> and state the decision rule.</li>
+<li>[ ] <strong>L2:</strong> You can define functional and geometric margins and prove why margin width is <span class="arithmatex">\(\frac{2}{\|\mathbf{w}\|_2}\)</span>.</li>
+<li>[ ] <strong>L3:</strong> You can formulate the hard-margin and soft-margin primal quadratic programs with slack variables <span class="arithmatex">\(\xi_i\)</span>.</li>
+<li>[ ] <strong>L4:</strong> You can express SVM as Hinge Loss minimization with <span class="arithmatex">\(L_2\)</span> regularization.</li>
+<li>[ ] <strong>L5:</strong> You can derive the stationarity conditions <span class="arithmatex">\(\mathbf{w} = \sum \alpha_i y_i \mathbf{x}_i\)</span> and <span class="arithmatex">\(\sum \alpha_i y_i = 0\)</span> from the Lagrangian.</li>
+<li>[ ] <strong>L6:</strong> You can derive the Wolfe Dual quadratic program and state its box constraints <span class="arithmatex">\(0 \le \alpha_i \le C\)</span>.</li>
+<li>[ ] <strong>L7:</strong> You can classify points into non-support vectors, free support vectors, and bounded support vectors via KKT conditions.</li>
+<li>[ ] <strong>L8:</strong> You can state Mercer's theorem and prove that the RBF kernel maps to an infinite-dimensional Hilbert space.</li>
+<li>[ ] <strong>L9:</strong> You can explain why SMO must update two multipliers simultaneously and derive the analytic update.</li>
+<li>[ ] <strong>L10:</strong> You can implement an SVM from scratch in NumPy with both linear and RBF kernels and benchmark against scikit-learn.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../ensemble-learning-deep-dive/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deep-dive: Ensemble Learning (Random Forests &amp; GBDT)">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Ensemble Learning (Random Forests & GBDT)
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../05-ml-theory/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

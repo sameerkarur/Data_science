@@ -1,0 +1,4998 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete, deep-dive AI/ML curriculum — from Python internals to production AI systems.">
+      
+      
+        <meta name="author" content="Sameer Karur">
+      
+      
+      
+        <link rel="prev" href="../linear-algebra-deep-dive/">
+      
+      
+        <link rel="next" href="../probability-statistics-deep-dive/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Deep-dive: Calculus & Optimization - AI/ML Mastery Program</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#multivariate-calculus-optimization-gradients-hessians-firstsecond-order-optimizers" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI/ML Mastery Program" class="md-header__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI/ML Mastery Program
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Deep-dive: Calculus & Optimization
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../00-computer-science/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 0 – CS Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-python/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 1 – Python
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 2 – Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../03-data-engineering/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 3 – Data Engineering
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../04-classical-ml/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 4 – Classical ML
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../05-ml-theory/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 5 – ML Theory & Evaluation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../06-deep-learning/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 6 – Deep Learning
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../07-computer-vision/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 7 – Computer Vision
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../08-nlp/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 8 – NLP
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../09-transformers-llms/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 9 – Transformers & LLMs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../10-generative-ai/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 10 – Generative AI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../11-ai-agents/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 11 – AI Agents
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../12-mlops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 12 – MLOps
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../13-ai-system-design/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 13 – AI System Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../14-projects/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 14 – Projects & Interview
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI/ML Mastery Program" class="md-nav__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI/ML Mastery Program
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../00-computer-science/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 0 – CS Foundations
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 0 – CS Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/how-computers-execute-programs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: How Computers Execute Programs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/arrays-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Arrays
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/linked-lists-stacks-queues-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linked Lists, Stacks & Queues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/hash-tables-sets-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hash Tables & Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Trees (Binary, BST, Heaps)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/graphs-tries-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Graphs & Tries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/algorithms-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Algorithms (Big-O, Searching, Sorting, Recursion, Greedy, DP, Graphs)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../01-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 1 – Python
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 1 – Python
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/fundamentals-control-flow-collections-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Fundamentals, Control Flow & Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/functions-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/oop-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: OOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/advanced-python-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced Python (Iterators, Generators, Async, Concurrency)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/internals-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Internals (CPython, Bytecode, GC, GIL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 2 – Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 2 – Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations-math-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundations of Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linear-algebra-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Calculus & Optimization
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Calculus & Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-intuition-real-world-framing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Intuition &amp; Real-World Framing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Intuition &amp; Real-World Framing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#traversing-a-foggy-mountain-at-midnight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Traversing a Foggy Mountain at Midnight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-differential-calculus-limits-gradients-jacobians-and-hessians" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Differential Calculus: Limits, Gradients, Jacobians, and Hessians
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Differential Calculus: Limits, Gradients, Jacobians, and Hessians">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-the-limit-and-single-variable-derivative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 The Limit and Single-Variable Derivative
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-partial-derivatives-and-the-gradient-vector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Partial Derivatives and the Gradient Vector
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-the-jacobian-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 The Jacobian Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-the-hessian-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 The Hessian Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-taylor-series-approximations-and-convexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Taylor Series Approximations and Convexity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Taylor Series Approximations and Convexity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-multivariate-taylor-expansions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Multivariate Taylor Expansions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-mathematical-convexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Mathematical Convexity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-reverse-mode-automatic-differentiation-computational-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Reverse-Mode Automatic Differentiation &amp; Computational Graphs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Reverse-Mode Automatic Differentiation &amp; Computational Graphs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-the-multivariate-chain-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 The Multivariate Chain Rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-forward-mode-vs-reverse-mode-autodiff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Forward-Mode vs. Reverse-Mode Autodiff
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-matrix-backpropagation-equations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Matrix Backpropagation Equations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-optimization-algorithms-from-sgd-to-adam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Optimization Algorithms: From SGD to Adam
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Optimization Algorithms: From SGD to Adam">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-stochastic-gradient-descent-sgd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Stochastic Gradient Descent (SGD)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-sgd-with-classical-momentum-polyak-heavy-ball" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 SGD with Classical Momentum (Polyak Heavy Ball)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-rmsprop-root-mean-square-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 RMSprop (Root Mean Square Propagation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-adam-adaptive-moment-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Adam (Adaptive Moment Estimation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-full-derivation-of-adams-bias-corrections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Full Derivation of Adam's Bias Corrections
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-second-order-optimization-newton-raphson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 Second-Order Optimization: Newton-Raphson
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-python-implementation-autodiff-engine-2d-optimizer-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Python Implementation: Autodiff Engine &amp; 2D Optimizer Suite
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-common-errors-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Common Errors &amp; Debugging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-staff-level-technical-interview-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Staff-Level Technical Interview Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Staff-Level Technical Interview Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-prove-the-bias-correction-formulas-for-both-the-first-and-second-moments-in-the-adam-optimizer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Prove the bias correction formulas for both the first and second moments in the Adam optimizer.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-explain-the-fundamental-difference-between-forward-mode-and-reverse-mode-automatic-differentiation-when-is-reverse-mode-computationally-superior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Explain the fundamental difference between forward-mode and reverse-mode automatic differentiation. When is reverse-mode computationally superior?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-what-is-a-saddle-point-why-are-saddle-points-vastly-more-prevalent-than-local-minima-in-high-dimensional-deep-learning-loss-surfaces-and-how-do-second-order-methods-behave-near-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: What is a saddle point, why are saddle points vastly more prevalent than local minima in high-dimensional deep learning loss surfaces, and how do second-order methods behave near them?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-derive-the-second-order-taylor-expansion-of-a-multivariate-function-how-does-newton-raphson-optimization-utilize-the-hessian-and-why-is-exact-newtons-method-impractical-in-deep-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Derive the second-order Taylor expansion of a multivariate function. How does Newton-Raphson optimization utilize the Hessian, and why is exact Newton's method impractical in deep learning?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-what-is-the-condition-number-of-the-hessian-matrix-at-a-local-minimum-and-how-does-it-affect-the-convergence-rate-of-first-order-gradient-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: What is the condition number of the Hessian matrix at a local minimum, and how does it affect the convergence rate of first-order Gradient Descent?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q6-derive-the-matrix-calculus-backpropagation-equations-for-a-dense-linear-layer-y-xw-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q6: Derive the matrix calculus backpropagation equations for a dense linear layer \(Y = XW + b\).
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q7-explain-why-standard-l2-regularization-interacts-poorly-with-adaptive-optimizers-like-adam-and-how-adamw-resolves-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q7: Explain why standard L2 regularization interacts poorly with adaptive optimizers like Adam, and how AdamW resolves this.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../probability-statistics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Probability & Statistics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../03-data-engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 3 – Data Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 3 – Data Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-ecosystem-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Data Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-formats-storage-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Formats & Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-cleaning-preprocessing-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Cleaning & Preprocessing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/feature-engineering-selection-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Feature Engineering & Selection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../04-classical-ml/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 4 – Classical ML
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 4 – Classical ML
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/linear-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/regularized-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Regularized & Polynomial Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/logistic-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Logistic Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/knn-naive-bayes-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: KNN & Naive Bayes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/decision-trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/ensemble-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Ensemble Learning (Random Forests & GBDT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/svm-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Support Vector Machines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../05-ml-theory/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/model-validation-generalization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Validation & Generalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/evaluation-metrics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/hyperparameter-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hyperparameter Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../06-deep-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 6 – Deep Learning
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 6 – Deep Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/neural-network-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Neural Network Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/architecture-components-regularization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Architecture Components & Regularization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/deep-learning-optimizers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Deep Learning Optimizers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../07-computer-vision/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 7 – Computer Vision
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 7 – Computer Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/convolutional-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Convolutional Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/modern-cnn-architectures-transfer-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Modern CNN Architectures & Transfer Learning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/vision-tasks-transformers-multimodal-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Vision Tasks, ViT & Multimodal Vision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../08-nlp/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 8 – NLP
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 8 – NLP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/text-representation-word-embeddings-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Text Representation & Word Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/sequence-models-attention-transformers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Sequence Models, Attention & Transformers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../09-transformers-llms/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 9 – Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 9 – Transformers & LLMs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/transformer-architecture-mechanics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Transformer Architecture & Mechanics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/foundation-model-families-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundation Model Families
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/llm-training-alignment-peft-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Training, Alignment & PEFT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../10-generative-ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 10 – Generative AI
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 10 – Generative AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/llm-application-engineering-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Application Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/enterprise-rag-systems-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Enterprise RAG Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/diffusion-models-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../11-ai-agents/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 11 – AI Agents
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 11 – AI Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/agent-architectures-patterns-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Agent Architectures & Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/multi-agent-systems-security-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Multi-Agent Systems & Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../12-mlops/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 12 – MLOps
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 12 – MLOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/production-tooling-containerization-cicd-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production Tooling, Containerization & CI/CD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/serving-pipelines-orchestration-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Serving, Pipelines & Distributed Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/model-monitoring-observability-retraining-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Monitoring, Observability & Automated Retraining
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../13-ai-system-design/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 13 – AI System Design
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_15" id="__nav_15_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 13 – AI System Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/ai-system-design-methodology-framework-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: AI System Design Methodology & Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/production-case-studies-system-design-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production AI System Design Case Studies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../14-projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 14 – Projects & Interview
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_16" id="__nav_16_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 14 – Projects & Interview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/foundational-applied-projects-tier-1-to-4-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundational Applied Projects (Tiers 1–4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/advanced-frontier-projects-tier-5-to-8-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced & Frontier Applied Projects (Tiers 5–8)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/staff-level-interview-question-banks-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Staff-Level Technical Interview Question Banks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-intuition-real-world-framing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Intuition &amp; Real-World Framing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Intuition &amp; Real-World Framing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#traversing-a-foggy-mountain-at-midnight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Traversing a Foggy Mountain at Midnight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-differential-calculus-limits-gradients-jacobians-and-hessians" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Differential Calculus: Limits, Gradients, Jacobians, and Hessians
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Differential Calculus: Limits, Gradients, Jacobians, and Hessians">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-the-limit-and-single-variable-derivative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 The Limit and Single-Variable Derivative
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-partial-derivatives-and-the-gradient-vector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Partial Derivatives and the Gradient Vector
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-the-jacobian-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 The Jacobian Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-the-hessian-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 The Hessian Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-taylor-series-approximations-and-convexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Taylor Series Approximations and Convexity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Taylor Series Approximations and Convexity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-multivariate-taylor-expansions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Multivariate Taylor Expansions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-mathematical-convexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Mathematical Convexity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-reverse-mode-automatic-differentiation-computational-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Reverse-Mode Automatic Differentiation &amp; Computational Graphs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Reverse-Mode Automatic Differentiation &amp; Computational Graphs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-the-multivariate-chain-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 The Multivariate Chain Rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-forward-mode-vs-reverse-mode-autodiff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Forward-Mode vs. Reverse-Mode Autodiff
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-matrix-backpropagation-equations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Matrix Backpropagation Equations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-optimization-algorithms-from-sgd-to-adam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Optimization Algorithms: From SGD to Adam
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Optimization Algorithms: From SGD to Adam">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-stochastic-gradient-descent-sgd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Stochastic Gradient Descent (SGD)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-sgd-with-classical-momentum-polyak-heavy-ball" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 SGD with Classical Momentum (Polyak Heavy Ball)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-rmsprop-root-mean-square-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 RMSprop (Root Mean Square Propagation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-adam-adaptive-moment-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Adam (Adaptive Moment Estimation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-full-derivation-of-adams-bias-corrections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Full Derivation of Adam's Bias Corrections
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-second-order-optimization-newton-raphson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 Second-Order Optimization: Newton-Raphson
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-python-implementation-autodiff-engine-2d-optimizer-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Python Implementation: Autodiff Engine &amp; 2D Optimizer Suite
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-common-errors-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Common Errors &amp; Debugging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-staff-level-technical-interview-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Staff-Level Technical Interview Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Staff-Level Technical Interview Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-prove-the-bias-correction-formulas-for-both-the-first-and-second-moments-in-the-adam-optimizer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Prove the bias correction formulas for both the first and second moments in the Adam optimizer.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-explain-the-fundamental-difference-between-forward-mode-and-reverse-mode-automatic-differentiation-when-is-reverse-mode-computationally-superior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Explain the fundamental difference between forward-mode and reverse-mode automatic differentiation. When is reverse-mode computationally superior?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-what-is-a-saddle-point-why-are-saddle-points-vastly-more-prevalent-than-local-minima-in-high-dimensional-deep-learning-loss-surfaces-and-how-do-second-order-methods-behave-near-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: What is a saddle point, why are saddle points vastly more prevalent than local minima in high-dimensional deep learning loss surfaces, and how do second-order methods behave near them?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-derive-the-second-order-taylor-expansion-of-a-multivariate-function-how-does-newton-raphson-optimization-utilize-the-hessian-and-why-is-exact-newtons-method-impractical-in-deep-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Derive the second-order Taylor expansion of a multivariate function. How does Newton-Raphson optimization utilize the Hessian, and why is exact Newton's method impractical in deep learning?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-what-is-the-condition-number-of-the-hessian-matrix-at-a-local-minimum-and-how-does-it-affect-the-convergence-rate-of-first-order-gradient-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: What is the condition number of the Hessian matrix at a local minimum, and how does it affect the convergence rate of first-order Gradient Descent?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q6-derive-the-matrix-calculus-backpropagation-equations-for-a-dense-linear-layer-y-xw-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q6: Derive the matrix calculus backpropagation equations for a dense linear layer \(Y = XW + b\).
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q7-explain-why-standard-l2-regularization-interacts-poorly-with-adaptive-optimizers-like-adam-and-how-adamw-resolves-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q7: Explain why standard L2 regularization interacts poorly with adaptive optimizers like Adam, and how AdamW resolves this.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="multivariate-calculus-optimization-gradients-hessians-firstsecond-order-optimizers">Multivariate Calculus &amp; Optimization — Gradients, Hessians &amp; First/Second-Order Optimizers<a class="headerlink" href="#multivariate-calculus-optimization-gradients-hessians-firstsecond-order-optimizers" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>Multivariate functions, vector spaces, dot products, and matrix operations. See <a href="../foundations-math-deep-dive/">Mathematical Foundations</a> and <a href="../linear-algebra-deep-dive/">Linear Algebra</a>.</p>
+</div>
+<hr />
+<h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
+<p>All machine learning models learn by adjusting parameters to minimize an objective function. <strong>Calculus</strong> provides the mathematical lens to measure sensitivity: <em>if I nudge this weight by an infinitesimal amount, in which direction and by how much will the loss change?</em> <strong>Optimization</strong> provides the navigational algorithms that use these sensitivity measurements to traverse high-dimensional, non-convex loss surfaces toward optimal parameter configurations.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Sensitivity &amp; Differential Operators
+        F["Multivariate Objective: L(θ)"] --&gt; G["Gradient ∇_θ L: Steepest Ascent Direction"]
+        F --&gt; J["Jacobian J: Matrix of First-Order Partial Derivatives"]
+        F --&gt; H["Hessian H: Matrix of Second-Order Curvatures (∇^2 L)"]
+    end
+    subgraph Algorithmic Traversal
+        G --&gt; GD["Gradient Descent (1st-Order Local Stepping)"]
+        G --&gt; MOM["Momentum &amp; Nesterov (Inertial Velocity Filtering)"]
+        G --&gt; AD["Adaptive Learning Rates: RMSprop &amp; Adam"]
+        H --&gt; NEWT["Newton-Raphson (2nd-Order Curvature Compensation)"]
+    end
+    subgraph Production ML Engines
+        GD --&gt; ADIFF["Reverse-Mode Autodiff (Backpropagation via VJPs)"]
+        AD --&gt; LLM["Modern Foundation Model Training (AdamW)"]
+    end</code></pre>
+<p>Without an exact understanding of gradients, Jacobians, Hessians, and optimizer dynamics, machine learning practitioners struggle to debug vanishing/exploding gradients, ill-conditioned training ravines, saddle point stalls, and optimizer-regularizer interactions.</p>
+<hr />
+<h2 id="2-intuition-real-world-framing">2. Intuition &amp; Real-World Framing<a class="headerlink" href="#2-intuition-real-world-framing" title="Permanent link">&para;</a></h2>
+<h3 id="traversing-a-foggy-mountain-at-midnight">Traversing a Foggy Mountain at Midnight<a class="headerlink" href="#traversing-a-foggy-mountain-at-midnight" title="Permanent link">&para;</a></h3>
+<p>Imagine standing on a rugged mountain range in complete darkness with dense fog. You cannot see the global valley below; you can only feel the slope of the ground directly beneath your feet with your boots.</p>
+<ol>
+<li><strong>Gradient (<span class="arithmatex">\(\nabla f\)</span>)</strong>: The direction of steepest uphill slope. To descend, you take a step in the exact opposite direction: <span class="arithmatex">\(-\nabla f\)</span>.</li>
+<li><strong>Learning Rate (<span class="arithmatex">\(\eta\)</span>)</strong>: The length of the stride you take. If your stride is too small, you will take years to reach the base. If your stride is too large, you will leap blindly across valleys and crash into opposing peaks.</li>
+<li><strong>Hessian (<span class="arithmatex">\(H\)</span>)</strong>: The curvature of the terrain. Is the slope flattening out into a wide plateau, curving up into a bowl, or dropping away into a treacherous, knife-edge gorge?</li>
+<li><strong>Ill-conditioned Ravines</strong>: A canyon whose walls are thousands of times steeper than the gentle downward slope along the valley floor. Standard gradient descent bounces violently back and forth between the steep canyon walls, making virtually zero forward progress down the riverbed.</li>
+</ol>
+<pre class="mermaid"><code>flowchart LR
+    A["Steep Ravine Wall"] -- "High Curvature λ_max" --&gt; B["Violent Orthogonal Oscillations"]
+    C["Gentle Valley Floor"] -- "Low Curvature λ_min" --&gt; D["Slow Forward Crawl"]
+    B &amp; D --&gt; E["Momentum / Adaptive Optimizers Smooth Oscillations &amp; Accelerate Forward"]</code></pre>
+<hr />
+<h2 id="3-differential-calculus-limits-gradients-jacobians-and-hessians">3. Differential Calculus: Limits, Gradients, Jacobians, and Hessians<a class="headerlink" href="#3-differential-calculus-limits-gradients-jacobians-and-hessians" title="Permanent link">&para;</a></h2>
+<h3 id="31-the-limit-and-single-variable-derivative">3.1 The Limit and Single-Variable Derivative<a class="headerlink" href="#31-the-limit-and-single-variable-derivative" title="Permanent link">&para;</a></h3>
+<p>For a scalar function <span class="arithmatex">\(f: \mathbb{R} \to \mathbb{R}\)</span>, the derivative <span class="arithmatex">\(f'(x)\)</span> is the instantaneous rate of change:</p>
+<div class="arithmatex">\[
+f'(x) = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}
+\]</div>
+<h3 id="32-partial-derivatives-and-the-gradient-vector">3.2 Partial Derivatives and the Gradient Vector<a class="headerlink" href="#32-partial-derivatives-and-the-gradient-vector" title="Permanent link">&para;</a></h3>
+<p>For a multivariable function <span class="arithmatex">\(f: \mathbb{R}^d \to \mathbb{R}\)</span>, the partial derivative with respect to coordinate <span class="arithmatex">\(x_i\)</span> holds all other coordinates fixed:</p>
+<div class="arithmatex">\[
+\frac{\partial f}{\partial x_i} = \lim_{h \to 0} \frac{f(x_1, \dots, x_i + h, \dots, x_d) - f(x_1, \dots, x_d)}{h}
+\]</div>
+<p>The <strong>gradient</strong> <span class="arithmatex">\(\nabla f(\mathbf{x}) \in \mathbb{R}^d\)</span> gathers all <span class="arithmatex">\(d\)</span> first-order partial derivatives into a vector:</p>
+<div class="arithmatex">\[
+\nabla f(\mathbf{x}) = \begin{bmatrix} \frac{\partial f}{\partial x_1} \\ \frac{\partial f}{\partial x_2} \\ \vdots \\ \frac{\partial f}{\partial x_d} \end{bmatrix}
+\]</div>
+<h4 id="fundamental-properties-of-the-gradient">Fundamental Properties of the Gradient:<a class="headerlink" href="#fundamental-properties-of-the-gradient" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Direction of Steepest Ascent</strong>: The directional derivative <span class="arithmatex">\(D_{\mathbf{u}} f(\mathbf{x}) = \nabla f(\mathbf{x})^T \mathbf{u}\)</span> along a unit direction <span class="arithmatex">\(\|\mathbf{u}\|_2 = 1\)</span> is maximized when <span class="arithmatex">\(\mathbf{u} = \frac{\nabla f(\mathbf{x})}{\|\nabla f(\mathbf{x})\|_2}\)</span>.</li>
+<li><strong>Orthogonal to Level Sets</strong>: The gradient <span class="arithmatex">\(\nabla f(\mathbf{x})\)</span> is strictly perpendicular to the tangent hyperplane of the contour surface <span class="arithmatex">\(f(\mathbf{x}) = c\)</span> at point <span class="arithmatex">\(\mathbf{x}\)</span>.</li>
+</ol>
+<h3 id="33-the-jacobian-matrix">3.3 The Jacobian Matrix<a class="headerlink" href="#33-the-jacobian-matrix" title="Permanent link">&para;</a></h3>
+<p>When a function maps a vector to a vector, <span class="arithmatex">\(\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m\)</span>, the first-order partial derivatives form an <span class="arithmatex">\(m \times n\)</span> matrix called the <strong>Jacobian</strong> <span class="arithmatex">\(J \in \mathbb{R}^{m \times n}\)</span>:</p>
+<div class="arithmatex">\[
+J = \frac{\partial \mathbf{f}}{\partial \mathbf{x}} = \begin{bmatrix}
+\frac{\partial f_1}{\partial x_1} &amp; \frac{\partial f_1}{\partial x_2} &amp; \cdots &amp; \frac{\partial f_1}{\partial x_n} \\
+\frac{\partial f_2}{\partial x_1} &amp; \frac{\partial f_2}{\partial x_2} &amp; \cdots &amp; \frac{\partial f_2}{\partial x_n} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+\frac{\partial f_m}{\partial x_1} &amp; \frac{\partial f_m}{\partial x_2} &amp; \cdots &amp; \frac{\partial f_m}{\partial x_n}
+\end{bmatrix}, \qquad J_{ij} = \frac{\partial f_i}{\partial x_j}
+\]</div>
+<h3 id="34-the-hessian-matrix">3.4 The Hessian Matrix<a class="headerlink" href="#34-the-hessian-matrix" title="Permanent link">&para;</a></h3>
+<p>For a scalar function <span class="arithmatex">\(f: \mathbb{R}^d \to \mathbb{R}\)</span>, the matrix of all second-order partial derivatives is the <strong>Hessian</strong> <span class="arithmatex">\(H \in \mathbb{R}^{d \times d}\)</span>:</p>
+<div class="arithmatex">\[
+H_{ij} = \frac{\partial^2 f}{\partial x_i \partial x_j}
+\]</div>
+<p>By <strong>Schwarz's Theorem</strong> (Clairaut's Theorem), if the second partial derivatives are continuous, the order of differentiation does not matter:</p>
+<div class="arithmatex">\[
+\frac{\partial^2 f}{\partial x_i \partial x_j} = \frac{\partial^2 f}{\partial x_j \partial x_i} \implies H = H^T
+\]</div>
+<p>The Hessian is always a <strong>real symmetric matrix</strong>, meaning it can be orthogonally diagonalized per the <a href="../linear-algebra-deep-dive/#62-spectral-theorem-for-real-symmetric-matrices">Spectral Theorem</a>:</p>
+<div class="arithmatex">\[
+H = Q \Lambda Q^T = \sum_{i=1}^d \lambda_i \mathbf{q}_i \mathbf{q}_i^T
+\]</div>
+<h4 id="curvature-classification-at-critical-points-nabla-fmathbfx-mathbf0">Curvature Classification at Critical Points (<span class="arithmatex">\(\nabla f(\mathbf{x}^*) = \mathbf{0}\)</span>):<a class="headerlink" href="#curvature-classification-at-critical-points-nabla-fmathbfx-mathbf0" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Local Minimum</strong>: <span class="arithmatex">\(H \succ 0\)</span> (Strictly Positive Definite, all <span class="arithmatex">\(\lambda_i &gt; 0\)</span>). The surface curves upward in all directions.</li>
+<li><strong>Local Maximum</strong>: <span class="arithmatex">\(H \prec 0\)</span> (Strictly Negative Definite, all <span class="arithmatex">\(\lambda_i &lt; 0\)</span>). The surface curves downward in all directions.</li>
+<li><strong>Saddle Point</strong>: <span class="arithmatex">\(H\)</span> is <strong>indefinite</strong> (has both positive and negative eigenvalues, <span class="arithmatex">\(\lambda_{\max} &gt; 0\)</span> and <span class="arithmatex">\(\lambda_{\min} &lt; 0\)</span>). The surface curves up along some directions and down along others.</li>
+</ul>
+<pre class="mermaid"><code>flowchart TD
+    CP["Critical Point: ∇ f(x*) = 0"] --&gt; EIG["Examine Eigenvalues of Hessian H"]
+    EIG --&gt;|All λ_i &gt; 0| MIN["Local Minimum (Convex Bowl)"]
+    EIG --&gt;|All λ_i &lt; 0| MAX["Local Maximum (Concave Dome)"]
+    EIG --&gt;|Both λ &gt; 0 and λ &lt; 0| SAD["Saddle Point (Hyperbolic Paraboloid)"]
+    EIG --&gt;|Some λ_i = 0| DEG["Degenerate Flat Valley / Ridge"]</code></pre>
+<hr />
+<h2 id="4-taylor-series-approximations-and-convexity">4. Taylor Series Approximations and Convexity<a class="headerlink" href="#4-taylor-series-approximations-and-convexity" title="Permanent link">&para;</a></h2>
+<h3 id="41-multivariate-taylor-expansions">4.1 Multivariate Taylor Expansions<a class="headerlink" href="#41-multivariate-taylor-expansions" title="Permanent link">&para;</a></h3>
+<p>Any smooth function <span class="arithmatex">\(f: \mathbb{R}^d \to \mathbb{R}\)</span> can be approximated locally around point <span class="arithmatex">\(\mathbf{x}_0\)</span> by its Taylor series:</p>
+<div class="arithmatex">\[
+f(\mathbf{x}_0 + \Delta \mathbf{x}) = \underbrace{f(\mathbf{x}_0)}_{\text{0th-Order}} + \underbrace{\nabla f(\mathbf{x}_0)^T \Delta \mathbf{x}}_{\text{1st-Order (Linear)}} + \underbrace{\frac{1}{2} \Delta \mathbf{x}^T H(\mathbf{x}_0) \Delta \mathbf{x}}_{\text{2nd-Order (Quadratic)}} + \mathcal{O}(\|\Delta \mathbf{x}\|^3)
+\]</div>
+<ul>
+<li><strong>First-Order Methods (Gradient Descent)</strong> use the linear approximation:
+  $<span class="arithmatex">\(f(\mathbf{x}_0 + \Delta \mathbf{x}) \approx f(\mathbf{x}_0) + \nabla f(\mathbf{x}_0)^T \Delta \mathbf{x}\)</span>$</li>
+<li><strong>Second-Order Methods (Newton's Method)</strong> use the full quadratic model including the Hessian:
+  $<span class="arithmatex">\(m(\Delta \mathbf{x}) = f(\mathbf{x}_0) + \nabla f(\mathbf{x}_0)^T \Delta \mathbf{x} + \frac{1}{2} \Delta \mathbf{x}^T H(\mathbf{x}_0) \Delta \mathbf{x}\)</span>$</li>
+</ul>
+<h3 id="42-mathematical-convexity">4.2 Mathematical Convexity<a class="headerlink" href="#42-mathematical-convexity" title="Permanent link">&para;</a></h3>
+<p>A set <span class="arithmatex">\(\mathcal{C} \subseteq \mathbb{R}^d\)</span> is convex if for all <span class="arithmatex">\(\mathbf{x}, \mathbf{y} \in \mathcal{C}\)</span> and <span class="arithmatex">\(\theta \in [0, 1]\)</span>:</p>
+<div class="arithmatex">\[
+\theta \mathbf{x} + (1 - \theta) \mathbf{y} \in \mathcal{C}
+\]</div>
+<p>A function <span class="arithmatex">\(f: \mathcal{C} \to \mathbb{R}\)</span> is <strong>convex</strong> if:</p>
+<div class="arithmatex">\[
+f(\theta \mathbf{x} + (1 - \theta)\mathbf{y}) \le \theta f(\mathbf{x}) + (1 - \theta) f(\mathbf{y}) \quad \forall \mathbf{x}, \mathbf{y} \in \mathcal{C}, \; \theta \in [0, 1]
+\]</div>
+<h4 id="equivalent-first-and-second-order-characterizations">Equivalent First- and Second-Order Characterizations:<a class="headerlink" href="#equivalent-first-and-second-order-characterizations" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>First-Order Condition</strong>: <span class="arithmatex">\(f\)</span> is convex if and only if the tangent hyperplane always lies below the function:
+   $<span class="arithmatex">\(f(\mathbf{y}) \ge f(\mathbf{x}) + \nabla f(\mathbf{x})^T (\mathbf{y} - \mathbf{x}) \quad \forall \mathbf{x}, \mathbf{y}\)</span>$</li>
+<li><strong>Second-Order Condition</strong>: A twice-differentiable function is convex if and only if its Hessian is positive semi-definite everywhere:
+   $<span class="arithmatex">\(\nabla^2 f(\mathbf{x}) \succeq 0 \quad \forall \mathbf{x} \in \mathcal{C}\)</span>$</li>
+</ol>
+<p><strong>Fundamental Property of Convex Functions:</strong> Any local minimum of a convex function is guaranteed to be a <strong>global minimum</strong>.</p>
+<hr />
+<h2 id="5-reverse-mode-automatic-differentiation-computational-graphs">5. Reverse-Mode Automatic Differentiation &amp; Computational Graphs<a class="headerlink" href="#5-reverse-mode-automatic-differentiation-computational-graphs" title="Permanent link">&para;</a></h2>
+<p>How do deep learning frameworks compute exact gradients for millions of parameters without symbolic expression explosion or numerical approximation error? Through <strong>Reverse-Mode Automatic Differentiation</strong> (Backpropagation).</p>
+<h3 id="51-the-multivariate-chain-rule">5.1 The Multivariate Chain Rule<a class="headerlink" href="#51-the-multivariate-chain-rule" title="Permanent link">&para;</a></h3>
+<p>Let <span class="arithmatex">\(y = f(u_1, u_2, \dots, u_k)\)</span>, where each intermediate variable <span class="arithmatex">\(u_j = g_j(x)\)</span> depends on scalar input <span class="arithmatex">\(x\)</span>. The chain rule states:</p>
+<div class="arithmatex">\[
+\frac{dy}{dx} = \sum_{j=1}^k \frac{\partial y}{\partial u_j} \frac{\partial u_j}{\partial x}
+\]</div>
+<p>In vector notation, if <span class="arithmatex">\(\mathbf{y} = \mathbf{f}(\mathbf{u})\)</span> and <span class="arithmatex">\(\mathbf{u} = \mathbf{g}(\mathbf{x})\)</span>:</p>
+<div class="arithmatex">\[
+\frac{\partial \mathbf{y}}{\partial \mathbf{x}} = \frac{\partial \mathbf{y}}{\partial \mathbf{u}} \frac{\partial \mathbf{u}}{\partial \mathbf{x}} = J_{\mathbf{f}} J_{\mathbf{g}}
+\]</div>
+<h3 id="52-forward-mode-vs-reverse-mode-autodiff">5.2 Forward-Mode vs. Reverse-Mode Autodiff<a class="headerlink" href="#52-forward-mode-vs-reverse-mode-autodiff" title="Permanent link">&para;</a></h3>
+<p>Consider a function <span class="arithmatex">\(\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m\)</span>:
+- <strong>Forward-Mode (Jacobian-Vector Products - JVPs)</strong>: Propagates derivatives <span class="arithmatex">\(\frac{\partial v}{\partial x_{\text{in}}}\)</span> forward from inputs to outputs alongside function evaluation. Computing the full Jacobian requires <span class="arithmatex">\(n\)</span> forward passes (one per input dimension).
+- <strong>Reverse-Mode (Vector-Jacobian Products - VJPs)</strong>: First evaluates all operations forward (recording the DAG and intermediate values), then sweeps <strong>backward</strong> from the scalar loss <span class="arithmatex">\(L \in \mathbb{R}\)</span> to all inputs.</p>
+<p>In machine learning, we optimize a <strong>single scalar loss</strong> <span class="arithmatex">\(L \in \mathbb{R}\)</span> with respect to <span class="arithmatex">\(P = 10^9\)</span> parameters (<span class="arithmatex">\(n = 10^9, m = 1\)</span>).
+- Forward mode requires <span class="arithmatex">\(10^9\)</span> forward passes.
+- Reverse mode requires <strong>exactly ONE backward pass</strong>!</p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph Forward Pass (Evaluation)
+        X["Inputs: x1, x2"] --&gt; N1["Node v1 = x1 * x2"]
+        N1 --&gt; N2["Node v2 = sin(v1)"]
+        N2 --&gt; L["Scalar Loss L = v2 + x1"]
+    end
+    subgraph Backward Pass (Adjoint Propagation)
+        L_adj["dL/dL = 1.0"] --&gt; N2_adj["dL/dv2 = 1.0"]
+        N2_adj --&gt; N1_adj["dL/dv1 = cos(v1) * dL/dv2"]
+        N1_adj --&gt; X_adj["dL/dx1, dL/dx2 via VJPs"]
+    end</code></pre>
+<h3 id="53-matrix-backpropagation-equations">5.3 Matrix Backpropagation Equations<a class="headerlink" href="#53-matrix-backpropagation-equations" title="Permanent link">&para;</a></h3>
+<p>For a fully connected linear layer <span class="arithmatex">\(\mathbf{Y} = \mathbf{X} \mathbf{W} + \mathbf{b}\)</span>, where <span class="arithmatex">\(\mathbf{X} \in \mathbb{R}^{B \times d_{\text{in}}}\)</span>, <span class="arithmatex">\(\mathbf{W} \in \mathbb{R}^{d_{\text{in}} \times d_{\text{out}}}\)</span>, and <span class="arithmatex">\(\mathbf{b} \in \mathbb{R}^{d_{\text{out}}}\)</span>, given incoming upstream gradient <span class="arithmatex">\(\frac{\partial L}{\partial \mathbf{Y}} \in \mathbb{R}^{B \times d_{\text{out}}}\)</span>:</p>
+<div class="arithmatex">\[
+\frac{\partial L}{\partial \mathbf{W}} = \mathbf{X}^T \left( \frac{\partial L}{\partial \mathbf{Y}} \right) \in \mathbb{R}^{d_{\text{in}} \times d_{\text{out}}}
+\]</div>
+<div class="arithmatex">\[
+\frac{\partial L}{\partial \mathbf{X}} = \left( \frac{\partial L}{\partial \mathbf{Y}} \right) \mathbf{W}^T \in \mathbb{R}^{B \times d_{\text{in}}}
+\]</div>
+<div class="arithmatex">\[
+\frac{\partial L}{\partial \mathbf{b}} = \sum_{i=1}^B \left( \frac{\partial L}{\partial \mathbf{Y}} \right)_{i, :} = \mathbf{1}^T \left( \frac{\partial L}{\partial \mathbf{Y}} \right) \in \mathbb{R}^{d_{\text{out}}}
+\]</div>
+<p>Notice the exact transposition patterns: inner dimensions align naturally with tensor contractions.</p>
+<hr />
+<h2 id="6-optimization-algorithms-from-sgd-to-adam">6. Optimization Algorithms: From SGD to Adam<a class="headerlink" href="#6-optimization-algorithms-from-sgd-to-adam" title="Permanent link">&para;</a></h2>
+<h3 id="61-stochastic-gradient-descent-sgd">6.1 Stochastic Gradient Descent (SGD)<a class="headerlink" href="#61-stochastic-gradient-descent-sgd" title="Permanent link">&para;</a></h3>
+<p>The base update rule using noisy mini-batch gradient <span class="arithmatex">\(\mathbf{g}_t = \nabla_\theta L_B(\boldsymbol{\theta}_t)\)</span>:</p>
+<div class="arithmatex">\[
+\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \eta \mathbf{g}_t
+\]</div>
+<h3 id="62-sgd-with-classical-momentum-polyak-heavy-ball">6.2 SGD with Classical Momentum (Polyak Heavy Ball)<a class="headerlink" href="#62-sgd-with-classical-momentum-polyak-heavy-ball" title="Permanent link">&para;</a></h3>
+<p>Momentum simulates a physical particle with mass rolling down the loss surface, accumulating velocity <span class="arithmatex">\(\mathbf{v}_t\)</span>:</p>
+<div class="arithmatex">\[
+\mathbf{v}_t = \beta \mathbf{v}_{t-1} + \eta \mathbf{g}_t
+\]</div>
+<div class="arithmatex">\[
+\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \mathbf{v}_t
+\]</div>
+<p>where <span class="arithmatex">\(\beta \in [0.9, 0.99]\)</span> is the momentum decay coefficient. Momentum cancels high-frequency orthogonal oscillations in narrow ravines while compounding consistent forward momentum.</p>
+<h3 id="63-rmsprop-root-mean-square-propagation">6.3 RMSprop (Root Mean Square Propagation)<a class="headerlink" href="#63-rmsprop-root-mean-square-propagation" title="Permanent link">&para;</a></h3>
+<p>RMSprop scales the gradient coordinate-wise by the running exponential average of squared gradients, equalizing step sizes across steep and flat dimensions:</p>
+<div class="arithmatex">\[
+\mathbf{s}_t = \gamma \mathbf{s}_{t-1} + (1 - \gamma) \mathbf{g}_t^2
+\]</div>
+<div class="arithmatex">\[
+\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \frac{\eta}{\sqrt{\mathbf{s}_t} + \epsilon} \odot \mathbf{g}_t
+\]</div>
+<p>where <span class="arithmatex">\(\odot\)</span> denotes elementwise Hadamard multiplication, <span class="arithmatex">\(\gamma \approx 0.99\)</span>, and <span class="arithmatex">\(\epsilon = 10^{-8}\)</span>.</p>
+<h3 id="64-adam-adaptive-moment-estimation">6.4 Adam (Adaptive Moment Estimation)<a class="headerlink" href="#64-adam-adaptive-moment-estimation" title="Permanent link">&para;</a></h3>
+<p>Adam combines the advantages of Momentum (first moment <span class="arithmatex">\(\mathbf{m}_t\)</span>) and RMSprop (second moment <span class="arithmatex">\(\mathbf{v}_t\)</span>).</p>
+<h4 id="algorithm-equations">Algorithm Equations:<a class="headerlink" href="#algorithm-equations" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Update biased first moment estimate:
+   $<span class="arithmatex">\(\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1 - \beta_1) \mathbf{g}_t\)</span>$</li>
+<li>Update biased second raw moment estimate:
+   $<span class="arithmatex">\(\mathbf{v}_t = \beta_2 \mathbf{v}_{t-1} + (1 - \beta_2) \mathbf{g}_t^2\)</span>$</li>
+<li>Compute bias-corrected first moment:
+   $<span class="arithmatex">\(\hat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1 - \beta_1^t}\)</span>$</li>
+<li>Compute bias-corrected second moment:
+   $<span class="arithmatex">\(\hat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1 - \beta_2^t}\)</span>$</li>
+<li>Apply parameter update:
+   $<span class="arithmatex">\(\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \frac{\eta}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon} \odot \hat{\mathbf{m}}_t\)</span>$</li>
+</ol>
+<p>Standard default hyperparameters: <span class="arithmatex">\(\eta = 0.001\)</span>, <span class="arithmatex">\(\beta_1 = 0.9\)</span>, <span class="arithmatex">\(\beta_2 = 0.999\)</span>, <span class="arithmatex">\(\epsilon = 10^{-8}\)</span>.</p>
+<pre class="mermaid"><code>flowchart TD
+    G["Stochastic Gradient g_t"] --&gt; M["First Moment EMA: m_t = β1 m_t-1 + (1-β1) g_t"]
+    G --&gt; V["Second Moment EMA: v_t = β2 v_t-1 + (1-β2) g_t^2"]
+    M --&gt; BC1["Bias Correction: m_hat = m_t / (1 - β1^t)"]
+    V --&gt; BC2["Bias Correction: v_hat = v_t / (1 - β2^t)"]
+    BC1 &amp; BC2 --&gt; STEP["Update: θ = θ - η * m_hat / (sqrt(v_hat) + ε)"]</code></pre>
+<h3 id="65-full-derivation-of-adams-bias-corrections">6.5 Full Derivation of Adam's Bias Corrections<a class="headerlink" href="#65-full-derivation-of-adams-bias-corrections" title="Permanent link">&para;</a></h3>
+<p>Why are the denominators <span class="arithmatex">\(1 - \beta_1^t\)</span> and <span class="arithmatex">\(1 - \beta_2^t\)</span> necessary?</p>
+<p>At time <span class="arithmatex">\(t=0\)</span>, moments are initialized to zero: <span class="arithmatex">\(\mathbf{m}_0 = \mathbf{0}, \mathbf{v}_0 = \mathbf{0}\)</span>. Unrolling the recursive equation for <span class="arithmatex">\(\mathbf{m}_t\)</span>:</p>
+<div class="arithmatex">\[
+\mathbf{m}_1 = (1 - \beta_1) \mathbf{g}_1
+\]</div>
+<div class="arithmatex">\[
+\mathbf{m}_2 = \beta_1 \mathbf{m}_1 + (1 - \beta_1) \mathbf{g}_2 = \beta_1 (1 - \beta_1) \mathbf{g}_1 + (1 - \beta_1) \mathbf{g}_2
+\]</div>
+<p>By induction, at step <span class="arithmatex">\(t\)</span>:</p>
+<div class="arithmatex">\[
+\mathbf{m}_t = (1 - \beta_1) \sum_{i=1}^t \beta_1^{t - i} \mathbf{g}_i
+\]</div>
+<p>Now take mathematical expectations of both sides, assuming the true gradients <span class="arithmatex">\(\mathbf{g}_i\)</span> come from a stationary distribution with true mean <span class="arithmatex">\(\mathbb{E}[\mathbf{g}_i] = \mathbb{E}[\mathbf{g}]\)</span>:</p>
+<div class="arithmatex">\[
+\mathbb{E}[\mathbf{m}_t] = \mathbb{E}\left[ (1 - \beta_1) \sum_{i=1}^t \beta_1^{t - i} \mathbf{g}_i \right] = (1 - \beta_1) \sum_{i=1}^t \beta_1^{t - i} \mathbb{E}[\mathbf{g}]
+\]</div>
+<p>The summation is a finite geometric series:</p>
+<div class="arithmatex">\[
+\sum_{i=1}^t \beta_1^{t - i} = \sum_{k=0}^{t-1} \beta_1^k = \frac{1 - \beta_1^t}{1 - \beta_1}
+\]</div>
+<p>Substitute this sum back:</p>
+<div class="arithmatex">\[
+\mathbb{E}[\mathbf{m}_t] = (1 - \beta_1) \cdot \left( \frac{1 - \beta_1^t}{1 - \beta_1} \right) \mathbb{E}[\mathbf{g}] = (1 - \beta_1^t) \mathbb{E}[\mathbf{g}]
+\]</div>
+<p>Notice that for early timesteps (e.g., <span class="arithmatex">\(t=1\)</span>, <span class="arithmatex">\(\beta_1 = 0.9\)</span>):</p>
+<div class="arithmatex">\[\mathbb{E}[\mathbf{m}_1] = (1 - 0.9^1) \mathbb{E}[\mathbf{g}] = 0.1 \mathbb{E}[\mathbf{g}]\]</div>
+<p>The uncorrected moment is biased toward zero by a factor of 10!
+To make the estimator strictly unbiased (<span class="arithmatex">\(\mathbb{E}[\hat{\mathbf{m}}_t] = \mathbb{E}[\mathbf{g}]\)</span>), we must divide by <span class="arithmatex">\((1 - \beta_1^t)\)</span>:</p>
+<div class="arithmatex">\[
+\hat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1 - \beta_1^t}
+\]</div>
+<p>The exact same algebraic derivation applies to the second raw moment <span class="arithmatex">\(\mathbf{v}_t\)</span>, giving <span class="arithmatex">\(\hat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1 - \beta_2^t}\)</span>.</p>
+<h3 id="66-second-order-optimization-newton-raphson">6.6 Second-Order Optimization: Newton-Raphson<a class="headerlink" href="#66-second-order-optimization-newton-raphson" title="Permanent link">&para;</a></h3>
+<p>Using the quadratic Taylor expansion:</p>
+<div class="arithmatex">\[
+m(\Delta \mathbf{x}) = f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^T \Delta \mathbf{x} + \frac{1}{2} \Delta \mathbf{x}^T H(\mathbf{x}_t) \Delta \mathbf{x}
+\]</div>
+<p>To find the minimum of this quadratic surrogate, take the gradient with respect to <span class="arithmatex">\(\Delta \mathbf{x}\)</span> and set it to <span class="arithmatex">\(\mathbf{0}\)</span>:</p>
+<div class="arithmatex">\[
+\nabla_{\Delta \mathbf{x}} m(\Delta \mathbf{x}) = \nabla f(\mathbf{x}_t) + H(\mathbf{x}_t) \Delta \mathbf{x} = \mathbf{0}
+\]</div>
+<div class="arithmatex">\[
+\Delta \mathbf{x}^* = - [H(\mathbf{x}_t)]^{-1} \nabla f(\mathbf{x}_t)
+\]</div>
+<p>The <strong>Newton-Raphson parameter update</strong> is:</p>
+<div class="arithmatex">\[
+\mathbf{x}_{t+1} = \mathbf{x}_t - [H(\mathbf{x}_t)]^{-1} \nabla f(\mathbf{x}_t)
+\]</div>
+<h4 id="why-newtons-method-is-impractical-for-deep-learning">Why Newton's Method is Impractical for Deep Learning:<a class="headerlink" href="#why-newtons-method-is-impractical-for-deep-learning" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Computational Complexity</strong>: For a model with <span class="arithmatex">\(P = 10^9\)</span> parameters, the Hessian contains <span class="arithmatex">\(P^2 = 10^{18}\)</span> entries (requiring 4 exabytes of memory). Inverting <span class="arithmatex">\(H\)</span> costs <span class="arithmatex">\(\mathcal{O}(P^3) \approx 10^{27}\)</span> FLOPs per step!</li>
+<li><strong>Saddle Point Attraction</strong>: If <span class="arithmatex">\(\mathbf{x}_t\)</span> is near a saddle point where <span class="arithmatex">\(H\)</span> has negative eigenvalues, Newton's method jumps aggressively toward the saddle point (or toward local maxima), whereas gradient descent naturally flows away along negative curvature.</li>
+</ol>
+<hr />
+<h2 id="7-python-implementation-autodiff-engine-2d-optimizer-suite">7. Python Implementation: Autodiff Engine &amp; 2D Optimizer Suite<a class="headerlink" href="#7-python-implementation-autodiff-engine-2d-optimizer-suite" title="Permanent link">&para;</a></h2>
+<p>Below is a complete, runnable script featuring:
+1. A micro <strong>Scalar Autodiff Engine</strong> (<code>Value</code>) building dynamic computational DAGs.
+2. From-scratch optimizers: <strong>SGD</strong>, <strong>Momentum</strong>, <strong>RMSprop</strong>, and <strong>Adam</strong>.
+3. Benchmark optimization on the notorious non-convex <strong>Beale Function</strong> (<span class="arithmatex">\(f(x, y) = (1.5 - x + xy)^2 + (2.25 - x + xy^2)^2 + (2.625 - x + xy^3)^2\)</span>, global minimum at <span class="arithmatex">\((3.0, 0.5)\)</span>).</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="sd">"""</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="sd">calculus_optimization_deep_dive.py</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="sd">Reverse-mode automatic differentiation engine and 2D optimizer suite.</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="sd">"""</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="k">class</span><span class="w"> </span><span class="nc">Value</span><span class="p">:</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="sd">    Scalar node in a computational graph supporting reverse-mode autodiff.</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="sd">    """</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">_children</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="s2">"Value"</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span> <span class="n">_op</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">):</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_backward</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_prev</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">_children</span><span class="p">)</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_op</span> <span class="o">=</span> <span class="n">_op</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">"Value(data=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, grad=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">grad</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)"</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Value"</span><span class="p">:</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>        <span class="n">other</span> <span class="o">=</span> <span class="n">other</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Value</span><span class="p">)</span> <span class="k">else</span> <span class="n">Value</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="n">out</span> <span class="o">=</span> <span class="n">Value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">),</span> <span class="s2">"+"</span><span class="p">)</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>        <span class="k">def</span><span class="w"> </span><span class="nf">_backward</span><span class="p">():</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">grad</span> <span class="o">+=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">grad</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>            <span class="n">other</span><span class="o">.</span><span class="n">grad</span> <span class="o">+=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">grad</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="n">out</span><span class="o">.</span><span class="n">_backward</span> <span class="o">=</span> <span class="n">_backward</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>        <span class="k">return</span> <span class="n">out</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Value"</span><span class="p">:</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        <span class="n">other</span> <span class="o">=</span> <span class="n">other</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Value</span><span class="p">)</span> <span class="k">else</span> <span class="n">Value</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>        <span class="n">out</span> <span class="o">=</span> <span class="n">Value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">),</span> <span class="s2">"*"</span><span class="p">)</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>        <span class="k">def</span><span class="w"> </span><span class="nf">_backward</span><span class="p">():</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">grad</span> <span class="o">+=</span> <span class="n">other</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">grad</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>            <span class="n">other</span><span class="o">.</span><span class="n">grad</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">grad</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>        <span class="n">out</span><span class="o">.</span><span class="n">_backward</span> <span class="o">=</span> <span class="n">_backward</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>        <span class="k">return</span> <span class="n">out</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Value"</span><span class="p">:</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)),</span> <span class="s2">"Power only supports numeric exponents"</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>        <span class="n">out</span> <span class="o">=</span> <span class="n">Value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">**</span> <span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="p">,),</span> <span class="sa">f</span><span class="s2">"**</span><span class="si">{</span><span class="n">other</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>        <span class="k">def</span><span class="w"> </span><span class="nf">_backward</span><span class="p">():</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">grad</span> <span class="o">+=</span> <span class="p">(</span><span class="n">other</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">**</span> <span class="p">(</span><span class="n">other</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">grad</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>        <span class="n">out</span><span class="o">.</span><span class="n">_backward</span> <span class="o">=</span> <span class="n">_backward</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>        <span class="k">return</span> <span class="n">out</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Value"</span><span class="p">:</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>        <span class="k">return</span> <span class="bp">self</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="n">other</span><span class="p">)</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Value"</span><span class="p">:</span>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>        <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="o">-</span><span class="mf">1.0</span>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a><span class="w">        </span><span class="sd">"""Topological sort sweep for reverse-mode automatic differentiation."""</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>        <span class="n">topo</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Value</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>        <span class="n">visited</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Value</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>        <span class="k">def</span><span class="w"> </span><span class="nf">build_topo</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">Value</span><span class="p">):</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>            <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>                <span class="n">visited</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>                <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">_prev</span><span class="p">:</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>                    <span class="n">build_topo</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>                <span class="n">topo</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>        <span class="n">build_topo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="mf">1.0</span>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">topo</span><span class="p">):</span>
+</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>            <span class="n">node</span><span class="o">.</span><span class="n">_backward</span><span class="p">()</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>
+</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>
+</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a><span class="c1"># ---------------------------------------------------------</span>
+</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a><span class="c1"># Non-Convex Benchmark Function: Beale Function</span>
+</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a><span class="c1"># ---------------------------------------------------------</span>
+</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a><span class="k">def</span><span class="w"> </span><span class="nf">beale_loss</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a><span class="sd">    Evaluates Beale function and analytic gradients:</span>
+</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a><span class="sd">    f(x, y) = (1.5 - x + x*y)^2 + (2.25 - x + x*y^2)^2 + (2.625 - x + x*y^3)^2</span>
+</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a><span class="sd">    Global minimum: f(3.0, 0.5) = 0.0</span>
+</span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a><span class="sd">    """</span>
+</span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>    <span class="c1"># Term 1</span>
+</span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a>    <span class="n">t1</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">-</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+</span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>    <span class="n">dt1_dx</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">y</span>
+</span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>    <span class="n">dt1_dy</span> <span class="o">=</span> <span class="n">x</span>
+</span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>
+</span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a>    <span class="c1"># Term 2</span>
+</span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a>    <span class="n">t2</span> <span class="o">=</span> <span class="mf">2.25</span> <span class="o">-</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a>    <span class="n">dt2_dx</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">2</span>
+</span><span id="__span-0-95"><a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a>    <span class="n">dt2_dy</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+</span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a>
+</span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a>    <span class="c1"># Term 3</span>
+</span><span id="__span-0-98"><a id="__codelineno-0-98" name="__codelineno-0-98" href="#__codelineno-0-98"></a>    <span class="n">t3</span> <span class="o">=</span> <span class="mf">2.625</span> <span class="o">-</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-0-99"><a id="__codelineno-0-99" name="__codelineno-0-99" href="#__codelineno-0-99"></a>    <span class="n">dt3_dx</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">3</span>
+</span><span id="__span-0-100"><a id="__codelineno-0-100" name="__codelineno-0-100" href="#__codelineno-0-100"></a>    <span class="n">dt3_dy</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-101"><a id="__codelineno-0-101" name="__codelineno-0-101" href="#__codelineno-0-101"></a>
+</span><span id="__span-0-102"><a id="__codelineno-0-102" name="__codelineno-0-102" href="#__codelineno-0-102"></a>    <span class="n">val</span> <span class="o">=</span> <span class="n">t1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">t2</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">t3</span><span class="o">**</span><span class="mi">2</span>
+</span><span id="__span-0-103"><a id="__codelineno-0-103" name="__codelineno-0-103" href="#__codelineno-0-103"></a>    <span class="n">grad_x</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">t1</span> <span class="o">*</span> <span class="n">dt1_dx</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">t2</span> <span class="o">*</span> <span class="n">dt2_dx</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">t3</span> <span class="o">*</span> <span class="n">dt3_dx</span>
+</span><span id="__span-0-104"><a id="__codelineno-0-104" name="__codelineno-0-104" href="#__codelineno-0-104"></a>    <span class="n">grad_y</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">t1</span> <span class="o">*</span> <span class="n">dt1_dy</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">t2</span> <span class="o">*</span> <span class="n">dt2_dy</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">t3</span> <span class="o">*</span> <span class="n">dt3_dy</span>
+</span><span id="__span-0-105"><a id="__codelineno-0-105" name="__codelineno-0-105" href="#__codelineno-0-105"></a>
+</span><span id="__span-0-106"><a id="__codelineno-0-106" name="__codelineno-0-106" href="#__codelineno-0-106"></a>    <span class="k">return</span> <span class="n">val</span><span class="p">,</span> <span class="n">grad_x</span><span class="p">,</span> <span class="n">grad_y</span>
+</span><span id="__span-0-107"><a id="__codelineno-0-107" name="__codelineno-0-107" href="#__codelineno-0-107"></a>
+</span><span id="__span-0-108"><a id="__codelineno-0-108" name="__codelineno-0-108" href="#__codelineno-0-108"></a>
+</span><span id="__span-0-109"><a id="__codelineno-0-109" name="__codelineno-0-109" href="#__codelineno-0-109"></a><span class="c1"># ---------------------------------------------------------</span>
+</span><span id="__span-0-110"><a id="__codelineno-0-110" name="__codelineno-0-110" href="#__codelineno-0-110"></a><span class="c1"># Optimizer Implementations</span>
+</span><span id="__span-0-111"><a id="__codelineno-0-111" name="__codelineno-0-111" href="#__codelineno-0-111"></a><span class="c1"># ---------------------------------------------------------</span>
+</span><span id="__span-0-112"><a id="__codelineno-0-112" name="__codelineno-0-112" href="#__codelineno-0-112"></a><span class="k">def</span><span class="w"> </span><span class="nf">optimize_2d</span><span class="p">(</span><span class="n">optimizer</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+</span><span id="__span-0-113"><a id="__codelineno-0-113" name="__codelineno-0-113" href="#__codelineno-0-113"></a><span class="w">    </span><span class="sd">"""Runs a 2D optimization on Beale function starting from (1.5, 1.5)."""</span>
+</span><span id="__span-0-114"><a id="__codelineno-0-114" name="__codelineno-0-114" href="#__codelineno-0-114"></a>    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span>
+</span><span id="__span-0-115"><a id="__codelineno-0-115" name="__codelineno-0-115" href="#__codelineno-0-115"></a>
+</span><span id="__span-0-116"><a id="__codelineno-0-116" name="__codelineno-0-116" href="#__codelineno-0-116"></a>    <span class="c1"># Momentum state</span>
+</span><span id="__span-0-117"><a id="__codelineno-0-117" name="__codelineno-0-117" href="#__codelineno-0-117"></a>    <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+</span><span id="__span-0-118"><a id="__codelineno-0-118" name="__codelineno-0-118" href="#__codelineno-0-118"></a>    <span class="n">beta</span> <span class="o">=</span> <span class="mf">0.9</span>
+</span><span id="__span-0-119"><a id="__codelineno-0-119" name="__codelineno-0-119" href="#__codelineno-0-119"></a>
+</span><span id="__span-0-120"><a id="__codelineno-0-120" name="__codelineno-0-120" href="#__codelineno-0-120"></a>    <span class="c1"># RMSprop / Adam state</span>
+</span><span id="__span-0-121"><a id="__codelineno-0-121" name="__codelineno-0-121" href="#__codelineno-0-121"></a>    <span class="n">sx</span><span class="p">,</span> <span class="n">sy</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+</span><span id="__span-0-122"><a id="__codelineno-0-122" name="__codelineno-0-122" href="#__codelineno-0-122"></a>    <span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.99</span>
+</span><span id="__span-0-123"><a id="__codelineno-0-123" name="__codelineno-0-123" href="#__codelineno-0-123"></a>    <span class="n">eps</span> <span class="o">=</span> <span class="mf">1e-8</span>
+</span><span id="__span-0-124"><a id="__codelineno-0-124" name="__codelineno-0-124" href="#__codelineno-0-124"></a>
+</span><span id="__span-0-125"><a id="__codelineno-0-125" name="__codelineno-0-125" href="#__codelineno-0-125"></a>    <span class="c1"># Adam moments</span>
+</span><span id="__span-0-126"><a id="__codelineno-0-126" name="__codelineno-0-126" href="#__codelineno-0-126"></a>    <span class="n">mx</span><span class="p">,</span> <span class="n">my</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+</span><span id="__span-0-127"><a id="__codelineno-0-127" name="__codelineno-0-127" href="#__codelineno-0-127"></a>    <span class="n">beta1</span><span class="p">,</span> <span class="n">beta2</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.999</span>
+</span><span id="__span-0-128"><a id="__codelineno-0-128" name="__codelineno-0-128" href="#__codelineno-0-128"></a>
+</span><span id="__span-0-129"><a id="__codelineno-0-129" name="__codelineno-0-129" href="#__codelineno-0-129"></a>    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="__span-0-130"><a id="__codelineno-0-130" name="__codelineno-0-130" href="#__codelineno-0-130"></a>        <span class="n">loss</span><span class="p">,</span> <span class="n">gx</span><span class="p">,</span> <span class="n">gy</span> <span class="o">=</span> <span class="n">beale_loss</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</span><span id="__span-0-131"><a id="__codelineno-0-131" name="__codelineno-0-131" href="#__codelineno-0-131"></a>
+</span><span id="__span-0-132"><a id="__codelineno-0-132" name="__codelineno-0-132" href="#__codelineno-0-132"></a>        <span class="k">if</span> <span class="n">optimizer</span> <span class="o">==</span> <span class="s2">"sgd"</span><span class="p">:</span>
+</span><span id="__span-0-133"><a id="__codelineno-0-133" name="__codelineno-0-133" href="#__codelineno-0-133"></a>            <span class="n">x</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">gx</span>
+</span><span id="__span-0-134"><a id="__codelineno-0-134" name="__codelineno-0-134" href="#__codelineno-0-134"></a>            <span class="n">y</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">gy</span>
+</span><span id="__span-0-135"><a id="__codelineno-0-135" name="__codelineno-0-135" href="#__codelineno-0-135"></a>
+</span><span id="__span-0-136"><a id="__codelineno-0-136" name="__codelineno-0-136" href="#__codelineno-0-136"></a>        <span class="k">elif</span> <span class="n">optimizer</span> <span class="o">==</span> <span class="s2">"momentum"</span><span class="p">:</span>
+</span><span id="__span-0-137"><a id="__codelineno-0-137" name="__codelineno-0-137" href="#__codelineno-0-137"></a>            <span class="n">vx</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">vx</span> <span class="o">+</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">gx</span>
+</span><span id="__span-0-138"><a id="__codelineno-0-138" name="__codelineno-0-138" href="#__codelineno-0-138"></a>            <span class="n">vy</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">vy</span> <span class="o">+</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">gy</span>
+</span><span id="__span-0-139"><a id="__codelineno-0-139" name="__codelineno-0-139" href="#__codelineno-0-139"></a>            <span class="n">x</span> <span class="o">-=</span> <span class="n">vx</span>
+</span><span id="__span-0-140"><a id="__codelineno-0-140" name="__codelineno-0-140" href="#__codelineno-0-140"></a>            <span class="n">y</span> <span class="o">-=</span> <span class="n">vy</span>
+</span><span id="__span-0-141"><a id="__codelineno-0-141" name="__codelineno-0-141" href="#__codelineno-0-141"></a>
+</span><span id="__span-0-142"><a id="__codelineno-0-142" name="__codelineno-0-142" href="#__codelineno-0-142"></a>        <span class="k">elif</span> <span class="n">optimizer</span> <span class="o">==</span> <span class="s2">"rmsprop"</span><span class="p">:</span>
+</span><span id="__span-0-143"><a id="__codelineno-0-143" name="__codelineno-0-143" href="#__codelineno-0-143"></a>            <span class="n">sx</span> <span class="o">=</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">sx</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">gamma</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">gx</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-144"><a id="__codelineno-0-144" name="__codelineno-0-144" href="#__codelineno-0-144"></a>            <span class="n">sy</span> <span class="o">=</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">sy</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">gamma</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">gy</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-145"><a id="__codelineno-0-145" name="__codelineno-0-145" href="#__codelineno-0-145"></a>            <span class="n">x</span> <span class="o">-=</span> <span class="p">(</span><span class="n">lr</span> <span class="o">/</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sx</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span><span class="p">))</span> <span class="o">*</span> <span class="n">gx</span>
+</span><span id="__span-0-146"><a id="__codelineno-0-146" name="__codelineno-0-146" href="#__codelineno-0-146"></a>            <span class="n">y</span> <span class="o">-=</span> <span class="p">(</span><span class="n">lr</span> <span class="o">/</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sy</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span><span class="p">))</span> <span class="o">*</span> <span class="n">gy</span>
+</span><span id="__span-0-147"><a id="__codelineno-0-147" name="__codelineno-0-147" href="#__codelineno-0-147"></a>
+</span><span id="__span-0-148"><a id="__codelineno-0-148" name="__codelineno-0-148" href="#__codelineno-0-148"></a>        <span class="k">elif</span> <span class="n">optimizer</span> <span class="o">==</span> <span class="s2">"adam"</span><span class="p">:</span>
+</span><span id="__span-0-149"><a id="__codelineno-0-149" name="__codelineno-0-149" href="#__codelineno-0-149"></a>            <span class="n">mx</span> <span class="o">=</span> <span class="n">beta1</span> <span class="o">*</span> <span class="n">mx</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">beta1</span><span class="p">)</span> <span class="o">*</span> <span class="n">gx</span>
+</span><span id="__span-0-150"><a id="__codelineno-0-150" name="__codelineno-0-150" href="#__codelineno-0-150"></a>            <span class="n">my</span> <span class="o">=</span> <span class="n">beta1</span> <span class="o">*</span> <span class="n">my</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">beta1</span><span class="p">)</span> <span class="o">*</span> <span class="n">gy</span>
+</span><span id="__span-0-151"><a id="__codelineno-0-151" name="__codelineno-0-151" href="#__codelineno-0-151"></a>            <span class="n">sx</span> <span class="o">=</span> <span class="n">beta2</span> <span class="o">*</span> <span class="n">sx</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">beta2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">gx</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-152"><a id="__codelineno-0-152" name="__codelineno-0-152" href="#__codelineno-0-152"></a>            <span class="n">sy</span> <span class="o">=</span> <span class="n">beta2</span> <span class="o">*</span> <span class="n">sy</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">beta2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">gy</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-153"><a id="__codelineno-0-153" name="__codelineno-0-153" href="#__codelineno-0-153"></a>
+</span><span id="__span-0-154"><a id="__codelineno-0-154" name="__codelineno-0-154" href="#__codelineno-0-154"></a>            <span class="c1"># Bias correction</span>
+</span><span id="__span-0-155"><a id="__codelineno-0-155" name="__codelineno-0-155" href="#__codelineno-0-155"></a>            <span class="n">mx_hat</span> <span class="o">=</span> <span class="n">mx</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">beta1</span> <span class="o">**</span> <span class="n">t</span><span class="p">)</span>
+</span><span id="__span-0-156"><a id="__codelineno-0-156" name="__codelineno-0-156" href="#__codelineno-0-156"></a>            <span class="n">my_hat</span> <span class="o">=</span> <span class="n">my</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">beta1</span> <span class="o">**</span> <span class="n">t</span><span class="p">)</span>
+</span><span id="__span-0-157"><a id="__codelineno-0-157" name="__codelineno-0-157" href="#__codelineno-0-157"></a>            <span class="n">sx_hat</span> <span class="o">=</span> <span class="n">sx</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">beta2</span> <span class="o">**</span> <span class="n">t</span><span class="p">)</span>
+</span><span id="__span-0-158"><a id="__codelineno-0-158" name="__codelineno-0-158" href="#__codelineno-0-158"></a>            <span class="n">sy_hat</span> <span class="o">=</span> <span class="n">sy</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">beta2</span> <span class="o">**</span> <span class="n">t</span><span class="p">)</span>
+</span><span id="__span-0-159"><a id="__codelineno-0-159" name="__codelineno-0-159" href="#__codelineno-0-159"></a>
+</span><span id="__span-0-160"><a id="__codelineno-0-160" name="__codelineno-0-160" href="#__codelineno-0-160"></a>            <span class="n">x</span> <span class="o">-=</span> <span class="p">(</span><span class="n">lr</span> <span class="o">/</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sx_hat</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span><span class="p">))</span> <span class="o">*</span> <span class="n">mx_hat</span>
+</span><span id="__span-0-161"><a id="__codelineno-0-161" name="__codelineno-0-161" href="#__codelineno-0-161"></a>            <span class="n">y</span> <span class="o">-=</span> <span class="p">(</span><span class="n">lr</span> <span class="o">/</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sy_hat</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span><span class="p">))</span> <span class="o">*</span> <span class="n">my_hat</span>
+</span><span id="__span-0-162"><a id="__codelineno-0-162" name="__codelineno-0-162" href="#__codelineno-0-162"></a>
+</span><span id="__span-0-163"><a id="__codelineno-0-163" name="__codelineno-0-163" href="#__codelineno-0-163"></a>    <span class="n">final_loss</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">beale_loss</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</span><span id="__span-0-164"><a id="__codelineno-0-164" name="__codelineno-0-164" href="#__codelineno-0-164"></a>    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">final_loss</span>
+</span><span id="__span-0-165"><a id="__codelineno-0-165" name="__codelineno-0-165" href="#__codelineno-0-165"></a>
+</span><span id="__span-0-166"><a id="__codelineno-0-166" name="__codelineno-0-166" href="#__codelineno-0-166"></a>
+</span><span id="__span-0-167"><a id="__codelineno-0-167" name="__codelineno-0-167" href="#__codelineno-0-167"></a><span class="c1"># ---------------------------------------------------------</span>
+</span><span id="__span-0-168"><a id="__codelineno-0-168" name="__codelineno-0-168" href="#__codelineno-0-168"></a><span class="c1"># Verification &amp; Execution</span>
+</span><span id="__span-0-169"><a id="__codelineno-0-169" name="__codelineno-0-169" href="#__codelineno-0-169"></a><span class="c1"># ---------------------------------------------------------</span>
+</span><span id="__span-0-170"><a id="__codelineno-0-170" name="__codelineno-0-170" href="#__codelineno-0-170"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-0-171"><a id="__codelineno-0-171" name="__codelineno-0-171" href="#__codelineno-0-171"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"=== Testing Micro-Autodiff Engine ==="</span><span class="p">)</span>
+</span><span id="__span-0-172"><a id="__codelineno-0-172" name="__codelineno-0-172" href="#__codelineno-0-172"></a>    <span class="n">x_val</span> <span class="o">=</span> <span class="n">Value</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+</span><span id="__span-0-173"><a id="__codelineno-0-173" name="__codelineno-0-173" href="#__codelineno-0-173"></a>    <span class="n">y_val</span> <span class="o">=</span> <span class="n">Value</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
+</span><span id="__span-0-174"><a id="__codelineno-0-174" name="__codelineno-0-174" href="#__codelineno-0-174"></a>    <span class="c1"># f(x, y) = x^2 * y + x * y^2</span>
+</span><span id="__span-0-175"><a id="__codelineno-0-175" name="__codelineno-0-175" href="#__codelineno-0-175"></a>    <span class="n">f_val</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_val</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">y_val</span> <span class="o">+</span> <span class="n">x_val</span> <span class="o">*</span> <span class="p">(</span><span class="n">y_val</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-176"><a id="__codelineno-0-176" name="__codelineno-0-176" href="#__codelineno-0-176"></a>    <span class="n">f_val</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+</span><span id="__span-0-177"><a id="__codelineno-0-177" name="__codelineno-0-177" href="#__codelineno-0-177"></a>
+</span><span id="__span-0-178"><a id="__codelineno-0-178" name="__codelineno-0-178" href="#__codelineno-0-178"></a>    <span class="c1"># Analytic: df/dx = 2xy + y^2 = 2(2)(3) + 9 = 21</span>
+</span><span id="__span-0-179"><a id="__codelineno-0-179" name="__codelineno-0-179" href="#__codelineno-0-179"></a>    <span class="c1">#           df/dy = x^2 + 2xy = 4 + 2(2)(3) = 16</span>
+</span><span id="__span-0-180"><a id="__codelineno-0-180" name="__codelineno-0-180" href="#__codelineno-0-180"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Value f: </span><span class="si">{</span><span class="n">f_val</span><span class="o">.</span><span class="n">data</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (Expected: 30.0)"</span><span class="p">)</span>
+</span><span id="__span-0-181"><a id="__codelineno-0-181" name="__codelineno-0-181" href="#__codelineno-0-181"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"df/dx:   </span><span class="si">{</span><span class="n">x_val</span><span class="o">.</span><span class="n">grad</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (Expected: 21.0)"</span><span class="p">)</span>
+</span><span id="__span-0-182"><a id="__codelineno-0-182" name="__codelineno-0-182" href="#__codelineno-0-182"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"df/dy:   </span><span class="si">{</span><span class="n">y_val</span><span class="o">.</span><span class="n">grad</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (Expected: 16.0)</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-183"><a id="__codelineno-0-183" name="__codelineno-0-183" href="#__codelineno-0-183"></a>
+</span><span id="__span-0-184"><a id="__codelineno-0-184" name="__codelineno-0-184" href="#__codelineno-0-184"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"=== Benchmarking 2D Optimizers on Beale Surface ==="</span><span class="p">)</span>
+</span><span id="__span-0-185"><a id="__codelineno-0-185" name="__codelineno-0-185" href="#__codelineno-0-185"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Target Global Minimum: x = 3.0, y = 0.5, Loss = 0.0"</span><span class="p">)</span>
+</span><span id="__span-0-186"><a id="__codelineno-0-186" name="__codelineno-0-186" href="#__codelineno-0-186"></a>    <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"sgd"</span><span class="p">,</span> <span class="s2">"momentum"</span><span class="p">,</span> <span class="s2">"rmsprop"</span><span class="p">,</span> <span class="s2">"adam"</span><span class="p">]:</span>
+</span><span id="__span-0-187"><a id="__codelineno-0-187" name="__codelineno-0-187" href="#__codelineno-0-187"></a>        <span class="n">lr</span> <span class="o">=</span> <span class="mf">0.05</span> <span class="k">if</span> <span class="n">opt</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"rmsprop"</span><span class="p">,</span> <span class="s2">"adam"</span><span class="p">)</span> <span class="k">else</span> <span class="mf">0.001</span>
+</span><span id="__span-0-188"><a id="__codelineno-0-188" name="__codelineno-0-188" href="#__codelineno-0-188"></a>        <span class="n">res_x</span><span class="p">,</span> <span class="n">res_y</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="n">optimize_2d</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</span><span id="__span-0-189"><a id="__codelineno-0-189" name="__codelineno-0-189" href="#__codelineno-0-189"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">:</span><span class="s2">8s</span><span class="si">}</span><span class="s2">] Final (x, y): (</span><span class="si">{</span><span class="n">res_x</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">res_y</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">) | Loss: </span><span class="si">{</span><span class="n">loss</span><span class="si">:</span><span class="s2">.6e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="8-common-errors-debugging">8. Common Errors &amp; Debugging<a class="headerlink" href="#8-common-errors-debugging" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Bug / Phenomenon</th>
+<th>Root Cause</th>
+<th>Diagnosis Method</th>
+<th>Production Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Vanishing Gradients</strong></td>
+<td>Backpropagating through dozens of saturated activations (<span class="arithmatex">\(\sigma' \approx 0\)</span>) shrinks gradients exponentially: <span class="arithmatex">\(\|\nabla_\theta L\| \to 0\)</span>.</td>
+<td>Monitor layer-by-layer gradient norms in TensorBoard or Weights &amp; Biases.</td>
+<td>Use residual skip connections (ResNets), Layer Normalization, and non-saturating activations (ReLU, GELU).</td>
+</tr>
+<tr>
+<td><strong>Exploding Gradients</strong></td>
+<td>Repeatedly multiplying weight matrices with spectral norm <span class="arithmatex">\(\sigma_{\max}(W) &gt; 1\)</span> creates exponentially large gradients, causing <code>inf</code>/<code>NaN</code>.</td>
+<td>Check for sudden <code>NaN</code> losses or monitor <span class="arithmatex">\(\|\mathbf{g}_t\|_2 &gt; 10^3\)</span>.</td>
+<td>Apply <strong>Gradient Clipping</strong>: <span class="arithmatex">\(\mathbf{g} \leftarrow \mathbf{g} \cdot \min\left(1, \frac{C}{\|\mathbf{g}\|_2}\right)\)</span>.</td>
+</tr>
+<tr>
+<td><strong>Saddle Point Stalling</strong></td>
+<td>Gradient is near zero (<span class="arithmatex">\(\|\nabla L\| \approx 0\)</span>), but Hessian has negative eigenvalues (escapable downhill direction).</td>
+<td>Optimizer loss plateaus at a high value for hundreds of iterations.</td>
+<td>Add stochastic noise (mini-batch noise), momentum, or adaptive learning rates (Adam).</td>
+</tr>
+<tr>
+<td><strong>Adam Divergence / Overshooting</strong></td>
+<td>Learning rate <span class="arithmatex">\(\eta\)</span> is too high during early training before moment estimates <span class="arithmatex">\(\hat{\mathbf{v}}_t\)</span> stabilize.</td>
+<td>Loss spikes to <code>inf</code> during the first few hundred steps.</td>
+<td>Use a <strong>Learning Rate Warmup Schedule</strong> (linearly increasing <span class="arithmatex">\(\eta\)</span> from 0 to target over initial steps).</td>
+</tr>
+<tr>
+<td><strong>L2 Regularization vs. Weight Decay Bug</strong></td>
+<td>Adding <span class="arithmatex">\(\frac{1}{2}\lambda \|\mathbf{w}\|^2\)</span> to loss in Adam penalizes weights inversely proportional to adaptive gradient scale <span class="arithmatex">\(\sqrt{\mathbf{v}_t}\)</span>.</td>
+<td>Weights with large frequent gradients are under-regularized.</td>
+<td>Use <strong>AdamW</strong> (decoupled weight decay): apply direct parameter shrinkage <span class="arithmatex">\(\boldsymbol{\theta} \leftarrow \boldsymbol{\theta}(1 - \eta \lambda)\)</span> outside the momentum update.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9-staff-level-technical-interview-questions">9. Staff-Level Technical Interview Questions<a class="headerlink" href="#9-staff-level-technical-interview-questions" title="Permanent link">&para;</a></h2>
+<h3 id="q1-prove-the-bias-correction-formulas-for-both-the-first-and-second-moments-in-the-adam-optimizer">Q1: Prove the bias correction formulas for both the first and second moments in the Adam optimizer.<a class="headerlink" href="#q1-prove-the-bias-correction-formulas-for-both-the-first-and-second-moments-in-the-adam-optimizer" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Adam initializes moments to <span class="arithmatex">\(\mathbf{m}_0 = \mathbf{0}\)</span> and <span class="arithmatex">\(\mathbf{v}_0 = \mathbf{0}\)</span>.
+Unrolling the first moment recurrence relation <span class="arithmatex">\(\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1 - \beta_1) \mathbf{g}_t\)</span>:
+$<span class="arithmatex">\(\mathbf{m}_t = (1 - \beta_1) \sum_{i=1}^t \beta_1^{t - i} \mathbf{g}_i\)</span>$
+Taking expectations of both sides under the assumption that the true stochastic gradients <span class="arithmatex">\(\mathbf{g}_i\)</span> share a constant expectation <span class="arithmatex">\(\mathbb{E}[\mathbf{g}_i] = \mathbb{E}[\mathbf{g}]\)</span>:
+$<span class="arithmatex">\(\mathbb{E}[\mathbf{m}_t] = \mathbb{E}\left[ (1 - \beta_1) \sum_{i=1}^t \beta_1^{t - i} \mathbf{g}_i \right] = (1 - \beta_1) \left( \sum_{i=1}^t \beta_1^{t - i} \right) \mathbb{E}[\mathbf{g}]\)</span>$
+The sum is a finite geometric progression: <span class="arithmatex">\(\sum_{k=0}^{t-1} \beta_1^k = \frac{1 - \beta_1^t}{1 - \beta_1}\)</span>. Substituting this in:
+$<span class="arithmatex">\(\mathbb{E}[\mathbf{m}_t] = (1 - \beta_1) \cdot \frac{1 - \beta_1^t}{1 - \beta_1} \cdot \mathbb{E}[\mathbf{g}] = (1 - \beta_1^t) \mathbb{E}[\mathbf{g}]\)</span>$
+To make the estimator unbiased (<span class="arithmatex">\(\mathbb{E}[\hat{\mathbf{m}}_t] = \mathbb{E}[\mathbf{g}]\)</span>), we divide by <span class="arithmatex">\((1 - \beta_1^t)\)</span>:
+$<span class="arithmatex">\(\hat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1 - \beta_1^t}\)</span>$
+The second moment follows the identical recurrence <span class="arithmatex">\(\mathbf{v}_t = (1 - \beta_2) \sum_{i=1}^t \beta_2^{t-i} \mathbf{g}_i^2\)</span>. Assuming stationary second moment <span class="arithmatex">\(\mathbb{E}[\mathbf{g}_i^2] = \mathbb{E}[\mathbf{g}^2]\)</span>, the sum evaluates to <span class="arithmatex">\(\frac{1 - \beta_2^t}{1 - \beta_2}\)</span>, yielding <span class="arithmatex">\(\mathbb{E}[\mathbf{v}_t] = (1 - \beta_2^t) \mathbb{E}[\mathbf{g}^2]\)</span>. Thus, the bias-corrected second moment is <span class="arithmatex">\(\hat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1 - \beta_2^t}\)</span>.</p>
+<hr />
+<h3 id="q2-explain-the-fundamental-difference-between-forward-mode-and-reverse-mode-automatic-differentiation-when-is-reverse-mode-computationally-superior">Q2: Explain the fundamental difference between forward-mode and reverse-mode automatic differentiation. When is reverse-mode computationally superior?<a class="headerlink" href="#q2-explain-the-fundamental-difference-between-forward-mode-and-reverse-mode-automatic-differentiation-when-is-reverse-mode-computationally-superior" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Consider a function <span class="arithmatex">\(\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m\)</span>.
+- <strong>Forward-Mode AD</strong> applies the chain rule from the inside out (from inputs to outputs). It computes <strong>Jacobian-Vector Products (JVPs)</strong>, evaluating <span class="arithmatex">\(\nabla_{\mathbf{x}} v_i\)</span> concurrently with the primal value <span class="arithmatex">\(v_i\)</span>. To obtain the full <span class="arithmatex">\(m \times n\)</span> Jacobian, forward mode must be evaluated <span class="arithmatex">\(n\)</span> times (once per unit basis vector <span class="arithmatex">\(\mathbf{e}_j \in \mathbb{R}^n\)</span>).
+- <strong>Reverse-Mode AD</strong> evaluates the function forward, records the execution graph (tape/DAG), and then propagates derivatives from the outside in (from outputs back to inputs) using <strong>Vector-Jacobian Products (VJPs)</strong>. Computing gradients with respect to all <span class="arithmatex">\(n\)</span> inputs requires <span class="arithmatex">\(m\)</span> backward sweeps.</p>
+<p><strong>ML Superiority:</strong>
+In deep learning, the loss function maps millions of parameters to a single scalar objective (<span class="arithmatex">\(n \approx 10^7 \text{ to } 10^{11}\)</span>, <span class="arithmatex">\(m = 1\)</span>).
+- Forward mode would require <span class="arithmatex">\(10^{11}\)</span> full network evaluations to get the gradient vector!
+- Reverse mode requires <strong>a single forward pass and a single backward pass</strong>, running in <span class="arithmatex">\(\mathcal{O}(1)\)</span> relative to parameter count <span class="arithmatex">\(n\)</span>. Hence, reverse-mode autodiff is fundamentally necessary for training modern deep models.</p>
+<hr />
+<h3 id="q3-what-is-a-saddle-point-why-are-saddle-points-vastly-more-prevalent-than-local-minima-in-high-dimensional-deep-learning-loss-surfaces-and-how-do-second-order-methods-behave-near-them">Q3: What is a saddle point, why are saddle points vastly more prevalent than local minima in high-dimensional deep learning loss surfaces, and how do second-order methods behave near them?<a class="headerlink" href="#q3-what-is-a-saddle-point-why-are-saddle-points-vastly-more-prevalent-than-local-minima-in-high-dimensional-deep-learning-loss-surfaces-and-how-do-second-order-methods-behave-near-them" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+A saddle point <span class="arithmatex">\(\mathbf{x}^*\)</span> is a stationary point (<span class="arithmatex">\(\nabla f(\mathbf{x}^*) = \mathbf{0}\)</span>) where the Hessian <span class="arithmatex">\(H(\mathbf{x}^*)\)</span> is indefinite—possessing both strictly positive eigenvalues (<span class="arithmatex">\(\lambda &gt; 0\)</span>, local minimum along that eigenvector) and strictly negative eigenvalues (<span class="arithmatex">\(\lambda &lt; 0\)</span>, local maximum along that eigenvector).</p>
+<p><strong>Prevalence in High Dimensions (<span class="arithmatex">\(d \gg 1\)</span>):</strong>
+Dauphin et al. (2014) showed that for a non-convex function in <span class="arithmatex">\(d\)</span> dimensions, the probability of a critical point being a true local minimum requires all <span class="arithmatex">\(d\)</span> eigenvalues of the Hessian to be simultaneously positive. If each eigenvalue has independent sign probability <span class="arithmatex">\(\approx 0.5\)</span>, the probability of a critical point being a local minimum scales as <span class="arithmatex">\(2^{-d}\)</span>. In a network with <span class="arithmatex">\(d = 10^7\)</span>, the ratio of saddle points to local minima is astronomical: almost all zero-gradient points are saddle points.</p>
+<p><strong>Second-Order Newton Failure:</strong>
+The Newton update is <span class="arithmatex">\(\Delta \mathbf{x} = - H^{-1} \nabla f\)</span>. Near a saddle point where <span class="arithmatex">\(\nabla f \approx \mathbf{0}\)</span>, if an eigenvalue <span class="arithmatex">\(\lambda_i &lt; 0\)</span>, Newton's method steps in the direction that <em>maximizes</em> the objective along that eigenvector (jumping toward the saddle point), actively trapping the optimization. In contrast, first-order gradient descent with stochastic noise or momentum escapes saddle points because negative curvature directions naturally accelerate downhill.</p>
+<hr />
+<h3 id="q4-derive-the-second-order-taylor-expansion-of-a-multivariate-function-how-does-newton-raphson-optimization-utilize-the-hessian-and-why-is-exact-newtons-method-impractical-in-deep-learning">Q4: Derive the second-order Taylor expansion of a multivariate function. How does Newton-Raphson optimization utilize the Hessian, and why is exact Newton's method impractical in deep learning?<a class="headerlink" href="#q4-derive-the-second-order-taylor-expansion-of-a-multivariate-function-how-does-newton-raphson-optimization-utilize-the-hessian-and-why-is-exact-newtons-method-impractical-in-deep-learning" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+The second-order multivariate Taylor expansion of <span class="arithmatex">\(f(\mathbf{x})\)</span> around <span class="arithmatex">\(\mathbf{x}_t\)</span> for a displacement <span class="arithmatex">\(\Delta \mathbf{x}\)</span> is:
+$<span class="arithmatex">\(f(\mathbf{x}_t + \Delta \mathbf{x}) \approx m(\Delta \mathbf{x}) = f(\mathbf{x}_t) + \nabla f(\mathbf{x}_t)^T \Delta \mathbf{x} + \frac{1}{2} \Delta \mathbf{x}^T H(\mathbf{x}_t) \Delta \mathbf{x}\)</span>$
+Differentiating <span class="arithmatex">\(m(\Delta \mathbf{x})\)</span> with respect to <span class="arithmatex">\(\Delta \mathbf{x}\)</span> and setting the derivative to zero:
+$<span class="arithmatex">\(\nabla_{\Delta \mathbf{x}} m(\Delta \mathbf{x}) = \nabla f(\mathbf{x}_t) + H(\mathbf{x}_t) \Delta \mathbf{x} = \mathbf{0} \implies H(\mathbf{x}_t) \Delta \mathbf{x} = -\nabla f(\mathbf{x}_t)\)</span>$
+If <span class="arithmatex">\(H\)</span> is invertible, the optimal step is <span class="arithmatex">\(\Delta \mathbf{x}^* = - [H(\mathbf{x}_t)]^{-1} \nabla f(\mathbf{x}_t)\)</span>.</p>
+<p><strong>Why Impractical in Deep Learning:</strong>
+1. <strong>Memory Complexity:</strong> For <span class="arithmatex">\(P\)</span> parameters, <span class="arithmatex">\(H \in \mathbb{R}^{P \times P}\)</span>. For <span class="arithmatex">\(P = 10^8\)</span>, storing <span class="arithmatex">\(H\)</span> in float32 requires <span class="arithmatex">\(4 \times 10^{16}\)</span> bytes (<span class="arithmatex">\(40\)</span> Petabytes).
+2. <strong>Computational Inversion Cost:</strong> Solving <span class="arithmatex">\(H \Delta \mathbf{x} = -\mathbf{g}\)</span> via Cholesky or LU decomposition requires <span class="arithmatex">\(\mathcal{O}(P^3)\)</span> operations per step.
+3. <strong>Non-Convexity Instability:</strong> In deep nets, <span class="arithmatex">\(H\)</span> is rarely positive definite. Inverting an indefinite Hessian leads directly to saddle points or local maxima.</p>
+<hr />
+<h3 id="q5-what-is-the-condition-number-of-the-hessian-matrix-at-a-local-minimum-and-how-does-it-affect-the-convergence-rate-of-first-order-gradient-descent">Q5: What is the condition number of the Hessian matrix at a local minimum, and how does it affect the convergence rate of first-order Gradient Descent?<a class="headerlink" href="#q5-what-is-the-condition-number-of-the-hessian-matrix-at-a-local-minimum-and-how-does-it-affect-the-convergence-rate-of-first-order-gradient-descent" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+At a local minimum <span class="arithmatex">\(\mathbf{x}^*\)</span> with strictly positive definite Hessian <span class="arithmatex">\(H \succ 0\)</span>, the condition number is:
+$<span class="arithmatex">\(\kappa(H) = \frac{\lambda_{\max}(H)}{\lambda_{\min}(H)} \ge 1\)</span>$
+For a quadratic objective <span class="arithmatex">\(f(\mathbf{x}) = \frac{1}{2} \mathbf{x}^T H \mathbf{x}\)</span>, standard Gradient Descent with optimal learning rate <span class="arithmatex">\(\eta = \frac{2}{\lambda_{\max} + \lambda_{\min}}\)</span> exhibits the linear convergence bound:
+$<span class="arithmatex">\(\|\mathbf{x}_k - \mathbf{x}^*\|_H \le \left( \frac{\kappa(H) - 1}{\kappa(H) + 1} \right)^k \|\mathbf{x}_0 - \mathbf{x}^*\|_H\)</span>$
+- When <span class="arithmatex">\(\kappa(H) \approx 1\)</span> (isotropic, circular contours), <span class="arithmatex">\(\frac{\kappa - 1}{\kappa + 1} \approx 0\)</span>, converging in a single step.
+- When <span class="arithmatex">\(\kappa(H) \gg 1\)</span> (e.g., <span class="arithmatex">\(\kappa = 10^4\)</span>, highly ill-conditioned ravine), <span class="arithmatex">\(\frac{\kappa - 1}{\kappa + 1} \approx 1 - \frac{2}{\kappa} = 0.9998\)</span>. Gradient descent crawls, oscillating violently along the eigenvector of <span class="arithmatex">\(\lambda_{\max}\)</span> while making virtually zero progress along the eigenvector of <span class="arithmatex">\(\lambda_{\min}\)</span>. This necessitates adaptive optimizers (Adam) or batch normalization to condition the landscape.</p>
+<hr />
+<h3 id="q6-derive-the-matrix-calculus-backpropagation-equations-for-a-dense-linear-layer-y-xw-b">Q6: Derive the matrix calculus backpropagation equations for a dense linear layer <span class="arithmatex">\(Y = XW + b\)</span>.<a class="headerlink" href="#q6-derive-the-matrix-calculus-backpropagation-equations-for-a-dense-linear-layer-y-xw-b" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Let <span class="arithmatex">\(\mathbf{X} \in \mathbb{R}^{B \times d_{\text{in}}}\)</span>, <span class="arithmatex">\(\mathbf{W} \in \mathbb{R}^{d_{\text{in}} \times d_{\text{out}}}\)</span>, and <span class="arithmatex">\(\mathbf{b} \in \mathbb{R}^{d_{\text{out}}}\)</span>, giving <span class="arithmatex">\(\mathbf{Y} = \mathbf{X} \mathbf{W} + \mathbf{1} \mathbf{b}^T \in \mathbb{R}^{B \times d_{\text{out}}}\)</span>.
+Let the incoming upstream gradient from the scalar loss <span class="arithmatex">\(L\)</span> be <span class="arithmatex">\(\mathbf{G} = \frac{\partial L}{\partial \mathbf{Y}} \in \mathbb{R}^{B \times d_{\text{out}}}\)</span>, where <span class="arithmatex">\(G_{ij} = \frac{\partial L}{\partial Y_{ij}}\)</span>.</p>
+<ol>
+<li>
+<p><strong>Gradient with respect to weights <span class="arithmatex">\(\mathbf{W}\)</span>:</strong>
+   By chain rule:
+   $<span class="arithmatex">\(\frac{\partial L}{\partial W_{jk}} = \sum_{i=1}^B \frac{\partial L}{\partial Y_{ik}} \frac{\partial Y_{ik}}{\partial W_{jk}}\)</span>$
+   Since <span class="arithmatex">\(Y_{ik} = \sum_{l} X_{il} W_{lk} + b_k\)</span>, we have <span class="arithmatex">\(\frac{\partial Y_{ik}}{\partial W_{jk}} = X_{ij}\)</span>.
+   $<span class="arithmatex">\(\frac{\partial L}{\partial W_{jk}} = \sum_{i=1}^B X_{ij} G_{ik} = \sum_{i=1}^B (X^T)_{ji} G_{ik} = (\mathbf{X}^T \mathbf{G})_{jk} \implies \frac{\partial L}{\partial \mathbf{W}} = \mathbf{X}^T \mathbf{G}\)</span>$</p>
+</li>
+<li>
+<p><strong>Gradient with respect to inputs <span class="arithmatex">\(\mathbf{X}\)</span>:</strong>
+   $<span class="arithmatex">\(\frac{\partial L}{\partial X_{ij}} = \sum_{k=1}^{d_{\text{out}}} \frac{\partial L}{\partial Y_{ik}} \frac{\partial Y_{ik}}{\partial X_{ij}} = \sum_{k=1}^{d_{\text{out}}} G_{ik} W_{jk} = \sum_{k=1}^{d_{\text{out}}} G_{ik} (W^T)_{kj} = (\mathbf{G} \mathbf{W}^T)_{ij} \implies \frac{\partial L}{\partial \mathbf{X}} = \mathbf{G} \mathbf{W}^T\)</span>$</p>
+</li>
+<li>
+<p><strong>Gradient with respect to bias <span class="arithmatex">\(\mathbf{b}\)</span>:</strong>
+   $<span class="arithmatex">\(\frac{\partial L}{\partial b_k} = \sum_{i=1}^B \frac{\partial L}{\partial Y_{ik}} \frac{\partial Y_{ik}}{\partial b_k} = \sum_{i=1}^B G_{ik} \cdot 1 \implies \frac{\partial L}{\partial \mathbf{b}} = \sum_{i=1}^B \mathbf{G}_{i, :} = \mathbf{1}^T \mathbf{G}\)</span>$</p>
+</li>
+</ol>
+<hr />
+<h3 id="q7-explain-why-standard-l2-regularization-interacts-poorly-with-adaptive-optimizers-like-adam-and-how-adamw-resolves-this">Q7: Explain why standard L2 regularization interacts poorly with adaptive optimizers like Adam, and how AdamW resolves this.<a class="headerlink" href="#q7-explain-why-standard-l2-regularization-interacts-poorly-with-adaptive-optimizers-like-adam-and-how-adamw-resolves-this" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+In standard L2 regularization, an extra penalty term <span class="arithmatex">\(\frac{1}{2} \lambda \|\boldsymbol{\theta}\|^2\)</span> is added directly to the loss function:
+$<span class="arithmatex">\(L_{\text{reg}}(\boldsymbol{\theta}) = L(\boldsymbol{\theta}) + \frac{1}{2} \lambda \|\boldsymbol{\theta}\|^2 \implies \nabla L_{\text{reg}}(\boldsymbol{\theta}) = \mathbf{g}_t + \lambda \boldsymbol{\theta}_t\)</span>$
+In standard SGD, this yields the intended weight decay:
+$<span class="arithmatex">\(\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \eta (\mathbf{g}_t + \lambda \boldsymbol{\theta}_t) = (1 - \eta \lambda) \boldsymbol{\theta}_t - \eta \mathbf{g}_t\)</span>$
+However, in <strong>Adam</strong>, the regularized gradient is fed into the second moment <span class="arithmatex">\(\mathbf{v}_t\)</span>:
+$<span class="arithmatex">\(\mathbf{v}_t = \beta_2 \mathbf{v}_{t-1} + (1 - \beta_2) (\mathbf{g}_t + \lambda \boldsymbol{\theta}_t)^2\)</span>$
+The parameter update becomes:
+$<span class="arithmatex">\(\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \frac{\eta}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon} (\hat{\mathbf{m}}_t + \lambda \boldsymbol{\theta}_t)\)</span>$
+<strong>The Pathology:</strong>
+Parameters with large, frequent historical gradients have huge <span class="arithmatex">\(\hat{\mathbf{v}}_t\)</span>. Their effective weight decay penalty <span class="arithmatex">\(\frac{\eta \lambda}{\sqrt{\hat{\mathbf{v}}_t}}\)</span> is heavily suppressed! Conversely, parameters with sparse or small gradients receive disproportionately large regularization.</p>
+<p><strong>The AdamW Solution (Loshchilov &amp; Hutter, 2017):</strong>
+Decouple weight decay entirely from gradient moment estimation. The loss gradient <span class="arithmatex">\(\mathbf{g}_t = \nabla L(\boldsymbol{\theta}_t)\)</span> enters Adam's moments purely, and weight decay is applied as a direct parameter contraction:
+$<span class="arithmatex">\(\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t(1 - \eta \lambda) - \frac{\eta}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon} \hat{\mathbf{m}}_t\)</span>$
+This ensures uniform weight decay rate <span class="arithmatex">\(\eta \lambda\)</span> across all parameters regardless of gradient history.</p>
+<hr />
+<h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
+<p>Complete this checklist to verify your depth in calculus and optimization for ML:</p>
+<ul>
+<li>[ ] <strong>L1:</strong> You can compute partial derivatives, gradients, and directional derivatives by hand.</li>
+<li>[ ] <strong>L2:</strong> You can write out the Jacobian matrix for arbitrary vector-valued functions <span class="arithmatex">\(\mathbf{f}: \mathbb{R}^n \to \mathbb{R}^m\)</span>.</li>
+<li>[ ] <strong>L3:</strong> You can construct the Hessian matrix and classify stationary points as local minima, maxima, or saddle points using eigenvalue signs.</li>
+<li>[ ] <strong>L4:</strong> You can state the mathematical definition of convexity and verify it via the second-order Hessian condition (<span class="arithmatex">\(\nabla^2 f \succeq 0\)</span>).</li>
+<li>[ ] <strong>L5:</strong> You can explain the algorithmic difference between forward-mode (JVPs) and reverse-mode (VJPs) automatic differentiation.</li>
+<li>[ ] <strong>L6:</strong> You can derive matrix backpropagation equations for a fully connected dense layer (<span class="arithmatex">\(\frac{\partial L}{\partial W} = X^T G, \frac{\partial L}{\partial X} = G W^T\)</span>).</li>
+<li>[ ] <strong>L7:</strong> You can implement a working scalar automatic differentiation engine (<code>Value</code>) with topological sort DAG evaluation from scratch.</li>
+<li>[ ] <strong>L8:</strong> You can derive the exact bias correction formulas <span class="arithmatex">\(\frac{1}{1-\beta_1^t}\)</span> and <span class="arithmatex">\(\frac{1}{1-\beta_2^t}\)</span> in the Adam optimizer.</li>
+<li>[ ] <strong>L9:</strong> You can explain how the condition number of the Hessian <span class="arithmatex">\(\kappa(H)\)</span> bounds the linear convergence rate of first-order gradient descent.</li>
+<li>[ ] <strong>L10:</strong> You can mathematically explain the distinction between L2 regularization and decoupled weight decay in AdamW.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../linear-algebra-deep-dive/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deep-dive: Linear Algebra">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Linear Algebra
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../probability-statistics-deep-dive/" class="md-footer__link md-footer__link--next" aria-label="Next: Deep-dive: Probability &amp; Statistics">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Probability & Statistics
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

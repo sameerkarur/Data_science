@@ -1,0 +1,4832 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete, deep-dive AI/ML curriculum — from Python internals to production AI systems.">
+      
+      
+        <meta name="author" content="Sameer Karur">
+      
+      
+      
+        <link rel="prev" href="../data-cleaning-preprocessing-deep-dive/">
+      
+      
+        <link rel="next" href="../../04-classical-ml/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Deep-dive: Feature Engineering & Selection - AI/ML Mastery Program</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#feature-engineering-selection-transforms-signals-redundancy-elimination" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI/ML Mastery Program" class="md-header__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI/ML Mastery Program
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Deep-dive: Feature Engineering & Selection
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../00-computer-science/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 0 – CS Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-python/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 1 – Python
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../02-mathematics/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 2 – Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 3 – Data Engineering
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../04-classical-ml/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 4 – Classical ML
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../05-ml-theory/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 5 – ML Theory & Evaluation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../06-deep-learning/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 6 – Deep Learning
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../07-computer-vision/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 7 – Computer Vision
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../08-nlp/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 8 – NLP
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../09-transformers-llms/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 9 – Transformers & LLMs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../10-generative-ai/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 10 – Generative AI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../11-ai-agents/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 11 – AI Agents
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../12-mlops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 12 – MLOps
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../13-ai-system-design/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 13 – AI System Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../14-projects/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 14 – Projects & Interview
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI/ML Mastery Program" class="md-nav__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI/ML Mastery Program
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../00-computer-science/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 0 – CS Foundations
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 0 – CS Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/how-computers-execute-programs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: How Computers Execute Programs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/arrays-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Arrays
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/linked-lists-stacks-queues-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linked Lists, Stacks & Queues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/hash-tables-sets-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hash Tables & Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Trees (Binary, BST, Heaps)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/graphs-tries-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Graphs & Tries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/algorithms-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Algorithms (Big-O, Searching, Sorting, Recursion, Greedy, DP, Graphs)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../01-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 1 – Python
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 1 – Python
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/fundamentals-control-flow-collections-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Fundamentals, Control Flow & Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/functions-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/oop-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: OOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/advanced-python-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced Python (Iterators, Generators, Async, Concurrency)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/internals-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Internals (CPython, Bytecode, GC, GIL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../02-mathematics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 2 – Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 2 – Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/foundations-math-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundations of Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/linear-algebra-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/calculus-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Calculus & Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/probability-statistics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Probability & Statistics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 3 – Data Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 3 – Data Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-ecosystem-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Data Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-formats-storage-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Formats & Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-cleaning-preprocessing-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Cleaning & Preprocessing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Feature Engineering & Selection
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Feature Engineering & Selection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-intuition-real-world-framing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Intuition &amp; Real-World Framing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Intuition &amp; Real-World Framing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feature-representation-defines-model-inductive-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature Representation Defines Model Inductive Bias
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-numerical-transformations-power-transforms-discretization-and-interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Numerical Transformations: Power Transforms, Discretization and Interactions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Numerical Transformations: Power Transforms, Discretization and Interactions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-power-transformations-box-cox-yeo-johnson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Power Transformations: Box-Cox &amp; Yeo-Johnson
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-binning-discretization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Binning &amp; Discretization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-polynomial-non-linear-interaction-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Polynomial &amp; Non-Linear Interaction Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-temporal-features-cyclical-encoding-lags-and-point-in-time-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Temporal Features: Cyclical Encoding, Lags and Point-in-Time Windows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Temporal Features: Cyclical Encoding, Lags and Point-in-Time Windows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-trigonometric-cyclical-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Trigonometric Cyclical Encoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-point-in-time-aggregations-and-lookahead-leakage-prevention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Point-in-Time Aggregations and Lookahead Leakage Prevention
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-text-representations-tf-idf-and-subword-tokenization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Text Representations: TF-IDF and Subword Tokenization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Text Representations: TF-IDF and Subword Tokenization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-term-frequency-inverse-document-frequency-tf-idf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Term Frequency - Inverse Document Frequency (TF-IDF)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-feature-selection-filter-wrapper-and-embedded-paradigms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Feature Selection: Filter, Wrapper and Embedded Paradigms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Feature Selection: Filter, Wrapper and Embedded Paradigms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-filter-methods-information-theory-mutual-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Filter Methods: Information Theory &amp; Mutual Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-wrapper-methods-recursive-feature-elimination-rfe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Wrapper Methods: Recursive Feature Elimination (RFE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-embedded-methods-l1-regularization-lasso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Embedded Methods: L1 Regularization (Lasso)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-tree-importance-mdi-vs-permutation-importance-vs-shap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Tree Importance: MDI vs. Permutation Importance vs. SHAP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-python-implementation-cyclical-encoders-point-in-time-windows-and-mutual-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Python Implementation: Cyclical Encoders, Point-in-Time Windows and Mutual Information
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-common-errors-and-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Common Errors and Debugging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-staff-level-technical-interview-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Staff-Level Technical Interview Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Staff-Level Technical Interview Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-explain-cyclical-feature-encoding-using-sine-and-cosine-transformations-why-is-a-single-sine-or-cosine-transformation-insufficient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Explain cyclical feature encoding using sine and cosine transformations. Why is a single sine or cosine transformation insufficient?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-derive-the-mutual-information-metric-between-feature-x-and-target-y-why-can-mutual-information-capture-dependencies-that-pearson-and-spearman-correlation-miss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Derive the Mutual Information metric between feature \(X\) and target \(Y\). Why can Mutual Information capture dependencies that Pearson and Spearman correlation miss?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-what-is-lookahead-bias-in-time-series-feature-engineering-and-how-do-point-in-time-feature-stores-prevent-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: What is lookahead bias in time-series feature engineering, and how do point-in-time feature stores prevent it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-contrast-mean-decrease-in-impurity-mdi-gini-importance-permutation-feature-importance-and-shap-values-why-does-mdi-bias-toward-high-cardinality-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Contrast Mean Decrease in Impurity (MDI / Gini Importance), Permutation Feature Importance, and SHAP values. Why does MDI bias toward high-cardinality features?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-derive-the-box-cox-and-yeo-johnson-transformations-when-must-yeo-johnson-be-chosen-over-box-cox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: Derive the Box-Cox and Yeo-Johnson transformations. When must Yeo-Johnson be chosen over Box-Cox?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q6-compare-filter-wrapper-and-embedded-feature-selection-paradigms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q6: Compare Filter, Wrapper, and Embedded feature selection paradigms.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q7-what-is-the-variance-inflation-factor-vif-how-do-you-calculate-it-and-what-threshold-indicates-severe-multicollinearity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q7: What is the Variance Inflation Factor (VIF), how do you calculate it, and what threshold indicates severe multicollinearity?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../04-classical-ml/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 4 – Classical ML
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 4 – Classical ML
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/linear-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/regularized-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Regularized & Polynomial Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/logistic-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Logistic Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/knn-naive-bayes-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: KNN & Naive Bayes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/decision-trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/ensemble-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Ensemble Learning (Random Forests & GBDT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/svm-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Support Vector Machines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../05-ml-theory/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/model-validation-generalization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Validation & Generalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/evaluation-metrics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/hyperparameter-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hyperparameter Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../06-deep-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 6 – Deep Learning
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 6 – Deep Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/neural-network-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Neural Network Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/architecture-components-regularization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Architecture Components & Regularization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/deep-learning-optimizers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Deep Learning Optimizers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../07-computer-vision/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 7 – Computer Vision
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 7 – Computer Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/convolutional-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Convolutional Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/modern-cnn-architectures-transfer-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Modern CNN Architectures & Transfer Learning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/vision-tasks-transformers-multimodal-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Vision Tasks, ViT & Multimodal Vision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../08-nlp/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 8 – NLP
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 8 – NLP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/text-representation-word-embeddings-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Text Representation & Word Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/sequence-models-attention-transformers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Sequence Models, Attention & Transformers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../09-transformers-llms/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 9 – Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 9 – Transformers & LLMs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/transformer-architecture-mechanics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Transformer Architecture & Mechanics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/foundation-model-families-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundation Model Families
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/llm-training-alignment-peft-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Training, Alignment & PEFT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../10-generative-ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 10 – Generative AI
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 10 – Generative AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/llm-application-engineering-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Application Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/enterprise-rag-systems-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Enterprise RAG Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/diffusion-models-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../11-ai-agents/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 11 – AI Agents
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 11 – AI Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/agent-architectures-patterns-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Agent Architectures & Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/multi-agent-systems-security-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Multi-Agent Systems & Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../12-mlops/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 12 – MLOps
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 12 – MLOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/production-tooling-containerization-cicd-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production Tooling, Containerization & CI/CD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/serving-pipelines-orchestration-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Serving, Pipelines & Distributed Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/model-monitoring-observability-retraining-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Monitoring, Observability & Automated Retraining
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../13-ai-system-design/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 13 – AI System Design
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_15" id="__nav_15_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 13 – AI System Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/ai-system-design-methodology-framework-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: AI System Design Methodology & Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/production-case-studies-system-design-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production AI System Design Case Studies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../14-projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 14 – Projects & Interview
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_16" id="__nav_16_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 14 – Projects & Interview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/foundational-applied-projects-tier-1-to-4-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundational Applied Projects (Tiers 1–4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/advanced-frontier-projects-tier-5-to-8-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced & Frontier Applied Projects (Tiers 5–8)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/staff-level-interview-question-banks-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Staff-Level Technical Interview Question Banks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-intuition-real-world-framing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Intuition &amp; Real-World Framing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Intuition &amp; Real-World Framing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feature-representation-defines-model-inductive-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature Representation Defines Model Inductive Bias
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-numerical-transformations-power-transforms-discretization-and-interactions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Numerical Transformations: Power Transforms, Discretization and Interactions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Numerical Transformations: Power Transforms, Discretization and Interactions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-power-transformations-box-cox-yeo-johnson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Power Transformations: Box-Cox &amp; Yeo-Johnson
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-binning-discretization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Binning &amp; Discretization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-polynomial-non-linear-interaction-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Polynomial &amp; Non-Linear Interaction Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-temporal-features-cyclical-encoding-lags-and-point-in-time-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Temporal Features: Cyclical Encoding, Lags and Point-in-Time Windows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Temporal Features: Cyclical Encoding, Lags and Point-in-Time Windows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-trigonometric-cyclical-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Trigonometric Cyclical Encoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-point-in-time-aggregations-and-lookahead-leakage-prevention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Point-in-Time Aggregations and Lookahead Leakage Prevention
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-text-representations-tf-idf-and-subword-tokenization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Text Representations: TF-IDF and Subword Tokenization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Text Representations: TF-IDF and Subword Tokenization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-term-frequency-inverse-document-frequency-tf-idf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Term Frequency - Inverse Document Frequency (TF-IDF)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-feature-selection-filter-wrapper-and-embedded-paradigms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Feature Selection: Filter, Wrapper and Embedded Paradigms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Feature Selection: Filter, Wrapper and Embedded Paradigms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-filter-methods-information-theory-mutual-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Filter Methods: Information Theory &amp; Mutual Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-wrapper-methods-recursive-feature-elimination-rfe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Wrapper Methods: Recursive Feature Elimination (RFE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-embedded-methods-l1-regularization-lasso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Embedded Methods: L1 Regularization (Lasso)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-tree-importance-mdi-vs-permutation-importance-vs-shap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Tree Importance: MDI vs. Permutation Importance vs. SHAP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-python-implementation-cyclical-encoders-point-in-time-windows-and-mutual-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Python Implementation: Cyclical Encoders, Point-in-Time Windows and Mutual Information
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-common-errors-and-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Common Errors and Debugging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-staff-level-technical-interview-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Staff-Level Technical Interview Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Staff-Level Technical Interview Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-explain-cyclical-feature-encoding-using-sine-and-cosine-transformations-why-is-a-single-sine-or-cosine-transformation-insufficient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Explain cyclical feature encoding using sine and cosine transformations. Why is a single sine or cosine transformation insufficient?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-derive-the-mutual-information-metric-between-feature-x-and-target-y-why-can-mutual-information-capture-dependencies-that-pearson-and-spearman-correlation-miss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Derive the Mutual Information metric between feature \(X\) and target \(Y\). Why can Mutual Information capture dependencies that Pearson and Spearman correlation miss?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-what-is-lookahead-bias-in-time-series-feature-engineering-and-how-do-point-in-time-feature-stores-prevent-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: What is lookahead bias in time-series feature engineering, and how do point-in-time feature stores prevent it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-contrast-mean-decrease-in-impurity-mdi-gini-importance-permutation-feature-importance-and-shap-values-why-does-mdi-bias-toward-high-cardinality-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Contrast Mean Decrease in Impurity (MDI / Gini Importance), Permutation Feature Importance, and SHAP values. Why does MDI bias toward high-cardinality features?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-derive-the-box-cox-and-yeo-johnson-transformations-when-must-yeo-johnson-be-chosen-over-box-cox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: Derive the Box-Cox and Yeo-Johnson transformations. When must Yeo-Johnson be chosen over Box-Cox?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q6-compare-filter-wrapper-and-embedded-feature-selection-paradigms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q6: Compare Filter, Wrapper, and Embedded feature selection paradigms.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q7-what-is-the-variance-inflation-factor-vif-how-do-you-calculate-it-and-what-threshold-indicates-severe-multicollinearity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q7: What is the Variance Inflation Factor (VIF), how do you calculate it, and what threshold indicates severe multicollinearity?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="feature-engineering-selection-transforms-signals-redundancy-elimination">Feature Engineering &amp; Selection — Transforms, Signals &amp; Redundancy Elimination<a class="headerlink" href="#feature-engineering-selection-transforms-signals-redundancy-elimination" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>Information theory (entropy, mutual information), probability distributions, and linear models. See <a href="../../02-mathematics/foundations-math-deep-dive/">Mathematical Foundations</a>, <a href="../../02-mathematics/probability-statistics-deep-dive/">Probability &amp; Statistics</a>, and <a href="../../04-classical-ml/linear-regression-deep-dive/">Linear Regression</a>.</p>
+</div>
+<hr />
+<h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
+<p>Machine learning models cannot learn signals that are absent from their input representations. While deep learning architectures can discover latent representations from raw perceptual data (pixels, audio waveforms, text tokens), tabular and structured predictive systems live or die by <strong>Feature Engineering and Feature Selection</strong>:</p>
+<ul>
+<li><strong>Feature Engineering</strong>: Creating informative mathematical representations <span class="arithmatex">\(\mathbf{z} = \phi(\mathbf{x})\)</span> that expose the underlying physical, economic, or temporal mechanics of the problem directly to the learning algorithm.</li>
+<li><strong>Feature Selection</strong>: Pruning uninformative, noisy, or collinear features to maximize signal-to-noise ratio, prevent the curse of dimensionality, eliminate lookahead leakage, and reduce inference latency.</li>
+</ul>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Raw Feature Inputs
+        RAW["Raw Domain Signals: Timestamps, Numerics, Text, Entity IDs"]
+    end
+    subgraph Feature Engineering Transformations
+        RAW --&gt; NUM["Numerical: Log/Power Transforms, Binning, Polynomial Interactions"]
+        RAW --&gt; CYC["Temporal: Cyclical Sine/Cosine, Point-in-Time Rolling Windows, Lags"]
+        RAW --&gt; TXT["Text: TF-IDF, N-Grams, Subword Tokenization"]
+        RAW --&gt; GRP["Group Aggregations: Entity Historical Trajectories &amp; Ratios"]
+    end
+    subgraph Feature Selection Pipeline
+        NUM &amp; CYC &amp; TXT &amp; GRP --&gt; FILT["Filter Methods: Mutual Information, ANOVA F-Test, Chi-Square"]
+        FILT --&gt; WRAP["Wrapper Methods: Recursive Feature Elimination (RFE)"]
+        WRAP --&gt; EMBED["Embedded Methods: L1 Lasso Regularization, Permutation Importance, SHAP"]
+    end
+    subgraph Production Serving
+        EMBED --&gt; STORE["Point-in-Time Production Feature Store"]
+    end</code></pre>
+<hr />
+<h2 id="2-intuition-real-world-framing">2. Intuition &amp; Real-World Framing<a class="headerlink" href="#2-intuition-real-world-framing" title="Permanent link">&para;</a></h2>
+<h3 id="feature-representation-defines-model-inductive-bias">Feature Representation Defines Model Inductive Bias<a class="headerlink" href="#feature-representation-defines-model-inductive-bias" title="Permanent link">&para;</a></h3>
+<p>Consider predicting an outcome that varies continuously with the hour of the day (<span class="arithmatex">\(t \in \{0, 1, \dots, 23\}\)</span>).
+At 23:59 (11:59 PM), the temperature or traffic condition is nearly identical to 00:01 (12:01 AM).</p>
+<p>If represented as a raw integer <span class="arithmatex">\(t \in [0, 23]\)</span>:
+- The mathematical distance between 23:00 and 00:00 is <span class="arithmatex">\(|23 - 0| = 23\)</span> (the maximum possible distance in the feature space!).
+- A linear regressor or neural network must learn an abrupt, discontinuous cliff at midnight.
+- A decision tree must create artificial, brittle split thresholds at both ends (<span class="arithmatex">\(t \le 1\)</span> and <span class="arithmatex">\(t \ge 22\)</span>).</p>
+<p>By projecting <span class="arithmatex">\(t\)</span> onto the 2D unit circle via trigonometric transforms:</p>
+<div class="arithmatex">\[
+x_{\sin} = \sin\left(\frac{2\pi t}{24}\right), \qquad x_{\cos} = \cos\left(\frac{2\pi t}{24}\right)
+\]</div>
+<p>The Euclidean distance between 23:00 and 00:00 becomes:</p>
+<div class="arithmatex">\[\sqrt{(\sin(23\pi/12) - \sin(0))^2 + (\cos(23\pi/12) - \cos(0))^2} \approx 0.26\]</div>
+<p>The geometry of the feature space now mirrors the physical reality: 23:00 and 00:00 are immediate geometric neighbors.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Linear Integer Line (Flawed)
+        L1["0 (Midnight)"] --- L2["6 (Dawn)"] --- L3["12 (Noon)"] --- L4["18 (Dusk)"] --- L5["23 (Night)"]
+        L5 -. "False Discontinuous Distance = 23" .-&gt; L1
+    end
+    subgraph Cyclical Unit Circle (Preserves Physical Topology)
+        C["2D Unit Circle: (sin(2πt/24), cos(2πt/24))"]
+        C --&gt; N1["00:00 (1.0, 0.0)"]
+        C --&gt; N2["23:00 (0.96, -0.26)"]
+        N1 -. "True Smooth Distance = 0.26" .- N2
+    end</code></pre>
+<hr />
+<h2 id="3-numerical-transformations-power-transforms-discretization-and-interactions">3. Numerical Transformations: Power Transforms, Discretization and Interactions<a class="headerlink" href="#3-numerical-transformations-power-transforms-discretization-and-interactions" title="Permanent link">&para;</a></h2>
+<h3 id="31-power-transformations-box-cox-yeo-johnson">3.1 Power Transformations: Box-Cox &amp; Yeo-Johnson<a class="headerlink" href="#31-power-transformations-box-cox-yeo-johnson" title="Permanent link">&para;</a></h3>
+<p>Many parametric models (linear regression, logistic regression, Gaussian Naive Bayes) assume that features are approximately normally distributed with constant variance (homoscedasticity). Skewed, heavy-tailed features degrade gradient convergence and violate statistical assumptions.</p>
+<h4 id="the-box-cox-transformation-y-0-strictly">The Box-Cox Transformation (<span class="arithmatex">\(y &gt; 0\)</span> strictly):<a class="headerlink" href="#the-box-cox-transformation-y-0-strictly" title="Permanent link">&para;</a></h4>
+<p>The Box-Cox transform parameter <span class="arithmatex">\(\lambda\)</span> is estimated via Maximum Likelihood Estimation:</p>
+<div class="arithmatex">\[
+y^{(\lambda)} = \begin{cases} 
+\frac{y^\lambda - 1}{\lambda} &amp; \text{if } \lambda \ne 0 \\
+\ln(y) &amp; \text{if } \lambda = 0 
+\end{cases}
+\]</div>
+<ul>
+<li><span class="arithmatex">\(\lambda = 1\)</span>: Linear (no transformation).</li>
+<li><span class="arithmatex">\(\lambda = 0.5\)</span>: Square root transformation (<span class="arithmatex">\(\sqrt{y}\)</span>).</li>
+<li><span class="arithmatex">\(\lambda = 0\)</span>: Natural log transformation (<span class="arithmatex">\(\ln y\)</span>).</li>
+<li><span class="arithmatex">\(\lambda = -1\)</span>: Reciprocal transformation (<span class="arithmatex">\(1/y\)</span>).</li>
+</ul>
+<h4 id="the-yeo-johnson-transformation-supports-zero-and-negative-values">The Yeo-Johnson Transformation (Supports zero and negative values):<a class="headerlink" href="#the-yeo-johnson-transformation-supports-zero-and-negative-values" title="Permanent link">&para;</a></h4>
+<p>To handle zero and negative values (<span class="arithmatex">\(y \le 0\)</span>):</p>
+<div class="arithmatex">\[
+\psi(\lambda, y) = \begin{cases}
+\frac{(y + 1)^\lambda - 1}{\lambda} &amp; \text{if } \lambda \ne 0, \; y \ge 0 \\
+\ln(y + 1) &amp; \text{if } \lambda = 0, \; y \ge 0 \\
+-\frac{(-y + 1)^{2 - \lambda} - 1}{2 - \lambda} &amp; \text{if } \lambda \ne 2, \; y &lt; 0 \\
+-\ln(-y + 1) &amp; \text{if } \lambda = 2, \; y &lt; 0
+\end{cases}
+\]</div>
+<h3 id="32-binning-discretization">3.2 Binning &amp; Discretization<a class="headerlink" href="#32-binning-discretization" title="Permanent link">&para;</a></h3>
+<p>Discretization converts continuous variables into discrete intervals (bins):
+1. <strong>Uniform Binning (Equal Width)</strong>: Divides range <span class="arithmatex">\([x_{\min}, x_{\max}]\)</span> into <span class="arithmatex">\(K\)</span> intervals of equal size <span class="arithmatex">\(\frac{x_{\max} - x_{\min}}{K}\)</span>. Sensitive to outliers (outliers leave middle bins empty).
+2. <strong>Quantile Binning (Equal Frequency)</strong>: Divides data using sample percentiles such that every bin contains exactly <span class="arithmatex">\(N / K\)</span> samples. Robust against outliers and normalizes feature distribution.</p>
+<h3 id="33-polynomial-non-linear-interaction-features">3.3 Polynomial &amp; Non-Linear Interaction Features<a class="headerlink" href="#33-polynomial-non-linear-interaction-features" title="Permanent link">&para;</a></h3>
+<p>For feature vector <span class="arithmatex">\(\mathbf{x} = [x_1, x_2]^T\)</span>, degree-2 polynomial expansion generates:</p>
+<div class="arithmatex">\[
+\phi(\mathbf{x}) = [1, \; x_1, \; x_2, \; x_1^2, \; x_1 x_2, \; x_2^2]
+\]</div>
+<p>Interaction terms like <span class="arithmatex">\(x_1 x_2\)</span> allow linear models to capture multiplicative synergies (e.g., <span class="arithmatex">\(\text{Price} \times \text{Quantity} = \text{Total Revenue}\)</span>).
+<em>The Risk:</em> For <span class="arithmatex">\(d\)</span> features, degree-<span class="arithmatex">\(k\)</span> expansion generates <span class="arithmatex">\(\binom{d + k}{k}\)</span> features. For <span class="arithmatex">\(d = 100, k = 2\)</span>, features explode to <span class="arithmatex">\(\approx 5{,}150\)</span>, causing high multicollinearity and overfitting.</p>
+<hr />
+<h2 id="4-temporal-features-cyclical-encoding-lags-and-point-in-time-windows">4. Temporal Features: Cyclical Encoding, Lags and Point-in-Time Windows<a class="headerlink" href="#4-temporal-features-cyclical-encoding-lags-and-point-in-time-windows" title="Permanent link">&para;</a></h2>
+<h3 id="41-trigonometric-cyclical-encoding">4.1 Trigonometric Cyclical Encoding<a class="headerlink" href="#41-trigonometric-cyclical-encoding" title="Permanent link">&para;</a></h3>
+<p>For any periodic feature <span class="arithmatex">\(t\)</span> with natural cycle period <span class="arithmatex">\(T\)</span> (e.g., hour <span class="arithmatex">\(T=24\)</span>, day of week <span class="arithmatex">\(T=7\)</span>, month <span class="arithmatex">\(T=12\)</span>):</p>
+<div class="arithmatex">\[
+x_{\sin} = \sin\left(\frac{2\pi t}{T}\right), \qquad x_{\cos} = \cos\left(\frac{2\pi t}{T}\right)
+\]</div>
+<p><strong>Why both sine and cosine are strictly required:</strong>
+If you only include <span class="arithmatex">\(\sin\left(\frac{2\pi t}{T}\right)\)</span>, two distinct times will produce identical feature values:
+$<span class="arithmatex">\(\sin\left(\frac{2\pi \cdot 2}{24}\right) = \sin\left(\frac{\pi}{6}\right) = 0.5\)</span>$
+$<span class="arithmatex">\(\sin\left(\frac{2\pi \cdot 10}{24}\right) = \sin\left(\frac{5\pi}{6}\right) = 0.5\)</span>$
+2:00 AM and 10:00 AM would map to identical coordinates! Cosine provides the orthogonal phase information: <span class="arithmatex">\(\cos(2:00) \approx 0.866\)</span> while <span class="arithmatex">\(\cos(10:00) \approx -0.866\)</span>, uniquely identifying every point on the unit circle.</p>
+<pre class="mermaid"><code>flowchart LR
+    Hour["Hour t ∈ [0..23]"] --&gt; Sin["x_sin = sin(2πt/24)"]
+    Hour --&gt; Cos["x_cos = cos(2πt/24)"]
+    Sin &amp; Cos --&gt; Point["Unique Coordinate (x_sin, x_cos) on Unit Circle"]</code></pre>
+<h3 id="42-point-in-time-aggregations-and-lookahead-leakage-prevention">4.2 Point-in-Time Aggregations and Lookahead Leakage Prevention<a class="headerlink" href="#42-point-in-time-aggregations-and-lookahead-leakage-prevention" title="Permanent link">&para;</a></h3>
+<p>In temporal machine learning (financial forecasting, fraud detection, churn prediction), <strong>Lookahead Leakage</strong> occurs when feature values incorporate information that occurred after the prediction timestamp <span class="arithmatex">\(T_{\text{event}}\)</span>.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Data Leakage (Flawed Future Leak)
+        E1["Event Timestamp: 2024-06-01 14:00"]
+        F1["Rolling Average includes data up to 2024-06-01 23:59!"]
+        E1 -. Lookahead Bias .-&gt; F1
+    end
+    subgraph Point-in-Time Correct (Leak-Free)
+        E2["Event Timestamp: 2024-06-01 14:00"]
+        F2["Rolling Average strictly filtered: timestamp &lt; 2024-06-01 14:00"]
+        E2 --&gt; F2
+    end</code></pre>
+<h4 id="point-in-time-mathematical-formulation">Point-in-Time Mathematical Formulation:<a class="headerlink" href="#point-in-time-mathematical-formulation" title="Permanent link">&para;</a></h4>
+<p>For an entity <span class="arithmatex">\(e\)</span> at prediction time <span class="arithmatex">\(t\)</span>, rolling window features over historical interval <span class="arithmatex">\(W\)</span> must satisfy:</p>
+<div class="arithmatex">\[
+\text{Mean\_Spend}_{e}(t, W) = \frac{1}{|\mathcal{T}_{e}(t, W)|} \sum_{i \in \mathcal{T}_{e}(t, W)} y_i
+\]</div>
+<p>where the index set is strictly bounded by:</p>
+<div class="arithmatex">\[
+\mathcal{T}_{e}(t, W) = \{i \mid \text{entity}_i = e, \quad t - W \le \tau_i &lt; t\}
+\]</div>
+<p>Notice the strict inequality <span class="arithmatex">\(\tau_i &lt; t\)</span>: the current event's own transaction cannot participate in historical feature computation.</p>
+<hr />
+<h2 id="5-text-representations-tf-idf-and-subword-tokenization">5. Text Representations: TF-IDF and Subword Tokenization<a class="headerlink" href="#5-text-representations-tf-idf-and-subword-tokenization" title="Permanent link">&para;</a></h2>
+<p>Before deep language models, classical ML represented text via statistical term-frequency matrices.</p>
+<h3 id="51-term-frequency-inverse-document-frequency-tf-idf">5.1 Term Frequency - Inverse Document Frequency (TF-IDF)<a class="headerlink" href="#51-term-frequency-inverse-document-frequency-tf-idf" title="Permanent link">&para;</a></h3>
+<p>TF-IDF quantifies the importance of word <span class="arithmatex">\(t\)</span> within document <span class="arithmatex">\(d\)</span> relative to a corpus collection <span class="arithmatex">\(\mathcal{D}\)</span> of <span class="arithmatex">\(N\)</span> documents:</p>
+<div class="arithmatex">\[
+\text{TF-IDF}(t, d, \mathcal{D}) = \text{TF}(t, d) \times \text{IDF}(t, \mathcal{D})
+\]</div>
+<ol>
+<li><strong>Term Frequency <span class="arithmatex">\(\text{TF}(t, d)\)</span></strong>: Relative frequency of token <span class="arithmatex">\(t\)</span> in document <span class="arithmatex">\(d\)</span>:
+   $<span class="arithmatex">\(\text{TF}(t, d) = \frac{f_{t, d}}{\sum_{t' \in d} f_{t', d}}\)</span>$</li>
+<li><strong>Smooth Inverse Document Frequency <span class="arithmatex">\(\text{IDF}(t, \mathcal{D})\)</span></strong>:
+   $<span class="arithmatex">\(\text{IDF}(t, \mathcal{D}) = \ln\left( \frac{1 + N}{1 + \text{DF}(t)} \right) + 1\)</span>$
+   where <span class="arithmatex">\(\text{DF}(t)\)</span> is the number of documents in corpus <span class="arithmatex">\(\mathcal{D}\)</span> containing term <span class="arithmatex">\(t\)</span>. Words appearing in every document (e.g., "the", "is") yield <span class="arithmatex">\(\text{IDF} \approx 1\)</span>, while rare diagnostic keywords yield large IDF multipliers.</li>
+<li><strong>L2 Normalization</strong>: To eliminate document length bias, each document vector <span class="arithmatex">\(\mathbf{v}_d\)</span> is projected onto the unit sphere:
+   $<span class="arithmatex">\(\mathbf{v}_d \leftarrow \frac{\mathbf{v}_d}{\|\mathbf{v}_d\|_2}\)</span>$</li>
+</ol>
+<pre class="mermaid"><code>flowchart LR
+    DOC["Raw Text Document"] --&gt; TOK["Tokenization &amp; Stopword Removal"]
+    TOK --&gt; TF["Compute Term Frequency TF(t, d)"]
+    CORP["Corpus Document Frequency DF(t)"] --&gt; IDF["Compute Inverse Document Frequency IDF(t)"]
+    TF &amp; IDF --&gt; PROD["TF-IDF = TF * IDF"]
+    PROD --&gt; L2["L2 Vector Normalization: v / ||v||_2"]</code></pre>
+<hr />
+<h2 id="6-feature-selection-filter-wrapper-and-embedded-paradigms">6. Feature Selection: Filter, Wrapper and Embedded Paradigms<a class="headerlink" href="#6-feature-selection-filter-wrapper-and-embedded-paradigms" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    FS["Feature Selection Paradigms"] --&gt; FILT["Filter Methods (Statistical, Model-Agnostic)"]
+    FS --&gt; WRAP["Wrapper Methods (Iterative, Model-Guided)"]
+    FS --&gt; EMB["Embedded Methods (Built into Model Objective)"]
+    FILT --&gt; F1["Mutual Information, Pearson Correlation, ANOVA F-test, Chi-Square"]
+    WRAP --&gt; W1["Recursive Feature Elimination (RFE), Forward / Backward Selection"]
+    EMB --&gt; E1["L1 Lasso Sparsity, Tree Permutation Importance, SHAP Values"]</code></pre>
+<h3 id="61-filter-methods-information-theory-mutual-information">6.1 Filter Methods: Information Theory &amp; Mutual Information<a class="headerlink" href="#61-filter-methods-information-theory-mutual-information" title="Permanent link">&para;</a></h3>
+<p>Filter methods evaluate the statistical relationship between each feature <span class="arithmatex">\(X\)</span> and the target <span class="arithmatex">\(Y\)</span> independently of any predictive model.</p>
+<h4 id="mutual-information-ix-y">Mutual Information <span class="arithmatex">\(I(X; Y)\)</span>:<a class="headerlink" href="#mutual-information-ix-y" title="Permanent link">&para;</a></h4>
+<p>Mutual Information measures the reduction in uncertainty (entropy) of target <span class="arithmatex">\(Y\)</span> given knowledge of feature <span class="arithmatex">\(X\)</span>:</p>
+<div class="arithmatex">\[
+I(X; Y) = H(Y) - H(Y \mid X) = \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x, y) \log \left( \frac{p(x, y)}{p(x) p(y)} \right)
+\]</div>
+<ul>
+<li><span class="arithmatex">\(I(X; Y) = 0\)</span> if and only if <span class="arithmatex">\(X\)</span> and <span class="arithmatex">\(Y\)</span> are <strong>strictly statistically independent</strong>.</li>
+<li>Unlike Pearson correlation <span class="arithmatex">\(\rho\)</span>, which detects only linear relationships (<span class="arithmatex">\(\rho = 0\)</span> for <span class="arithmatex">\(Y = X^2\)</span> on <span class="arithmatex">\([-1, 1]\)</span>), Mutual Information detects <strong>arbitrary non-linear, non-monotonic dependencies</strong>.</li>
+</ul>
+<h3 id="62-wrapper-methods-recursive-feature-elimination-rfe">6.2 Wrapper Methods: Recursive Feature Elimination (RFE)<a class="headerlink" href="#62-wrapper-methods-recursive-feature-elimination-rfe" title="Permanent link">&para;</a></h3>
+<p>Wrapper methods treat model training as an evaluation sub-routine:
+1. Train model on the full set of <span class="arithmatex">\(d\)</span> features.
+2. Rank features by importance (e.g., absolute weight <span class="arithmatex">\(|w_j|\)</span> in linear models or feature importances in trees).
+3. Prune the least important <span class="arithmatex">\(k\)</span> features.
+4. Retrain model on remaining features and repeat until desired feature count is achieved.</p>
+<p><em>Trade-Off:</em> Highly accurate because it accounts for feature interactions, but computationally expensive (<span class="arithmatex">\(\mathcal{O}(d)\)</span> full model training iterations).</p>
+<h3 id="63-embedded-methods-l1-regularization-lasso">6.3 Embedded Methods: L1 Regularization (Lasso)<a class="headerlink" href="#63-embedded-methods-l1-regularization-lasso" title="Permanent link">&para;</a></h3>
+<p>As derived in <a href="../../02-mathematics/linear-algebra-deep-dive/#41-vector-l_p-norms">Linear Algebra</a> and <a href="../../02-mathematics/probability-statistics-deep-dive/#11-staff-level-technical-interview-questions">Probability &amp; Statistics</a>, optimizing under an <span class="arithmatex">\(L_1\)</span> penalty:</p>
+<div class="arithmatex">\[
+\min_\mathbf{w} \frac{1}{N} \|X\mathbf{w} - \mathbf{y}\|_2^2 + \lambda \|\mathbf{w}\|_1
+\]</div>
+<p>forces non-essential feature weights to become <strong>identically zero</strong>. Features with <span class="arithmatex">\(w_j^* = 0\)</span> are automatically eliminated during model fitting.</p>
+<h3 id="64-tree-importance-mdi-vs-permutation-importance-vs-shap">6.4 Tree Importance: MDI vs. Permutation Importance vs. SHAP<a class="headerlink" href="#64-tree-importance-mdi-vs-permutation-importance-vs-shap" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Mechanism</th>
+<th>Computational Cost</th>
+<th>Major Pathology / Bias</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mean Decrease in Impurity (MDI / Gini)</strong></td>
+<td>Sum of impurity reductions across all tree splits on feature <span class="arithmatex">\(j\)</span></td>
+<td>Zero (computed during training)</td>
+<td><strong>Severely biased toward continuous, high-cardinality features</strong> or random noise!</td>
+</tr>
+<tr>
+<td><strong>Permutation Feature Importance</strong></td>
+<td>Measure drop in test metric after randomly shuffling column <span class="arithmatex">\(j\)</span></td>
+<td>Low (<span class="arithmatex">\(\mathcal{O}(d)\)</span> inferences)</td>
+<td>Correlated features split importance; shuffling out-of-distribution points</td>
+</tr>
+<tr>
+<td><strong>SHAP (Shapley Additive Explanations)</strong></td>
+<td>Axiomatic cooperative game theory attribution across all feature subsets</td>
+<td>High (<span class="arithmatex">\(\mathcal{O}(2^d)\)</span> exact, or <span class="arithmatex">\(\mathcal{O}(T \cdot L \cdot D^2)\)</span> via TreeSHAP)</td>
+<td>Gold standard for consistent, additive, theoretically grounded feature attributions</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Permutation Importance Mechanism
+        TEST["Baseline Test Set Evaluation: Baseline Score = 0.88"] --&gt; SHUFFLE["Shuffle Column 'Feature X' Randomly (Breaks Feature-Target Link)"]
+        SHUFFLE --&gt; RE_EVAL["Re-evaluate Model on Corrupted Test Set: New Score = 0.72"]
+        RE_EVAL --&gt; DIFF["Feature Importance = Baseline (0.88) - Corrupted (0.72) = +0.16"]
+    end</code></pre>
+<hr />
+<h2 id="7-python-implementation-cyclical-encoders-point-in-time-windows-and-mutual-information">7. Python Implementation: Cyclical Encoders, Point-in-Time Windows and Mutual Information<a class="headerlink" href="#7-python-implementation-cyclical-encoders-point-in-time-windows-and-mutual-information" title="Permanent link">&para;</a></h2>
+<p>Below is a complete, runnable script featuring:
+1. A from-scratch <strong>Cyclical Sine/Cosine Temporal Transformer</strong>.
+2. A from-scratch <strong>Discrete Mutual Information Estimator</strong>.
+3. A <strong>Point-in-Time Leak-Free Aggregator</strong> for temporal event logs.
+4. A comparison between <strong>MDI Gini Importance vs. Permutation Feature Importance</strong> demonstrating cardinality bias.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="sd">"""</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="sd">feature_engineering_selection_deep_dive.py</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="sd">Production implementations of cyclical transforms, point-in-time windowing,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="sd">mutual information calculation, and permutation importance.</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="sd">"""</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.inspection</span><span class="w"> </span><span class="kn">import</span> <span class="n">permutation_importance</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="k">class</span><span class="w"> </span><span class="nc">CyclicalDateTimeEncoder</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="sd">    Transforms periodic integer timestamps into 2D unit circle coordinates (sin, cos).</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="sd">    """</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">period</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">period</span><span class="p">)</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>        <span class="k">return</span> <span class="bp">self</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="n">x_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="n">radians</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x_arr</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">period</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>        <span class="n">sin_feat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">radians</span><span class="p">)</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="n">cos_feat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">radians</span><span class="p">)</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">sin_feat</span><span class="p">,</span> <span class="n">cos_feat</span><span class="p">])</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_discrete_mutual_information</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="sd">    Calculates exact Shannon Mutual Information I(X; Y) between discrete arrays x and y.</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="sd">    Formula: I(X; Y) = sum p(x, y) * log( p(x, y) / (p(x) * p(y)) )</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="sd">    """</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="s2">"Inputs must have identical length"</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>    <span class="c1"># Compute joint frequencies</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>    <span class="n">joint_counts</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>    <span class="n">x_counts</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    <span class="n">y_counts</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>    <span class="k">for</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>        <span class="n">joint_counts</span><span class="p">[(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">)]</span> <span class="o">=</span> <span class="n">joint_counts</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>        <span class="n">x_counts</span><span class="p">[</span><span class="n">xi</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>        <span class="n">y_counts</span><span class="p">[</span><span class="n">yi</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">yi</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>    <span class="n">mi</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>    <span class="k">for</span> <span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">),</span> <span class="n">n_xy</span> <span class="ow">in</span> <span class="n">joint_counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>        <span class="n">p_xy</span> <span class="o">=</span> <span class="n">n_xy</span> <span class="o">/</span> <span class="n">N</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>        <span class="n">p_x</span> <span class="o">=</span> <span class="n">x_counts</span><span class="p">[</span><span class="n">xi</span><span class="p">]</span> <span class="o">/</span> <span class="n">N</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>        <span class="n">p_y</span> <span class="o">=</span> <span class="n">y_counts</span><span class="p">[</span><span class="n">yi</span><span class="p">]</span> <span class="o">/</span> <span class="n">N</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>        <span class="n">mi</span> <span class="o">+=</span> <span class="n">p_xy</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p_xy</span> <span class="o">/</span> <span class="p">(</span><span class="n">p_x</span> <span class="o">*</span> <span class="n">p_y</span><span class="p">))</span>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">mi</span><span class="p">)</span>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a><span class="k">def</span><span class="w"> </span><span class="nf">point_in_time_rolling_features</span><span class="p">(</span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>    <span class="n">events_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">window_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3600</span>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a><span class="sd">    Generates point-in-time rolling customer spend features strictly avoiding lookahead bias.</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a><span class="sd">    Guarantees: each transaction uses ONLY events strictly prior to its own timestamp.</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a><span class="sd">    """</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">events_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"timestamp"</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>    <span class="n">rolling_means</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>    <span class="c1"># Fast point-in-time rolling calculation per user</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>    <span class="k">for</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"user_id"</span><span class="p">):</span>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>        <span class="n">times</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">"timestamp"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>        <span class="n">amounts</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">"amount"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>
+</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">)):</span>
+</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>            <span class="n">current_time</span> <span class="o">=</span> <span class="n">times</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>            <span class="c1"># Strict inequality: time &lt; current_time and time &gt;= current_time - window</span>
+</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>            <span class="n">window_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">times</span> <span class="o">&lt;</span> <span class="n">current_time</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">times</span> <span class="o">&gt;=</span> <span class="n">current_time</span> <span class="o">-</span> <span class="n">window_seconds</span><span class="p">)</span>
+</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a>            <span class="n">window_amounts</span> <span class="o">=</span> <span class="n">amounts</span><span class="p">[</span><span class="n">window_mask</span><span class="p">]</span>
+</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>
+</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>            <span class="n">mean_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">window_amounts</span><span class="p">))</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">window_amounts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>            <span class="n">rolling_means</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">group</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">mean_val</span><span class="p">))</span>
+</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>
+</span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a>    <span class="n">rolling_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rolling_means</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"index"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"spend_mean_prev_</span><span class="si">{</span><span class="n">window_seconds</span><span class="si">}</span><span class="s2">s"</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"index"</span><span class="p">)</span>
+</span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rolling_df</span><span class="p">)</span>
+</span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a>    <span class="k">return</span> <span class="n">df</span>
+</span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>
+</span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>
+</span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a><span class="k">def</span><span class="w"> </span><span class="nf">demonstrate_mdi_cardinality_bias</span><span class="p">():</span>
+</span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a><span class="sd">    Demonstrates how Random Forest MDI Gini importance severely overestimates</span>
+</span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a><span class="sd">    random high-cardinality noise features compared to Permutation Importance.</span>
+</span><span id="__span-0-95"><a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a><span class="sd">    """</span>
+</span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a>    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a>    <span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>
+</span><span id="__span-0-98"><a id="__codelineno-0-98" name="__codelineno-0-98" href="#__codelineno-0-98"></a>
+</span><span id="__span-0-99"><a id="__codelineno-0-99" name="__codelineno-0-99" href="#__codelineno-0-99"></a>    <span class="c1"># True informative binary feature</span>
+</span><span id="__span-0-100"><a id="__codelineno-0-100" name="__codelineno-0-100" href="#__codelineno-0-100"></a>    <span class="n">informative</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+</span><span id="__span-0-101"><a id="__codelineno-0-101" name="__codelineno-0-101" href="#__codelineno-0-101"></a>    <span class="c1"># Target is driven strictly by the informative feature</span>
+</span><span id="__span-0-102"><a id="__codelineno-0-102" name="__codelineno-0-102" href="#__codelineno-0-102"></a>    <span class="n">target</span> <span class="o">=</span> <span class="n">informative</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="__span-0-103"><a id="__codelineno-0-103" name="__codelineno-0-103" href="#__codelineno-0-103"></a>
+</span><span id="__span-0-104"><a id="__codelineno-0-104" name="__codelineno-0-104" href="#__codelineno-0-104"></a>    <span class="c1"># Noise feature with high cardinality (unique IDs)</span>
+</span><span id="__span-0-105"><a id="__codelineno-0-105" name="__codelineno-0-105" href="#__codelineno-0-105"></a>    <span class="n">random_high_cardinality</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+</span><span id="__span-0-106"><a id="__codelineno-0-106" name="__codelineno-0-106" href="#__codelineno-0-106"></a>    <span class="c1"># Noise feature with low cardinality</span>
+</span><span id="__span-0-107"><a id="__codelineno-0-107" name="__codelineno-0-107" href="#__codelineno-0-107"></a>    <span class="n">random_low_cardinality</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+</span><span id="__span-0-108"><a id="__codelineno-0-108" name="__codelineno-0-108" href="#__codelineno-0-108"></a>
+</span><span id="__span-0-109"><a id="__codelineno-0-109" name="__codelineno-0-109" href="#__codelineno-0-109"></a>    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">informative</span><span class="p">,</span> <span class="n">random_high_cardinality</span><span class="p">,</span> <span class="n">random_low_cardinality</span><span class="p">])</span>
+</span><span id="__span-0-110"><a id="__codelineno-0-110" name="__codelineno-0-110" href="#__codelineno-0-110"></a>    <span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Informative_Feature"</span><span class="p">,</span> <span class="s2">"Random_High_Card_Noise"</span><span class="p">,</span> <span class="s2">"Random_Continuous_Noise"</span><span class="p">]</span>
+</span><span id="__span-0-111"><a id="__codelineno-0-111" name="__codelineno-0-111" href="#__codelineno-0-111"></a>
+</span><span id="__span-0-112"><a id="__codelineno-0-112" name="__codelineno-0-112" href="#__codelineno-0-112"></a>    <span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-0-113"><a id="__codelineno-0-113" name="__codelineno-0-113" href="#__codelineno-0-113"></a>    <span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+</span><span id="__span-0-114"><a id="__codelineno-0-114" name="__codelineno-0-114" href="#__codelineno-0-114"></a>
+</span><span id="__span-0-115"><a id="__codelineno-0-115" name="__codelineno-0-115" href="#__codelineno-0-115"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"=== MDI Gini Importance vs Permutation Feature Importance ==="</span><span class="p">)</span>
+</span><span id="__span-0-116"><a id="__codelineno-0-116" name="__codelineno-0-116" href="#__codelineno-0-116"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"MDI Gini Importances (Notice high cardinality noise is ranked HIGHEST!):"</span><span class="p">)</span>
+</span><span id="__span-0-117"><a id="__codelineno-0-117" name="__codelineno-0-117" href="#__codelineno-0-117"></a>    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">imp</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">feature_names</span><span class="p">,</span> <span class="n">rf</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">):</span>
+</span><span id="__span-0-118"><a id="__codelineno-0-118" name="__codelineno-0-118" href="#__codelineno-0-118"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">25s</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">imp</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-119"><a id="__codelineno-0-119" name="__codelineno-0-119" href="#__codelineno-0-119"></a>
+</span><span id="__span-0-120"><a id="__codelineno-0-120" name="__codelineno-0-120" href="#__codelineno-0-120"></a>    <span class="c1"># Compute Permutation Feature Importance on a validation holdout</span>
+</span><span id="__span-0-121"><a id="__codelineno-0-121" name="__codelineno-0-121" href="#__codelineno-0-121"></a>    <span class="n">perm_res</span> <span class="o">=</span> <span class="n">permutation_importance</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-0-122"><a id="__codelineno-0-122" name="__codelineno-0-122" href="#__codelineno-0-122"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Permutation Feature Importance (Correctly identifies true signal!):"</span><span class="p">)</span>
+</span><span id="__span-0-123"><a id="__codelineno-0-123" name="__codelineno-0-123" href="#__codelineno-0-123"></a>    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">imp</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">feature_names</span><span class="p">,</span> <span class="n">perm_res</span><span class="o">.</span><span class="n">importances_mean</span><span class="p">):</span>
+</span><span id="__span-0-124"><a id="__codelineno-0-124" name="__codelineno-0-124" href="#__codelineno-0-124"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">25s</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">imp</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-125"><a id="__codelineno-0-125" name="__codelineno-0-125" href="#__codelineno-0-125"></a>    <span class="nb">print</span><span class="p">()</span>
+</span><span id="__span-0-126"><a id="__codelineno-0-126" name="__codelineno-0-126" href="#__codelineno-0-126"></a>
+</span><span id="__span-0-127"><a id="__codelineno-0-127" name="__codelineno-0-127" href="#__codelineno-0-127"></a>
+</span><span id="__span-0-128"><a id="__codelineno-0-128" name="__codelineno-0-128" href="#__codelineno-0-128"></a><span class="c1"># ---------------------------------------------------------</span>
+</span><span id="__span-0-129"><a id="__codelineno-0-129" name="__codelineno-0-129" href="#__codelineno-0-129"></a><span class="c1"># Verification &amp; Execution</span>
+</span><span id="__span-0-130"><a id="__codelineno-0-130" name="__codelineno-0-130" href="#__codelineno-0-130"></a><span class="c1"># ---------------------------------------------------------</span>
+</span><span id="__span-0-131"><a id="__codelineno-0-131" name="__codelineno-0-131" href="#__codelineno-0-131"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-0-132"><a id="__codelineno-0-132" name="__codelineno-0-132" href="#__codelineno-0-132"></a>    <span class="c1"># 1. Test Cyclical Encoder</span>
+</span><span id="__span-0-133"><a id="__codelineno-0-133" name="__codelineno-0-133" href="#__codelineno-0-133"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"=== Testing Cyclical Encoding ==="</span><span class="p">)</span>
+</span><span id="__span-0-134"><a id="__codelineno-0-134" name="__codelineno-0-134" href="#__codelineno-0-134"></a>    <span class="n">hours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">23</span><span class="p">])</span>
+</span><span id="__span-0-135"><a id="__codelineno-0-135" name="__codelineno-0-135" href="#__codelineno-0-135"></a>    <span class="n">encoder</span> <span class="o">=</span> <span class="n">CyclicalDateTimeEncoder</span><span class="p">(</span><span class="n">period</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+</span><span id="__span-0-136"><a id="__codelineno-0-136" name="__codelineno-0-136" href="#__codelineno-0-136"></a>    <span class="n">encoded_hours</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">hours</span><span class="p">)</span>
+</span><span id="__span-0-137"><a id="__codelineno-0-137" name="__codelineno-0-137" href="#__codelineno-0-137"></a>    <span class="k">for</span> <span class="n">h</span><span class="p">,</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">hours</span><span class="p">,</span> <span class="n">encoded_hours</span><span class="p">):</span>
+</span><span id="__span-0-138"><a id="__codelineno-0-138" name="__codelineno-0-138" href="#__codelineno-0-138"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Hour </span><span class="si">{</span><span class="n">h</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> -&gt; Sin: </span><span class="si">{</span><span class="n">s</span><span class="si">:</span><span class="s2">7.4f</span><span class="si">}</span><span class="s2">, Cos: </span><span class="si">{</span><span class="n">c</span><span class="si">:</span><span class="s2">7.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-139"><a id="__codelineno-0-139" name="__codelineno-0-139" href="#__codelineno-0-139"></a>
+</span><span id="__span-0-140"><a id="__codelineno-0-140" name="__codelineno-0-140" href="#__codelineno-0-140"></a>    <span class="c1"># Euclidean distance between 23:00 and 00:00</span>
+</span><span id="__span-0-141"><a id="__codelineno-0-141" name="__codelineno-0-141" href="#__codelineno-0-141"></a>    <span class="n">dist_23_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">encoded_hours</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">-</span> <span class="n">encoded_hours</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span id="__span-0-142"><a id="__codelineno-0-142" name="__codelineno-0-142" href="#__codelineno-0-142"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Euclidean distance between 23:00 and 00:00 on unit circle: </span><span class="si">{</span><span class="n">dist_23_0</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-143"><a id="__codelineno-0-143" name="__codelineno-0-143" href="#__codelineno-0-143"></a>
+</span><span id="__span-0-144"><a id="__codelineno-0-144" name="__codelineno-0-144" href="#__codelineno-0-144"></a>    <span class="c1"># 2. Test Discrete Mutual Information</span>
+</span><span id="__span-0-145"><a id="__codelineno-0-145" name="__codelineno-0-145" href="#__codelineno-0-145"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"=== Testing Mutual Information ==="</span><span class="p">)</span>
+</span><span id="__span-0-146"><a id="__codelineno-0-146" name="__codelineno-0-146" href="#__codelineno-0-146"></a>    <span class="n">x_independent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</span><span id="__span-0-147"><a id="__codelineno-0-147" name="__codelineno-0-147" href="#__codelineno-0-147"></a>    <span class="n">y_independent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</span><span id="__span-0-148"><a id="__codelineno-0-148" name="__codelineno-0-148" href="#__codelineno-0-148"></a>    <span class="n">mi_indep</span> <span class="o">=</span> <span class="n">calculate_discrete_mutual_information</span><span class="p">(</span><span class="n">x_independent</span><span class="p">,</span> <span class="n">y_independent</span><span class="p">)</span>
+</span><span id="__span-0-149"><a id="__codelineno-0-149" name="__codelineno-0-149" href="#__codelineno-0-149"></a>
+</span><span id="__span-0-150"><a id="__codelineno-0-150" name="__codelineno-0-150" href="#__codelineno-0-150"></a>    <span class="n">x_dependent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</span><span id="__span-0-151"><a id="__codelineno-0-151" name="__codelineno-0-151" href="#__codelineno-0-151"></a>    <span class="n">y_dependent</span> <span class="o">=</span> <span class="n">x_dependent</span>  <span class="c1"># Perfect deterministic dependence</span>
+</span><span id="__span-0-152"><a id="__codelineno-0-152" name="__codelineno-0-152" href="#__codelineno-0-152"></a>    <span class="n">mi_dep</span> <span class="o">=</span> <span class="n">calculate_discrete_mutual_information</span><span class="p">(</span><span class="n">x_dependent</span><span class="p">,</span> <span class="n">y_dependent</span><span class="p">)</span>
+</span><span id="__span-0-153"><a id="__codelineno-0-153" name="__codelineno-0-153" href="#__codelineno-0-153"></a>
+</span><span id="__span-0-154"><a id="__codelineno-0-154" name="__codelineno-0-154" href="#__codelineno-0-154"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Mutual Information (Independent Features):  </span><span class="si">{</span><span class="n">mi_indep</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> (Expected ≈ 0.0)"</span><span class="p">)</span>
+</span><span id="__span-0-155"><a id="__codelineno-0-155" name="__codelineno-0-155" href="#__codelineno-0-155"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Mutual Information (Deterministic Identity): </span><span class="si">{</span><span class="n">mi_dep</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> (Expected = ln(2) ≈ 0.6931)</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-156"><a id="__codelineno-0-156" name="__codelineno-0-156" href="#__codelineno-0-156"></a>
+</span><span id="__span-0-157"><a id="__codelineno-0-157" name="__codelineno-0-157" href="#__codelineno-0-157"></a>    <span class="c1"># 3. Test Point-in-Time Rolling Aggregator</span>
+</span><span id="__span-0-158"><a id="__codelineno-0-158" name="__codelineno-0-158" href="#__codelineno-0-158"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"=== Testing Point-in-Time Rolling Feature Extraction ==="</span><span class="p">)</span>
+</span><span id="__span-0-159"><a id="__codelineno-0-159" name="__codelineno-0-159" href="#__codelineno-0-159"></a>    <span class="n">events</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+</span><span id="__span-0-160"><a id="__codelineno-0-160" name="__codelineno-0-160" href="#__codelineno-0-160"></a>        <span class="s2">"user_id"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+</span><span id="__span-0-161"><a id="__codelineno-0-161" name="__codelineno-0-161" href="#__codelineno-0-161"></a>        <span class="s2">"timestamp"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">3000</span><span class="p">],</span>  <span class="c1"># Seconds</span>
+</span><span id="__span-0-162"><a id="__codelineno-0-162" name="__codelineno-0-162" href="#__codelineno-0-162"></a>        <span class="s2">"amount"</span><span class="p">:</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">],</span>
+</span><span id="__span-0-163"><a id="__codelineno-0-163" name="__codelineno-0-163" href="#__codelineno-0-163"></a>    <span class="p">})</span>
+</span><span id="__span-0-164"><a id="__codelineno-0-164" name="__codelineno-0-164" href="#__codelineno-0-164"></a>    <span class="n">pit_df</span> <span class="o">=</span> <span class="n">point_in_time_rolling_features</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">window_seconds</span><span class="o">=</span><span class="mi">3600</span><span class="p">)</span>
+</span><span id="__span-0-165"><a id="__codelineno-0-165" name="__codelineno-0-165" href="#__codelineno-0-165"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">pit_df</span><span class="p">[[</span><span class="s2">"user_id"</span><span class="p">,</span> <span class="s2">"timestamp"</span><span class="p">,</span> <span class="s2">"amount"</span><span class="p">,</span> <span class="s2">"spend_mean_prev_3600s"</span><span class="p">]])</span>
+</span><span id="__span-0-166"><a id="__codelineno-0-166" name="__codelineno-0-166" href="#__codelineno-0-166"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Notice: First transaction for each user has 0.0 prior spend; no future events leaked!</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-167"><a id="__codelineno-0-167" name="__codelineno-0-167" href="#__codelineno-0-167"></a>
+</span><span id="__span-0-168"><a id="__codelineno-0-168" name="__codelineno-0-168" href="#__codelineno-0-168"></a>    <span class="c1"># 4. Demonstrate MDI Gini Cardinality Bias</span>
+</span><span id="__span-0-169"><a id="__codelineno-0-169" name="__codelineno-0-169" href="#__codelineno-0-169"></a>    <span class="n">demonstrate_mdi_cardinality_bias</span><span class="p">()</span>
+</span></code></pre></div>
+<hr />
+<h2 id="8-common-errors-and-debugging">8. Common Errors and Debugging<a class="headerlink" href="#8-common-errors-and-debugging" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Bug / Phenomenon</th>
+<th>Root Cause</th>
+<th>Diagnosis Method</th>
+<th>Production Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Lookahead Bias in Time Series</strong></td>
+<td>Using <code>df['spend'].rolling(10).mean()</code> without shifting (<code>.shift(1)</code>), leaking the current and future values into the predictor.</td>
+<td>Check feature importance: feature has unrealistic 0.99 AUC or test error spikes on future out-of-time splits.</td>
+<td>Always apply strict temporal bounds: <span class="arithmatex">\(\tau &lt; t_{\text{prediction}}\)</span> or call <code>.shift(1)</code> after rolling windows.</td>
+</tr>
+<tr>
+<td><strong>Variance Inflation Factor (VIF) Explosion</strong></td>
+<td>Adding polynomial interaction terms (<span class="arithmatex">\(x_1 x_2, x_1^2\)</span>) creates severe multicollinearity, inflating weight variance.</td>
+<td>Compute <span class="arithmatex">\(\text{VIF}_j = \frac{1}{1 - R_j^2}\)</span>. If <span class="arithmatex">\(\text{VIF} &gt; 10\)</span>, collinearity is severe.</td>
+<td>Apply PCA to orthogonalize features, or use <span class="arithmatex">\(L_1\)</span> Lasso / Ridge regularization.</td>
+</tr>
+<tr>
+<td><strong>Box-Cox Negative Value Crash</strong></td>
+<td>Feeding non-positive values (<span class="arithmatex">\(x \le 0\)</span>) to standard Box-Cox transform raises <code>ValueError: Data must be positive</code>.</td>
+<td>Inspect <code>np.min(X) &lt;= 0</code>.</td>
+<td>Use the <strong>Yeo-Johnson transformation</strong> or apply an explicit shift: <span class="arithmatex">\(x' = x - \min(x) + 1\)</span>.</td>
+</tr>
+<tr>
+<td><strong>MDI Feature Importance Mirage</strong></td>
+<td>Trusting default Random Forest <code>.feature_importances_</code> on datasets with high-cardinality noise columns (e.g., user IDs).</td>
+<td>Compare MDI rankings with Permutation Importance on a holdout set.</td>
+<td>Use <strong>Permutation Feature Importance</strong> or <strong>TreeSHAP</strong> for unbiased feature attributions.</td>
+</tr>
+<tr>
+<td><strong>Target Leakage via Rolling Target Means</strong></td>
+<td>Computing running target rates across an entity without excluding the current target record.</td>
+<td>Model achieves near-perfect cross-validation score, but fails completely on live unseen inference.</td>
+<td>Enforce out-of-fold historical isolation; only aggregate features, never target labels from the active prediction point.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9-staff-level-technical-interview-questions">9. Staff-Level Technical Interview Questions<a class="headerlink" href="#9-staff-level-technical-interview-questions" title="Permanent link">&para;</a></h2>
+<h3 id="q1-explain-cyclical-feature-encoding-using-sine-and-cosine-transformations-why-is-a-single-sine-or-cosine-transformation-insufficient">Q1: Explain cyclical feature encoding using sine and cosine transformations. Why is a single sine or cosine transformation insufficient?<a class="headerlink" href="#q1-explain-cyclical-feature-encoding-using-sine-and-cosine-transformations-why-is-a-single-sine-or-cosine-transformation-insufficient" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Periodic temporal features (hour of day, day of week, day of year) possess a continuous cyclical topology where the maximum value wraps immediately to the minimum value (e.g., 23:59 to 00:00). Linear representations introduce an artificial cliff of magnitude <span class="arithmatex">\(T-1\)</span>.</p>
+<p>To preserve topological continuity, we map periodic scalar <span class="arithmatex">\(t \in [0, T)\)</span> onto the 2D unit circle:
+$<span class="arithmatex">\(x_{\sin} = \sin\left(\frac{2\pi t}{T}\right), \qquad x_{\cos} = \cos\left(\frac{2\pi t}{T}\right)\)</span>$
+<strong>Why a single function is insufficient:</strong>
+Both <span class="arithmatex">\(\sin(\theta)\)</span> and <span class="arithmatex">\(\cos(\theta)\)</span> are non-monotonic on <span class="arithmatex">\([0, 2\pi)\)</span>. Specifically:
+- <span class="arithmatex">\(\sin(\pi - \theta) = \sin(\theta)\)</span>. For hour <span class="arithmatex">\(T=24\)</span>, <span class="arithmatex">\(\sin\left(\frac{2\pi \cdot 2}{24}\right) = \sin\left(\frac{\pi}{6}\right) = 0.5\)</span>, and <span class="arithmatex">\(\sin\left(\frac{2\pi \cdot 10}{24}\right) = \sin\left(\frac{5\pi}{6}\right) = 0.5\)</span>. A model relying solely on sine cannot distinguish 2:00 AM from 10:00 AM!
+- <span class="arithmatex">\(\cos(-\theta) = \cos(\theta)\)</span>. A model relying solely on cosine cannot distinguish morning from evening.
+Together, the pair <span class="arithmatex">\((\sin, \cos)\)</span> forms a unique bijection to the unit circle: <span class="arithmatex">\(\sin^2\theta + \cos^2\theta = 1\)</span>. The Euclidean distance between any two points <span class="arithmatex">\(t_1, t_2\)</span> is strictly proportional to their shortest circular arc distance along the period.</p>
+<hr />
+<h3 id="q2-derive-the-mutual-information-metric-between-feature-x-and-target-y-why-can-mutual-information-capture-dependencies-that-pearson-and-spearman-correlation-miss">Q2: Derive the Mutual Information metric between feature <span class="arithmatex">\(X\)</span> and target <span class="arithmatex">\(Y\)</span>. Why can Mutual Information capture dependencies that Pearson and Spearman correlation miss?<a class="headerlink" href="#q2-derive-the-mutual-information-metric-between-feature-x-and-target-y-why-can-mutual-information-capture-dependencies-that-pearson-and-spearman-correlation-miss" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+The Mutual Information <span class="arithmatex">\(I(X; Y)\)</span> is defined in terms of Shannon entropy:
+$<span class="arithmatex">\(I(X; Y) = H(X) - H(X \mid Y) = H(Y) - H(Y \mid X) = H(X) + H(Y) - H(X, Y)\)</span>$
+Expanding in terms of joint and marginal probability distributions:
+$<span class="arithmatex">\(I(X; Y) = \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x, y) \log \left( \frac{p(x, y)}{p(x) p(y)} \right) = D_{\text{KL}}(p(x, y) \parallel p(x)p(y))\)</span>$
+<span class="arithmatex">\(I(X; Y)\)</span> is the Kullback-Leibler divergence between the true joint distribution <span class="arithmatex">\(p(x, y)\)</span> and the factored independent distribution <span class="arithmatex">\(p(x)p(y)\)</span>.</p>
+<p><strong>Comparison with Correlation:</strong>
+- <strong>Pearson Correlation (<span class="arithmatex">\(\rho\)</span>):</strong> Measures exclusively linear co-variation: <span class="arithmatex">\(\rho = \frac{\text{Cov}(X, Y)}{\sigma_X \sigma_Y}\)</span>. If <span class="arithmatex">\(X \sim \mathcal{U}(-1, 1)\)</span> and <span class="arithmatex">\(Y = X^2\)</span>, <span class="arithmatex">\(Y\)</span> is completely deterministically determined by <span class="arithmatex">\(X\)</span>, yet <span class="arithmatex">\(\text{Cov}(X, Y) = \mathbb{E}[X^3] - \mathbb{E}[X]\mathbb{E}[X^2] = 0 - 0 = 0\)</span>. Pearson correlation is exactly <span class="arithmatex">\(0\)</span>!
+- <strong>Spearman Correlation (<span class="arithmatex">\(r_s\)</span>):</strong> Evaluates monotonic rank relationships; also fails on parabolic or circular dependencies.
+- <strong>Mutual Information:</strong> Since <span class="arithmatex">\(p(x, y) \ne p(x)p(y)\)</span> for <span class="arithmatex">\(Y = X^2\)</span>, <span class="arithmatex">\(I(X; X^2) = H(X^2) &gt; 0\)</span>. Mutual Information makes no parametric or functional assumptions, capturing arbitrary non-linear, non-monotonic, and multi-modal statistical dependencies.</p>
+<hr />
+<h3 id="q3-what-is-lookahead-bias-in-time-series-feature-engineering-and-how-do-point-in-time-feature-stores-prevent-it">Q3: What is lookahead bias in time-series feature engineering, and how do point-in-time feature stores prevent it?<a class="headerlink" href="#q3-what-is-lookahead-bias-in-time-series-feature-engineering-and-how-do-point-in-time-feature-stores-prevent-it" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+<strong>Lookahead Bias (Temporal Data Leakage):</strong> Occurs when a feature computed for training example at time <span class="arithmatex">\(t\)</span> incorporates information from events that occurred at timestamp <span class="arithmatex">\(\tau \ge t\)</span>.
+Example: Computing a customer's <code>average_monthly_spend</code> by executing a SQL <code>GROUP BY user_id</code> across the entire database history. When predicting whether a customer will churn on March 1st, the feature contains their spending in April, May, and June! The model achieves near-zero training error, but collapses when deployed live because future data does not exist at inference time.</p>
+<p><strong>Point-in-Time Resolution in Feature Stores (e.g., Feast, Hopsworks):</strong>
+Production feature stores enforce <strong>Point-in-Time Joins</strong> (also called "AS OF" joins):
+1. The training dataset consists of entity IDs with explicit observation timestamps: <span class="arithmatex">\((\text{user\_id}, t_{\text{obs}})\)</span>.
+2. For each record, the feature store joins historical feature values by querying the feature log strictly as it existed at <span class="arithmatex">\(t_{\text{obs}}\)</span>:
+   $<span class="arithmatex">\(\text{Feature Value} = \max_{\tau &lt; t_{\text{obs}}} f(\text{user\_id}, \tau)\)</span>$
+3. Ensures that historical training feature vectors exactly match the state of the production key-value store when an inference request arrives at timestamp <span class="arithmatex">\(t_{\text{obs}}\)</span>.</p>
+<hr />
+<h3 id="q4-contrast-mean-decrease-in-impurity-mdi-gini-importance-permutation-feature-importance-and-shap-values-why-does-mdi-bias-toward-high-cardinality-features">Q4: Contrast Mean Decrease in Impurity (MDI / Gini Importance), Permutation Feature Importance, and SHAP values. Why does MDI bias toward high-cardinality features?<a class="headerlink" href="#q4-contrast-mean-decrease-in-impurity-mdi-gini-importance-permutation-feature-importance-and-shap-values-why-does-mdi-bias-toward-high-cardinality-features" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+- <strong>Mean Decrease in Impurity (MDI):</strong>
+  Accumulates the total Gini impurity (or MSE) reduction brought by all splits on feature <span class="arithmatex">\(j\)</span> across all trees in an ensemble.
+  <em>The Cardinality Pathology:</em> Decision tree split algorithms evaluate all possible split points. A random noise feature with high cardinality (e.g., a random integer ID <span class="arithmatex">\(\in [1, 1000]\)</span>) offers thousands of opportunities to accidentally find a split that separates training samples by chance. The tree splits on the noise feature near the leaves, achieving massive training impurity reduction, causing MDI to rank random noise as the most important feature!
+- <strong>Permutation Feature Importance:</strong>
+  Evaluates the trained model on a validation holdout set, shuffles column <span class="arithmatex">\(j\)</span> to destroy its relationship with target <span class="arithmatex">\(y\)</span>, and records the metric drop: <span class="arithmatex">\(\Delta = \text{Score}_{\text{base}} - \text{Score}_{\text{shuffled}}\)</span>.
+  Because evaluation occurs on unseen validation data, splitting on random noise does not generalize; shuffling noise causes zero drop in validation score. Immune to cardinality bias!
+- <strong>SHAP (Shapley Additive Explanations):</strong>
+  Derived from cooperative game theory. Measures the marginal contribution of feature <span class="arithmatex">\(j\)</span> across all possible subsets (coalitions) of remaining features:
+  $<span class="arithmatex">\(\phi_j = \sum_{S \subseteq F \setminus \{j\}} \frac{|S|!(|F| - |S| - 1)!}{|F|!} \Big( f(S \cup \{j\}) - f(S) \Big)\)</span>$
+  Provides local, sample-level explanations with strict mathematical guarantees of <strong>Efficiency</strong>, <strong>Symmetry</strong>, and <strong>Additivity</strong>.</p>
+<hr />
+<h3 id="q5-derive-the-box-cox-and-yeo-johnson-transformations-when-must-yeo-johnson-be-chosen-over-box-cox">Q5: Derive the Box-Cox and Yeo-Johnson transformations. When must Yeo-Johnson be chosen over Box-Cox?<a class="headerlink" href="#q5-derive-the-box-cox-and-yeo-johnson-transformations-when-must-yeo-johnson-be-chosen-over-box-cox" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+- <strong>Box-Cox Transformation:</strong>
+  Designed to normalize positive continuous variables:
+  $<span class="arithmatex">\(y^{(\lambda)} = \begin{cases} \frac{y^\lambda - 1}{\lambda} &amp; \text{if } \lambda \ne 0 \\ \ln y &amp; \text{if } \lambda = 0 \end{cases}\)</span>$
+  As <span class="arithmatex">\(\lambda \to 0\)</span>, by L'Hôpital's rule: <span class="arithmatex">\(\lim_{\lambda \to 0} \frac{d/d\lambda(y^\lambda - 1)}{d/d\lambda(\lambda)} = \lim_{\lambda \to 0} \frac{y^\lambda \ln y}{1} = \ln y\)</span>.
+  <strong>Limitation:</strong> Strictly undefined for <span class="arithmatex">\(y \le 0\)</span> because <span class="arithmatex">\(\ln y\)</span> and fractional powers of negative numbers are non-real.
+- <strong>Yeo-Johnson Transformation:</strong>
+  Extends Box-Cox to all real numbers (<span class="arithmatex">\(y \in \mathbb{R}\)</span>) while ensuring strict continuity and monotonicity across zero:
+  $<span class="arithmatex">\(\psi(\lambda, y) = \begin{cases}
+  \frac{(y + 1)^\lambda - 1}{\lambda} &amp; \text{if } \lambda \ne 0, \; y \ge 0 \\
+  \ln(y + 1) &amp; \text{if } \lambda = 0, \; y \ge 0 \\
+  -\frac{(-y + 1)^{2 - \lambda} - 1}{2 - \lambda} &amp; \text{if } \lambda \ne 2, \; y &lt; 0 \\
+  -\ln(-y + 1) &amp; \text{if } \lambda = 2, \; y &lt; 0
+  \end{cases}\)</span>$
+  <strong>Decision Rule:</strong> Yeo-Johnson must strictly be selected whenever features contain zero values (e.g., revenue, rainfall) or negative values (e.g., profit/loss, temperature, financial returns).</p>
+<hr />
+<h3 id="q6-compare-filter-wrapper-and-embedded-feature-selection-paradigms">Q6: Compare Filter, Wrapper, and Embedded feature selection paradigms.<a class="headerlink" href="#q6-compare-filter-wrapper-and-embedded-feature-selection-paradigms" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+1. <strong>Filter Methods (e.g., Mutual Information, ANOVA, Chi-Square):</strong>
+   - <em>Complexity:</em> <span class="arithmatex">\(\mathcal{O}(d \cdot N)\)</span>. Fast, univariate screening.
+   - <em>Model Dependency:</em> Completely model-agnostic; evaluates intrinsic statistical correlation.
+   - <em>Risk:</em> Ignores complex multi-feature interactions; redundant features that correlate with the target are all selected together.
+2. <strong>Wrapper Methods (e.g., Recursive Feature Elimination - RFE):</strong>
+   - <em>Complexity:</em> <span class="arithmatex">\(\mathcal{O}(d \cdot \text{Model\_Train\_Time})\)</span>. Very slow; trains <span class="arithmatex">\(d\)</span> model instances.
+   - <em>Model Dependency:</em> Strongly coupled to chosen model; optimizes performance for that specific model architecture.
+   - <em>Risk:</em> High risk of overfitting to the validation split if sample size is small; computationally prohibitive for deep networks or massive datasets.
+3. <strong>Embedded Methods (e.g., L1 Lasso, Tree-based Permutation / SHAP):</strong>
+   - <em>Complexity:</em> <span class="arithmatex">\(\mathcal{O}(\text{Model\_Train\_Time})\)</span>. Selection happens concurrently with parameter optimization.
+   - <em>Model Dependency:</em> Bound to the model's loss formulation.
+   - <em>Advantage:</em> Directly penalizes complexity in the loss function, natively accounting for interactions while maintaining computational efficiency.</p>
+<hr />
+<h3 id="q7-what-is-the-variance-inflation-factor-vif-how-do-you-calculate-it-and-what-threshold-indicates-severe-multicollinearity">Q7: What is the Variance Inflation Factor (VIF), how do you calculate it, and what threshold indicates severe multicollinearity?<a class="headerlink" href="#q7-what-is-the-variance-inflation-factor-vif-how-do-you-calculate-it-and-what-threshold-indicates-severe-multicollinearity" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+The <strong>Variance Inflation Factor (VIF)</strong> measures how much the variance of an estimated regression coefficient <span class="arithmatex">\(\hat{\beta}_j\)</span> is inflated due to linear multicollinearity with other features in the design matrix.</p>
+<p><strong>Calculation:</strong>
+For each feature <span class="arithmatex">\(X_j\)</span>:
+1. Fit an Ordinary Least Squares regression treating <span class="arithmatex">\(X_j\)</span> as the dependent variable and all other features <span class="arithmatex">\(X_{-j}\)</span> as predictors:
+   $<span class="arithmatex">\(X_j = \alpha_0 + \sum_{k \ne j} \alpha_k X_k + \epsilon\)</span>$
+2. Compute the coefficient of determination <span class="arithmatex">\(R_j^2\)</span> from this regression.
+3. Calculate VIF:
+   $<span class="arithmatex">\(\text{VIF}_j = \frac{1}{1 - R_j^2}\)</span>$</p>
+<p><strong>Interpretation:</strong>
+- If <span class="arithmatex">\(X_j\)</span> is completely orthogonal to all other features, <span class="arithmatex">\(R_j^2 = 0 \implies \text{VIF}_j = 1\)</span> (no variance inflation).
+- If <span class="arithmatex">\(X_j\)</span> is strongly collinear (<span class="arithmatex">\(R_j^2 = 0.90\)</span>), <span class="arithmatex">\(\text{VIF}_j = \frac{1}{1 - 0.90} = 10\)</span>. The variance of <span class="arithmatex">\(\hat{\beta}_j\)</span> is inflated by a factor of 10.
+- <strong>Rule of Thumb:</strong> <span class="arithmatex">\(\text{VIF} &gt; 5\)</span> indicates moderate collinearity; <span class="arithmatex">\(\text{VIF} &gt; 10\)</span> indicates severe multicollinearity that destabilizes parameter estimates, requiring feature elimination or regularization.</p>
+<hr />
+<h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
+<p>Complete this checklist to verify your depth in feature engineering and selection:</p>
+<ul>
+<li>[ ] <strong>L1:</strong> You can explain how cyclical encoding via <span class="arithmatex">\((\sin, \cos)\)</span> preserves continuous topological distance on periodic features.</li>
+<li>[ ] <strong>L2:</strong> You can state why both sine and cosine are required to form a unique bijection to the 2D unit circle.</li>
+<li>[ ] <strong>L3:</strong> You can state the Box-Cox and Yeo-Johnson formulas and explain why Yeo-Johnson is required for zero/negative values.</li>
+<li>[ ] <strong>L4:</strong> You can explain lookahead bias in time-series features and formulate point-in-time window filtering.</li>
+<li>[ ] <strong>L5:</strong> You can calculate TF-IDF with smooth IDF and explain why L2 document normalization is required.</li>
+<li>[ ] <strong>L6:</strong> You can derive Mutual Information <span class="arithmatex">\(I(X; Y)\)</span> from Shannon entropy and explain why it captures non-linear relationships.</li>
+<li>[ ] <strong>L7:</strong> You can compare Filter, Wrapper, and Embedded feature selection paradigms in terms of time complexity and interaction modeling.</li>
+<li>[ ] <strong>L8:</strong> You can explain why Random Forest MDI Gini importance is severely biased toward high-cardinality features.</li>
+<li>[ ] <strong>L9:</strong> You can implement Permutation Feature Importance from scratch and interpret validation metric drops.</li>
+<li>[ ] <strong>L10:</strong> You can define the Variance Inflation Factor (VIF), explain how it is derived from auxiliary regressions, and diagnose multicollinearity.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../data-cleaning-preprocessing-deep-dive/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deep-dive: Data Cleaning &amp; Preprocessing">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Data Cleaning & Preprocessing
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../04-classical-ml/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,4815 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete, deep-dive AI/ML curriculum — from Python internals to production AI systems.">
+      
+      
+        <meta name="author" content="Sameer Karur">
+      
+      
+      
+        <link rel="prev" href="../transformer-architecture-mechanics-deep-dive/">
+      
+      
+        <link rel="next" href="../llm-training-alignment-peft-deep-dive/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Deep-dive: Foundation Model Families - AI/ML Mastery Program</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#foundation-model-families-from-bert-gpt-to-t5-gqa-moe-deepseek-mla" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI/ML Mastery Program" class="md-header__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI/ML Mastery Program
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Deep-dive: Foundation Model Families
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../00-computer-science/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 0 – CS Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-python/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 1 – Python
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../02-mathematics/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 2 – Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../03-data-engineering/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 3 – Data Engineering
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../04-classical-ml/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 4 – Classical ML
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../05-ml-theory/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 5 – ML Theory & Evaluation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../06-deep-learning/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 6 – Deep Learning
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../07-computer-vision/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 7 – Computer Vision
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../08-nlp/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 8 – NLP
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 9 – Transformers & LLMs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../10-generative-ai/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 10 – Generative AI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../11-ai-agents/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 11 – AI Agents
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../12-mlops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 12 – MLOps
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../13-ai-system-design/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 13 – AI System Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../14-projects/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 14 – Projects & Interview
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI/ML Mastery Program" class="md-nav__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI/ML Mastery Program
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../00-computer-science/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 0 – CS Foundations
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 0 – CS Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/how-computers-execute-programs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: How Computers Execute Programs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/arrays-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Arrays
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/linked-lists-stacks-queues-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linked Lists, Stacks & Queues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/hash-tables-sets-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hash Tables & Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Trees (Binary, BST, Heaps)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/graphs-tries-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Graphs & Tries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/algorithms-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Algorithms (Big-O, Searching, Sorting, Recursion, Greedy, DP, Graphs)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../01-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 1 – Python
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 1 – Python
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/fundamentals-control-flow-collections-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Fundamentals, Control Flow & Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/functions-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/oop-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: OOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/advanced-python-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced Python (Iterators, Generators, Async, Concurrency)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/internals-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Internals (CPython, Bytecode, GC, GIL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../02-mathematics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 2 – Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 2 – Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/foundations-math-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundations of Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/linear-algebra-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/calculus-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Calculus & Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/probability-statistics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Probability & Statistics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../03-data-engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 3 – Data Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 3 – Data Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-ecosystem-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Data Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-formats-storage-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Formats & Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-cleaning-preprocessing-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Cleaning & Preprocessing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/feature-engineering-selection-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Feature Engineering & Selection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../04-classical-ml/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 4 – Classical ML
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 4 – Classical ML
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/linear-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/regularized-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Regularized & Polynomial Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/logistic-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Logistic Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/knn-naive-bayes-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: KNN & Naive Bayes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/decision-trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/ensemble-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Ensemble Learning (Random Forests & GBDT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/svm-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Support Vector Machines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../05-ml-theory/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/model-validation-generalization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Validation & Generalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/evaluation-metrics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/hyperparameter-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hyperparameter Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../06-deep-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 6 – Deep Learning
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 6 – Deep Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/neural-network-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Neural Network Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/architecture-components-regularization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Architecture Components & Regularization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/deep-learning-optimizers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Deep Learning Optimizers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../07-computer-vision/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 7 – Computer Vision
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 7 – Computer Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/convolutional-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Convolutional Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/modern-cnn-architectures-transfer-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Modern CNN Architectures & Transfer Learning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/vision-tasks-transformers-multimodal-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Vision Tasks, ViT & Multimodal Vision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../08-nlp/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 8 – NLP
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 8 – NLP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/text-representation-word-embeddings-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Text Representation & Word Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/sequence-models-attention-transformers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Sequence Models, Attention & Transformers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 9 – Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 9 – Transformers & LLMs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transformer-architecture-mechanics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Transformer Architecture & Mechanics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundation Model Families
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundation Model Families
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture-model-taxonomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture &amp; Model Taxonomy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-bert-bidirectional-encoder-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. BERT &amp; Bidirectional Encoder Models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. BERT &amp; Bidirectional Encoder Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-philosophy-of-masked-pretraining" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 The Philosophy of Masked Pretraining
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-pretraining-objectives-mlm-and-nsp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Pretraining Objectives: MLM and NSP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-gpt-family-autoregressive-decoder-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The GPT Family &amp; Autoregressive Decoder Models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The GPT Family &amp; Autoregressive Decoder Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-next-token-prediction-in-context-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Next-Token Prediction &amp; In-Context Learning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-scaling-laws-kaplan-vs-chinchilla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Scaling Laws: Kaplan vs. Chinchilla
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-t5-the-unified-sequence-to-sequence-paradigm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. T5 &amp; The Unified Sequence-to-Sequence Paradigm
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. T5 &amp; The Unified Sequence-to-Sequence Paradigm">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-span-corruption-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Span Corruption Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-relative-position-buckets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Relative Position Buckets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-modern-open-llm-architectural-innovations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Modern Open LLM Architectural Innovations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Modern Open LLM Architectural Innovations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-multi-query-attention-mqa-grouped-query-attention-gqa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Multi-Query Attention (MQA) &amp; Grouped-Query Attention (GQA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-multi-head-latent-attention-mla-deepseek-v2-deepseek-v3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Multi-Head Latent Attention (MLA) — DeepSeek-V2 &amp; DeepSeek-V3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-sparse-mixture-of-experts-moe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Sparse Mixture of Experts (MoE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-pytorch-implementations-from-scratch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. PyTorch Implementations from Scratch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. PyTorch Implementations from Scratch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-grouped-query-attention-gqa-with-kv-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Grouped-Query Attention (GQA) with KV Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-top-2-moe-routing-layer-with-auxiliary-load-balancing-loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Top-2 MoE Routing Layer with Auxiliary Load-Balancing Loss
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-common-errors-debugging-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Common Errors &amp; Debugging Guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Common Errors &amp; Debugging Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-gqa-kv-cache-head-mismatch-during-autoregressive-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. GQA KV-Cache Head Mismatch during Autoregressive Step
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-router-collapse-in-sparse-moe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Router Collapse in Sparse MoE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-detached-router-gradients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Detached Router Gradients
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-staff-level-technical-interview-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Staff-Level Technical Interview Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Staff-Level Technical Interview Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-compare-kaplan-et-al-and-chinchilla-scaling-laws-what-error-did-kaplan-make-and-how-did-it-affect-models-like-gpt-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Compare Kaplan et al. and Chinchilla scaling laws. What error did Kaplan make, and how did it affect models like GPT-3?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-why-does-grouped-query-attention-gqa-reduce-inference-latency-if-total-parameter-count-is-nearly-unchanged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Why does Grouped-Query Attention (GQA) reduce inference latency if total parameter count is nearly unchanged?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-explain-the-mathematical-mechanism-of-deepseek-multi-head-latent-attention-mla-and-why-decoupled-rope-is-necessary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: Explain the mathematical mechanism of DeepSeek Multi-Head Latent Attention (MLA) and why decoupled RoPE is necessary.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-formulate-the-auxiliary-load-balancing-loss-in-sparse-moe-and-explain-why-multiplying-f_i-cdot-p_i-provides-a-differentiable-training-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Formulate the auxiliary load-balancing loss in Sparse MoE and explain why multiplying \(f_i \cdot P_i\) provides a differentiable training signal.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-why-did-the-field-transition-from-encoder-only-bert-and-encoder-decoder-t5-architectures-to-decoder-only-models-for-generative-agents-and-foundation-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: Why did the field transition from Encoder-only (BERT) and Encoder-Decoder (T5) architectures to Decoder-only models for generative agents and foundation models?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../llm-training-alignment-peft-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Training, Alignment & PEFT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../10-generative-ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 10 – Generative AI
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 10 – Generative AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/llm-application-engineering-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Application Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/enterprise-rag-systems-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Enterprise RAG Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/diffusion-models-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../11-ai-agents/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 11 – AI Agents
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 11 – AI Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/agent-architectures-patterns-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Agent Architectures & Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/multi-agent-systems-security-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Multi-Agent Systems & Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../12-mlops/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 12 – MLOps
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 12 – MLOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/production-tooling-containerization-cicd-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production Tooling, Containerization & CI/CD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/serving-pipelines-orchestration-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Serving, Pipelines & Distributed Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/model-monitoring-observability-retraining-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Monitoring, Observability & Automated Retraining
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../13-ai-system-design/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 13 – AI System Design
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_15" id="__nav_15_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 13 – AI System Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/ai-system-design-methodology-framework-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: AI System Design Methodology & Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/production-case-studies-system-design-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production AI System Design Case Studies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../14-projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 14 – Projects & Interview
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_16" id="__nav_16_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 14 – Projects & Interview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/foundational-applied-projects-tier-1-to-4-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundational Applied Projects (Tiers 1–4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/advanced-frontier-projects-tier-5-to-8-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced & Frontier Applied Projects (Tiers 5–8)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/staff-level-interview-question-banks-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Staff-Level Technical Interview Question Banks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture-model-taxonomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture &amp; Model Taxonomy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-bert-bidirectional-encoder-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. BERT &amp; Bidirectional Encoder Models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. BERT &amp; Bidirectional Encoder Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-philosophy-of-masked-pretraining" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 The Philosophy of Masked Pretraining
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-pretraining-objectives-mlm-and-nsp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Pretraining Objectives: MLM and NSP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-gpt-family-autoregressive-decoder-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The GPT Family &amp; Autoregressive Decoder Models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The GPT Family &amp; Autoregressive Decoder Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-next-token-prediction-in-context-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Next-Token Prediction &amp; In-Context Learning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-scaling-laws-kaplan-vs-chinchilla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Scaling Laws: Kaplan vs. Chinchilla
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-t5-the-unified-sequence-to-sequence-paradigm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. T5 &amp; The Unified Sequence-to-Sequence Paradigm
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. T5 &amp; The Unified Sequence-to-Sequence Paradigm">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-span-corruption-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Span Corruption Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-relative-position-buckets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Relative Position Buckets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-modern-open-llm-architectural-innovations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Modern Open LLM Architectural Innovations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Modern Open LLM Architectural Innovations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-multi-query-attention-mqa-grouped-query-attention-gqa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Multi-Query Attention (MQA) &amp; Grouped-Query Attention (GQA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-multi-head-latent-attention-mla-deepseek-v2-deepseek-v3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Multi-Head Latent Attention (MLA) — DeepSeek-V2 &amp; DeepSeek-V3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-sparse-mixture-of-experts-moe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Sparse Mixture of Experts (MoE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-pytorch-implementations-from-scratch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. PyTorch Implementations from Scratch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. PyTorch Implementations from Scratch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-grouped-query-attention-gqa-with-kv-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Grouped-Query Attention (GQA) with KV Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-top-2-moe-routing-layer-with-auxiliary-load-balancing-loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Top-2 MoE Routing Layer with Auxiliary Load-Balancing Loss
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-common-errors-debugging-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Common Errors &amp; Debugging Guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Common Errors &amp; Debugging Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-gqa-kv-cache-head-mismatch-during-autoregressive-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. GQA KV-Cache Head Mismatch during Autoregressive Step
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-router-collapse-in-sparse-moe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Router Collapse in Sparse MoE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-detached-router-gradients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Detached Router Gradients
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-staff-level-technical-interview-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Staff-Level Technical Interview Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Staff-Level Technical Interview Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-compare-kaplan-et-al-and-chinchilla-scaling-laws-what-error-did-kaplan-make-and-how-did-it-affect-models-like-gpt-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Compare Kaplan et al. and Chinchilla scaling laws. What error did Kaplan make, and how did it affect models like GPT-3?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-why-does-grouped-query-attention-gqa-reduce-inference-latency-if-total-parameter-count-is-nearly-unchanged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Why does Grouped-Query Attention (GQA) reduce inference latency if total parameter count is nearly unchanged?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-explain-the-mathematical-mechanism-of-deepseek-multi-head-latent-attention-mla-and-why-decoupled-rope-is-necessary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: Explain the mathematical mechanism of DeepSeek Multi-Head Latent Attention (MLA) and why decoupled RoPE is necessary.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-formulate-the-auxiliary-load-balancing-loss-in-sparse-moe-and-explain-why-multiplying-f_i-cdot-p_i-provides-a-differentiable-training-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Formulate the auxiliary load-balancing loss in Sparse MoE and explain why multiplying \(f_i \cdot P_i\) provides a differentiable training signal.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-why-did-the-field-transition-from-encoder-only-bert-and-encoder-decoder-t5-architectures-to-decoder-only-models-for-generative-agents-and-foundation-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: Why did the field transition from Encoder-only (BERT) and Encoder-Decoder (T5) architectures to Decoder-only models for generative agents and foundation models?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="foundation-model-families-from-bert-gpt-to-t5-gqa-moe-deepseek-mla">Foundation Model Families — From BERT &amp; GPT to T5, GQA, MoE &amp; DeepSeek MLA<a class="headerlink" href="#foundation-model-families-from-bert-gpt-to-t5-gqa-moe-deepseek-mla" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>Self-attention mechanics, causal masking, layer normalization, and autoregressive generation. Review <a href="../transformer-architecture-mechanics-deep-dive/">Transformer Architecture &amp; Mechanics</a>, <a href="../../08-nlp/sequence-models-attention-transformers-deep-dive/">Sequence Models, Attention &amp; Transformers</a>, and <a href="../../06-deep-learning/deep-learning-optimizers-deep-dive/">Deep Learning Optimizers</a>.</p>
+</div>
+<hr />
+<h2 id="1-the-big-picture-model-taxonomy">1. The Big Picture &amp; Model Taxonomy<a class="headerlink" href="#1-the-big-picture-model-taxonomy" title="Permanent link">&para;</a></h2>
+<p>The Transformer architecture sparked three divergent evolutionary branches based on attention connectivity and pretraining objectives:</p>
+<ol>
+<li><strong>Autoencoding Encoders (BERT, RoBERTa, DeBERTa)</strong>: Bidirectional attention allows every token to attend to all past and future tokens. Optimized for sequence understanding, text classification, semantic search embeddings, and token-level labeling.</li>
+<li><strong>Autoregressive Decoders (GPT-1/2/3/4, LLaMA, Mistral, Claude)</strong>: Causal attention masks future tokens. Optimized for generative sequence modeling, in-context few-shot learning, and conversational reasoning.</li>
+<li><strong>Sequence-to-Sequence / Encoder-Decoders (T5, BART)</strong>: Bidirectional encoder compresses source text; causal decoder generates target text via cross-attention. Optimized for translation, summarization, and unified text-to-text transformation.</li>
+</ol>
+<pre class="mermaid"><code>flowchart TD
+    Vaswani["Transformer (Vaswani et al., 2017)\nEncoder-Decoder"] --&gt; Encoders["Encoder-Only (Autoencoding)\nBERT (2018), RoBERTa (2019), DeBERTa (2021)"]
+    Vaswani --&gt; Decoders["Decoder-Only (Autoregressive)\nGPT Family (2018-2020), LLaMA (2023), Mistral (2023)"]
+    Vaswani --&gt; Seq2Seq["Encoder-Decoder (Text-to-Text)\nT5 (2020), BART (2019)"]
+
+    Decoders --&gt; ModernLLMs["Modern Scaled LLMs (2023-2026)\nKV Cache Optimizations: MQA / GQA / DeepSeek MLA\nCompute Scaling: Sparse Mixture of Experts (MoE)"]</code></pre>
+<p>Over the period from 2020 to 2026, the machine learning industry converged overwhelmingly on <strong>Decoder-only</strong> architectures for frontier foundation models. Decoder architectures exhibit superior zero-shot and few-shot in-context learning capabilities, unified pretraining-inference dynamics, and lower memory overhead during multi-turn generation.</p>
+<hr />
+<h2 id="2-bert-bidirectional-encoder-models">2. BERT &amp; Bidirectional Encoder Models<a class="headerlink" href="#2-bert-bidirectional-encoder-models" title="Permanent link">&para;</a></h2>
+<h3 id="21-the-philosophy-of-masked-pretraining">2.1 The Philosophy of Masked Pretraining<a class="headerlink" href="#21-the-philosophy-of-masked-pretraining" title="Permanent link">&para;</a></h3>
+<p>Traditional n-gram and autoregressive language models factorize sequence probability in a single directional sweep:</p>
+<div class="arithmatex">\[
+P(x_1, \dots, x_T) = \prod_{t=1}^T P(x_t \mid x_1, \dots, x_{t-1})
+\]</div>
+<p>While necessary for generation, directional conditioning severely handicaps sequence comprehension. In natural language, the identity of an ambiguous word depends equally on subsequent context:
+- <em>"The </em><em>crane</em><em> lifted the five-ton steel beam."</em> (Construction vehicle)
+- <em>"The </em><em>crane</em><em> folded its long wings by the lake."</em> (Bird)</p>
+<p><a href="https://arxiv.org/abs/1810.04805">Devlin et al. (2018)</a> introduced <strong>BERT (Bidirectional Encoder Representations from Transformers)</strong> to capture non-directional context by masking random tokens and training the model to reconstruct them from deep bidirectional representations.</p>
+<pre class="mermaid"><code>flowchart TD
+    Tokens["Input: ['[CLS]', 'The', '[MASK]', 'lifted', 'the', 'beam', '[SEP]']"] --&gt; Embeddings["WordPiece + Position + Segment Embeddings"]
+    Embeddings --&gt; Layers["12 to 24 Bidirectional Transformer Encoder Layers"]
+    Layers --&gt; Hidden["Final Hidden States H"]
+    Hidden --&gt; Head1["MLM Head over [MASK] -&gt; Predicts 'crane'"]
+    Hidden --&gt; Head2["NSP Binary Head over [CLS] -&gt; Predicts 'IsNext'"]</code></pre>
+<hr />
+<h3 id="22-pretraining-objectives-mlm-and-nsp">2.2 Pretraining Objectives: MLM and NSP<a class="headerlink" href="#22-pretraining-objectives-mlm-and-nsp" title="Permanent link">&para;</a></h3>
+<h4 id="masked-language-modeling-mlm-and-the-801010-rule">Masked Language Modeling (MLM) and the 80/10/10 Rule<a class="headerlink" href="#masked-language-modeling-mlm-and-the-801010-rule" title="Permanent link">&para;</a></h4>
+<p>BERT randomly selects <span class="arithmatex">\(15\%\)</span> of all input WordPiece tokens as prediction targets. However, if target tokens were always replaced with a special <code>[MASK]</code> token, the model would encounter a severe mismatch during downstream fine-tuning, where <code>[MASK]</code> tokens never appear.</p>
+<p>To mitigate this discrepancy, the <strong>80/10/10 corruption rule</strong> governs the chosen <span class="arithmatex">\(15\%\)</span> targets:
+1. <strong><span class="arithmatex">\(80\%\)</span> of the time</strong>: Replace the token with <code>[MASK]</code><br />
+<em>(e.g., "my dog is hairy" <span class="arithmatex">\(\to\)</span> "my dog is [MASK]")</em>
+2. <strong><span class="arithmatex">\(10\%\)</span> of the time</strong>: Replace the token with a random token from the vocabulary<br />
+<em>(e.g., "my dog is hairy" <span class="arithmatex">\(\to\)</span> "my dog is apple")</em><br />
+<em>Forces the model to maintain contextual representations for every token, since any observed word could be a corrupted intruder.</em>
+3. <strong><span class="arithmatex">\(10\%\)</span> of the time</strong>: Keep the original token unchanged<br />
+<em>(e.g., "my dog is hairy" <span class="arithmatex">\(\to\)</span> "my dog is hairy")</em><br />
+<em>Biases the representation towards the true observed token identity.</em></p>
+<p>Let <span class="arithmatex">\(\mathcal{M}\)</span> be the set of masked token positions. The MLM objective minimizes cross-entropy strictly over <span class="arithmatex">\(\mathcal{M}\)</span>:</p>
+<div class="arithmatex">\[
+\mathcal{L}_{\text{MLM}}(\theta) = -\sum_{i \in \mathcal{M}} \log P(x_i \mid \tilde{\mathbf{x}}; \theta) = -\sum_{i \in \mathcal{M}} \log \left( \frac{\exp(\mathbf{h}_i^T \mathbf{w}_{x_i})}{\sum_{v \in \mathcal{V}} \exp(\mathbf{h}_i^T \mathbf{w}_v)} \right)
+\]</div>
+<p>where <span class="arithmatex">\(\mathbf{h}_i \in \mathbb{R}^{d_{\text{model}}}\)</span> is the output hidden state for position <span class="arithmatex">\(i\)</span>, and <span class="arithmatex">\(\mathbf{w}_v\)</span> is the embedding vector for vocabulary word <span class="arithmatex">\(v\)</span>.</p>
+<h4 id="next-sentence-prediction-nsp">Next Sentence Prediction (NSP)<a class="headerlink" href="#next-sentence-prediction-nsp" title="Permanent link">&para;</a></h4>
+<p>To learn discourse relationships between pairs of sentences <span class="arithmatex">\((A, B)\)</span>:
+- <span class="arithmatex">\(50\%\)</span> of training pairs are consecutive sentences from the corpus (<code>IsNext</code>).
+- <span class="arithmatex">\(50\%\)</span> of training pairs pair sentence <span class="arithmatex">\(A\)</span> with a randomly sampled sentence <span class="arithmatex">\(B\)</span> (<code>NotNext</code>).</p>
+<p>The representation of the special first token <code>[CLS]</code> is passed through a binary classification layer:</p>
+<div class="arithmatex">\[
+\mathcal{L}_{\text{NSP}}(\theta) = - y \log \sigma(\mathbf{h}_{\text{[CLS]}}^T \mathbf{w}_{\text{NSP}}) - (1 - y) \log (1 - \sigma(\mathbf{h}_{\text{[CLS]}}^T \mathbf{w}_{\text{NSP}}))
+\]</div>
+<p>Total BERT pretraining loss:</p>
+<div class="arithmatex">\[
+\mathcal{L}_{\text{BERT}} = \mathcal{L}_{\text{MLM}} + \mathcal{L}_{\text{NSP}}
+\]</div>
+<p><em>Note: Subsequent research (<a href="https://arxiv.org/abs/1907.11692">RoBERTa, Liu et al., 2019</a>) demonstrated that NSP harms downstream performance and that training on longer continuous documents with pure dynamic MLM substantially outperforms original BERT.</em></p>
+<hr />
+<h2 id="3-the-gpt-family-autoregressive-decoder-models">3. The GPT Family &amp; Autoregressive Decoder Models<a class="headerlink" href="#3-the-gpt-family-autoregressive-decoder-models" title="Permanent link">&para;</a></h2>
+<h3 id="31-next-token-prediction-in-context-learning">3.1 Next-Token Prediction &amp; In-Context Learning<a class="headerlink" href="#31-next-token-prediction-in-context-learning" title="Permanent link">&para;</a></h3>
+<p>Generative Pretrained Transformers (GPT-1, Radford et al. 2018; GPT-2, 2019; GPT-3, Brown et al. 2020) demonstrated that autoregressive language modeling on massive corpora acts as an unsupervised meta-learner.</p>
+<p>The objective is exact causal negative log-likelihood:</p>
+<div class="arithmatex">\[
+\mathcal{L}_{\text{AR}}(\theta) = -\sum_{t=1}^T \log P(x_t \mid x_1, \dots, x_{t-1}; \theta)
+\]</div>
+<pre class="mermaid"><code>flowchart LR
+    Token1["'The'"] --&gt; L1["Transformer Decoder Layer"] --&gt; P1["Predicts 'quick'"]
+    Token2["'quick'"] --&gt; L2["Transformer Decoder Layer"] --&gt; P2["Predicts 'brown'"]
+    Token3["'brown'"] --&gt; L3["Transformer Decoder Layer"] --&gt; P3["Predicts 'fox'"]
+    L1 -.-&gt;|"Causal Mask (no forward flow)"| L2 -.-&gt; L3</code></pre>
+<p>GPT-3 revealed that once model scale crosses a critical threshold (<span class="arithmatex">\(\approx 10\text{B}-100\text{B}\)</span> parameters), models acquire <strong>In-Context Learning (ICL)</strong> without weight updates:
+- <strong>Zero-Shot</strong>: Prompt contains task instructions only.
+- <strong>One-Shot</strong>: Instructions followed by a single demonstration example.
+- <strong>Few-Shot</strong>: Instructions followed by <span class="arithmatex">\(k \in [3, 32]\)</span> demonstration pairs <span class="arithmatex">\(\langle x_i, y_i \rangle\)</span>.</p>
+<p>Under ICL, the transformer's attention activations dynamically synthesize an internal task algorithm in its forward pass activations, behaving analogously to implicit gradient descent on the prompt's demonstrations (<a href="https://arxiv.org/abs/2212.07677">von Oswald et al., 2023</a>).</p>
+<hr />
+<h3 id="32-scaling-laws-kaplan-vs-chinchilla">3.2 Scaling Laws: Kaplan vs. Chinchilla<a class="headerlink" href="#32-scaling-laws-kaplan-vs-chinchilla" title="Permanent link">&para;</a></h3>
+<p>How should compute budget be allocated between <strong>model parameter count (<span class="arithmatex">\(N\)</span>)</strong> and <strong>training dataset tokens (<span class="arithmatex">\(D\)</span>)</strong>?</p>
+<pre class="mermaid"><code>flowchart TD
+    Compute["Total Compute Budget C ≈ 6 · N · D FLOPs"] --&gt; Kaplan["Kaplan et al. (2020)\nCompute-optimal: N ∝ C^0.73, D ∝ C^0.27\nAdvocated massive models trained on fewer tokens (e.g., GPT-3 175B on 300B tokens)"]
+    Compute --&gt; Chinchilla["Hoffmann et al. / Chinchilla (2022)\nCorrected learning rate scheduler artifact\nCompute-optimal: N ∝ C^0.50, D ∝ C^0.50\nModel parameters and training tokens should scale in equal proportion! (Ratio ≈ 20 tokens / param)"]</code></pre>
+<h4 id="flops-accounting-for-transformer-training">FLOPs Accounting for Transformer Training<a class="headerlink" href="#flops-accounting-for-transformer-training" title="Permanent link">&para;</a></h4>
+<p>For a standard decoder-only transformer with <span class="arithmatex">\(N\)</span> non-embedding parameters trained on <span class="arithmatex">\(D\)</span> tokens, each forward pass requires approximately <span class="arithmatex">\(2N\)</span> floating-point operations (FLOPs) per token (one multiply-accumulate per weight). The backward pass requires approximately <span class="arithmatex">\(4N\)</span> FLOPs per token (computing activation gradients and weight gradients).</p>
+<p>The total training compute budget <span class="arithmatex">\(C\)</span> in floating-point operations is:</p>
+<div class="arithmatex">\[
+C \approx 2ND + 4ND = 6ND \text{ FLOPs}
+\]</div>
+<h4 id="kaplan-et-al-2020-power-law">Kaplan et al. (2020) Power Law<a class="headerlink" href="#kaplan-et-al-2020-power-law" title="Permanent link">&para;</a></h4>
+<p>OpenAI's initial empirical investigation fitted power-law relationships:</p>
+<div class="arithmatex">\[
+L(N) = \left( \frac{N_c}{N} \right)^{\alpha_N}, \quad L(D) = \left( \frac{D_c}{D} \right)^{\alpha_D}, \quad L(C) = \left( \frac{C_c}{C} \right)^{\alpha_C}
+\]</div>
+<p>Kaplan concluded that performance depends most strongly on parameter count <span class="arithmatex">\(N\)</span>, scaling compute-optimally as:</p>
+<div class="arithmatex">\[
+N \propto C^{0.73}, \quad D \propto C^{0.27}
+\]</div>
+<p>This led to models like GPT-3 (175 billion parameters trained on only 300 billion tokens — a ratio of only <span class="arithmatex">\(1.7\)</span> tokens per parameter), which were severely undertrained relative to their capacity.</p>
+<h4 id="hoffmann-et-al-2022-chinchilla-scaling-law">Hoffmann et al. (2022) / Chinchilla Scaling Law<a class="headerlink" href="#hoffmann-et-al-2022-chinchilla-scaling-law" title="Permanent link">&para;</a></h4>
+<p>DeepMind identified that Kaplan et al. had kept the cosine learning rate schedule fixed to a constant step count across varying token budgets rather than tuning the schedule length to each specific run, artificially penalizing runs with larger token counts.</p>
+<p>By training over 400 models ranging from 70M to 16B parameters across variations of token lengths, Hoffmann et al. derived the true compute-optimal relationship:</p>
+<div class="arithmatex">\[
+L(N, D) = E + \frac{A}{N^\alpha} + \frac{B}{D^\beta}
+\]</div>
+<p>Under the budget constraint <span class="arithmatex">\(C = 6ND\)</span>, minimizing loss yields the optimality condition:</p>
+<div class="arithmatex">\[
+\alpha \approx 0.34, \quad \beta \approx 0.28
+\]</div>
+<div class="arithmatex">\[
+N_{\text{opt}} \propto G \cdot C^a, \quad D_{\text{opt}} \propto G^{-1} \cdot C^b, \quad \text{where } a \approx 0.50, \quad b \approx 0.50
+\]</div>
+<p><strong>The Chinchilla Takeaway:</strong>
+Parameters and tokens should scale in <strong>equal proportion</strong>:</p>
+<div class="arithmatex">\[
+\frac{D}{N} \approx 20
+\]</div>
+<p>A compute-optimal model with <span class="arithmatex">\(70\text{B}\)</span> parameters requires at least <span class="arithmatex">\(1.4\text{ trillion tokens}\)</span>. Modern foundation models (LLaMA-3, Mistral) push this ratio even further (<span class="arithmatex">\(&gt;100\)</span> tokens per parameter) to optimize downstream <strong>inference latency and cost</strong>, since an overtrained smaller model is vastly cheaper to serve in production.</p>
+<hr />
+<h2 id="4-t5-the-unified-sequence-to-sequence-paradigm">4. T5 &amp; The Unified Sequence-to-Sequence Paradigm<a class="headerlink" href="#4-t5-the-unified-sequence-to-sequence-paradigm" title="Permanent link">&para;</a></h2>
+<p><a href="https://arxiv.org/abs/1910.10683">Raffel et al. (2020)</a> introduced <strong>T5 (Text-to-Text Transfer Transformer)</strong>, reframing every natural language processing task into an explicit string-to-string format:</p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph T5Unified["T5 Unified Text-to-Text Paradigm"]
+        direction TB
+        In1["'translate English to German: The door is open.'"] --&gt; T5["T5 Shared Model"] --&gt; Out1["'Die Tür ist offen.'"]
+        In2["'cola sentence: The course is jumped well.'"] --&gt; T5 --&gt; Out2["'unacceptable'"]
+        In3["'summarize: Deep learning has evolved...'"] --&gt; T5 --&gt; Out3["'AI models scaled up.'"]
+    end</code></pre>
+<h3 id="41-span-corruption-objective">4.1 Span Corruption Objective<a class="headerlink" href="#41-span-corruption-objective" title="Permanent link">&para;</a></h3>
+<p>Rather than single-token masking (BERT), T5 replaces contiguous spans of text with unique sentinel tokens (<code>&lt;extra_id_0&gt;</code>, <code>&lt;extra_id_1&gt;</code>, ...):</p>
+<ul>
+<li><strong>Original Input</strong>: <em>"Thank you for inviting me to your lovely home yesterday."</em></li>
+<li><strong>Corrupted Input</strong>: <em>"Thank you <code>&lt;extra_id_0&gt;</code> me to your <code>&lt;extra_id_1&gt;</code> yesterday."</em></li>
+<li><strong>Target Output</strong>: <em>"<code>&lt;extra_id_0&gt;</code> for inviting <code>&lt;extra_id_1&gt;</code> lovely home <code>&lt;extra_id_2&gt;</code>"</em></li>
+</ul>
+<p>This reduces target sequence length in the causal decoder, saving significant training compute.</p>
+<h3 id="42-relative-position-buckets">4.2 Relative Position Buckets<a class="headerlink" href="#42-relative-position-buckets" title="Permanent link">&para;</a></h3>
+<p>T5 introduced logarithmic relative position bias buckets. The attention logit is augmented by a scalar bias <span class="arithmatex">\(b_{i-j}\)</span>:</p>
+<div class="arithmatex">\[
+\text{Logit}_{ij} = \frac{\mathbf{q}_i \mathbf{k}_j^T}{\sqrt{d_k}} + b_{i-j}
+\]</div>
+<p>Offsets from 0 to 8 receive exact individual buckets, while larger offsets up to 128 are mapped logarithmically to 32 discrete buckets, allowing the model to generalize smoothly to longer sequences.</p>
+<hr />
+<h2 id="5-modern-open-llm-architectural-innovations">5. Modern Open LLM Architectural Innovations<a class="headerlink" href="#5-modern-open-llm-architectural-innovations" title="Permanent link">&para;</a></h2>
+<p>Between 2023 and 2026, foundation models evolved beyond vanilla Multi-Head Attention to overcome two primary physical barriers on GPUs:
+1. <strong>The KV Cache Memory Wall</strong> during generation.
+2. <strong>Dense Feed-Forward Compute Costs</strong> when scaling parameters beyond 100B.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph AttentionEvolution["Evolution of Attention Mechanisms"]
+        MHA["Multi-Head Attention (MHA)\nQueries: H heads\nKeys: H heads\nValues: H heads\n(Massive KV Cache)"]
+        MQA["Multi-Query Attention (MQA)\nQueries: H heads\nKeys: 1 head\nValues: 1 head\n(Lowest KV memory, slight quality drop)"]
+        GQA["Grouped-Query Attention (GQA)\nQueries: H heads\nKeys: G groups\nValues: G groups\n(Sweet spot: 8x cache compression, 0 quality loss)"]
+        MLA["Multi-Head Latent Attention (MLA)\nDeepSeek-V2/V3\nLow-rank projection to compressed latent vector c_t^{KV}\nDecoupled RoPE + Content cache"]
+        MHA --&gt; MQA --&gt; GQA --&gt; MLA
+    end</code></pre>
+<hr />
+<h3 id="51-multi-query-attention-mqa-grouped-query-attention-gqa">5.1 Multi-Query Attention (MQA) &amp; Grouped-Query Attention (GQA)<a class="headerlink" href="#51-multi-query-attention-mqa-grouped-query-attention-gqa" title="Permanent link">&para;</a></h3>
+<p>Recall that in standard Multi-Head Attention (MHA) with <span class="arithmatex">\(H\)</span> heads, the KV cache size per token across <span class="arithmatex">\(L\)</span> layers is:</p>
+<div class="arithmatex">\[
+\text{Size}_{\text{MHA}} = 2 \times 2 \times L \times H \times d_k \text{ bytes}
+\]</div>
+<p>For an 8-head or 32-head model, this consumes gigabytes of GPU HBM per active user stream. During generation, memory bandwidth—not matrix multiplication compute—becomes the primary bottleneck (the kernel is memory-bound with arithmetic intensity <span class="arithmatex">\(&lt; 1\)</span>).</p>
+<ul>
+<li><strong>Multi-Query Attention (MQA, Shazeer 2019)</strong>: Collapses all key and value heads to a single shared head (<span class="arithmatex">\(H_K = H_V = 1\)</span>) while retaining <span class="arithmatex">\(H_Q\)</span> independent query heads. This slashes KV cache memory by a factor of <span class="arithmatex">\(H\)</span>, but can degrade accuracy on complex retrieval tasks.</li>
+<li><strong>Grouped-Query Attention (GQA, Ainslie et al. 2023)</strong>: Partitions the <span class="arithmatex">\(H_Q\)</span> query heads into <span class="arithmatex">\(G\)</span> groups. Each group shares 1 key head and 1 value head:</li>
+</ul>
+<div class="arithmatex">\[
+H_K = H_V = G, \quad \text{where } 1 &lt; G &lt; H_Q
+\]</div>
+<p>Typically <span class="arithmatex">\(H_Q = 32\)</span> and <span class="arithmatex">\(G = 8\)</span> (a <span class="arithmatex">\(4\times\)</span> reduction in KV cache size) or <span class="arithmatex">\(G = 4\)</span> (<span class="arithmatex">\(8\times\)</span> reduction). Modern models like LLaMA-2/3 (70B), Mistral-7B, and Mixtral universally adopt GQA.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph MHA_diag["MHA (H=8, G=8)"]
+        Q1["Q1"] &amp; Q2["Q2"] --&gt; K1["K1, V1"]
+        Q3["Q3"] &amp; Q4["Q4"] --&gt; K2["K2, V2"]
+        Q5["Q5"] &amp; Q6["Q6"] --&gt; K3["K3, V3"]
+        Q7["Q7"] &amp; Q8["Q8"] --&gt; K4["K4, V4"]
+    end
+
+    subgraph GQA_diag["GQA (H=8, G=2 groups)"]
+        QA1["Q1"] &amp; QA2["Q2"] &amp; QA3["Q3"] &amp; QA4["Q4"] --&gt; KA1["Group 1: Shared K1, V1"]
+        QA5["Q5"] &amp; QA6["Q6"] &amp; QA7["Q7"] &amp; QA8["Q8"] --&gt; KA2["Group 2: Shared K2, V2"]
+    end</code></pre>
+<hr />
+<h3 id="52-multi-head-latent-attention-mla-deepseek-v2-deepseek-v3">5.2 Multi-Head Latent Attention (MLA) — DeepSeek-V2 &amp; DeepSeek-V3<a class="headerlink" href="#52-multi-head-latent-attention-mla-deepseek-v2-deepseek-v3" title="Permanent link">&para;</a></h3>
+<p>While GQA compresses the number of heads, it still stores raw head dimensions (<span class="arithmatex">\(G \times d_k\)</span>). DeepSeek introduced <strong>Multi-Head Latent Attention (MLA)</strong>, which compresses keys and values into a single low-dimensional latent vector via low-rank projection.</p>
+<pre class="mermaid"><code>flowchart TD
+    H_t["Hidden State h_t (d_model)"] --&gt; W_DKV["Down-projection W_DKV (d_model -&gt; d_c)"]
+    W_DKV --&gt; C_KV["Compressed Latent Vector c_t^{KV} (dimension d_c &lt;&lt; H · d_k)"]
+    C_KV --&gt; CacheStore["STORE IN KV CACHE (Only d_c floats per token!)"]
+    CacheStore --&gt; W_UK["Up-project Keys W_UK"]
+    CacheStore --&gt; W_UV["Up-project Values W_UV"]
+    W_UK --&gt; K_content["Uncompressed K Content"]
+    W_UV --&gt; V_content["Uncompressed V Content"]
+    H_t --&gt; RoPE_K["Decoupled Key RoPE k_t^R"]</code></pre>
+<h4 id="mathematical-formulation">Mathematical Formulation<a class="headerlink" href="#mathematical-formulation" title="Permanent link">&para;</a></h4>
+<p>Instead of caching <span class="arithmatex">\(H \cdot d_k\)</span> keys and <span class="arithmatex">\(H \cdot d_v\)</span> values per token:
+1. Down-project the hidden state <span class="arithmatex">\(\mathbf{h}_t \in \mathbb{R}^{d_{\text{model}}}\)</span> to a compressed latent space:
+   $<span class="arithmatex">\(\mathbf{c}_t^{KV} = \mathbf{h}_t \mathbf{W}_{DKV} \in \mathbb{R}^{d_c}, \quad \text{where } d_c \ll H d_k\)</span>$
+2. Because Rotary Position Embedding (RoPE) is position-sensitive, it cannot be baked directly into a cached compressed representation that undergoes downstream linear transformations. MLA solves this by <strong>decoupling RoPE</strong>:
+   - Cache <span class="arithmatex">\(\mathbf{c}_t^{KV}\)</span> (representing position-invariant content).
+   - Cache a separate small positional vector <span class="arithmatex">\(\mathbf{k}_t^R \in \mathbb{R}^{d_R}\)</span> carrying RoPE.
+3. During generation, the query is split into content query <span class="arithmatex">\(\mathbf{q}_{i, c}\)</span> and rotary query <span class="arithmatex">\(\mathbf{q}_{i, r}\)</span>:
+   $<span class="arithmatex">\(\mathbf{S}_{i, j} = \frac{1}{\sqrt{d_k + d_R}} \left( \mathbf{q}_{i, c}^T \mathbf{W}_{UK} \mathbf{c}_j^{KV} + (\mathbf{q}_{i, r}^R)^T \mathbf{k}_{j}^R \right)\)</span>$</p>
+<p>By absorbing <span class="arithmatex">\(\mathbf{W}_{UK}\)</span> into <span class="arithmatex">\(\mathbf{q}_{i, c}\)</span> via associativity: <span class="arithmatex">\(\tilde{\mathbf{q}}_{i, c} = \mathbf{q}_{i, c}^T \mathbf{W}_{UK}\)</span>, key up-projection is performed once per query rather than materialized across all cached keys!</p>
+<p>This reduces the KV cache footprint per token by up to <strong><span class="arithmatex">\(93\%\)</span></strong> compared to standard MHA, allowing DeepSeek models to serve 128k context windows on standard GPU clusters.</p>
+<hr />
+<h3 id="53-sparse-mixture-of-experts-moe">5.3 Sparse Mixture of Experts (MoE)<a class="headerlink" href="#53-sparse-mixture-of-experts-moe" title="Permanent link">&para;</a></h3>
+<p>Dense LLMs activate <span class="arithmatex">\(100\%\)</span> of their parameters for every single token. However, a token representing a mathematical equation does not require the linguistic parameters specialized for French grammar or legal drafting.</p>
+<p><strong>Sparse Mixture of Experts (MoE)</strong> replaces the dense Feed-Forward Network with <span class="arithmatex">\(E\)</span> separate expert networks, activating only the top-<span class="arithmatex">\(K\)</span> experts per token (<span class="arithmatex">\(K \ll E\)</span>).</p>
+<pre class="mermaid"><code>flowchart TD
+    X["Token Input x (1 × d_model)"] --&gt; Router["Gating / Router Network W_g"]
+    Router --&gt; SoftmaxTopK["Softmax(TopK(x W_g, k=2))"]
+    SoftmaxTopK --&gt; G1["Weight g_1"] &amp; G2["Weight g_2"]
+    X --&gt; Exp1["Expert E_1 (SwiGLU FFN)"]
+    X --&gt; Exp2["Expert E_2 (SwiGLU FFN)"]
+    X --&gt; ExpE["Expert E_N (SwiGLU FFN)"]
+    G1 &amp; Exp1 --&gt; Mult1["g_1 · E_1(x)"]
+    G2 &amp; Exp2 --&gt; Mult2["g_2 · E_2(x)"]
+    Mult1 &amp; Mult2 --&gt; Add["Sum: y = ∑ g_i · E_i(x)"]
+    Add --&gt; Out["Output (1 × d_model)"]</code></pre>
+<h4 id="routing-gate-formulation">Routing Gate Formulation<a class="headerlink" href="#routing-gate-formulation" title="Permanent link">&para;</a></h4>
+<p>Let <span class="arithmatex">\(E\)</span> be the total number of experts. The gating network computes affinity logits:</p>
+<div class="arithmatex">\[
+\mathbf{h}(\mathbf{x}) = \mathbf{x} \mathbf{W}_g, \quad \mathbf{W}_g \in \mathbb{R}^{d_{\text{model}} \times E}
+\]</div>
+<p>Select the top-<span class="arithmatex">\(K\)</span> experts (typically <span class="arithmatex">\(K=2\)</span> in Mixtral 8x7B, or <span class="arithmatex">\(K=8\)</span> out of <span class="arithmatex">\(256\)</span> in DeepSeek-V3):</p>
+<div class="arithmatex">\[
+\mathcal{T} = \text{TopK}(\mathbf{h}(\mathbf{x}), K)
+\]</div>
+<p>The gating weights are computed by applying softmax strictly over the selected top-<span class="arithmatex">\(K\)</span> indices:</p>
+<div class="arithmatex">\[
+g_i(\mathbf{x}) = \begin{cases} \frac{\exp(h_i(\mathbf{x}))}{\sum_{j \in \mathcal{T}} \exp(h_j(\mathbf{x}))} &amp; \text{if } i \in \mathcal{T} \\ 0 &amp; \text{otherwise} \end{cases}
+\]</div>
+<p>The output is the weighted sum of expert computations:</p>
+<div class="arithmatex">\[
+\mathbf{y} = \sum_{i \in \mathcal{T}} g_i(\mathbf{x}) \text{Expert}_i(\mathbf{x})
+\]</div>
+<h4 id="the-load-balancing-auxiliary-loss">The Load Balancing Auxiliary Loss<a class="headerlink" href="#the-load-balancing-auxiliary-loss" title="Permanent link">&para;</a></h4>
+<p>Without intervention, the gating network rapidly falls into a <strong>winner-take-all collapse</strong>: early stochastic updates make 1 or 2 experts slightly better at general tokens. The router sends all tokens to these few experts, while the remaining <span class="arithmatex">\(E-K\)</span> experts receive no gradients, stalling their learning.</p>
+<p>To enforce uniform expert utilization, <a href="https://arxiv.org/abs/1701.06538">Shazeer et al. (2017)</a> and <a href="https://arxiv.org/abs/2101.03961">Fedus et al. (2022)</a> introduced an auxiliary load-balancing loss <span class="arithmatex">\(\mathcal{L}_{\text{aux}}\)</span> across a batch of <span class="arithmatex">\(T\)</span> tokens:</p>
+<p>Let <span class="arithmatex">\(f_i\)</span> be the fraction of tokens routed to expert <span class="arithmatex">\(i\)</span>:</p>
+<div class="arithmatex">\[
+f_i = \frac{1}{T} \sum_{t=1}^T \mathbb{I}(i \in \mathcal{T}_t)
+\]</div>
+<p>Let <span class="arithmatex">\(P_i\)</span> be the average gating probability allocated to expert <span class="arithmatex">\(i\)</span> before top-<span class="arithmatex">\(K\)</span> truncation:</p>
+<div class="arithmatex">\[
+P_i = \frac{1}{T} \sum_{t=1}^T \frac{\exp(h_i(\mathbf{x}_t))}{\sum_{j=1}^E \exp(h_j(\mathbf{x}_t))}
+\]</div>
+<p>The auxiliary loss is:</p>
+<div class="arithmatex">\[
+\mathcal{L}_{\text{aux}} = \alpha \cdot E \sum_{i=1}^E f_i P_i
+\]</div>
+<p>where <span class="arithmatex">\(\alpha\)</span> is a hyperparameter (typically <span class="arithmatex">\(0.01\)</span> to <span class="arithmatex">\(0.05\)</span>).</p>
+<p><strong>Why <span class="arithmatex">\(f_i P_i\)</span>?</strong><br />
+Because the indicator <span class="arithmatex">\(\mathbb{I}(i \in \mathcal{T}_t)\)</span> is non-differentiable, multiplying by the smooth probability <span class="arithmatex">\(P_i\)</span> allows gradients from <span class="arithmatex">\(\mathcal{L}_{\text{aux}}\)</span> to propagate directly into the router weights <span class="arithmatex">\(\mathbf{W}_g\)</span>, pushing probabilities down for overloaded experts and up for underutilized experts.</p>
+<hr />
+<h2 id="6-pytorch-implementations-from-scratch">6. PyTorch Implementations from Scratch<a class="headerlink" href="#6-pytorch-implementations-from-scratch" title="Permanent link">&para;</a></h2>
+<h3 id="61-grouped-query-attention-gqa-with-kv-caching">6.1 Grouped-Query Attention (GQA) with KV Caching<a class="headerlink" href="#61-grouped-query-attention-gqa-with-kv-caching" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">class</span><span class="w"> </span><span class="nc">GroupedQueryAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="sd">"""Grouped-Query Attention (GQA, Ainslie et al. 2023).</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="sd">    Partitions num_q_heads into num_kv_groups.</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="sd">    Each group shares 1 key head and 1 value head.</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="sd">    """</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_q_heads</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_kv_groups</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">num_q_heads</span> <span class="o">=</span> <span class="n">num_q_heads</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">num_kv_groups</span> <span class="o">=</span> <span class="n">num_kv_groups</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">=</span> <span class="n">dim</span> <span class="o">//</span> <span class="n">num_q_heads</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">num_q_per_kv</span> <span class="o">=</span> <span class="n">num_q_heads</span> <span class="o">//</span> <span class="n">num_kv_groups</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>        <span class="k">assert</span> <span class="n">num_q_heads</span> <span class="o">%</span> <span class="n">num_kv_groups</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"q_heads must divide by kv_groups"</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>        <span class="k">assert</span> <span class="n">dim</span> <span class="o">%</span> <span class="n">num_q_heads</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"dim must divide by q_heads"</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">q_proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">num_q_heads</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">k_proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">num_kv_groups</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">v_proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">num_kv_groups</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">out_proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>        <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>        <span class="n">kv_cache</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>        <span class="n">use_cache</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]]:</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>        <span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>        <span class="c1"># Projections</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_q_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>        <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_kv_groups</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v_proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_kv_groups</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>        <span class="c1"># Update KV cache</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>        <span class="k">if</span> <span class="n">kv_cache</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>            <span class="n">k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">kv_cache</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">k</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>            <span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">kv_cache</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>        <span class="n">new_cache</span> <span class="o">=</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="n">use_cache</span> <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>        <span class="n">total_k_len</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>        <span class="c1"># Expand K and V heads to match Q heads via repeating across groups</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>        <span class="c1"># (B, num_kv_groups, 1, total_k_len, head_dim) -&gt; (B, num_kv_groups, num_q_per_kv, total_k_len, head_dim)</span>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>        <span class="n">k_expanded</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_q_per_kv</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>            <span class="n">B</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_q_heads</span><span class="p">,</span> <span class="n">total_k_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>        <span class="p">)</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>        <span class="n">v_expanded</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_q_per_kv</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>            <span class="n">B</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_q_heads</span><span class="p">,</span> <span class="n">total_k_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>        <span class="p">)</span>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>        <span class="c1"># Scaled dot-product attention</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>        <span class="n">scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">k_expanded</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>        <span class="c1"># Causal mask for prefill</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>        <span class="k">if</span> <span class="n">T</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>            <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>                <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">T</span><span class="p">,</span> <span class="n">total_k_len</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"-inf"</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">),</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>                <span class="n">diagonal</span><span class="o">=</span><span class="n">total_k_len</span> <span class="o">-</span> <span class="n">T</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>            <span class="p">)</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>            <span class="n">scores</span> <span class="o">=</span> <span class="n">scores</span> <span class="o">+</span> <span class="n">mask</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>        <span class="n">attn_weights</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>        <span class="n">out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">attn_weights</span><span class="p">,</span> <span class="n">v_expanded</span><span class="p">)</span>  <span class="c1"># (B, num_q_heads, T, head_dim)</span>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>
+</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_proj</span><span class="p">(</span><span class="n">out</span><span class="p">),</span> <span class="n">new_cache</span>
+</span></code></pre></div>
+<hr />
+<h3 id="62-top-2-moe-routing-layer-with-auxiliary-load-balancing-loss">6.2 Top-2 MoE Routing Layer with Auxiliary Load-Balancing Loss<a class="headerlink" href="#62-top-2-moe-routing-layer-with-auxiliary-load-balancing-loss" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">SwiGLUExpert</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="sd">"""Individual Feed-Forward Expert Network."""</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">w_gate</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">w_up</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">w_down</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_down</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">silu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_gate</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_up</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="k">class</span><span class="w"> </span><span class="nc">TopKMoELayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="sd">"""Sparse Mixture of Experts Layer with Top-2 Routing and Load-Balancing Loss."""</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_experts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">aux_loss_coef</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">):</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">num_experts</span> <span class="o">=</span> <span class="n">num_experts</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">top_k</span> <span class="o">=</span> <span class="n">top_k</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">aux_loss_coef</span> <span class="o">=</span> <span class="n">aux_loss_coef</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>        <span class="c1"># Router gate projection</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">router</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">num_experts</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>        <span class="c1"># Expert ensemble</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        <span class="n">hidden_dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">experts</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>            <span class="n">SwiGLUExpert</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_experts</span><span class="p">)</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>        <span class="p">])</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">        </span><span class="sd">"""Args:</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="sd">        x: Tensor of shape (batch_size, seq_len, dim)</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="sd">        Returns:</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="sd">            out: Tensor of shape (batch_size, seq_len, dim)</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="sd">            aux_loss: Scalar auxiliary loss for load balancing</span>
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="sd">        """</span>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>        <span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>        <span class="n">flat_x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>  <span class="c1"># (N_tokens, D)</span>
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>        <span class="n">num_tokens</span> <span class="o">=</span> <span class="n">flat_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>
+</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>        <span class="c1"># 1. Router logits and normalized probabilities</span>
+</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>        <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">router</span><span class="p">(</span><span class="n">flat_x</span><span class="p">)</span>  <span class="c1"># (N_tokens, E)</span>
+</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>        <span class="n">all_probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># (N_tokens, E)</span>
+</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>
+</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>        <span class="c1"># 2. Top-K selection</span>
+</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>        <span class="n">topk_weights</span><span class="p">,</span> <span class="n">topk_indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">all_probs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">top_k</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>        <span class="c1"># Renormalize Top-K weights to sum to 1.0</span>
+</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>        <span class="n">topk_weights</span> <span class="o">=</span> <span class="n">topk_weights</span> <span class="o">/</span> <span class="n">topk_weights</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>
+</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>        <span class="c1"># 3. Compute Load-Balancing Auxiliary Loss</span>
+</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>        <span class="c1"># f_i: fraction of tokens routed to expert i</span>
+</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>        <span class="n">expert_mask</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">topk_indices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_experts</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># (N_tokens, E)</span>
+</span><span id="__span-1-57"><a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>        <span class="n">tokens_per_expert</span> <span class="o">=</span> <span class="n">expert_mask</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># f_i: (E,)</span>
+</span><span id="__span-1-58"><a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>        <span class="c1"># P_i: average probability assigned to expert i</span>
+</span><span id="__span-1-59"><a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>        <span class="n">mean_prob_per_expert</span> <span class="o">=</span> <span class="n">all_probs</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># P_i: (E,)</span>
+</span><span id="__span-1-60"><a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>
+</span><span id="__span-1-61"><a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>        <span class="n">aux_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aux_loss_coef</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_experts</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">tokens_per_expert</span> <span class="o">*</span> <span class="n">mean_prob_per_expert</span><span class="p">)</span>
+</span><span id="__span-1-62"><a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>
+</span><span id="__span-1-63"><a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>        <span class="c1"># 4. Expert Dispatch &amp; Accumulation</span>
+</span><span id="__span-1-64"><a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>        <span class="n">flat_out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">flat_x</span><span class="p">)</span>
+</span><span id="__span-1-65"><a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>
+</span><span id="__span-1-66"><a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>        <span class="c1"># Vectorized routing loop across experts</span>
+</span><span id="__span-1-67"><a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>        <span class="k">for</span> <span class="n">expert_idx</span><span class="p">,</span> <span class="n">expert</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experts</span><span class="p">):</span>
+</span><span id="__span-1-68"><a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>            <span class="c1"># Find tokens assigned to this expert in any of the top_k slots</span>
+</span><span id="__span-1-69"><a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>            <span class="n">token_mask</span><span class="p">,</span> <span class="n">slot_indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">topk_indices</span> <span class="o">==</span> <span class="n">expert_idx</span><span class="p">)</span>
+</span><span id="__span-1-70"><a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>            <span class="k">if</span> <span class="n">token_mask</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-1-71"><a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>                <span class="k">continue</span>
+</span><span id="__span-1-72"><a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>
+</span><span id="__span-1-73"><a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>            <span class="n">selected_inputs</span> <span class="o">=</span> <span class="n">flat_x</span><span class="p">[</span><span class="n">token_mask</span><span class="p">]</span>
+</span><span id="__span-1-74"><a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>            <span class="n">expert_outputs</span> <span class="o">=</span> <span class="n">expert</span><span class="p">(</span><span class="n">selected_inputs</span><span class="p">)</span>
+</span><span id="__span-1-75"><a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>            <span class="n">weights</span> <span class="o">=</span> <span class="n">topk_weights</span><span class="p">[</span><span class="n">token_mask</span><span class="p">,</span> <span class="n">slot_indices</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-1-76"><a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>
+</span><span id="__span-1-77"><a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>            <span class="n">flat_out</span><span class="o">.</span><span class="n">index_add_</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">token_mask</span><span class="p">,</span> <span class="n">expert_outputs</span> <span class="o">*</span> <span class="n">weights</span><span class="p">)</span>
+</span><span id="__span-1-78"><a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>
+</span><span id="__span-1-79"><a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>        <span class="k">return</span> <span class="n">flat_out</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">D</span><span class="p">),</span> <span class="n">aux_loss</span>
+</span><span id="__span-1-80"><a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a>
+</span><span id="__span-1-81"><a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a>
+</span><span id="__span-1-82"><a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a><span class="c1"># -------------------------------------------------------------</span>
+</span><span id="__span-1-83"><a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a><span class="c1"># Verification Run</span>
+</span><span id="__span-1-84"><a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a><span class="c1"># -------------------------------------------------------------</span>
+</span><span id="__span-1-85"><a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-1-86"><a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a>    <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-1-87"><a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>    <span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">128</span>
+</span><span id="__span-1-88"><a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>
+</span><span id="__span-1-89"><a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"--- 1. Testing Grouped-Query Attention (GQA) ---"</span><span class="p">)</span>
+</span><span id="__span-1-90"><a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a>    <span class="n">gqa</span> <span class="o">=</span> <span class="n">GroupedQueryAttention</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">D</span><span class="p">,</span> <span class="n">num_q_heads</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">num_kv_groups</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-1-91"><a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a>    <span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+</span><span id="__span-1-92"><a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a>    <span class="n">gqa_out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gqa</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+</span><span id="__span-1-93"><a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"GQA input shape:  </span><span class="si">{</span><span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-1-94"><a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"GQA output shape: </span><span class="si">{</span><span class="n">gqa_out</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-1-95"><a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a>    <span class="k">assert</span> <span class="n">gqa_out</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">inputs</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-1-96"><a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a>
+</span><span id="__span-1-97"><a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">--- 2. Testing Mixture of Experts (MoE) Top-2 ---"</span><span class="p">)</span>
+</span><span id="__span-1-98"><a id="__codelineno-1-98" name="__codelineno-1-98" href="#__codelineno-1-98"></a>    <span class="n">moe</span> <span class="o">=</span> <span class="n">TopKMoELayer</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">D</span><span class="p">,</span> <span class="n">num_experts</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-1-99"><a id="__codelineno-1-99" name="__codelineno-1-99" href="#__codelineno-1-99"></a>    <span class="n">moe_out</span><span class="p">,</span> <span class="n">aux_loss</span> <span class="o">=</span> <span class="n">moe</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+</span><span id="__span-1-100"><a id="__codelineno-1-100" name="__codelineno-1-100" href="#__codelineno-1-100"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MoE output shape: </span><span class="si">{</span><span class="n">moe_out</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-1-101"><a id="__codelineno-1-101" name="__codelineno-1-101" href="#__codelineno-1-101"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MoE load-balancing aux loss: </span><span class="si">{</span><span class="n">aux_loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-1-102"><a id="__codelineno-1-102" name="__codelineno-1-102" href="#__codelineno-1-102"></a>    <span class="k">assert</span> <span class="n">moe_out</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">inputs</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-1-103"><a id="__codelineno-1-103" name="__codelineno-1-103" href="#__codelineno-1-103"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Verification successful!"</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="7-common-errors-debugging-guide">7. Common Errors &amp; Debugging Guide<a class="headerlink" href="#7-common-errors-debugging-guide" title="Permanent link">&para;</a></h2>
+<h3 id="1-gqa-kv-cache-head-mismatch-during-autoregressive-step">1. GQA KV-Cache Head Mismatch during Autoregressive Step<a class="headerlink" href="#1-gqa-kv-cache-head-mismatch-during-autoregressive-step" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Symptom</strong>: <code>RuntimeError: The size of tensor a (8) must match the size of tensor b (2) at non-singleton dimension 1</code>.</li>
+<li><strong>Root Cause</strong>: Forgetting to repeat/expand the <span class="arithmatex">\(G\)</span> key/value heads to match the <span class="arithmatex">\(H\)</span> query heads before performing the matrix product <span class="arithmatex">\(\mathbf{Q} \mathbf{K}^T\)</span>.</li>
+<li><strong>Fix</strong>: Use <code>repeat_interleave</code> or <code>repeat</code> along the head dimension:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># k has shape: (B, num_kv_groups, seq_len, head_dim)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">k_expanded</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="n">num_q_heads</span> <span class="o">//</span> <span class="n">num_kv_groups</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></code></pre></div></li>
+</ul>
+<hr />
+<h3 id="2-router-collapse-in-sparse-moe">2. Router Collapse in Sparse MoE<a class="headerlink" href="#2-router-collapse-in-sparse-moe" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Symptom</strong>: Expert utilization profiling shows expert 0 and 1 processing <span class="arithmatex">\(99\%\)</span> of all tokens while experts <span class="arithmatex">\(2-7\)</span> process <span class="arithmatex">\(0\%\)</span>; training perplexity stalls.</li>
+<li><strong>Root Cause</strong>: Missing or deactivated auxiliary loss <span class="arithmatex">\(\mathcal{L}_{\text{aux}}\)</span>, or learning rate for router gate set too high.</li>
+<li><strong>Fix</strong>: Monitor <code>tokens_per_expert.std()</code>. Ensure <span class="arithmatex">\(\mathcal{L}_{\text{aux}}\)</span> is added directly to total training loss:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">loss</span> <span class="o">=</span> <span class="n">task_loss</span> <span class="o">+</span> <span class="n">aux_loss</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+</span></code></pre></div></li>
+</ul>
+<hr />
+<h3 id="3-detached-router-gradients">3. Detached Router Gradients<a class="headerlink" href="#3-detached-router-gradients" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Symptom</strong>: Router weights receive zero gradients (<code>router.weight.grad is None</code> or all zeros); model acts like a random, frozen router.</li>
+<li><strong>Root Cause</strong>: Indexing operations using <code>.argmax()</code> or slicing tokens into Python lists without maintaining differentiable computation back through <code>all_probs</code>.</li>
+<li><strong>Fix</strong>: Always multiply the expert outputs by <code>topk_weights</code>, which derive from differentiable <code>F.softmax(logits)</code>.</li>
+</ul>
+<hr />
+<h2 id="8-staff-level-technical-interview-questions">8. Staff-Level Technical Interview Questions<a class="headerlink" href="#8-staff-level-technical-interview-questions" title="Permanent link">&para;</a></h2>
+<h3 id="q1-compare-kaplan-et-al-and-chinchilla-scaling-laws-what-error-did-kaplan-make-and-how-did-it-affect-models-like-gpt-3">Q1: Compare Kaplan et al. and Chinchilla scaling laws. What error did Kaplan make, and how did it affect models like GPT-3?<a class="headerlink" href="#q1-compare-kaplan-et-al-and-chinchilla-scaling-laws-what-error-did-kaplan-make-and-how-did-it-affect-models-like-gpt-3" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong><br />
+Kaplan et al. (2020) proposed that training compute was optimally spent by scaling model parameters much faster than tokens (<span class="arithmatex">\(N \propto C^{0.73}, D \propto C^{0.27}\)</span>). This conclusion arose because Kaplan used a fixed learning rate cosine decay schedule that did not scale its cycle length with the total token budget for each individual run. Consequently, runs with large token counts were penalized by having their learning rate decayed too late in training.<br />
+Hoffmann et al. (2022) corrected this artifact by training over 400 models with cosine schedules matched precisely to each token budget. They proved that parameters and tokens should scale symmetrically in equal proportion: <span class="arithmatex">\(N \propto C^{0.5}, D \propto C^{0.5}\)</span>, yielding the compute-optimal ratio:
+$<span class="arithmatex">\(\frac{D}{N} \approx 20 \text{ tokens per parameter}\)</span>$
+Because GPT-3 (175B parameters) was trained on only 300B tokens (a ratio of 1.7), it was substantially undertrained. A 70B parameter model trained on 1.4T tokens (Chinchilla) outperforms GPT-3 on virtually all benchmarks while using identical training compute and running inference at less than half the GPU memory and latency.</p>
+<hr />
+<h3 id="q2-why-does-grouped-query-attention-gqa-reduce-inference-latency-if-total-parameter-count-is-nearly-unchanged">Q2: Why does Grouped-Query Attention (GQA) reduce inference latency if total parameter count is nearly unchanged?<a class="headerlink" href="#q2-why-does-grouped-query-attention-gqa-reduce-inference-latency-if-total-parameter-count-is-nearly-unchanged" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong><br />
+During autoregressive generation, generating each new token processes an input batch of size <span class="arithmatex">\((B, 1, d)\)</span>. The matrix multiplication arithmetic intensity (FLOPs per byte of memory loaded from GPU HBM) is low (<span class="arithmatex">\(\approx 1\)</span>). The GPU streaming multiprocessors (SMs) spend most of their execution cycles waiting for weights and KV cache tensors to be fetched from high-bandwidth memory into SRAM (memory-bound regime).<br />
+In standard Multi-Head Attention, <span class="arithmatex">\(H\)</span> key and value tensors are fetched from memory at every single step. In GQA with <span class="arithmatex">\(G = H / 8\)</span>, the KV cache memory footprint is cut by <span class="arithmatex">\(8\times\)</span>. Because memory transfer time dominates latency in generation, reducing the KV cache footprint by <span class="arithmatex">\(87.5\%\)</span> directly translates into nearly an <span class="arithmatex">\(8\times\)</span> reduction in memory bandwidth saturation, accelerating decoding throughput dramatically even though the FLOP count for linear projections decreases only marginally.</p>
+<hr />
+<h3 id="q3-explain-the-mathematical-mechanism-of-deepseek-multi-head-latent-attention-mla-and-why-decoupled-rope-is-necessary">Q3: Explain the mathematical mechanism of DeepSeek Multi-Head Latent Attention (MLA) and why decoupled RoPE is necessary.<a class="headerlink" href="#q3-explain-the-mathematical-mechanism-of-deepseek-multi-head-latent-attention-mla-and-why-decoupled-rope-is-necessary" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong><br />
+Standard attention caches full keys and values: <span class="arithmatex">\(2 \times H \times d_k\)</span> floats per token. DeepSeek MLA compresses keys and values into a single low-dimensional latent vector <span class="arithmatex">\(\mathbf{c}_t^{KV} \in \mathbb{R}^{d_c}\)</span> via projection <span class="arithmatex">\(\mathbf{W}_{DKV}\)</span> (<span class="arithmatex">\(d_c \ll H d_k\)</span>), so only <span class="arithmatex">\(\mathbf{c}_t^{KV}\)</span> needs to be stored in the KV cache.<br />
+However, standard keys incorporate Rotary Position Embeddings (RoPE), which apply coordinate rotation <span class="arithmatex">\(\mathbf{R}_t \mathbf{k}_t\)</span>. Because <span class="arithmatex">\(\mathbf{R}_t\)</span> is position-dependent and non-commutative with arbitrary linear projections, multiplying a cached compressed vector by an up-projection matrix <span class="arithmatex">\(\mathbf{W}_{UK}\)</span> cannot reconstruct rotated keys after the fact:
+$<span class="arithmatex">\(\mathbf{R}_t (\mathbf{c}_t \mathbf{W}_{UK}) \ne (\mathbf{R}_t \mathbf{c}_t) \mathbf{W}_{UK}\)</span>$
+MLA solves this by <strong>decoupling RoPE</strong>: it splits attention into two parallel streams:
+1. An unrotated content stream where keys <span class="arithmatex">\(\mathbf{k}_t^C\)</span> are reconstructed from cached latent <span class="arithmatex">\(\mathbf{c}_t^{KV}\)</span>.
+2. A small, independent rotary key <span class="arithmatex">\(\mathbf{k}_t^R \in \mathbb{R}^{d_R}\)</span> that carries RoPE and is cached separately.<br />
+Total cached floats per token are <span class="arithmatex">\(d_c + d_R\)</span>, yielding up to <span class="arithmatex">\(93\%\)</span> cache compression while preserving exact relative position sensitivity.</p>
+<hr />
+<h3 id="q4-formulate-the-auxiliary-load-balancing-loss-in-sparse-moe-and-explain-why-multiplying-f_i-cdot-p_i-provides-a-differentiable-training-signal">Q4: Formulate the auxiliary load-balancing loss in Sparse MoE and explain why multiplying <span class="arithmatex">\(f_i \cdot P_i\)</span> provides a differentiable training signal.<a class="headerlink" href="#q4-formulate-the-auxiliary-load-balancing-loss-in-sparse-moe-and-explain-why-multiplying-f_i-cdot-p_i-provides-a-differentiable-training-signal" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong><br />
+In MoE routing, token assignment to expert <span class="arithmatex">\(i\)</span> is discrete: <span class="arithmatex">\(i \in \text{TopK}(\mathbf{x} \mathbf{W}_g)\)</span>. Let <span class="arithmatex">\(f_i = \frac{1}{T}\sum_t \mathbb{I}(i \in \mathcal{T}_t)\)</span> be the fraction of tokens routed to expert <span class="arithmatex">\(i\)</span>.<br />
+Because the indicator function <span class="arithmatex">\(\mathbb{I}(\cdot)\)</span> has a derivative of zero everywhere (except at step discontinuities), directly minimizing <span class="arithmatex">\(\sum f_i^2\)</span> provides no gradient back to the router weights <span class="arithmatex">\(\mathbf{W}_g\)</span>.<br />
+The solution defines <span class="arithmatex">\(P_i = \frac{1}{T}\sum_t \frac{e^{h_i(t)}}{\sum_j e^{h_j(t)}}\)</span>, the continuous softmax probability assigned to expert <span class="arithmatex">\(i\)</span> across all tokens before top-k selection.<br />
+The auxiliary loss is:
+$<span class="arithmatex">\(\mathcal{L}_{\text{aux}} = \alpha E \sum_{i=1}^E f_i P_i\)</span>$
+When an expert <span class="arithmatex">\(i\)</span> receives too many tokens, its fraction <span class="arithmatex">\(f_i\)</span> is large. Minimizing <span class="arithmatex">\(\mathcal{L}_{\text{aux}}\)</span> penalizes the gradient <span class="arithmatex">\(\frac{\partial \mathcal{L}_{\text{aux}}}{\partial P_i} \propto f_i\)</span>, pushing the continuous logits for expert <span class="arithmatex">\(i\)</span> downward through <span class="arithmatex">\(\nabla_{\mathbf{W}_g} P_i\)</span>. Conversely, underutilized experts have small <span class="arithmatex">\(f_i\)</span>, easing downward pressure and allowing them to compete for tokens.</p>
+<hr />
+<h3 id="q5-why-did-the-field-transition-from-encoder-only-bert-and-encoder-decoder-t5-architectures-to-decoder-only-models-for-generative-agents-and-foundation-models">Q5: Why did the field transition from Encoder-only (BERT) and Encoder-Decoder (T5) architectures to Decoder-only models for generative agents and foundation models?<a class="headerlink" href="#q5-why-did-the-field-transition-from-encoder-only-bert-and-encoder-decoder-t5-architectures-to-decoder-only-models-for-generative-agents-and-foundation-models" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong><br />
+1. <strong>Unified Compute Graph</strong>: In decoder-only architectures, prompt processing (prefill) and generation (decoding) share the identical attention and FFN weights without requiring separate encoder-decoder cross-attention layers.
+2. <strong>Key-Value Cache Simplicity</strong>: Encoder-decoders require caching both cross-attention keys/values (fixed size <span class="arithmatex">\(T_{\text{enc}} \times d\)</span>) and causal decoder keys/values. Decoder-only models manage a single homogeneous KV cache.
+3. <strong>In-Context Zero/Few-Shot Generality</strong>: Autoregressive causal language modeling directly matches the sequence conditioning required for prompting. Autoregressive decoders learn next-token distributions conditioned on arbitrary prefix trajectories, enabling multi-turn dialogues, code generation, and chain-of-thought without task-specific architectural heads.</p>
+<hr />
+<h2 id="9-mastery-ladder">9. Mastery Ladder<a class="headerlink" href="#9-mastery-ladder" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] <strong>L1:</strong> State the differences in attention mask structure among Encoders, Decoders, and Encoder-Decoder models.</li>
+<li>[ ] <strong>L2:</strong> Formulate the BERT Masked Language Model objective and explain the 80/10/10 token corruption rule.</li>
+<li>[ ] <strong>L3:</strong> Explain why RoBERTa eliminated the Next Sentence Prediction (NSP) task.</li>
+<li>[ ] <strong>L4:</strong> Derive the FLOPs training formula <span class="arithmatex">\(C \approx 6ND\)</span> for Transformer decoders.</li>
+<li>[ ] <strong>L5:</strong> Contrast the scaling exponents of Kaplan et al. (<span class="arithmatex">\(N \propto C^{0.73}\)</span>) with Chinchilla (<span class="arithmatex">\(N \propto C^{0.5}, D \propto C^{0.5}\)</span>).</li>
+<li>[ ] <strong>L6:</strong> Compare Multi-Head Attention (MHA), Multi-Query Attention (MQA), and Grouped-Query Attention (GQA) in terms of KV cache size.</li>
+<li>[ ] <strong>L7:</strong> Explain why RoPE cannot be directly applied to a compressed latent KV vector in DeepSeek MLA.</li>
+<li>[ ] <strong>L8:</strong> Formulate Top-2 MoE routing and implement the load-balancing auxiliary loss <span class="arithmatex">\(\mathcal{L}_{\text{aux}} = \alpha E \sum f_i P_i\)</span>.</li>
+<li>[ ] <strong>L9:</strong> Explain why expert routing collapses without an auxiliary loss.</li>
+<li>[ ] <strong>L10:</strong> Implement a functional Grouped-Query Attention module with KV caching from scratch in PyTorch.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../transformer-architecture-mechanics-deep-dive/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deep-dive: Transformer Architecture &amp; Mechanics">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Transformer Architecture & Mechanics
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../llm-training-alignment-peft-deep-dive/" class="md-footer__link md-footer__link--next" aria-label="Next: Deep-dive: LLM Training, Alignment &amp; PEFT">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: LLM Training, Alignment & PEFT
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

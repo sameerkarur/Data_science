@@ -1,0 +1,4725 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete, deep-dive AI/ML curriculum — from Python internals to production AI systems.">
+      
+      
+        <meta name="author" content="Sameer Karur">
+      
+      
+      
+        <link rel="prev" href="../model-validation-generalization-deep-dive/">
+      
+      
+        <link rel="next" href="../hyperparameter-optimization-deep-dive/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Deep-dive: Evaluation Metrics - AI/ML Mastery Program</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#model-evaluation-metrics-roc-pr-auc-calibration-regression" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI/ML Mastery Program" class="md-header__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI/ML Mastery Program
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Deep-dive: Evaluation Metrics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../00-computer-science/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 0 – CS Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-python/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 1 – Python
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../02-mathematics/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 2 – Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../03-data-engineering/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 3 – Data Engineering
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../04-classical-ml/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 4 – Classical ML
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 5 – ML Theory & Evaluation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../06-deep-learning/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 6 – Deep Learning
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../07-computer-vision/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 7 – Computer Vision
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../08-nlp/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 8 – NLP
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../09-transformers-llms/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 9 – Transformers & LLMs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../10-generative-ai/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 10 – Generative AI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../11-ai-agents/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 11 – AI Agents
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../12-mlops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 12 – MLOps
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../13-ai-system-design/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 13 – AI System Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../14-projects/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 14 – Projects & Interview
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI/ML Mastery Program" class="md-nav__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI/ML Mastery Program
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../00-computer-science/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 0 – CS Foundations
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 0 – CS Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/how-computers-execute-programs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: How Computers Execute Programs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/arrays-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Arrays
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/linked-lists-stacks-queues-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linked Lists, Stacks & Queues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/hash-tables-sets-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hash Tables & Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Trees (Binary, BST, Heaps)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/graphs-tries-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Graphs & Tries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/algorithms-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Algorithms (Big-O, Searching, Sorting, Recursion, Greedy, DP, Graphs)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../01-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 1 – Python
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 1 – Python
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/fundamentals-control-flow-collections-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Fundamentals, Control Flow & Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/functions-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/oop-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: OOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/advanced-python-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced Python (Iterators, Generators, Async, Concurrency)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/internals-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Internals (CPython, Bytecode, GC, GIL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../02-mathematics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 2 – Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 2 – Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/foundations-math-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundations of Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/linear-algebra-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/calculus-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Calculus & Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/probability-statistics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Probability & Statistics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../03-data-engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 3 – Data Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 3 – Data Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-ecosystem-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Data Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-formats-storage-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Formats & Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-cleaning-preprocessing-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Cleaning & Preprocessing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/feature-engineering-selection-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Feature Engineering & Selection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../04-classical-ml/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 4 – Classical ML
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 4 – Classical ML
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/linear-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/regularized-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Regularized & Polynomial Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/logistic-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Logistic Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/knn-naive-bayes-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: KNN & Naive Bayes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/decision-trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/ensemble-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Ensemble Learning (Random Forests & GBDT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/svm-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Support Vector Machines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model-validation-generalization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Validation & Generalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-classification-point-metrics-the-confusion-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Classification Point Metrics &amp; The Confusion Matrix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Classification Point Metrics &amp; The Confusion Matrix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-confusion-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 The Confusion Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-point-metric-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Point Metric Definitions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-the-f_beta-score-derivation-of-weighted-harmonic-mean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 The \(F_\beta\) Score: Derivation of Weighted Harmonic Mean
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-threshold-agnostic-curve-metrics-roc-auc-vs-pr-auc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Threshold-Agnostic Curve Metrics: ROC-AUC vs. PR-AUC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Threshold-Agnostic Curve Metrics: ROC-AUC vs. PR-AUC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-roc-curve-the-wilcoxon-mann-whitney-statistic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 ROC Curve &amp; The Wilcoxon-Mann-Whitney Statistic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-pr-auc-the-mathematical-failure-of-roc-on-imbalanced-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 PR-AUC &amp; The Mathematical Failure of ROC on Imbalanced Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-probability-calibration-ece-platt-scaling-isotonic-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Probability Calibration: ECE, Platt Scaling &amp; Isotonic Regression
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Probability Calibration: ECE, Platt Scaling &amp; Isotonic Regression">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-expected-calibration-error-ece" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Expected Calibration Error (ECE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-post-hoc-calibration-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Post-Hoc Calibration Algorithms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-regression-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Regression Metrics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Regression Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-absolute-vs-squared-residual-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Absolute vs. Squared Residual Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-coefficient-of-determination-r2-and-adjusted-r2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Coefficient of Determination (\(R^2\)) and Adjusted \(R^2\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-percentage-metrics-mape-and-symmetric-smape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Percentage Metrics: MAPE and Symmetric sMAPE
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-implementation-1-vectorized-metric-engine-calibration-from-scratch-numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Implementation 1 — Vectorized Metric Engine &amp; Calibration from Scratch (NumPy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-implementation-2-scikit-learn-benchmarking-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Implementation 2 — scikit-learn Benchmarking &amp; Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-common-errors-production-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Common Errors &amp; Production Debugging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Common Errors &amp; Production Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-macro-vs-micro-vs-weighted-averaging-in-multiclass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Macro vs. Micro vs. Weighted Averaging in Multiclass
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-calculating-negative-r2-on-out-of-sample-test-sets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Calculating Negative \(R^2\) on Out-of-Sample Test Sets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-staff-level-interview-questions-model-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Staff-Level Interview Questions &amp; Model Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Staff-Level Interview Questions &amp; Model Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-prove-that-the-area-under-the-roc-curve-roc-auc-is-mathematically-equivalent-to-the-wilcoxon-mann-whitney-ranking-statistic-phatsmathbfx-hatsmathbfx-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Prove that the area under the ROC curve (ROC-AUC) is mathematically equivalent to the Wilcoxon-Mann-Whitney ranking statistic: \(P(\hat{s}(\mathbf{x}^+) &gt; \hat{s}(\mathbf{x}^-))\).
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-derive-the-f_beta-metric-from-the-weighted-harmonic-mean-of-precision-and-recall-why-does-the-arithmetic-mean-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Derive the \(F_\beta\) metric from the weighted harmonic mean of Precision and Recall. Why does the arithmetic mean fail?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-contrast-platt-scaling-and-isotonic-regression-for-probability-calibration-when-should-each-be-chosen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: Contrast Platt Scaling and Isotonic Regression for probability calibration. When should each be chosen?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-derive-adjusted-r2-and-explain-why-it-can-decrease-when-a-new-feature-is-added-to-a-regression-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Derive Adjusted \(R^2\) and explain why it can decrease when a new feature is added to a regression model.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hyperparameter-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hyperparameter Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../06-deep-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 6 – Deep Learning
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 6 – Deep Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/neural-network-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Neural Network Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/architecture-components-regularization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Architecture Components & Regularization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/deep-learning-optimizers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Deep Learning Optimizers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../07-computer-vision/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 7 – Computer Vision
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 7 – Computer Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/convolutional-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Convolutional Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/modern-cnn-architectures-transfer-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Modern CNN Architectures & Transfer Learning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/vision-tasks-transformers-multimodal-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Vision Tasks, ViT & Multimodal Vision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../08-nlp/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 8 – NLP
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 8 – NLP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/text-representation-word-embeddings-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Text Representation & Word Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/sequence-models-attention-transformers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Sequence Models, Attention & Transformers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../09-transformers-llms/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 9 – Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 9 – Transformers & LLMs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/transformer-architecture-mechanics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Transformer Architecture & Mechanics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/foundation-model-families-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundation Model Families
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/llm-training-alignment-peft-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Training, Alignment & PEFT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../10-generative-ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 10 – Generative AI
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 10 – Generative AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/llm-application-engineering-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Application Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/enterprise-rag-systems-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Enterprise RAG Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/diffusion-models-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../11-ai-agents/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 11 – AI Agents
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 11 – AI Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/agent-architectures-patterns-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Agent Architectures & Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/multi-agent-systems-security-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Multi-Agent Systems & Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../12-mlops/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 12 – MLOps
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 12 – MLOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/production-tooling-containerization-cicd-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production Tooling, Containerization & CI/CD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/serving-pipelines-orchestration-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Serving, Pipelines & Distributed Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/model-monitoring-observability-retraining-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Monitoring, Observability & Automated Retraining
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../13-ai-system-design/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 13 – AI System Design
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_15" id="__nav_15_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 13 – AI System Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/ai-system-design-methodology-framework-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: AI System Design Methodology & Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/production-case-studies-system-design-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production AI System Design Case Studies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../14-projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 14 – Projects & Interview
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_16" id="__nav_16_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 14 – Projects & Interview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/foundational-applied-projects-tier-1-to-4-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundational Applied Projects (Tiers 1–4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/advanced-frontier-projects-tier-5-to-8-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced & Frontier Applied Projects (Tiers 5–8)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/staff-level-interview-question-banks-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Staff-Level Technical Interview Question Banks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-classification-point-metrics-the-confusion-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Classification Point Metrics &amp; The Confusion Matrix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Classification Point Metrics &amp; The Confusion Matrix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-confusion-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 The Confusion Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-point-metric-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Point Metric Definitions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-the-f_beta-score-derivation-of-weighted-harmonic-mean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 The \(F_\beta\) Score: Derivation of Weighted Harmonic Mean
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-threshold-agnostic-curve-metrics-roc-auc-vs-pr-auc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Threshold-Agnostic Curve Metrics: ROC-AUC vs. PR-AUC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Threshold-Agnostic Curve Metrics: ROC-AUC vs. PR-AUC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-roc-curve-the-wilcoxon-mann-whitney-statistic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 ROC Curve &amp; The Wilcoxon-Mann-Whitney Statistic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-pr-auc-the-mathematical-failure-of-roc-on-imbalanced-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 PR-AUC &amp; The Mathematical Failure of ROC on Imbalanced Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-probability-calibration-ece-platt-scaling-isotonic-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Probability Calibration: ECE, Platt Scaling &amp; Isotonic Regression
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Probability Calibration: ECE, Platt Scaling &amp; Isotonic Regression">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-expected-calibration-error-ece" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Expected Calibration Error (ECE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-post-hoc-calibration-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Post-Hoc Calibration Algorithms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-regression-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Regression Metrics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Regression Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-absolute-vs-squared-residual-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Absolute vs. Squared Residual Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-coefficient-of-determination-r2-and-adjusted-r2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Coefficient of Determination (\(R^2\)) and Adjusted \(R^2\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-percentage-metrics-mape-and-symmetric-smape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Percentage Metrics: MAPE and Symmetric sMAPE
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-implementation-1-vectorized-metric-engine-calibration-from-scratch-numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Implementation 1 — Vectorized Metric Engine &amp; Calibration from Scratch (NumPy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-implementation-2-scikit-learn-benchmarking-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Implementation 2 — scikit-learn Benchmarking &amp; Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-common-errors-production-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Common Errors &amp; Production Debugging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Common Errors &amp; Production Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-macro-vs-micro-vs-weighted-averaging-in-multiclass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Macro vs. Micro vs. Weighted Averaging in Multiclass
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-calculating-negative-r2-on-out-of-sample-test-sets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Calculating Negative \(R^2\) on Out-of-Sample Test Sets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-staff-level-interview-questions-model-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Staff-Level Interview Questions &amp; Model Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Staff-Level Interview Questions &amp; Model Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-prove-that-the-area-under-the-roc-curve-roc-auc-is-mathematically-equivalent-to-the-wilcoxon-mann-whitney-ranking-statistic-phatsmathbfx-hatsmathbfx-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Prove that the area under the ROC curve (ROC-AUC) is mathematically equivalent to the Wilcoxon-Mann-Whitney ranking statistic: \(P(\hat{s}(\mathbf{x}^+) &gt; \hat{s}(\mathbf{x}^-))\).
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-derive-the-f_beta-metric-from-the-weighted-harmonic-mean-of-precision-and-recall-why-does-the-arithmetic-mean-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Derive the \(F_\beta\) metric from the weighted harmonic mean of Precision and Recall. Why does the arithmetic mean fail?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-contrast-platt-scaling-and-isotonic-regression-for-probability-calibration-when-should-each-be-chosen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: Contrast Platt Scaling and Isotonic Regression for probability calibration. When should each be chosen?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-derive-adjusted-r2-and-explain-why-it-can-decrease-when-a-new-feature-is-added-to-a-regression-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Derive Adjusted \(R^2\) and explain why it can decrease when a new feature is added to a regression model.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="model-evaluation-metrics-roc-pr-auc-calibration-regression">Model Evaluation Metrics — ROC, PR-AUC, Calibration &amp; Regression<a class="headerlink" href="#model-evaluation-metrics-roc-pr-auc-calibration-regression" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>Probability distributions, expectation, and classification thresholds. Review <a href="../../02-mathematics/probability-statistics-deep-dive/">Probability &amp; Statistics</a>, <a href="../model-validation-generalization-deep-dive/">Model Validation &amp; Generalization</a>, and <a href="../../04-classical-ml/linear-regression-deep-dive/">Linear Regression</a>.</p>
+</div>
+<hr />
+<h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
+<p>A machine learning algorithm optimizes an internal loss function (MSE, Cross-Entropy, Hinge Loss), but loss numbers do not directly reflect business utility, operational risk, or diagnostic validity.</p>
+<p>Choosing an improper evaluation metric is one of the most frequent causes of catastrophic failure in production AI systems. A fraud model boasting <span class="arithmatex">\(99.9\%\)</span> accuracy may fail to detect a single real transaction theft; a medical diagnostic tool with high ROC-AUC may flood doctors with thousands of false alarms because the underlying class prevalence is tiny.</p>
+<p>Evaluation metrics form a rigorous hierarchy across three primary domains:
+1. <strong>Classification Point Metrics</strong>: Derived from the Confusion Matrix at a chosen decision threshold (<span class="arithmatex">\(F_1, F_\beta\)</span>, Balanced Accuracy).
+2. <strong>Threshold-Agnostic Curve Metrics</strong>: Evaluating discrimination across all possible operating thresholds (ROC-AUC, PR-AUC, Brier score).
+3. <strong>Probability Calibration</strong>: Measuring whether predicted continuous probabilities reflect true empirical long-run frequencies (Reliability curves, ECE, Platt Scaling, Isotonic Regression).
+4. <strong>Regression Diagnostics</strong>: Dissecting residual geometry, outlier vulnerability, and explanatory power (<span class="arithmatex">\(R^2\)</span>, Adjusted <span class="arithmatex">\(R^2\)</span>, MAE, RMSE, sMAPE).</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Metric Taxonomy
+        ROOT["Model Predictions"] --&gt; CLAS["Classification Task"]
+        ROOT --&gt; REG["Regression Task"]
+
+        CLAS --&gt; CONF["Point Metrics (Fixed Threshold θ)
+        Accuracy, Precision, Recall, Specificity, F_β"]
+        CLAS --&gt; CURV["Curve Metrics (All Thresholds)
+        ROC-AUC (Wilcoxon Rank-Sum)
+        PR-AUC (Mandatory for Imbalance)"]
+        CLAS --&gt; CALIB["Calibration Quality
+        Expected Calibration Error (ECE)
+        Platt Scaling vs Isotonic PAVA"]
+
+        REG --&gt; L1L2["Absolute vs Squared Residuals
+        MAE (Robust L1) vs RMSE (Penalizing L2)"]
+        REG --&gt; VAR["Variance Explained
+        R² vs Adjusted R² (Feature Penalized)"]
+        REG --&gt; REL["Relative Scale
+        MAPE vs Symmetric sMAPE"]
+    end</code></pre>
+<hr />
+<h2 id="2-classification-point-metrics-the-confusion-matrix">2. Classification Point Metrics &amp; The Confusion Matrix<a class="headerlink" href="#2-classification-point-metrics-the-confusion-matrix" title="Permanent link">&para;</a></h2>
+<h3 id="21-the-confusion-matrix">2.1 The Confusion Matrix<a class="headerlink" href="#21-the-confusion-matrix" title="Permanent link">&para;</a></h3>
+<p>For binary classification with ground truth <span class="arithmatex">\(y \in \{0, 1\}\)</span> and predicted binary class <span class="arithmatex">\(\hat{y} \in \{0, 1\}\)</span>:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Predicted Positive (<span class="arithmatex">\(\hat{y} = 1\)</span>)</th>
+<th>Predicted Negative (<span class="arithmatex">\(\hat{y} = 0\)</span>)</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Actual Positive (<span class="arithmatex">\(y = 1\)</span>)</strong></td>
+<td><strong>True Positive (TP)</strong></td>
+<td><strong>False Negative (FN)</strong> (Type II Error)</td>
+<td><span class="arithmatex">\(P = \text{TP} + \text{FN}\)</span></td>
+</tr>
+<tr>
+<td><strong>Actual Negative (<span class="arithmatex">\(y = 0\)</span>)</strong></td>
+<td><strong>False Positive (FP)</strong> (Type I Error)</td>
+<td><strong>True Negative (TN)</strong></td>
+<td><span class="arithmatex">\(N = \text{FP} + \text{TN}\)</span></td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><span class="arithmatex">\(\text{TP} + \text{FP}\)</span></td>
+<td><span class="arithmatex">\(\text{FN} + \text{TN}\)</span></td>
+<td><span class="arithmatex">\(n = P + N\)</span></td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-point-metric-definitions">2.2 Point Metric Definitions<a class="headerlink" href="#22-point-metric-definitions" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Accuracy</strong>:
+   $<span class="arithmatex">\(\text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}\)</span>$
+   <em>Hazard</em>: Deceptively inflated under class imbalance (<span class="arithmatex">\(P \ll N\)</span>).</li>
+<li><strong>Precision (Positive Predictive Value - PPV)</strong>:
+   $<span class="arithmatex">\(\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}\)</span>$
+   "When the model predicts positive, how often is it right?" (Cost of false alarms).</li>
+<li><strong>Recall (Sensitivity / True Positive Rate - TPR)</strong>:
+   $<span class="arithmatex">\(\text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}\)</span>$
+   "Out of all actual positive cases, how many did the model catch?" (Cost of misses).</li>
+<li><strong>Specificity (True Negative Rate - TNR)</strong>:
+   $<span class="arithmatex">\(\text{Specificity} = \frac{\text{TN}}{\text{TN} + \text{FP}} = 1 - \text{FPR}\)</span>$</li>
+<li><strong>False Positive Rate (FPR / Fall-out)</strong>:
+   $<span class="arithmatex">\(\text{FPR} = \frac{\text{FP}}{\text{FP} + \text{TN}} = 1 - \text{Specificity}\)</span>$</li>
+</ol>
+<h3 id="23-the-f_beta-score-derivation-of-weighted-harmonic-mean">2.3 The <span class="arithmatex">\(F_\beta\)</span> Score: Derivation of Weighted Harmonic Mean<a class="headerlink" href="#23-the-f_beta-score-derivation-of-weighted-harmonic-mean" title="Permanent link">&para;</a></h3>
+<p>Why can't we simply take the arithmetic mean <span class="arithmatex">\(\frac{\text{Precision} + \text{Recall}}{2}\)</span>?
+Suppose a trivial classifier predicts positive for every single instance: <span class="arithmatex">\(\text{Recall} = 1.0\)</span>, while <span class="arithmatex">\(\text{Precision} = 0.01\)</span>. The arithmetic mean is <span class="arithmatex">\(\frac{1.0 + 0.01}{2} = 0.505\)</span>, rewarding a useless model!</p>
+<p>The <strong>harmonic mean</strong> of two numbers <span class="arithmatex">\(x\)</span> and <span class="arithmatex">\(y\)</span> is the reciprocal of the arithmetic mean of their reciprocals:</p>
+<div class="arithmatex">\[
+H = \frac{2}{\frac{1}{x} + \frac{1}{y}} = \frac{2xy}{x + y}
+\]</div>
+<p>The harmonic mean approaches <span class="arithmatex">\(0\)</span> whenever <em>either</em> value approaches <span class="arithmatex">\(0\)</span>. It strictly penalizes disparity between precision and recall.</p>
+<p>To weight Recall <span class="arithmatex">\(\beta\)</span> times as heavily as Precision, we define the weighted harmonic mean:</p>
+<div class="arithmatex">\[
+\frac{1 + \beta^2}{F_\beta} = \frac{1}{\text{Precision}} + \frac{\beta^2}{\text{Recall}}
+\]</div>
+<p>Solving for <span class="arithmatex">\(F_\beta\)</span>:</p>
+<div class="arithmatex">\[
+\frac{1 + \beta^2}{F_\beta} = \frac{\text{Recall} + \beta^2 \text{Precision}}{\text{Precision} \cdot \text{Recall}} \implies F_\beta = (1 + \beta^2) \frac{\text{Precision} \cdot \text{Recall}}{\beta^2 \text{Precision} + \text{Recall}}
+\]</div>
+<div class="arithmatex">\[F_\beta = (1 + \beta^2) \frac{\text{Precision} \cdot \text{Recall}}{\beta^2 \text{Precision} + \text{Recall}}\]</div>
+<ul>
+<li><span class="arithmatex">\(\beta = 1 \implies F_1\)</span>: Equal weighting between Precision and Recall.</li>
+<li><span class="arithmatex">\(\beta = 2 \implies F_2\)</span>: Weights Recall twice as heavily as Precision (mandatory in cancer detection, malware screening).</li>
+<li><span class="arithmatex">\(\beta = 0.5 \implies F_{0.5}\)</span>: Weights Precision twice as heavily as Recall (search engine ranking, spam filtering).</li>
+</ul>
+<hr />
+<h2 id="3-threshold-agnostic-curve-metrics-roc-auc-vs-pr-auc">3. Threshold-Agnostic Curve Metrics: ROC-AUC vs. PR-AUC<a class="headerlink" href="#3-threshold-agnostic-curve-metrics-roc-auc-vs-pr-auc" title="Permanent link">&para;</a></h2>
+<p>Rather than evaluating a single threshold (<span class="arithmatex">\(\tau = 0.5\)</span>), curve metrics sweep <span class="arithmatex">\(\tau \in [0, 1]\)</span> across all possible decision boundaries.</p>
+<pre class="mermaid"><code>flowchart LR
+    A["Sweep Threshold τ from 1.0 down to 0.0"] --&gt; B["Compute (FPR(τ), TPR(τ))"]
+    A --&gt; C["Compute (Recall(τ), Precision(τ))"]
+    B --&gt; D["Trace ROC Curve &amp; Integrate ROC-AUC"]
+    C --&gt; E["Trace PR Curve &amp; Integrate PR-AUC / Average Precision"]</code></pre>
+<h3 id="31-roc-curve-the-wilcoxon-mann-whitney-statistic">3.1 ROC Curve &amp; The Wilcoxon-Mann-Whitney Statistic<a class="headerlink" href="#31-roc-curve-the-wilcoxon-mann-whitney-statistic" title="Permanent link">&para;</a></h3>
+<p>The <strong>Receiver Operating Characteristic (ROC)</strong> curve plots <span class="arithmatex">\(\text{TPR}(\tau)\)</span> against <span class="arithmatex">\(\text{FPR}(\tau)\)</span> for all thresholds <span class="arithmatex">\(\tau \in [0, 1]\)</span>.
+- A random guesser yields a diagonal line from <span class="arithmatex">\((0, 0)\)</span> to <span class="arithmatex">\((1, 1)\)</span> with <span class="arithmatex">\(\text{AUC} = 0.5\)</span>.
+- A perfect classifier achieves <span class="arithmatex">\(\text{AUC} = 1.0\)</span>, passing through the top-left corner <span class="arithmatex">\((0, 1)\)</span>.</p>
+<h4 id="the-equivalence-theorem">The Equivalence Theorem:<a class="headerlink" href="#the-equivalence-theorem" title="Permanent link">&para;</a></h4>
+<p>The Area Under the ROC Curve (ROC-AUC) is <strong>mathematically identical to the probability that a randomly selected positive instance <span class="arithmatex">\(x^+\)</span> receives a higher predicted score than a randomly selected negative instance <span class="arithmatex">\(x^-\)</span></strong>:</p>
+<div class="arithmatex">\[
+\text{ROC-AUC} = P\left( \hat{s}(\mathbf{x}^+) &gt; \hat{s}(\mathbf{x}^-) \right)
+\]</div>
+<p>For a dataset with <span class="arithmatex">\(n_+\)</span> positive samples and <span class="arithmatex">\(n_-\)</span> negative samples:</p>
+<div class="arithmatex">\[
+\text{ROC-AUC} = \frac{1}{n_+ n_-} \sum_{i=1}^{n_+} \sum_{j=1}^{n_-} \mathbb{I}\left( \hat{s}(\mathbf{x}_i^+) &gt; \hat{s}(\mathbf{x}_j^-) \right) = \frac{U}{n_+ n_-}
+\]</div>
+<p>where <span class="arithmatex">\(U\)</span> is the <strong>Mann-Whitney <span class="arithmatex">\(U\)</span> statistic</strong>! This can be computed in <span class="arithmatex">\(\mathcal{O}(n \log n)\)</span> time simply by sorting predictions and summing ranks.</p>
+<h3 id="32-pr-auc-the-mathematical-failure-of-roc-on-imbalanced-data">3.2 PR-AUC &amp; The Mathematical Failure of ROC on Imbalanced Data<a class="headerlink" href="#32-pr-auc-the-mathematical-failure-of-roc-on-imbalanced-data" title="Permanent link">&para;</a></h3>
+<p>Consider a fraud detection problem with <span class="arithmatex">\(100\)</span> fraudulent transactions (<span class="arithmatex">\(P = 100\)</span>) and <span class="arithmatex">\(1,000,000\)</span> legitimate transactions (<span class="arithmatex">\(N = 10^6\)</span>).
+Suppose a model produces <strong>10,000 False Positives</strong> while capturing <span class="arithmatex">\(90\)</span> True Positives:
+- <strong>True Positive Rate (Recall)</strong>: <span class="arithmatex">\(\text{TPR} = \frac{90}{100} = 0.90\)</span>.
+- <strong>False Positive Rate</strong>:
+  $<span class="arithmatex">\(\text{FPR} = \frac{\text{FP}}{N} = \frac{10,000}{1,000,000} = 0.01 \quad (1\%)\)</span>$
+On the ROC curve, the point is at <span class="arithmatex">\((0.01, 0.90)\)</span>—extremely close to the top-left corner! The ROC-AUC will appear stellar (<span class="arithmatex">\(\text{AUC} &gt; 0.98\)</span>).</p>
+<p>Now compute <strong>Precision</strong>:</p>
+<div class="arithmatex">\[
+\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{90}{90 + 10,000} \approx 0.0089 \quad (0.89\%)
+\]</div>
+<p><strong>For every 1 real fraud caught, the system triggers 111 false alarms!</strong></p>
+<h4 id="why-roc-auc-fails-and-pr-auc-succeeds">Why ROC-AUC Fails and PR-AUC Succeeds:<a class="headerlink" href="#why-roc-auc-fails-and-pr-auc-succeeds" title="Permanent link">&para;</a></h4>
+<div class="arithmatex">\[\text{FPR} = \frac{\text{FP}}{\mathbf{N}} = \frac{\text{FP}}{\text{FP} + \text{TN}}, \qquad \text{Precision} = \frac{\text{TP}}{\text{TP} + \mathbf{FP}}\]</div>
+<p>Because the denominator of FPR contains the total number of true negatives <span class="arithmatex">\(N\)</span>, an astronomical <span class="arithmatex">\(N\)</span> violently suppresses FPR, masking thousands of false positives.
+In contrast, Precision divides strictly by <span class="arithmatex">\(\text{TP} + \text{FP}\)</span>. Any surge in false positives immediately collapses Precision.
+<strong>Production Rule</strong>: Whenever classes are severely imbalanced (<span class="arithmatex">\(P / N \le 0.05\)</span>), ROC-AUC is mathematically uninformative. <strong>Precision-Recall AUC (PR-AUC / Average Precision)</strong> is strictly mandatory.</p>
+<hr />
+<h2 id="4-probability-calibration-ece-platt-scaling-isotonic-regression">4. Probability Calibration: ECE, Platt Scaling &amp; Isotonic Regression<a class="headerlink" href="#4-probability-calibration-ece-platt-scaling-isotonic-regression" title="Permanent link">&para;</a></h2>
+<p>A model can achieve a perfect ROC-AUC score of <span class="arithmatex">\(1.0\)</span> while producing completely uncalibrated probabilities (e.g., predicting scores <span class="arithmatex">\([0.9991, 0.9992, 0.9993]\)</span> that rank classes perfectly but do not represent true probabilities).</p>
+<p>A model is <strong>well-calibrated</strong> if among all instances assigned predicted probability <span class="arithmatex">\(\hat{p} \approx 0.80\)</span>, exactly <span class="arithmatex">\(80\%\)</span> of them are truly positive:</p>
+<div class="arithmatex">\[
+P(y = 1 \mid \hat{p}(\mathbf{x}) = p) = p \quad \forall p \in [0, 1]
+\]</div>
+<pre class="mermaid"><code>flowchart TD
+    A["Raw Model Scores s(x)"] --&gt; B["Group into M probability bins B_m"]
+    B --&gt; C["Plot Fraction of Positives acc(B_m) vs Mean Score conf(B_m)"]
+    C --&gt; D{"Points follow 45° line?"}
+    D -- Yes --&gt; E["Well-Calibrated (ECE ≈ 0)"]
+    D -- No --&gt; F["Miscalibrated → Apply Post-Hoc Calibration"]
+    F --&gt; G["Platt Scaling (Sigmoid) or Isotonic Regression (PAVA)"]</code></pre>
+<h3 id="41-expected-calibration-error-ece">4.1 Expected Calibration Error (ECE)<a class="headerlink" href="#41-expected-calibration-error-ece" title="Permanent link">&para;</a></h3>
+<p>To quantify calibration error across <span class="arithmatex">\(M\)</span> probability bins <span class="arithmatex">\(B_1, \dots, B_M\)</span> (typically <span class="arithmatex">\(M = 10\)</span> bins of width <span class="arithmatex">\(0.1\)</span>):</p>
+<ol>
+<li>Compute empirical accuracy within bin <span class="arithmatex">\(B_m\)</span>:
+   $<span class="arithmatex">\(\text{acc}(B_m) = \frac{1}{|B_m|} \sum_{i \in B_m} y_i\)</span>$</li>
+<li>Compute average predicted confidence within bin <span class="arithmatex">\(B_m\)</span>:
+   $<span class="arithmatex">\(\text{conf}(B_m) = \frac{1}{|B_m|} \sum_{i \in B_m} \hat{p}_i\)</span>$</li>
+<li>The <strong>Expected Calibration Error (ECE)</strong> is the weighted average absolute difference:
+   $<span class="arithmatex">\(\text{ECE} = \sum_{m=1}^M \frac{|B_m|}{n} \Big| \text{acc}(B_m) - \text{conf}(B_m) \Big|\)</span>$</li>
+</ol>
+<h3 id="42-post-hoc-calibration-algorithms">4.2 Post-Hoc Calibration Algorithms<a class="headerlink" href="#42-post-hoc-calibration-algorithms" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Platt Scaling (Sigmoid Calibration)</strong>:
+   Fits a scalar logistic regression model on the uncalibrated model outputs <span class="arithmatex">\(s(\mathbf{x})\)</span>:
+   $<span class="arithmatex">\(\hat{p}_{\text{calibrated}} = \frac{1}{1 + \exp\left( A \cdot s(\mathbf{x}) + B \right)}\)</span>$
+   Parameters <span class="arithmatex">\(A\)</span> and <span class="arithmatex">\(B\)</span> are fit via Maximum Likelihood on an independent validation holdout set.
+   <em>Best for</em>: Models whose uncalibrated scores produce an S-shaped reliability curve (e.g., SVM margin scores).</li>
+<li><strong>Isotonic Regression (Non-Parametric)</strong>:
+   Fits a non-decreasing, non-parametric step function <span class="arithmatex">\(m(s)\)</span> minimizing squared error:
+   $<span class="arithmatex">\(\min_{m} \sum_{i=1}^n \left( y_i - m(s_i) \right)^2 \quad \text{subject to } m(s_i) \le m(s_j) \text{ whenever } s_i \le s_j\)</span>$
+   Solved in <span class="arithmatex">\(\mathcal{O}(n)\)</span> time via the <strong>Pool Adjacent Violators Algorithm (PAVA)</strong>.
+   <em>Best for</em>: Complex models with abundant validation data (<span class="arithmatex">\(n &gt; 1000\)</span>). Risk of overfitting on small validation sets.</li>
+</ol>
+<hr />
+<h2 id="5-regression-metrics">5. Regression Metrics<a class="headerlink" href="#5-regression-metrics" title="Permanent link">&para;</a></h2>
+<p>Let <span class="arithmatex">\(y_i\)</span> denote the ground truth and <span class="arithmatex">\(\hat{y}_i\)</span> denote the model prediction for sample <span class="arithmatex">\(i \in \{1, \dots, n\}\)</span>.
+Let <span class="arithmatex">\(e_i = y_i - \hat{y}_i\)</span> denote the residual.</p>
+<h3 id="51-absolute-vs-squared-residual-metrics">5.1 Absolute vs. Squared Residual Metrics<a class="headerlink" href="#51-absolute-vs-squared-residual-metrics" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Formula</th>
+<th>Units</th>
+<th>Sensitivity to Outliers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mean Squared Error (MSE)</strong></td>
+<td><span class="arithmatex">\(\frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i)^2\)</span></td>
+<td><span class="arithmatex">\(y^2\)</span></td>
+<td>Extremely high (squares large residuals)</td>
+</tr>
+<tr>
+<td><strong>Root Mean Squared Error (RMSE)</strong></td>
+<td><span class="arithmatex">\(\sqrt{\frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i)^2}\)</span></td>
+<td>Same as <span class="arithmatex">\(y\)</span></td>
+<td>High (penalizes large errors heavily)</td>
+</tr>
+<tr>
+<td><strong>Mean Absolute Error (MAE)</strong></td>
+<td><span class="arithmatex">\(\frac{1}{n} \sum_{i=1}^n \|y_i - \hat{y}_i\|\)</span></td>
+<td>Same as <span class="arithmatex">\(y\)</span></td>
+<td>Linear / Robust (<span class="arithmatex">\(L_1\)</span> norm)</td>
+</tr>
+<tr>
+<td><strong>Median Absolute Error (MedAE)</strong></td>
+<td><span class="arithmatex">\(\text{median}(\|y_1 - \hat{y}_1\|, \dots, \|y_n - \hat{y}_n\|)\)</span></td>
+<td>Same as <span class="arithmatex">\(y\)</span></td>
+<td>Completely immune to up to 50% outliers</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-coefficient-of-determination-r2-and-adjusted-r2">5.2 Coefficient of Determination (<span class="arithmatex">\(R^2\)</span>) and Adjusted <span class="arithmatex">\(R^2\)</span><a class="headerlink" href="#52-coefficient-of-determination-r2-and-adjusted-r2" title="Permanent link">&para;</a></h3>
+<h4 id="ordinary-r2">Ordinary <span class="arithmatex">\(R^2\)</span>:<a class="headerlink" href="#ordinary-r2" title="Permanent link">&para;</a></h4>
+<p>Measures the proportion of total variance in the dependent variable explained by the model:</p>
+<div class="arithmatex">\[
+R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}} = 1 - \frac{\sum_{i=1}^n (y_i - \hat{y}_i)^2}{\sum_{i=1}^n (y_i - \bar{y})^2}
+\]</div>
+<ul>
+<li><span class="arithmatex">\(R^2 = 1.0\)</span>: Perfect predictions (<span class="arithmatex">\(\text{SS}_{\text{res}} = 0\)</span>).</li>
+<li><span class="arithmatex">\(R^2 = 0.0\)</span>: The model performs no better than simply predicting the historical target mean <span class="arithmatex">\(\bar{y}\)</span>.</li>
+<li><span class="arithmatex">\(R^2 &lt; 0.0\)</span>: The model is <strong>worse than predicting the mean</strong>! (Common on unseen test data when models overfit).</li>
+</ul>
+<h4 id="the-pathology-of-r2">The Pathology of <span class="arithmatex">\(R^2\)</span>:<a class="headerlink" href="#the-pathology-of-r2" title="Permanent link">&para;</a></h4>
+<p>Adding an arbitrary random noise feature to a linear model <strong>never decreases <span class="arithmatex">\(R^2\)</span></strong>; by chance, least squares will assign a tiny non-zero weight to the noise feature, mechanically reducing training <span class="arithmatex">\(\text{SS}_{\text{res}}\)</span>.</p>
+<h4 id="adjusted-r2">Adjusted <span class="arithmatex">\(R^2\)</span>:<a class="headerlink" href="#adjusted-r2" title="Permanent link">&para;</a></h4>
+<p>Corrects for model parameter count <span class="arithmatex">\(p\)</span> using unbiased sample variance estimators:</p>
+<div class="arithmatex">\[
+R_{\text{adj}}^2 = 1 - \frac{\text{SS}_{\text{res}} / (n - p - 1)}{\text{SS}_{\text{tot}} / (n - 1)} = 1 - \left( \frac{1 - R^2}{n - p - 1} \right) (n - 1)
+\]</div>
+<div class="arithmatex">\[R_{\text{adj}}^2 = 1 - (1 - R^2) \frac{n - 1}{n - p - 1}\]</div>
+<p>If a newly added feature does not reduce <span class="arithmatex">\(\text{SS}_{\text{res}}\)</span> enough to offset the loss of one degree of freedom in the denominator <span class="arithmatex">\((n - p - 1)\)</span>, <span class="arithmatex">\(R_{\text{adj}}^2\)</span> <strong>strictly decreases</strong>.</p>
+<h3 id="53-percentage-metrics-mape-and-symmetric-smape">5.3 Percentage Metrics: MAPE and Symmetric sMAPE<a class="headerlink" href="#53-percentage-metrics-mape-and-symmetric-smape" title="Permanent link">&para;</a></h3>
+<h4 id="mean-absolute-percentage-error-mape">Mean Absolute Percentage Error (MAPE):<a class="headerlink" href="#mean-absolute-percentage-error-mape" title="Permanent link">&para;</a></h4>
+<div class="arithmatex">\[
+\text{MAPE} = \frac{100\%}{n} \sum_{i=1}^n \left| \frac{y_i - \hat{y}_i}{y_i} \right|
+\]</div>
+<p><strong>Critical Flaws of MAPE</strong>:
+1. <strong>Division by Zero</strong>: If any actual target <span class="arithmatex">\(y_i = 0\)</span>, MAPE is undefined (<span class="arithmatex">\(\infty\)</span>).
+2. <strong>Asymmetry</strong>: Over-predictions are punished much more leniently than under-predictions.
+   - If true <span class="arithmatex">\(y = 100\)</span> and <span class="arithmatex">\(\hat{y} = 200 \implies \text{Error} = |100 - 200| / 100 = 100\%\)</span>.
+   - If true <span class="arithmatex">\(y = 100\)</span> and <span class="arithmatex">\(\hat{y} = 0 \implies \text{Error} = |100 - 0| / 100 = 100\%\)</span> (maximum penalty for zero prediction is 100%, but over-prediction is unbounded!).</p>
+<h4 id="symmetric-mape-smape">Symmetric MAPE (sMAPE):<a class="headerlink" href="#symmetric-mape-smape" title="Permanent link">&para;</a></h4>
+<p>Bounds percentage errors in <span class="arithmatex">\([0\%, 200\%]\)</span> by averaging the actual and predicted values in the denominator:</p>
+<div class="arithmatex">\[
+\text{sMAPE} = \frac{100\%}{n} \sum_{i=1}^n \frac{|y_i - \hat{y}_i|}{(|y_i| + |\hat{y}_i|) / 2} = \frac{200\%}{n} \sum_{i=1}^n \frac{|y_i - \hat{y}_i|}{|y_i| + |\hat{y}_i|}
+\]</div>
+<hr />
+<h2 id="6-implementation-1-vectorized-metric-engine-calibration-from-scratch-numpy">6. Implementation 1 — Vectorized Metric Engine &amp; Calibration from Scratch (NumPy)<a class="headerlink" href="#6-implementation-1-vectorized-metric-engine-calibration-from-scratch-numpy" title="Permanent link">&para;</a></h2>
+<p>Let us implement a comprehensive evaluation suite from scratch: point metrics, Mann-Whitney ROC-AUC, Expected Calibration Error, and regression metrics.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">ScratchMetrics</span><span class="p">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="sd">"""Vectorized calculation of classification, curve, and regression metrics."""</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="sd">"""Computes [[TN, FP], [FN, TP]] for binary classification."""</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="n">y_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="n">tp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y_true</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        <span class="n">tn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y_true</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        <span class="n">fp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y_true</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="n">fn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y_true</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">],</span> <span class="p">[</span><span class="n">fn</span><span class="p">,</span> <span class="n">tp</span><span class="p">]])</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="nd">@classmethod</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">f_beta_score</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>        <span class="n">cm</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>        <span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">cm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">cm</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cm</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>        <span class="n">precision</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>        <span class="n">recall</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="k">if</span> <span class="n">precision</span> <span class="o">+</span> <span class="n">recall</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>            <span class="k">return</span> <span class="mf">0.0</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="n">beta_sq</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">**</span> <span class="mi">2</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        <span class="k">return</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">beta_sq</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">precision</span> <span class="o">*</span> <span class="n">recall</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">beta_sq</span> <span class="o">*</span> <span class="n">precision</span> <span class="o">+</span> <span class="n">recall</span><span class="p">)</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">roc_auc_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y_scores</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">        </span><span class="sd">"""</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="sd">        Computes ROC-AUC in O(n log n) via the Wilcoxon-Mann-Whitney rank-sum statistic:</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="sd">        AUC = (sum(ranks of positive samples) - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg)</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="sd">        """</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>        <span class="n">y_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>        <span class="n">y_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_scores</span><span class="p">)</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>        <span class="n">pos_mask</span> <span class="o">=</span> <span class="n">y_true</span> <span class="o">==</span> <span class="mi">1</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>        <span class="n">n_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pos_mask</span><span class="p">)</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>        <span class="n">n_neg</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_pos</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>        <span class="k">if</span> <span class="n">n_pos</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n_neg</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>            <span class="k">return</span> <span class="mf">0.5</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>        <span class="c1"># Rank predictions with tie-breaking</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>        <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">y_scores</span><span class="p">)</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>        <span class="n">ranks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>        <span class="n">ranks</span><span class="p">[</span><span class="n">order</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_scores</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>        <span class="c1"># Handle ties by assigning average rank</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>        <span class="n">unique_scores</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y_scores</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>        <span class="k">for</span> <span class="n">score</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">unique_scores</span><span class="p">,</span> <span class="n">counts</span><span class="p">):</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>                <span class="n">mask</span> <span class="o">=</span> <span class="n">y_scores</span> <span class="o">==</span> <span class="n">score</span>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>                <span class="n">ranks</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ranks</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>        <span class="n">rank_sum_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ranks</span><span class="p">[</span><span class="n">pos_mask</span><span class="p">])</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>        <span class="n">u_stat</span> <span class="o">=</span> <span class="n">rank_sum_pos</span> <span class="o">-</span> <span class="p">(</span><span class="n">n_pos</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="mf">2.0</span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">u_stat</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_pos</span> <span class="o">*</span> <span class="n">n_neg</span><span class="p">))</span>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">expected_calibration_error</span><span class="p">(</span><span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a><span class="w">        </span><span class="sd">"""Computes Expected Calibration Error (ECE) across uniform probability bins."""</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>        <span class="n">y_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>        <span class="n">y_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_probs</span><span class="p">)</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>        <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>        <span class="n">bin_boundaries</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">n_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>        <span class="n">ece</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>
+</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_bins</span><span class="p">):</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>            <span class="n">bin_lower</span> <span class="o">=</span> <span class="n">bin_boundaries</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>            <span class="n">bin_upper</span> <span class="o">=</span> <span class="n">bin_boundaries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>
+</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>            <span class="n">in_bin</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_probs</span> <span class="o">&gt;</span> <span class="n">bin_lower</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_probs</span> <span class="o">&lt;=</span> <span class="n">bin_upper</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="n">y_probs</span> <span class="o">&gt;=</span> <span class="n">bin_lower</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_probs</span> <span class="o">&lt;=</span> <span class="n">bin_upper</span><span class="p">)</span>
+</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>            <span class="n">bin_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">in_bin</span><span class="p">)</span>
+</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a>
+</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>            <span class="k">if</span> <span class="n">bin_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>                <span class="n">acc_in_bin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_true</span><span class="p">[</span><span class="n">in_bin</span><span class="p">])</span>
+</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>                <span class="n">conf_in_bin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_probs</span><span class="p">[</span><span class="n">in_bin</span><span class="p">])</span>
+</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>                <span class="n">ece</span> <span class="o">+=</span> <span class="p">(</span><span class="n">bin_size</span> <span class="o">/</span> <span class="n">n_samples</span><span class="p">)</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">acc_in_bin</span> <span class="o">-</span> <span class="n">conf_in_bin</span><span class="p">)</span>
+</span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a>
+</span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">ece</span><span class="p">)</span>
+</span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a>
+</span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">r2_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>        <span class="n">ss_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a>        <span class="n">ss_tot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_true</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a>        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">ss_res</span> <span class="o">/</span> <span class="n">ss_tot</span><span class="p">))</span>
+</span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a>
+</span><span id="__span-0-95"><a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a>    <span class="nd">@classmethod</span>
+</span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">adjusted_r2_score</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a>        <span class="n">r2</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+</span><span id="__span-0-98"><a id="__codelineno-0-98" name="__codelineno-0-98" href="#__codelineno-0-98"></a>        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
+</span><span id="__span-0-99"><a id="__codelineno-0-99" name="__codelineno-0-99" href="#__codelineno-0-99"></a>        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">r2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">n_features</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+</span></code></pre></div>
+<hr />
+<h2 id="7-implementation-2-scikit-learn-benchmarking-verification">7. Implementation 2 — scikit-learn Benchmarking &amp; Verification<a class="headerlink" href="#7-implementation-2-scikit-learn-benchmarking-verification" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">fbeta_score</span><span class="p">,</span> <span class="n">roc_auc_score</span><span class="p">,</span> <span class="n">r2_score</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">calibration_curve</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># 1. Classification &amp; ROC-AUC Benchmark</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">y_true_cls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">])</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">raw_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">y_true_cls</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">y_probs</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">raw_scores</span><span class="p">))</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">y_pred_cls</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_probs</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Verify Confusion Matrix</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">cm_scratch</span> <span class="o">=</span> <span class="n">ScratchMetrics</span><span class="o">.</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true_cls</span><span class="p">,</span> <span class="n">y_pred_cls</span><span class="p">)</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">cm_sk</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true_cls</span><span class="p">,</span> <span class="n">y_pred_cls</span><span class="p">)</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">cm_scratch</span><span class="p">,</span> <span class="n">cm_sk</span><span class="p">),</span> <span class="s2">"Confusion matrix diverges from scikit-learn!"</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Verify F_beta Score</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="n">f2_scratch</span> <span class="o">=</span> <span class="n">ScratchMetrics</span><span class="o">.</span><span class="n">f_beta_score</span><span class="p">(</span><span class="n">y_true_cls</span><span class="p">,</span> <span class="n">y_pred_cls</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="n">f2_sk</span> <span class="o">=</span> <span class="n">fbeta_score</span><span class="p">(</span><span class="n">y_true_cls</span><span class="p">,</span> <span class="n">y_pred_cls</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">f2_scratch</span> <span class="o">-</span> <span class="n">f2_sk</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s2">"F2 score diverges from scikit-learn!"</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Verify Wilcoxon Rank-Sum ROC-AUC</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="n">auc_scratch</span> <span class="o">=</span> <span class="n">ScratchMetrics</span><span class="o">.</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true_cls</span><span class="p">,</span> <span class="n">y_probs</span><span class="p">)</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="n">auc_sk</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true_cls</span><span class="p">,</span> <span class="n">y_probs</span><span class="p">)</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ROC-AUC — Scratch (Wilcoxon Rank-Sum): </span><span class="si">{</span><span class="n">auc_scratch</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> | Sklearn: </span><span class="si">{</span><span class="n">auc_sk</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">auc_scratch</span> <span class="o">-</span> <span class="n">auc_sk</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">,</span> <span class="s2">"ROC-AUC diverges from scikit-learn!"</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># Verify ECE</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="n">ece</span> <span class="o">=</span> <span class="n">ScratchMetrics</span><span class="o">.</span><span class="n">expected_calibration_error</span><span class="p">(</span><span class="n">y_true_cls</span><span class="p">,</span> <span class="n">y_probs</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected Calibration Error (ECE): </span><span class="si">{</span><span class="n">ece</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1"># 2. Regression R² and Adjusted R² Benchmark</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="n">y_true_reg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">])</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="n">y_pred_reg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.1</span><span class="p">,</span> <span class="mf">7.8</span><span class="p">,</span> <span class="mf">3.9</span><span class="p">])</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="n">r2_scratch</span> <span class="o">=</span> <span class="n">ScratchMetrics</span><span class="o">.</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y_true_reg</span><span class="p">,</span> <span class="n">y_pred_reg</span><span class="p">)</span>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="n">r2_sk</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y_true_reg</span><span class="p">,</span> <span class="n">y_pred_reg</span><span class="p">)</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Regression R² — Scratch: </span><span class="si">{</span><span class="n">r2_scratch</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> | Sklearn: </span><span class="si">{</span><span class="n">r2_sk</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">r2_scratch</span> <span class="o">-</span> <span class="n">r2_sk</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s2">"R2 diverges from scikit-learn!"</span>
+</span></code></pre></div>
+<hr />
+<h2 id="8-common-errors-production-debugging">8. Common Errors &amp; Production Debugging<a class="headerlink" href="#8-common-errors-production-debugging" title="Permanent link">&para;</a></h2>
+<h3 id="81-macro-vs-micro-vs-weighted-averaging-in-multiclass">8.1 Macro vs. Micro vs. Weighted Averaging in Multiclass<a class="headerlink" href="#81-macro-vs-micro-vs-weighted-averaging-in-multiclass" title="Permanent link">&para;</a></h3>
+<p>When extending binary metrics to multi-class classification (<span class="arithmatex">\(K\)</span> classes):
+- <strong>Micro Average</strong>: Pools total global TPs, FPs, and FNs across all classes:
+  $<span class="arithmatex">\(\text{Precision}_{\text{micro}} = \frac{\sum_{k=1}^K \text{TP}_k}{\sum_{k=1}^K (\text{TP}_k + \text{FP}_k)}\)</span>$
+  <em>Property</em>: Micro-Precision, Micro-Recall, and Micro-<span class="arithmatex">\(F_1\)</span> are all <strong>mathematically identical to overall Accuracy</strong>!
+- <strong>Macro Average</strong>: Computes the metric independently for each class and calculates the unweighted arithmetic mean:
+  $<span class="arithmatex">\(\text{Macro } F_1 = \frac{1}{K} \sum_{k=1}^K F_{1, k}\)</span>$
+  Weights every class equally; gives massive influence to tiny rare classes.
+- <strong>Weighted Average</strong>: Averages per-class metrics weighted by class support (sample count <span class="arithmatex">\(N_k\)</span>).</p>
+<h3 id="82-calculating-negative-r2-on-out-of-sample-test-sets">8.2 Calculating Negative <span class="arithmatex">\(R^2\)</span> on Out-of-Sample Test Sets<a class="headerlink" href="#82-calculating-negative-r2-on-out-of-sample-test-sets" title="Permanent link">&para;</a></h3>
+<p>Engineers are often shocked when their model produces an <span class="arithmatex">\(R^2 = -0.42\)</span> on test data.
+<strong>Root Cause</strong>: <span class="arithmatex">\(R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}}\)</span>. If the model has overfit or the test distribution has shifted, the test residuals can easily be larger than the variance of the test data around its mean (<span class="arithmatex">\(\text{SS}_{\text{res}} &gt; \text{SS}_{\text{tot}}\)</span>). A negative <span class="arithmatex">\(R^2\)</span> is mathematically valid; it simply means your model is worse than a horizontal line predicting <span class="arithmatex">\(\bar{y}_{\text{test}}\)</span>.</p>
+<hr />
+<h2 id="9-staff-level-interview-questions-model-answers">9. Staff-Level Interview Questions &amp; Model Answers<a class="headerlink" href="#9-staff-level-interview-questions-model-answers" title="Permanent link">&para;</a></h2>
+<h3 id="q1-prove-that-the-area-under-the-roc-curve-roc-auc-is-mathematically-equivalent-to-the-wilcoxon-mann-whitney-ranking-statistic-phatsmathbfx-hatsmathbfx-">Q1: Prove that the area under the ROC curve (ROC-AUC) is mathematically equivalent to the Wilcoxon-Mann-Whitney ranking statistic: <span class="arithmatex">\(P(\hat{s}(\mathbf{x}^+) &gt; \hat{s}(\mathbf{x}^-))\)</span>.<a class="headerlink" href="#q1-prove-that-the-area-under-the-roc-curve-roc-auc-is-mathematically-equivalent-to-the-wilcoxon-mann-whitney-ranking-statistic-phatsmathbfx-hatsmathbfx-" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Let <span class="arithmatex">\(f_1(s)\)</span> and <span class="arithmatex">\(f_0(s)\)</span> be the probability density functions of the continuous predicted scores for positive (<span class="arithmatex">\(y = 1\)</span>) and negative (<span class="arithmatex">\(y = 0\)</span>) instances, respectively.
+Let <span class="arithmatex">\(F_1(s) = \int_{-\infty}^s f_1(t) dt\)</span> and <span class="arithmatex">\(F_0(s) = \int_{-\infty}^s f_0(t) dt\)</span> be their cumulative distribution functions.
+For a given decision threshold <span class="arithmatex">\(\tau\)</span>:
+- True Positive Rate: <span class="arithmatex">\(\text{TPR}(\tau) = P(\hat{s} &gt; \tau \mid y = 1) = 1 - F_1(\tau)\)</span>
+- False Positive Rate: <span class="arithmatex">\(\text{FPR}(\tau) = P(\hat{s} &gt; \tau \mid y = 0) = 1 - F_0(\tau)\)</span></p>
+<p>The Area Under the ROC Curve is the integral of <span class="arithmatex">\(\text{TPR}\)</span> with respect to <span class="arithmatex">\(\text{FPR}\)</span>:
+$<span class="arithmatex">\(\text{ROC-AUC} = \int_{0}^{1} \text{TPR} \, d(\text{FPR})\)</span>$
+Using substitution <span class="arithmatex">\(u = \text{FPR}(\tau) = 1 - F_0(\tau) \implies du = -f_0(\tau) d\tau\)</span>.
+When <span class="arithmatex">\(\tau = -\infty\)</span>, <span class="arithmatex">\(\text{FPR} = 1\)</span>; when <span class="arithmatex">\(\tau = \infty\)</span>, <span class="arithmatex">\(\text{FPR} = 0\)</span>:
+$<span class="arithmatex">\(\text{ROC-AUC} = \int_{\infty}^{-\infty} [1 - F_1(\tau)] (-f_0(\tau) d\tau) = \int_{-\infty}^{\infty} [1 - F_1(\tau)] f_0(\tau) d\tau\)</span>$
+Notice what the integral represents:
+- <span class="arithmatex">\(f_0(\tau) d\tau\)</span> is the probability that a randomly drawn negative instance <span class="arithmatex">\(\mathbf{x}^-\)</span> has score equal to <span class="arithmatex">\(\tau\)</span>.
+- <span class="arithmatex">\(1 - F_1(\tau) = P(\hat{s}(\mathbf{x}^+) &gt; \tau)\)</span> is the probability that an independently drawn positive instance <span class="arithmatex">\(\mathbf{x}^+\)</span> has score strictly greater than <span class="arithmatex">\(\tau\)</span>.
+Integrating over all possible values of <span class="arithmatex">\(\tau\)</span> evaluates the joint continuous expectation:
+$<span class="arithmatex">\(\int_{-\infty}^{\infty} P(\hat{s}(\mathbf{x}^+) &gt; \tau) \cdot f_0(\tau) d\tau = P\left( \hat{s}(\mathbf{x}^+) &gt; \hat{s}(\mathbf{x}^-) \right)\)</span>$
+Thus, the ROC-AUC is precisely the probability that a classifier assigns a higher score to a randomly chosen positive sample than to a randomly chosen negative sample.</p>
+<hr />
+<h3 id="q2-derive-the-f_beta-metric-from-the-weighted-harmonic-mean-of-precision-and-recall-why-does-the-arithmetic-mean-fail">Q2: Derive the <span class="arithmatex">\(F_\beta\)</span> metric from the weighted harmonic mean of Precision and Recall. Why does the arithmetic mean fail?<a class="headerlink" href="#q2-derive-the-f_beta-metric-from-the-weighted-harmonic-mean-of-precision-and-recall-why-does-the-arithmetic-mean-fail" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Let <span class="arithmatex">\(P = \text{Precision}\)</span> and <span class="arithmatex">\(R = \text{Recall}\)</span>.
+The arithmetic mean <span class="arithmatex">\(A = \frac{P + R}{2}\)</span> fails as an operational metric because it exhibits <strong>compensatory behavior</strong>: a severe defect in one dimension can be completely compensated by the other. A model with <span class="arithmatex">\(R = 1.0\)</span> and <span class="arithmatex">\(P = 0.0\)</span> scores <span class="arithmatex">\(0.50\)</span>, masking catastrophic failure.</p>
+<p>To enforce that both metrics must simultaneously be high, we define <span class="arithmatex">\(F_\beta\)</span> as a weighted harmonic mean:
+$<span class="arithmatex">\(\frac{1}{F_\beta} = \frac{w_P}{P} + \frac{w_R}{R}\)</span>$
+where weights satisfy <span class="arithmatex">\(w_P + w_R = 1\)</span>.
+To reflect that Recall is considered <span class="arithmatex">\(\beta\)</span> times as important as Precision, we set the relative ratio of their weights to <span class="arithmatex">\(\frac{w_R}{w_P} = \beta^2\)</span> (squaring preserves scale consistency with squared dimension of error):
+$<span class="arithmatex">\(w_R = \frac{\beta^2}{1 + \beta^2}, \qquad w_P = \frac{1}{1 + \beta^2}\)</span>$
+Substituting these weights:
+$<span class="arithmatex">\(\frac{1}{F_\beta} = \frac{\frac{1}{1 + \beta^2}}{P} + \frac{\frac{\beta^2}{1 + \beta^2}}{R} = \frac{1}{1 + \beta^2} \left( \frac{1}{P} + \frac{\beta^2}{R} \right) = \frac{1}{1 + \beta^2} \left( \frac{R + \beta^2 P}{P \cdot R} \right)\)</span>$
+Inverting both sides gives the exact <span class="arithmatex">\(F_\beta\)</span> formula:
+$<span class="arithmatex">\(F_\beta = (1 + \beta^2) \frac{P \cdot R}{\beta^2 P + R}\)</span>$</p>
+<hr />
+<h3 id="q3-contrast-platt-scaling-and-isotonic-regression-for-probability-calibration-when-should-each-be-chosen">Q3: Contrast Platt Scaling and Isotonic Regression for probability calibration. When should each be chosen?<a class="headerlink" href="#q3-contrast-platt-scaling-and-isotonic-regression-for-probability-calibration-when-should-each-be-chosen" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+- <strong>Platt Scaling:</strong>
+  <em>Mechanism:</em> A parametric approach that transforms raw model output scores <span class="arithmatex">\(s(\mathbf{x})\)</span> into calibrated probabilities via a 2-parameter logistic sigmoid:
+  $<span class="arithmatex">\(\hat{p} = \frac{1}{1 + \exp(As + B)}\)</span>$
+  <em>Assumptions:</em> Assumes the uncalibrated scores follow an approximate Gaussian distribution within each class with equal variance, yielding a sigmoidal miscalibration profile.
+  <em>Advantages:</em> Extremely robust against overfitting. Uses only 2 parameters (<span class="arithmatex">\(A, B\)</span>), making it highly effective on tiny validation sets (<span class="arithmatex">\(n &lt; 500\)</span>).
+  <em>Disadvantages:</em> Incapable of correcting non-sigmoidal distortion (e.g., multi-modal confidence errors produced by boosted decision trees).
+- <strong>Isotonic Regression:</strong>
+  <em>Mechanism:</em> A non-parametric piecewise-constant regression model that fits a monotonic step function <span class="arithmatex">\(m(s)\)</span> using the Pool Adjacent Violators Algorithm (PAVA).
+  <em>Assumptions:</em> Only assumes <strong>monotonicity</strong>—that higher raw scores should correspond to higher empirical probabilities.
+  <em>Advantages:</em> Completely flexible; can correct arbitrary monotonic distortions, making it ideal for GBDTs and Random Forests.
+  <em>Disadvantages:</em> Prone to severe overfitting if the calibration dataset is small (<span class="arithmatex">\(n &lt; 1,000\)</span>). Can produce flat regions with identical probabilities.</p>
+<hr />
+<h3 id="q4-derive-adjusted-r2-and-explain-why-it-can-decrease-when-a-new-feature-is-added-to-a-regression-model">Q4: Derive Adjusted <span class="arithmatex">\(R^2\)</span> and explain why it can decrease when a new feature is added to a regression model.<a class="headerlink" href="#q4-derive-adjusted-r2-and-explain-why-it-can-decrease-when-a-new-feature-is-added-to-a-regression-model" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Ordinary <span class="arithmatex">\(R^2\)</span> is defined as:
+$<span class="arithmatex">\(R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}}\)</span>$
+where <span class="arithmatex">\(\text{SS}_{\text{res}} = \sum_{i=1}^n (y_i - \hat{y}_i)^2\)</span> and <span class="arithmatex">\(\text{SS}_{\text{tot}} = \sum_{i=1}^n (y_i - \bar{y})^2\)</span>.
+Notice that <span class="arithmatex">\(\frac{\text{SS}_{\text{res}}}{n}\)</span> and <span class="arithmatex">\(\frac{\text{SS}_{\text{tot}}}{n}\)</span> are biased estimators of the residual variance <span class="arithmatex">\(\sigma^2\)</span> and total population variance <span class="arithmatex">\(\sigma_y^2\)</span>.
+The <strong>unbiased estimator</strong> of residual variance in multiple regression with <span class="arithmatex">\(p\)</span> predictors and an intercept uses <span class="arithmatex">\(n - p - 1\)</span> degrees of freedom:
+$<span class="arithmatex">\(s_{\text{res}}^2 = \frac{\text{SS}_{\text{res}}}{n - p - 1}\)</span>$
+The unbiased estimator of total variance uses <span class="arithmatex">\(n - 1\)</span> degrees of freedom:
+$<span class="arithmatex">\(s_{\text{tot}}^2 = \frac{\text{SS}_{\text{tot}}}{n - 1}\)</span>$
+Adjusted <span class="arithmatex">\(R^2\)</span> is the ratio of these unbiased variance estimators:
+$<span class="arithmatex">\(R_{\text{adj}}^2 = 1 - \frac{s_{\text{res}}^2}{s_{\text{tot}}^2} = 1 - \frac{\text{SS}_{\text{res}} / (n - p - 1)}{\text{SS}_{\text{tot}} / (n - 1)} = 1 - \left(\frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}}\right) \left(\frac{n - 1}{n - p - 1}\right)\)</span>$
+Substituting <span class="arithmatex">\(\frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}} = 1 - R^2\)</span>:
+$<span class="arithmatex">\(R_{\text{adj}}^2 = 1 - (1 - R^2) \frac{n - 1}{n - p - 1}\)</span>$
+<strong>Why it can decrease:</strong>
+When an uninformative feature is added, <span class="arithmatex">\(p\)</span> increases by 1, reducing the denominator <span class="arithmatex">\((n - p - 1)\)</span>. The factor <span class="arithmatex">\(\frac{n - 1}{n - p - 1} &gt; 1\)</span> inflates the subtracted penalty. If the reduction in <span class="arithmatex">\(\text{SS}_{\text{res}}\)</span> is smaller than the penalty imposed by losing one degree of freedom, <span class="arithmatex">\(R_{\text{adj}}^2\)</span> strictly drops. It penalizes non-informative feature expansion.</p>
+<hr />
+<h2 id="10-mastery-ladder">10. Mastery Ladder<a class="headerlink" href="#10-mastery-ladder" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] <strong>L1:</strong> You can construct a Confusion Matrix and define Accuracy, Precision, Recall, and Specificity.</li>
+<li>[ ] <strong>L2:</strong> You can derive the <span class="arithmatex">\(F_\beta\)</span> score formula from the weighted harmonic mean.</li>
+<li>[ ] <strong>L3:</strong> You can state the Wilcoxon-Mann-Whitney theorem for ROC-AUC: <span class="arithmatex">\(P(\hat{s}(x^+) &gt; \hat{s}(x^-))\)</span>.</li>
+<li>[ ] <strong>L4:</strong> You can explain mathematically why ROC-AUC fails under extreme class imbalance while PR-AUC succeeds.</li>
+<li>[ ] <strong>L5:</strong> You can calculate Expected Calibration Error (ECE) across reliability bins.</li>
+<li>[ ] <strong>L6:</strong> You can explain the mechanics of Platt Scaling and Isotonic Regression via PAVA.</li>
+<li>[ ] <strong>L7:</strong> You can define MSE, RMSE, MAE, and MedAE, explaining their trade-offs regarding outlier sensitivity.</li>
+<li>[ ] <strong>L8:</strong> You can derive Adjusted <span class="arithmatex">\(R^2\)</span> from unbiased variance degrees of freedom.</li>
+<li>[ ] <strong>L9:</strong> You can explain why MAPE is asymmetric and state the sMAPE formula.</li>
+<li>[ ] <strong>L10:</strong> You can implement a vectorized metric suite including rank-sum ROC-AUC and ECE from scratch in NumPy.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../model-validation-generalization-deep-dive/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deep-dive: Model Validation &amp; Generalization">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Model Validation & Generalization
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../hyperparameter-optimization-deep-dive/" class="md-footer__link md-footer__link--next" aria-label="Next: Deep-dive: Hyperparameter Optimization">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Hyperparameter Optimization
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

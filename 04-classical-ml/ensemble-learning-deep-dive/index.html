@@ -1,0 +1,4840 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete, deep-dive AI/ML curriculum — from Python internals to production AI systems.">
+      
+      
+        <meta name="author" content="Sameer Karur">
+      
+      
+      
+        <link rel="prev" href="../decision-trees-deep-dive/">
+      
+      
+        <link rel="next" href="../svm-deep-dive/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Deep-dive: Ensemble Learning (Random Forests & GBDT) - AI/ML Mastery Program</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ensemble-learning-random-forests-gbdt-xgboost-lightgbm-catboost" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI/ML Mastery Program" class="md-header__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI/ML Mastery Program
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Deep-dive: Ensemble Learning (Random Forests & GBDT)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../00-computer-science/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 0 – CS Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-python/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 1 – Python
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../02-mathematics/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 2 – Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../03-data-engineering/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 3 – Data Engineering
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 4 – Classical ML
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../05-ml-theory/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 5 – ML Theory & Evaluation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../06-deep-learning/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 6 – Deep Learning
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../07-computer-vision/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 7 – Computer Vision
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../08-nlp/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 8 – NLP
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../09-transformers-llms/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 9 – Transformers & LLMs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../10-generative-ai/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 10 – Generative AI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../11-ai-agents/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 11 – AI Agents
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../12-mlops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 12 – MLOps
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../13-ai-system-design/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 13 – AI System Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../14-projects/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 14 – Projects & Interview
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI/ML Mastery Program" class="md-nav__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI/ML Mastery Program
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../00-computer-science/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 0 – CS Foundations
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 0 – CS Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/how-computers-execute-programs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: How Computers Execute Programs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/arrays-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Arrays
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/linked-lists-stacks-queues-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linked Lists, Stacks & Queues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/hash-tables-sets-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hash Tables & Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Trees (Binary, BST, Heaps)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/graphs-tries-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Graphs & Tries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/algorithms-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Algorithms (Big-O, Searching, Sorting, Recursion, Greedy, DP, Graphs)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../01-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 1 – Python
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 1 – Python
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/fundamentals-control-flow-collections-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Fundamentals, Control Flow & Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/functions-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/oop-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: OOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/advanced-python-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced Python (Iterators, Generators, Async, Concurrency)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/internals-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Internals (CPython, Bytecode, GC, GIL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../02-mathematics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 2 – Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 2 – Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/foundations-math-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundations of Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/linear-algebra-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/calculus-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Calculus & Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-mathematics/probability-statistics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Probability & Statistics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../03-data-engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 3 – Data Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 3 – Data Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-ecosystem-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Data Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-formats-storage-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Formats & Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-cleaning-preprocessing-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Cleaning & Preprocessing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/feature-engineering-selection-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Feature Engineering & Selection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 4 – Classical ML
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 4 – Classical ML
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linear-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../regularized-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Regularized & Polynomial Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logistic-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Logistic Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../knn-naive-bayes-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: KNN & Naive Bayes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decision-trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Ensemble Learning (Random Forests & GBDT)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Ensemble Learning (Random Forests & GBDT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-bagging-random-forests-the-mathematics-of-variance-reduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Bagging &amp; Random Forests: The Mathematics of Variance Reduction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Bagging &amp; Random Forests: The Mathematics of Variance Reduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-variance-of-an-averaged-ensemble" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 The Variance of an Averaged Ensemble
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-random-forest-decorrelation-feature-subsampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Random Forest Decorrelation: Feature Subsampling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-out-of-bag-oob-error-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Out-of-Bag (OOB) Error Estimation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-boosting-paradigm-gradient-boosted-decision-trees-gbdt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The Boosting Paradigm &amp; Gradient Boosted Decision Trees (GBDT)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The Boosting Paradigm &amp; Gradient Boosted Decision Trees (GBDT)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-boosting-as-functional-gradient-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Boosting as Functional Gradient Descent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-xgboost-second-order-optimization-regularized-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. XGBoost: Second-Order Optimization &amp; Regularized Trees
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. XGBoost: Second-Order Optimization &amp; Regularized Trees">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-the-regularized-objective-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 The Regularized Objective Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-second-order-taylor-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Second-Order Taylor Expansion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-optimal-leaf-weights-split-gain-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Optimal Leaf Weights &amp; Split Gain Derivation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-sparsity-aware-split-finding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Sparsity-Aware Split Finding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-lightgbm-architectural-innovations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. LightGBM: Architectural Innovations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. LightGBM: Architectural Innovations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-gradient-based-one-side-sampling-goss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Gradient-Based One-Side Sampling (GOSS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-exclusive-feature-bundling-efb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Exclusive Feature Bundling (EFB)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-leaf-wise-best-first-tree-growth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Leaf-Wise (Best-First) Tree Growth
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-catboost-categorical-dominance-oblivious-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. CatBoost: Categorical Dominance &amp; Oblivious Trees
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. CatBoost: Categorical Dominance &amp; Oblivious Trees">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-ordered-target-encoding-preventing-target-leakage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Ordered Target Encoding (Preventing Target Leakage)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-symmetric-oblivious-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Symmetric Oblivious Trees
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-implementation-1-vectorized-gradient-boosted-regressor-from-scratch-numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Implementation 1 — Vectorized Gradient Boosted Regressor from Scratch (NumPy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-implementation-2-framework-benchmarks-scikit-learn-xgboost-lightgbm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Implementation 2 — Framework Benchmarks (Scikit-Learn, XGBoost, LightGBM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-common-errors-production-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Common Errors &amp; Production Debugging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Common Errors &amp; Production Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-overfitting-due-to-high-estimator-count-and-large-learning-rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Overfitting Due to High Estimator Count and Large Learning Rate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-gradienthessian-instability-with-extreme-imbalance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Gradient/Hessian Instability with Extreme Imbalance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-staff-level-interview-questions-model-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Staff-Level Interview Questions &amp; Model Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Staff-Level Interview Questions &amp; Model Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-prove-the-variance-reduction-formula-for-bagging-textvarleftfrac1bsum_i1b-t_iright-rho-sigma2-frac1-rhobsigma2-why-is-feature-subsampling-essential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Prove the variance reduction formula for Bagging: \(\text{Var}\left(\frac{1}{B}\sum_{i=1}^B T_i\right) = \rho \sigma^2 + \frac{1-\rho}{B}\sigma^2\). Why is feature subsampling essential?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-derive-the-optimal-leaf-weights-w_j-and-split-gain-formula-in-xgboost-using-the-second-order-taylor-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Derive the optimal leaf weights \(w_j^*\) and split gain formula in XGBoost using the second-order Taylor expansion.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-compare-the-core-algorithmic-innovations-of-xgboost-lightgbm-and-catboost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: Compare the core algorithmic innovations of XGBoost, LightGBM, and CatBoost.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-explain-goss-gradient-based-one-side-sampling-in-lightgbm-and-how-it-preserves-gradient-variance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Explain GOSS (Gradient-based One-Side Sampling) in LightGBM and how it preserves gradient variance.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-what-is-target-leakage-in-naive-target-encoding-and-how-does-catboosts-ordered-target-encoding-mathematically-eliminate-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: What is target leakage in naive target encoding, and how does CatBoost's Ordered Target Encoding mathematically eliminate it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q6-why-do-oblivious-symmetric-trees-in-catboost-execute-orders-of-magnitude-faster-at-inference-time-than-standard-asymmetric-cart-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q6: Why do oblivious (symmetric) trees in CatBoost execute orders of magnitude faster at inference time than standard asymmetric CART trees?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../svm-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Support Vector Machines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../05-ml-theory/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/model-validation-generalization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Validation & Generalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/evaluation-metrics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/hyperparameter-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hyperparameter Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../06-deep-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 6 – Deep Learning
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 6 – Deep Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/neural-network-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Neural Network Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/architecture-components-regularization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Architecture Components & Regularization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/deep-learning-optimizers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Deep Learning Optimizers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../07-computer-vision/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 7 – Computer Vision
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 7 – Computer Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/convolutional-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Convolutional Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/modern-cnn-architectures-transfer-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Modern CNN Architectures & Transfer Learning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/vision-tasks-transformers-multimodal-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Vision Tasks, ViT & Multimodal Vision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../08-nlp/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 8 – NLP
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 8 – NLP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/text-representation-word-embeddings-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Text Representation & Word Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/sequence-models-attention-transformers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Sequence Models, Attention & Transformers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../09-transformers-llms/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 9 – Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 9 – Transformers & LLMs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/transformer-architecture-mechanics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Transformer Architecture & Mechanics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/foundation-model-families-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundation Model Families
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/llm-training-alignment-peft-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Training, Alignment & PEFT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../10-generative-ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 10 – Generative AI
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 10 – Generative AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/llm-application-engineering-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Application Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/enterprise-rag-systems-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Enterprise RAG Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/diffusion-models-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../11-ai-agents/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 11 – AI Agents
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 11 – AI Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/agent-architectures-patterns-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Agent Architectures & Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/multi-agent-systems-security-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Multi-Agent Systems & Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../12-mlops/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 12 – MLOps
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 12 – MLOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/production-tooling-containerization-cicd-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production Tooling, Containerization & CI/CD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/serving-pipelines-orchestration-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Serving, Pipelines & Distributed Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/model-monitoring-observability-retraining-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Monitoring, Observability & Automated Retraining
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../13-ai-system-design/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 13 – AI System Design
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_15" id="__nav_15_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 13 – AI System Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/ai-system-design-methodology-framework-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: AI System Design Methodology & Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/production-case-studies-system-design-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production AI System Design Case Studies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../14-projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 14 – Projects & Interview
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_16" id="__nav_16_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 14 – Projects & Interview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/foundational-applied-projects-tier-1-to-4-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundational Applied Projects (Tiers 1–4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/advanced-frontier-projects-tier-5-to-8-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced & Frontier Applied Projects (Tiers 5–8)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/staff-level-interview-question-banks-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Staff-Level Technical Interview Question Banks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-bagging-random-forests-the-mathematics-of-variance-reduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Bagging &amp; Random Forests: The Mathematics of Variance Reduction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Bagging &amp; Random Forests: The Mathematics of Variance Reduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-variance-of-an-averaged-ensemble" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 The Variance of an Averaged Ensemble
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-random-forest-decorrelation-feature-subsampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Random Forest Decorrelation: Feature Subsampling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-out-of-bag-oob-error-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Out-of-Bag (OOB) Error Estimation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-boosting-paradigm-gradient-boosted-decision-trees-gbdt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The Boosting Paradigm &amp; Gradient Boosted Decision Trees (GBDT)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The Boosting Paradigm &amp; Gradient Boosted Decision Trees (GBDT)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-boosting-as-functional-gradient-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Boosting as Functional Gradient Descent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-xgboost-second-order-optimization-regularized-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. XGBoost: Second-Order Optimization &amp; Regularized Trees
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. XGBoost: Second-Order Optimization &amp; Regularized Trees">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-the-regularized-objective-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 The Regularized Objective Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-second-order-taylor-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Second-Order Taylor Expansion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-optimal-leaf-weights-split-gain-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Optimal Leaf Weights &amp; Split Gain Derivation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-sparsity-aware-split-finding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Sparsity-Aware Split Finding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-lightgbm-architectural-innovations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. LightGBM: Architectural Innovations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. LightGBM: Architectural Innovations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-gradient-based-one-side-sampling-goss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Gradient-Based One-Side Sampling (GOSS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-exclusive-feature-bundling-efb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Exclusive Feature Bundling (EFB)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-leaf-wise-best-first-tree-growth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Leaf-Wise (Best-First) Tree Growth
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-catboost-categorical-dominance-oblivious-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. CatBoost: Categorical Dominance &amp; Oblivious Trees
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. CatBoost: Categorical Dominance &amp; Oblivious Trees">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-ordered-target-encoding-preventing-target-leakage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Ordered Target Encoding (Preventing Target Leakage)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-symmetric-oblivious-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Symmetric Oblivious Trees
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-implementation-1-vectorized-gradient-boosted-regressor-from-scratch-numpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Implementation 1 — Vectorized Gradient Boosted Regressor from Scratch (NumPy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-implementation-2-framework-benchmarks-scikit-learn-xgboost-lightgbm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Implementation 2 — Framework Benchmarks (Scikit-Learn, XGBoost, LightGBM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-common-errors-production-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Common Errors &amp; Production Debugging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Common Errors &amp; Production Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-overfitting-due-to-high-estimator-count-and-large-learning-rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Overfitting Due to High Estimator Count and Large Learning Rate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-gradienthessian-instability-with-extreme-imbalance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Gradient/Hessian Instability with Extreme Imbalance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-staff-level-interview-questions-model-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Staff-Level Interview Questions &amp; Model Answers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Staff-Level Interview Questions &amp; Model Answers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-prove-the-variance-reduction-formula-for-bagging-textvarleftfrac1bsum_i1b-t_iright-rho-sigma2-frac1-rhobsigma2-why-is-feature-subsampling-essential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Prove the variance reduction formula for Bagging: \(\text{Var}\left(\frac{1}{B}\sum_{i=1}^B T_i\right) = \rho \sigma^2 + \frac{1-\rho}{B}\sigma^2\). Why is feature subsampling essential?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-derive-the-optimal-leaf-weights-w_j-and-split-gain-formula-in-xgboost-using-the-second-order-taylor-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Derive the optimal leaf weights \(w_j^*\) and split gain formula in XGBoost using the second-order Taylor expansion.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-compare-the-core-algorithmic-innovations-of-xgboost-lightgbm-and-catboost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: Compare the core algorithmic innovations of XGBoost, LightGBM, and CatBoost.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-explain-goss-gradient-based-one-side-sampling-in-lightgbm-and-how-it-preserves-gradient-variance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Explain GOSS (Gradient-based One-Side Sampling) in LightGBM and how it preserves gradient variance.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-what-is-target-leakage-in-naive-target-encoding-and-how-does-catboosts-ordered-target-encoding-mathematically-eliminate-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: What is target leakage in naive target encoding, and how does CatBoost's Ordered Target Encoding mathematically eliminate it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q6-why-do-oblivious-symmetric-trees-in-catboost-execute-orders-of-magnitude-faster-at-inference-time-than-standard-asymmetric-cart-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q6: Why do oblivious (symmetric) trees in CatBoost execute orders of magnitude faster at inference time than standard asymmetric CART trees?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="ensemble-learning-random-forests-gbdt-xgboost-lightgbm-catboost">Ensemble Learning — Random Forests, GBDT, XGBoost, LightGBM &amp; CatBoost<a class="headerlink" href="#ensemble-learning-random-forests-gbdt-xgboost-lightgbm-catboost" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>Decision trees and Taylor series expansions. Review <a href="../decision-trees-deep-dive/">Decision Trees</a>, <a href="../../02-mathematics/calculus-optimization-deep-dive/">Calculus &amp; Optimization</a>, and <a href="../../02-mathematics/probability-statistics-deep-dive/">Probability &amp; Statistics</a>.</p>
+</div>
+<hr />
+<h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
+<p>Individual machine learning models face a fundamental dilemma: simple models suffer from <strong>high bias</strong> (underfitting), while expressive models suffer from <strong>high variance</strong> (overfitting).</p>
+<p><strong>Ensemble Learning</strong> combines multiple base estimators (weak learners) to produce a unified meta-model with strictly superior generalization. Modern tabular ML is dominated by two foundational ensemble paradigms:</p>
+<ol>
+<li><strong>Bagging (Bootstrap Aggregating) &amp; Random Forests</strong>: Trains hundreds of high-capacity, deep decision trees independently in parallel on resampled subsets of data and features. Reduces <strong>variance</strong> by averaging decorrelated predictions.</li>
+<li><strong>Boosting (GBDT, XGBoost, LightGBM, CatBoost)</strong>: Trains a sequence of shallow, high-bias trees iteratively. Each new tree fits the pseudo-residuals (negative gradients) of the previous ensemble. Reduces <strong>bias</strong> and variance simultaneously via gradient descent in function space.</li>
+</ol>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Bagging Paradigm (Variance Reduction)
+        D1["Dataset D"] --&gt; B1["Bootstrap Sample 1"] &amp; B2["Bootstrap Sample 2"] &amp; B3["Bootstrap Sample B"]
+        B1 --&gt; T1["Deep Tree 1 (Low Bias, High Var)"]
+        B2 --&gt; T2["Deep Tree 2 (Low Bias, High Var)"]
+        B3 --&gt; TB["Deep Tree B (Low Bias, High Var)"]
+        T1 &amp; T2 &amp; TB --&gt; AVG["Parallel Averaging / Voting: Var = ρσ² + (1-ρ)σ²/B"]
+    end
+
+    subgraph Boosting Paradigm (Bias &amp; Variance Reduction)
+        D2["Dataset D"] --&gt; F0["Initial Base Prediction F₀(x)"]
+        F0 --&gt; R1["Compute Residuals / Gradients -g₁"]
+        R1 --&gt; H1["Fit Tree h₁(x) to Gradients"]
+        H1 --&gt; F1["F₁(x) = F₀(x) + η h₁(x)"]
+        F1 --&gt; R2["Compute Residuals -g₂"]
+        R2 --&gt; H2["Fit Tree h₂(x)"]
+        H2 --&gt; FM["F_M(x) = F₀(x) + ∑ η h_m(x)"]
+    end</code></pre>
+<hr />
+<h2 id="2-bagging-random-forests-the-mathematics-of-variance-reduction">2. Bagging &amp; Random Forests: The Mathematics of Variance Reduction<a class="headerlink" href="#2-bagging-random-forests-the-mathematics-of-variance-reduction" title="Permanent link">&para;</a></h2>
+<h3 id="21-the-variance-of-an-averaged-ensemble">2.1 The Variance of an Averaged Ensemble<a class="headerlink" href="#21-the-variance-of-an-averaged-ensemble" title="Permanent link">&para;</a></h3>
+<p>Let <span class="arithmatex">\(B\)</span> base estimators <span class="arithmatex">\(\hat{f}_1(\mathbf{x}), \dots, \hat{f}_B(\mathbf{x})\)</span> each have variance <span class="arithmatex">\(\text{Var}(\hat{f}_b(\mathbf{x})) = \sigma^2\)</span>.
+Suppose the pairwise Pearson correlation between any two estimators is <span class="arithmatex">\(\text{Corr}(\hat{f}_j, \hat{f}_k) = \rho\)</span>.
+The variance of the ensemble average <span class="arithmatex">\(\bar{f}(\mathbf{x}) = \frac{1}{B} \sum_{b=1}^B \hat{f}_b(\mathbf{x})\)</span> is:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\text{Var}(\bar{f}) &amp;= \text{Var}\left( \frac{1}{B} \sum_{b=1}^B \hat{f}_b \right) = \frac{1}{B^2} \sum_{j=1}^B \sum_{k=1}^B \text{Cov}(\hat{f}_j, \hat{f}_k) \\
+&amp;= \frac{1}{B^2} \left[ \sum_{j=1}^B \text{Var}(\hat{f}_j) + \sum_{j=1}^B \sum_{k \ne j}^B \text{Cov}(\hat{f}_j, \hat{f}_k) \right] \\
+&amp;= \frac{1}{B^2} \left[ B \sigma^2 + B(B - 1) \rho \sigma^2 \right] \\
+&amp;= \frac{\sigma^2}{B} + \frac{B - 1}{B} \rho \sigma^2 = \rho \sigma^2 + \frac{1 - \rho}{B} \sigma^2
+\end{aligned}
+\]</div>
+<div class="arithmatex">\[\text{Var}(\bar{f}(\mathbf{x})) = \rho \sigma^2 + \frac{1 - \rho}{B} \sigma^2\]</div>
+<h4 id="crucial-insights-from-the-formula">Crucial Insights from the Formula:<a class="headerlink" href="#crucial-insights-from-the-formula" title="Permanent link">&para;</a></h4>
+<ol>
+<li>As the number of trees <span class="arithmatex">\(B \to \infty\)</span>:
+   $<span class="arithmatex">\(\lim_{B \to \infty} \text{Var}(\bar{f}) = \rho \sigma^2\)</span>$
+   The second term <span class="arithmatex">\(\frac{1 - \rho}{B} \sigma^2\)</span> vanishes, but the first term <span class="arithmatex">\(\rho \sigma^2\)</span> acts as an <strong>irreducible variance floor</strong> dictated entirely by the correlation <span class="arithmatex">\(\rho\)</span> between trees!</li>
+<li>If trees are identical (<span class="arithmatex">\(\rho = 1\)</span>), averaging does nothing: <span class="arithmatex">\(\text{Var} = \sigma^2\)</span>.</li>
+<li>If trees are completely uncorrelated (<span class="arithmatex">\(\rho = 0\)</span>), variance drops linearly: <span class="arithmatex">\(\text{Var} = \sigma^2 / B\)</span>.</li>
+</ol>
+<h3 id="22-random-forest-decorrelation-feature-subsampling">2.2 Random Forest Decorrelation: Feature Subsampling<a class="headerlink" href="#22-random-forest-decorrelation-feature-subsampling" title="Permanent link">&para;</a></h3>
+<p>Standard Bagging builds trees using bootstrap samples of rows. However, if the dataset contains one dominant, highly predictive feature (e.g., <span class="arithmatex">\(x_1\)</span>), every tree will split on <span class="arithmatex">\(x_1\)</span> at the root node. The resulting trees look very similar, yielding a high correlation <span class="arithmatex">\(\rho \approx 0.8\)</span>.</p>
+<p>Breiman's <strong>Random Forest</strong> introduces a second source of randomization: <strong>Feature Subsampling</strong>.
+At every candidate split in every tree, the algorithm considers only a random subset of <span class="arithmatex">\(m\)</span> features out of all <span class="arithmatex">\(p\)</span> features:
+- For <strong>Classification</strong>: <span class="arithmatex">\(m = \lfloor\sqrt{p}\rfloor\)</span>
+- For <strong>Regression</strong>: <span class="arithmatex">\(m = \lfloor p / 3 \rfloor\)</span></p>
+<p>By forcing trees to split on suboptimal alternative features, Random Forests artificially suppress pairwise correlation <span class="arithmatex">\(\rho \downarrow\)</span>, pushing the variance floor <span class="arithmatex">\(\rho \sigma^2\)</span> significantly lower.</p>
+<h3 id="23-out-of-bag-oob-error-estimation">2.3 Out-of-Bag (OOB) Error Estimation<a class="headerlink" href="#23-out-of-bag-oob-error-estimation" title="Permanent link">&para;</a></h3>
+<p>In bootstrap sampling with replacement, we draw <span class="arithmatex">\(n\)</span> samples from a dataset of size <span class="arithmatex">\(n\)</span>.
+The probability that a specific training sample <span class="arithmatex">\(i\)</span> is <strong>not</strong> selected in a single draw is <span class="arithmatex">\(1 - \frac{1}{n}\)</span>.
+The probability that sample <span class="arithmatex">\(i\)</span> is omitted across all <span class="arithmatex">\(n\)</span> independent draws is:</p>
+<div class="arithmatex">\[
+P(\text{omitted}) = \left( 1 - \frac{1}{n} \right)^n
+\]</div>
+<p>Using the fundamental limit of calculus <span class="arithmatex">\(\lim_{n \to \infty} (1 - \frac{1}{n})^n = e^{-1}\)</span>:</p>
+<div class="arithmatex">\[
+\lim_{n \to \infty} \left( 1 - \frac{1}{n} \right)^n = \frac{1}{e} \approx 0.367879 \approx 36.8\%
+\]</div>
+<p>Each bootstrap tree is trained on approximately <span class="arithmatex">\(63.2\%\)</span> of the samples, leaving the remaining <span class="arithmatex">\(36.8\%\)</span> as <strong>Out-of-Bag (OOB)</strong> samples.
+For each sample <span class="arithmatex">\(i\)</span>, we compute predictions using only the subset of trees that never saw sample <span class="arithmatex">\(i\)</span> during training. The resulting <strong>OOB Error</strong> serves as a built-in cross-validation estimate with zero data leakage and zero additional training cost!</p>
+<hr />
+<h2 id="3-the-boosting-paradigm-gradient-boosted-decision-trees-gbdt">3. The Boosting Paradigm &amp; Gradient Boosted Decision Trees (GBDT)<a class="headerlink" href="#3-the-boosting-paradigm-gradient-boosted-decision-trees-gbdt" title="Permanent link">&para;</a></h2>
+<h3 id="31-boosting-as-functional-gradient-descent">3.1 Boosting as Functional Gradient Descent<a class="headerlink" href="#31-boosting-as-functional-gradient-descent" title="Permanent link">&para;</a></h3>
+<p>While Bagging trains learners in parallel, Boosting builds an additive model sequentially:</p>
+<div class="arithmatex">\[
+F_M(\mathbf{x}) = \sum_{m=1}^M \eta \cdot h_m(\mathbf{x})
+\]</div>
+<p>where <span class="arithmatex">\(h_m(\mathbf{x})\)</span> are base decision trees and <span class="arithmatex">\(\eta \in (0, 1]\)</span> is the shrinkage learning rate.
+Jerome Friedman (1999) reframed boosting as <strong>Gradient Descent in Function Space</strong>.</p>
+<p>Let the training objective be:</p>
+<div class="arithmatex">\[
+\mathcal{L}(F) = \sum_{i=1}^n L(y_i, F(\mathbf{x}_i))
+\]</div>
+<p>Instead of computing derivatives with respect to parameters <span class="arithmatex">\(\mathbf{w}\)</span>, we differentiate the loss with respect to the model's predictions <span class="arithmatex">\(F(\mathbf{x}_i)\)</span>.
+The negative gradient vector <span class="arithmatex">\(-\mathbf{g} \in \mathbb{R}^n\)</span> represents the direction of steepest descent in <span class="arithmatex">\(\mathbb{R}^n\)</span>:</p>
+<div class="arithmatex">\[
+-g_i = -\left[ \frac{\partial L(y_i, F(\mathbf{x}_i))}{\partial F(\mathbf{x}_i)} \right]_{F(\mathbf{x}) = F_{m-1}(\mathbf{x})}
+\]</div>
+<p>These negative gradients are called <strong>pseudo-residuals</strong>. Tree <span class="arithmatex">\(h_m(\mathbf{x})\)</span> is trained using least squares to fit these pseudo-residuals:</p>
+<div class="arithmatex">\[
+h_m = \arg\min_{h} \sum_{i=1}^n \left( (-g_i) - h(\mathbf{x}_i) \right)^2
+\]</div>
+<p>Once tree <span class="arithmatex">\(h_m\)</span> is constructed, we update the ensemble:</p>
+<div class="arithmatex">\[
+F_m(\mathbf{x}) = F_{m-1}(\mathbf{x}) + \eta \cdot h_m(\mathbf{x})
+\]</div>
+<pre class="mermaid"><code>flowchart LR
+    A["Current Ensemble F_{m-1}"] --&gt; B["Evaluate Negative Gradients: r_i = -∂L/∂F"]
+    B --&gt; C["Fit CART tree h_m to targets r_i"]
+    C --&gt; D["Update: F_m(x) = F_{m-1}(x) + η h_m(x)"]
+    D --&gt; E{m = M?}
+    E -- No --&gt; A
+    E -- Yes --&gt; F["Final GBDT F_M(x)"]</code></pre>
+<hr />
+<h2 id="4-xgboost-second-order-optimization-regularized-trees">4. XGBoost: Second-Order Optimization &amp; Regularized Trees<a class="headerlink" href="#4-xgboost-second-order-optimization-regularized-trees" title="Permanent link">&para;</a></h2>
+<p>Tianqi Chen &amp; Carlos Guestrin (2016) revolutionized gradient boosting with <strong>XGBoost (Extreme Gradient Boosting)</strong> by incorporating a second-order Taylor expansion and explicit tree complexity regularization.</p>
+<h3 id="41-the-regularized-objective-function">4.1 The Regularized Objective Function<a class="headerlink" href="#41-the-regularized-objective-function" title="Permanent link">&para;</a></h3>
+<p>At boosting step <span class="arithmatex">\(t\)</span>, the objective is:</p>
+<div class="arithmatex">\[
+\mathcal{L}^{(t)} = \sum_{i=1}^n L(y_i, \hat{y}_i^{(t-1)} + f_t(\mathbf{x}_i)) + \Omega(f_t)
+\]</div>
+<p>The tree complexity penalty <span class="arithmatex">\(\Omega(f_t)\)</span> penalizes both the number of leaves <span class="arithmatex">\(T\)</span> and the <span class="arithmatex">\(L_2\)</span> norm of leaf weights <span class="arithmatex">\(\mathbf{w}\)</span>:</p>
+<div class="arithmatex">\[
+\Omega(f_t) = \gamma T + \frac{1}{2} \lambda \sum_{j=1}^T w_j^2
+\]</div>
+<h3 id="42-second-order-taylor-expansion">4.2 Second-Order Taylor Expansion<a class="headerlink" href="#42-second-order-taylor-expansion" title="Permanent link">&para;</a></h3>
+<p>Taking the second-order Taylor expansion of the loss function around the current prediction <span class="arithmatex">\(\hat{y}_i^{(t-1)}\)</span>:</p>
+<div class="arithmatex">\[
+L(y_i, \hat{y}_i^{(t-1)} + f_t(\mathbf{x}_i)) \approx L(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(\mathbf{x}_i) + \frac{1}{2} h_i f_t^2(\mathbf{x}_i)
+\]</div>
+<p>where <span class="arithmatex">\(g_i\)</span> and <span class="arithmatex">\(h_i\)</span> are the first and second-order gradients:</p>
+<div class="arithmatex">\[
+g_i = \frac{\partial L(y_i, \hat{y}_i^{(t-1)})}{\partial \hat{y}_i^{(t-1)}}, \qquad h_i = \frac{\partial^2 L(y_i, \hat{y}_i^{(t-1)})}{\partial (\hat{y}_i^{(t-1)})^2}
+\]</div>
+<p>Removing constant terms independent of <span class="arithmatex">\(f_t\)</span>, the simplified surrogate objective is:</p>
+<div class="arithmatex">\[
+\tilde{\mathcal{L}}^{(t)} = \sum_{i=1}^n \left[ g_i f_t(\mathbf{x}_i) + \frac{1}{2} h_i f_t^2(\mathbf{x}_i) \right] + \gamma T + \frac{1}{2} \lambda \sum_{j=1}^T w_j^2
+\]</div>
+<p>Let <span class="arithmatex">\(I_j = \{i \mid q(\mathbf{x}_i) = j\}\)</span> denote the set of training instances mapped to leaf <span class="arithmatex">\(j\)</span>. Rewriting the sum across leaves:</p>
+<div class="arithmatex">\[
+\tilde{\mathcal{L}}^{(t)} = \sum_{j=1}^T \left[ \left( \sum_{i \in I_j} g_i \right) w_j + \frac{1}{2} \left( \sum_{i \in I_j} h_i + \lambda \right) w_j^2 \right] + \gamma T
+\]</div>
+<p>Define <span class="arithmatex">\(G_j = \sum_{i \in I_j} g_i\)</span> and <span class="arithmatex">\(H_j = \sum_{i \in I_j} h_i\)</span>. Then:</p>
+<div class="arithmatex">\[
+\tilde{\mathcal{L}}^{(t)} = \sum_{j=1}^T \left[ G_j w_j + \frac{1}{2} (H_j + \lambda) w_j^2 \right] + \gamma T
+\]</div>
+<h3 id="43-optimal-leaf-weights-split-gain-derivation">4.3 Optimal Leaf Weights &amp; Split Gain Derivation<a class="headerlink" href="#43-optimal-leaf-weights-split-gain-derivation" title="Permanent link">&para;</a></h3>
+<p>Differentiating with respect to leaf weight <span class="arithmatex">\(w_j\)</span> and setting to zero:</p>
+<div class="arithmatex">\[
+\frac{\partial \tilde{\mathcal{L}}^{(t)}}{\partial w_j} = G_j + (H_j + \lambda) w_j = 0 \implies w_j^* = -\frac{G_j}{H_j + \lambda}
+\]</div>
+<div class="arithmatex">\[w_j^* = -\frac{\sum_{i \in I_j} g_i}{\sum_{i \in I_j} h_i + \lambda}\]</div>
+<p>Substituting the optimal weights <span class="arithmatex">\(w_j^*\)</span> back into the objective yields the minimal cost of tree structure <span class="arithmatex">\(q\)</span>:</p>
+<div class="arithmatex">\[
+\tilde{\mathcal{L}}^{(t)}(q) = -\frac{1}{2} \sum_{j=1}^T \frac{G_j^2}{H_j + \lambda} + \gamma T
+\]</div>
+<p>When evaluating a split of node <span class="arithmatex">\(I\)</span> into left child <span class="arithmatex">\(I_L\)</span> and right child <span class="arithmatex">\(I_R\)</span>, the reduction in loss (the <strong>Analytic Split Gain</strong>) is:</p>
+<div class="arithmatex">\[
+\text{Gain} = \frac{1}{2} \left[ \frac{G_L^2}{H_L + \lambda} + \frac{G_R^2}{H_R + \lambda} - \frac{(G_L + G_R)^2}{H_L + H_R + \lambda} \right] - \gamma
+\]</div>
+<p>If <span class="arithmatex">\(\text{Gain} \le 0\)</span>, the split is not worth the structural penalty <span class="arithmatex">\(\gamma\)</span>, implementing <strong>automatic built-in post-pruning</strong>!</p>
+<pre class="mermaid"><code>flowchart TD
+    A["Evaluate Node I: Sum First Gradients G, Second Gradients H"] --&gt; B["Propose Split into Left (G_L, H_L) and Right (G_R, H_R)"]
+    B --&gt; C["Compute Split Gain: 0.5 * [G_L²/(H_L+λ) + G_R²/(H_R+λ) - G²/(H+λ)] - γ"]
+    C --&gt; D{"Gain &gt; 0?"}
+    D -- Yes --&gt; E["Accept Split"]
+    D -- No --&gt; F["Prune Split (Do not split node)"]</code></pre>
+<h3 id="44-sparsity-aware-split-finding">4.4 Sparsity-Aware Split Finding<a class="headerlink" href="#44-sparsity-aware-split-finding" title="Permanent link">&para;</a></h3>
+<p>In real datasets, features often contain missing values (<code>NaN</code>). XGBoost handles missingness natively:
+1. For a split candidate, all samples with non-missing values are partitioned into <span class="arithmatex">\(I_L\)</span> and <span class="arithmatex">\(I_R\)</span>.
+2. All missing samples are tentatively placed entirely in <span class="arithmatex">\(I_L\)</span>, and the Gain is calculated.
+3. Then all missing samples are placed entirely in <span class="arithmatex">\(I_R\)</span>, and the Gain is calculated.
+4. The direction that yields the highest Gain is retained as the <strong>default branch</strong>. At inference time, any sample with a missing value is automatically routed down this default branch.</p>
+<hr />
+<h2 id="5-lightgbm-architectural-innovations">5. LightGBM: Architectural Innovations<a class="headerlink" href="#5-lightgbm-architectural-innovations" title="Permanent link">&para;</a></h2>
+<p>Microsoft's <strong>LightGBM</strong> (Ke et al., 2017) was designed to train orders of magnitude faster on massive web-scale datasets using three core algorithmic innovations.</p>
+<h3 id="51-gradient-based-one-side-sampling-goss">5.1 Gradient-Based One-Side Sampling (GOSS)<a class="headerlink" href="#51-gradient-based-one-side-sampling-goss" title="Permanent link">&para;</a></h3>
+<p>In gradient boosting, instances with large gradients <span class="arithmatex">\(|g_i|\)</span> contribute much more to the split gain than instances with small gradients (which are already well-trained).
+GOSS balances sample size reduction with statistical unbiasedness:
+1. Rank all <span class="arithmatex">\(n\)</span> training instances by absolute gradient <span class="arithmatex">\(|g_i|\)</span>.
+2. Keep the top <span class="arithmatex">\(a \times 100\%\)</span> instances with the largest gradients (e.g., <span class="arithmatex">\(a = 0.2\)</span>).
+3. Randomly sample a fraction <span class="arithmatex">\(b \times 100\%\)</span> from the remaining <span class="arithmatex">\((1 - a)\)</span> small-gradient instances (e.g., <span class="arithmatex">\(b = 0.1\)</span>).
+4. To prevent skewing the gradient sum distribution, amplify the small-gradient samples by weight <span class="arithmatex">\(\frac{1 - a}{b}\)</span>:
+   $<span class="arithmatex">\(\tilde{g}_i = g_i \cdot \frac{1 - a}{b} \quad \text{for sampled small-gradient points}\)</span>$</p>
+<p>GOSS reduces sample size by 70–80% while provably preserving split gain accuracy!</p>
+<h3 id="52-exclusive-feature-bundling-efb">5.2 Exclusive Feature Bundling (EFB)<a class="headerlink" href="#52-exclusive-feature-bundling-efb" title="Permanent link">&para;</a></h3>
+<p>High-dimensional tabular data is often highly sparse (e.g., one-hot encodings). Sparse features are rarely non-zero simultaneously (mutually exclusive).
+EFB solves an exact Graph Coloring problem to bundle mutually exclusive features into a single dense feature. By adding an offset to the bin ranges of the bundled features (e.g., Feature A takes bins <span class="arithmatex">\([0, 10]\)</span>, Feature B takes bins <span class="arithmatex">\([11, 25]\)</span>), LightGBM collapses thousands of sparse columns into a few dense columns with zero loss of information.</p>
+<h3 id="53-leaf-wise-best-first-tree-growth">5.3 Leaf-Wise (Best-First) Tree Growth<a class="headerlink" href="#53-leaf-wise-best-first-tree-growth" title="Permanent link">&para;</a></h3>
+<p>Traditional GBDT (and scikit-learn) grows trees <strong>level-wise</strong> (depth-first), splitting all nodes at the current depth before moving deeper.
+LightGBM grows trees <strong>leaf-wise</strong> (best-first): it always splits the single leaf that produces the maximum global gain across the entire tree, regardless of depth. This achieves significantly lower loss for the same total number of leaves.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Level-Wise (Depth-First)
+        L0["Root"] --&gt; L1A["Node A"] &amp; L1B["Node B"]
+        L1A --&gt; L2A["Leaf"] &amp; L2B["Leaf"]
+        L1B --&gt; L2C["Leaf"] &amp; L2D["Leaf"]
+    end
+    subgraph Leaf-Wise (Best-First)
+        R0["Root"] --&gt; R1A["Node A (High Gain)"] &amp; R1B["Leaf B (Low Gain)"]
+        R1A --&gt; R2A["Node C (High Gain)"] &amp; R2B["Leaf D"]
+        R2A --&gt; R3A["Leaf E"] &amp; R3B["Leaf F"]
+    end</code></pre>
+<hr />
+<h2 id="6-catboost-categorical-dominance-oblivious-trees">6. CatBoost: Categorical Dominance &amp; Oblivious Trees<a class="headerlink" href="#6-catboost-categorical-dominance-oblivious-trees" title="Permanent link">&para;</a></h2>
+<p>Developed by Yandex (Prokhorenkova et al., 2018), <strong>CatBoost</strong> eliminates target leakage and accelerates CPU inference via two key technologies.</p>
+<h3 id="61-ordered-target-encoding-preventing-target-leakage">6.1 Ordered Target Encoding (Preventing Target Leakage)<a class="headerlink" href="#61-ordered-target-encoding-preventing-target-leakage" title="Permanent link">&para;</a></h3>
+<p>Standard target encoding replaces a categorical level <span class="arithmatex">\(c\)</span> with the target mean: <span class="arithmatex">\(\bar{y}_c = \frac{\sum_{i: x_i = c} y_i}{N_c}\)</span>.
+However, because sample <span class="arithmatex">\(i\)</span>'s own target <span class="arithmatex">\(y_i\)</span> is included in the mean, this introduces catastrophic <strong>conditional shift / target leakage</strong>, causing trees to overfit immediately.</p>
+<p>CatBoost introduces <strong>Ordered Target Encoding</strong>:
+1. Generate an online random permutation <span class="arithmatex">\(\sigma = (\sigma_1, \dots, \sigma_n)\)</span> of the training instances.
+2. For sample <span class="arithmatex">\(i\)</span>, calculate the target encoding using strictly the historical instances preceding it in the permutation:
+   $<span class="arithmatex">\(\hat{x}_{\sigma_k} = \frac{\sum_{j=1}^{k-1} \mathbb{I}(x_{\sigma_j} = x_{\sigma_k}) y_{\sigma_j} + a \cdot P}{\sum_{j=1}^{k-1} \mathbb{I}(x_{\sigma_j} = x_{\sigma_k}) + a}\)</span>$
+   where <span class="arithmatex">\(P\)</span> is the global target prior and <span class="arithmatex">\(a &gt; 0\)</span> is a smoothing parameter.
+Because sample <span class="arithmatex">\(\sigma_k\)</span> never sees its own label or labels from the "future," target leakage is mathematically eliminated.</p>
+<h3 id="62-symmetric-oblivious-trees">6.2 Symmetric Oblivious Trees<a class="headerlink" href="#62-symmetric-oblivious-trees" title="Permanent link">&para;</a></h3>
+<p>Standard trees grow asymmetric split structures. In contrast, CatBoost builds <strong>Oblivious Trees</strong>:
+At any given depth <span class="arithmatex">\(d\)</span>, <strong>all nodes across that entire level share the exact same splitting feature and threshold</strong>.</p>
+<pre class="mermaid"><code>flowchart TD
+    ROOT["Root Split: Age &gt; 30"]
+    ROOT -- Yes --&gt; N1["Node 1"]
+    ROOT -- No --&gt; N2["Node 2"]
+    N1 -- Income &gt; 50k --&gt; L1["Leaf 00"]
+    N1 -- Income ≤ 50k --&gt; L2["Leaf 01"]
+    N2 -- Income &gt; 50k --&gt; L3["Leaf 10"]
+    N2 -- Income ≤ 50k --&gt; L4["Leaf 11"]</code></pre>
+<h4 id="the-hardware-acceleration-advantage">The Hardware Acceleration Advantage:<a class="headerlink" href="#the-hardware-acceleration-advantage" title="Permanent link">&para;</a></h4>
+<p>Because every split at depth <span class="arithmatex">\(d\)</span> tests the identical boolean predicate, tree inference requires no pointer chasing or conditional branches:
+$<span class="arithmatex">\(\text{Index} = b_0 + 2 \cdot b_1 + 4 \cdot b_2 + \dots + 2^{d-1} b_{d-1}\)</span>$
+The leaf index is evaluated directly using bitwise operations: <code>index = (feat_1 &gt; thr_1) | ((feat_2 &gt; thr_2) &lt;&lt; 1) | ...</code>.
+The leaf prediction is a simple array lookup: <code>leaf_table[index]</code>. This executes entirely within CPU L1 cache and SIMD vector registers, delivering 10x to 50x faster inference latency than XGBoost!</p>
+<hr />
+<h2 id="7-implementation-1-vectorized-gradient-boosted-regressor-from-scratch-numpy">7. Implementation 1 — Vectorized Gradient Boosted Regressor from Scratch (NumPy)<a class="headerlink" href="#7-implementation-1-vectorized-gradient-boosted-regressor-from-scratch-numpy" title="Permanent link">&para;</a></h2>
+<p>Let us implement a functional Gradient Boosted Regressor from scratch using pure NumPy and simple regression decision trees.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">SimpleRegressionStump</span><span class="p">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="sd">"""1-depth decision tree (decision stump) for boosting."""</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">feat</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">thr</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">left_val</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">right_val</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        <span class="n">best_sse</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">'inf'</span><span class="p">)</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">):</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>            <span class="n">col</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">f</span><span class="p">]</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>            <span class="n">thrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">95</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">thrs</span><span class="p">:</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                <span class="n">left_mask</span> <span class="o">=</span> <span class="n">col</span> <span class="o">&lt;=</span> <span class="n">t</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                <span class="n">right_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">left_mask</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">left_mask</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">right_mask</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>                    <span class="k">continue</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>                <span class="n">val_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">left_mask</span><span class="p">])</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>                <span class="n">val_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">right_mask</span><span class="p">])</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>                <span class="n">sse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span><span class="p">[</span><span class="n">left_mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">val_l</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span><span class="p">[</span><span class="n">right_mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">val_r</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>                <span class="k">if</span> <span class="n">sse</span> <span class="o">&lt;</span> <span class="n">best_sse</span><span class="p">:</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>                    <span class="n">best_sse</span> <span class="o">=</span> <span class="n">sse</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">feat</span> <span class="o">=</span> <span class="n">f</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">thr</span> <span class="o">=</span> <span class="n">t</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">left_val</span> <span class="o">=</span> <span class="n">val_l</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">right_val</span> <span class="o">=</span> <span class="n">val_r</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>        <span class="k">return</span> <span class="bp">self</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>        <span class="n">mask</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thr</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_val</span><span class="p">)</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a><span class="k">class</span><span class="w"> </span><span class="nc">ScratchGBDTRegressor</span><span class="p">:</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a><span class="sd">    Gradient Boosted Decision Trees trained via functional gradient descent (MSE loss).</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="sd">    """</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">n_estimators</span> <span class="o">=</span> <span class="n">n_estimators</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="n">learning_rate</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">base_pred</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">trees</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>        <span class="c1"># Step 1: Initialize ensemble with constant prediction minimizing loss</span>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>        <span class="c1"># For MSE loss L(y, F) = 0.5 * (y - F)^2, optimal base prediction is the sample mean</span>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">base_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>        <span class="n">f_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_pred</span><span class="p">)</span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">trees</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>        <span class="k">for</span> <span class="n">stage</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_estimators</span><span class="p">):</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>            <span class="c1"># Step 2: Compute negative gradient (pseudo-residuals)</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>            <span class="c1"># -∂L/∂F = y - F</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>            <span class="n">residuals</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">f_pred</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>            <span class="c1"># Step 3: Fit weak learner to residuals</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>            <span class="n">tree</span> <span class="o">=</span> <span class="n">SimpleRegressionStump</span><span class="p">()</span>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>            <span class="n">tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">residuals</span><span class="p">)</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>            <span class="c1"># Step 4: Update ensemble prediction</span>
+</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>            <span class="n">h_pred</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>            <span class="n">f_pred</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="n">h_pred</span>
+</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>
+</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">trees</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>
+</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>        <span class="k">return</span> <span class="bp">self</span>
+</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a>
+</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>        <span class="n">y_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_pred</span><span class="p">)</span>
+</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>        <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trees</span><span class="p">:</span>
+</span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a>            <span class="n">y_hat</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="n">tree</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>        <span class="k">return</span> <span class="n">y_hat</span>
+</span></code></pre></div>
+<hr />
+<h2 id="8-implementation-2-framework-benchmarks-scikit-learn-xgboost-lightgbm">8. Implementation 2 — Framework Benchmarks (Scikit-Learn, XGBoost, LightGBM)<a class="headerlink" href="#8-implementation-2-framework-benchmarks-scikit-learn-xgboost-lightgbm" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_regression</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">GradientBoostingRegressor</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_squared_error</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Generate benchmark regression dataset</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_regression</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="mi">400</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">400</span><span class="p">:]</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="mi">400</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">400</span><span class="p">:]</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># 1. Scratch GBDT</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">scratch_gbdt</span> <span class="o">=</span> <span class="n">ScratchGBDTRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">scratch_gbdt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">scratch_mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">scratch_gbdt</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># 2. Scikit-Learn GradientBoostingRegressor</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="n">sk_gbdt</span> <span class="o">=</span> <span class="n">GradientBoostingRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="n">sk_gbdt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="n">sk_mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">sk_gbdt</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># 3. Scikit-Learn RandomForestRegressor (Bagging + Feature Subsampling)</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="s1">'sqrt'</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="n">rf_mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">rf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"=== MSE Performance Benchmarks ==="</span><span class="p">)</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Scratch GBDT (Stumps) MSE:    </span><span class="si">{</span><span class="n">scratch_mse</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Scikit-Learn GBDT (Stumps):   </span><span class="si">{</span><span class="n">sk_mse</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Random Forest (max_feat=sqrt): </span><span class="si">{</span><span class="n">rf_mse</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="9-common-errors-production-debugging">9. Common Errors &amp; Production Debugging<a class="headerlink" href="#9-common-errors-production-debugging" title="Permanent link">&para;</a></h2>
+<h3 id="91-overfitting-due-to-high-estimator-count-and-large-learning-rate">9.1 Overfitting Due to High Estimator Count and Large Learning Rate<a class="headerlink" href="#91-overfitting-due-to-high-estimator-count-and-large-learning-rate" title="Permanent link">&para;</a></h3>
+<p>In Random Forests, increasing <span class="arithmatex">\(B \to \infty\)</span> <strong>never causes overfitting</strong> (the variance formula <span class="arithmatex">\(\rho\sigma^2 + \frac{1-\rho}{B}\sigma^2\)</span> strictly decreases and plateaus).
+In Gradient Boosting, adding too many trees <span class="arithmatex">\(M\)</span> or setting learning rate <span class="arithmatex">\(\eta\)</span> too high <strong>guarantees severe overfitting</strong>, because each tree relentlessly chases microscopic residual noise from earlier trees.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># BROKEN: Fitting 2000 trees with large learning rate without early stopping</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradientBoostingClassifier</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">bad_model</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># PRODUCTION FIX: Pair high n_estimators with early stopping on validation split</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">HistGradientBoostingClassifier</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">good_model</span> <span class="o">=</span> <span class="n">HistGradientBoostingClassifier</span><span class="p">(</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validation_fraction</span><span class="o">=</span><span class="mf">0.15</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="92-gradienthessian-instability-with-extreme-imbalance">9.2 Gradient/Hessian Instability with Extreme Imbalance<a class="headerlink" href="#92-gradienthessian-instability-with-extreme-imbalance" title="Permanent link">&para;</a></h3>
+<p>In XGBoost/LightGBM binary classification with class imbalance (1 positive per 10,000 negatives), predicted probabilities for positive samples initially hover near zero (<span class="arithmatex">\(\hat{p} \approx 0.0001\)</span>).
+The second-order derivative <span class="arithmatex">\(h_i = \hat{p}_i(1 - \hat{p}_i) \approx 0.0001\)</span>.
+If <span class="arithmatex">\(H_j = \sum h_i\)</span> is tiny, optimal leaf weights <span class="arithmatex">\(w_j^* = -\frac{G_j}{H_j + \lambda}\)</span> can explode or divide near zero if <span class="arithmatex">\(\lambda = 0\)</span>.</p>
+<p><strong>Fix</strong>: Always retain positive <span class="arithmatex">\(L_2\)</span> regularization <span class="arithmatex">\(\lambda \ge 1.0\)</span> and tune <code>min_child_weight</code> (which enforces a minimum threshold on <span class="arithmatex">\(H_j = \sum h_i\)</span> before splitting).</p>
+<hr />
+<h2 id="10-staff-level-interview-questions-model-answers">10. Staff-Level Interview Questions &amp; Model Answers<a class="headerlink" href="#10-staff-level-interview-questions-model-answers" title="Permanent link">&para;</a></h2>
+<h3 id="q1-prove-the-variance-reduction-formula-for-bagging-textvarleftfrac1bsum_i1b-t_iright-rho-sigma2-frac1-rhobsigma2-why-is-feature-subsampling-essential">Q1: Prove the variance reduction formula for Bagging: <span class="arithmatex">\(\text{Var}\left(\frac{1}{B}\sum_{i=1}^B T_i\right) = \rho \sigma^2 + \frac{1-\rho}{B}\sigma^2\)</span>. Why is feature subsampling essential?<a class="headerlink" href="#q1-prove-the-variance-reduction-formula-for-bagging-textvarleftfrac1bsum_i1b-t_iright-rho-sigma2-frac1-rhobsigma2-why-is-feature-subsampling-essential" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Let <span class="arithmatex">\(T_1, \dots, T_B\)</span> be <span class="arithmatex">\(B\)</span> identically distributed (but correlated) random estimators with mean <span class="arithmatex">\(\mu\)</span>, variance <span class="arithmatex">\(\text{Var}(T_i) = \sigma^2\)</span>, and pairwise correlation <span class="arithmatex">\(\text{Corr}(T_i, T_j) = \rho\)</span> for <span class="arithmatex">\(i \ne j\)</span>.
+By definition of covariance, <span class="arithmatex">\(\text{Cov}(T_i, T_j) = \rho \sigma \sigma = \rho \sigma^2\)</span>.
+Expanding the variance of the sample average <span class="arithmatex">\(\bar{T} = \frac{1}{B}\sum_{i=1}^B T_i\)</span>:
+$<span class="arithmatex">\(\begin{aligned}
+\text{Var}(\bar{T}) &amp;= \text{Var}\left( \frac{1}{B} \sum_{i=1}^B T_i \right) = \frac{1}{B^2} \sum_{i=1}^B \sum_{j=1}^B \text{Cov}(T_i, T_j) \\
+&amp;= \frac{1}{B^2} \left[ \sum_{i=1}^B \text{Var}(T_i) + \sum_{i=1}^B \sum_{j \ne i}^B \text{Cov}(T_i, T_j) \right] \\
+&amp;= \frac{1}{B^2} \left[ B \sigma^2 + B(B - 1) \rho \sigma^2 \right] \\
+&amp;= \frac{\sigma^2}{B} + \frac{B - 1}{B} \rho \sigma^2 = \frac{\sigma^2}{B} + \left(1 - \frac{1}{B}\right) \rho \sigma^2 = \rho \sigma^2 + \frac{1 - \rho}{B} \sigma^2
+\end{aligned}\)</span>$
+<strong>Why Feature Subsampling is Essential:</strong>
+Notice that as <span class="arithmatex">\(B \to \infty\)</span>, the term <span class="arithmatex">\(\frac{1-\rho}{B}\sigma^2 \to 0\)</span>. The asymptotic variance of the ensemble is bounded below by <span class="arithmatex">\(\rho \sigma^2\)</span>.
+In standard Bagging with bootstrap sampling alone, all trees see the full feature set. If a strong predictor exists, every single tree splits on that feature at the root node. The tree topologies become highly similar, driving the pairwise correlation <span class="arithmatex">\(\rho\)</span> toward <span class="arithmatex">\(0.7 - 0.9\)</span>.
+Random Forests force each tree split to randomly sample <span class="arithmatex">\(m = \sqrt{p}\)</span> features. By blinding the split to the dominant feature, trees are forced to explore diverse sub-spaces, aggressively reducing <span class="arithmatex">\(\rho\)</span>. Even if individual tree variance <span class="arithmatex">\(\sigma^2\)</span> increases slightly, the massive reduction in <span class="arithmatex">\(\rho\)</span> drives down the overall ensemble variance floor <span class="arithmatex">\(\rho \sigma^2\)</span>.</p>
+<hr />
+<h3 id="q2-derive-the-optimal-leaf-weights-w_j-and-split-gain-formula-in-xgboost-using-the-second-order-taylor-expansion">Q2: Derive the optimal leaf weights <span class="arithmatex">\(w_j^*\)</span> and split gain formula in XGBoost using the second-order Taylor expansion.<a class="headerlink" href="#q2-derive-the-optimal-leaf-weights-w_j-and-split-gain-formula-in-xgboost-using-the-second-order-taylor-expansion" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+At boosting iteration <span class="arithmatex">\(t\)</span>, the objective function with <span class="arithmatex">\(L_2\)</span> leaf penalty and tree complexity is:
+$<span class="arithmatex">\(\mathcal{L}^{(t)} = \sum_{i=1}^n L(y_i, \hat{y}_i^{(t-1)} + f_t(\mathbf{x}_i)) + \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2\)</span>$
+Expanding <span class="arithmatex">\(L\)</span> to second order around <span class="arithmatex">\(\hat{y}_i^{(t-1)}\)</span>:
+$<span class="arithmatex">\(\mathcal{L}^{(t)} \approx \sum_{i=1}^n \left[ L(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(\mathbf{x}_i) + \frac{1}{2} h_i f_t^2(\mathbf{x}_i) \right] + \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2\)</span>$
+where <span class="arithmatex">\(g_i = \partial_{\hat{y}^{(t-1)}} L\)</span> and <span class="arithmatex">\(h_i = \partial^2_{\hat{y}^{(t-1)}} L\)</span>. Dropping constant <span class="arithmatex">\(L(y_i, \hat{y}_i^{(t-1)})\)</span> and grouping instances by leaf <span class="arithmatex">\(I_j = \{i \mid q(\mathbf{x}_i) = j\}\)</span> where <span class="arithmatex">\(f_t(\mathbf{x}_i) = w_j\)</span>:
+$<span class="arithmatex">\(\tilde{\mathcal{L}}^{(t)} = \sum_{j=1}^T \left[ \left(\sum_{i \in I_j} g_i\right) w_j + \frac{1}{2} \left(\sum_{i \in I_j} h_i + \lambda\right) w_j^2 \right] + \gamma T\)</span>$
+Let <span class="arithmatex">\(G_j = \sum_{i \in I_j} g_i\)</span> and <span class="arithmatex">\(H_j = \sum_{i \in I_j} h_i\)</span>. Setting the partial derivative with respect to <span class="arithmatex">\(w_j\)</span> to zero:
+$<span class="arithmatex">\(\frac{\partial \tilde{\mathcal{L}}^{(t)}}{\partial w_j} = G_j + (H_j + \lambda) w_j = 0 \implies w_j^* = -\frac{G_j}{H_j + \lambda} = -\frac{\sum_{i \in I_j} g_i}{\sum_{i \in I_j} h_i + \lambda}\)</span>$
+Substituting <span class="arithmatex">\(w_j^*\)</span> back into <span class="arithmatex">\(\tilde{\mathcal{L}}^{(t)}\)</span>:
+$<span class="arithmatex">\(\tilde{\mathcal{L}}^{(t)} = \sum_{j=1}^T \left[ G_j \left(-\frac{G_j}{H_j + \lambda}\right) + \frac{1}{2}(H_j + \lambda)\left(\frac{G_j^2}{(H_j + \lambda)^2}\right) \right] + \gamma T = -\frac{1}{2}\sum_{j=1}^T \frac{G_j^2}{H_j + \lambda} + \gamma T\)</span>$
+When considering splitting an existing leaf <span class="arithmatex">\(I\)</span> into <span class="arithmatex">\(I_L\)</span> and <span class="arithmatex">\(I_R\)</span>, the loss before split is <span class="arithmatex">\(-\frac{1}{2}\frac{(G_L + G_R)^2}{H_L + H_R + \lambda} + \gamma\)</span>. The loss after split is <span class="arithmatex">\(-\frac{1}{2}\left[\frac{G_L^2}{H_L + \lambda} + \frac{G_R^2}{H_R + \lambda}\right] + 2\gamma\)</span>.
+The <strong>Split Gain</strong> is the reduction in loss:
+$<span class="arithmatex">\(\text{Gain} = \mathcal{L}_{\text{before}} - \mathcal{L}_{\text{after}} = \frac{1}{2} \left[ \frac{G_L^2}{H_L + \lambda} + \frac{G_R^2}{H_R + \lambda} - \frac{(G_L + G_R)^2}{H_L + H_R + \lambda} \right] - \gamma\)</span>$</p>
+<hr />
+<h3 id="q3-compare-the-core-algorithmic-innovations-of-xgboost-lightgbm-and-catboost">Q3: Compare the core algorithmic innovations of XGBoost, LightGBM, and CatBoost.<a class="headerlink" href="#q3-compare-the-core-algorithmic-innovations-of-xgboost-lightgbm-and-catboost" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+| Dimension | XGBoost | LightGBM | CatBoost |
+|---|---|---|---|
+| <strong>Tree Growth Policy</strong> | Level-wise (depth-first) | Leaf-wise (best-first) | Symmetric Oblivious Trees |
+| <strong>Optimization</strong> | Second-order Taylor (<span class="arithmatex">\(g_i, h_i\)</span>) | Second-order Taylor (<span class="arithmatex">\(g_i, h_i\)</span>) | Second-order + Ordered Boosting |
+| <strong>Split Finding</strong> | Exact greedy or Weighted Quantile Sketch | Histogram-based Binning | Quantized numerical features |
+| <strong>Sample Subsampling</strong> | Uniform row subsampling | GOSS (Gradient-based One-Side Sampling) | Minimal variance sampling / Bernoulli |
+| <strong>Sparse Features</strong> | Sparsity-aware default routing | EFB (Exclusive Feature Bundling) | Native one-hot / combinations |
+| <strong>Categorical Data</strong> | Requires pre-encoding (one-hot / target) | Optimal subset bin sorting (<span class="arithmatex">\(2^k\)</span>) | Ordered Target Encoding (no leakage) |
+| <strong>Inference Engine</strong> | Pointer chasing across asymmetric nodes | Pointer chasing across asymmetric nodes | Bitwise boolean evaluation + lookup table |</p>
+<hr />
+<h3 id="q4-explain-goss-gradient-based-one-side-sampling-in-lightgbm-and-how-it-preserves-gradient-variance">Q4: Explain GOSS (Gradient-based One-Side Sampling) in LightGBM and how it preserves gradient variance.<a class="headerlink" href="#q4-explain-goss-gradient-based-one-side-sampling-in-lightgbm-and-how-it-preserves-gradient-variance" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+In GBDT, sample <span class="arithmatex">\(i\)</span> with a small gradient has already been well-fitted (low residual error), contributing minimal gain to split criteria.
+However, simply discarding all small-gradient samples skews the underlying data distribution, inducing severe bias.
+<strong>GOSS Algorithm:</strong>
+1. Sort all training samples by absolute gradient <span class="arithmatex">\(|g_i|\)</span>.
+2. Retain the top <span class="arithmatex">\(a \times 100\%\)</span> instances with the largest gradients: subset <span class="arithmatex">\(A\)</span>.
+3. Draw a random subsample of size <span class="arithmatex">\(b \times 100\%\)</span> from the remaining small-gradient pool <span class="arithmatex">\(A^c\)</span>: subset <span class="arithmatex">\(B\)</span>.
+4. When calculating split gain, calculate the gradient sum over <span class="arithmatex">\(A \cup B\)</span> by weighting samples in <span class="arithmatex">\(B\)</span> by factor <span class="arithmatex">\(\frac{1 - a}{b}\)</span>:
+   $<span class="arithmatex">\(\tilde{G}_j = \sum_{i \in A \cap I_j} g_i + \frac{1 - a}{b} \sum_{i \in B \cap I_j} g_i\)</span>$
+Ke et al. proved that <span class="arithmatex">\(\mathbb{E}[\tilde{G}_j] = G_j\)</span>, meaning the estimated gradient is strictly unbiased. The variance increase introduced by subsampling is bounded by <span class="arithmatex">\(\mathcal{O}\left(\frac{1 - a}{\sqrt{b \cdot n}}\right)\)</span>, which is negligible compared to the 80% reduction in training computation.</p>
+<hr />
+<h3 id="q5-what-is-target-leakage-in-naive-target-encoding-and-how-does-catboosts-ordered-target-encoding-mathematically-eliminate-it">Q5: What is target leakage in naive target encoding, and how does CatBoost's Ordered Target Encoding mathematically eliminate it?<a class="headerlink" href="#q5-what-is-target-leakage-in-naive-target-encoding-and-how-does-catboosts-ordered-target-encoding-mathematically-eliminate-it" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+<strong>Naive Target Encoding &amp; Leakage:</strong>
+For a categorical feature <span class="arithmatex">\(x_i \in \text{Category } c\)</span>, naive target encoding replaces the category with the empirical conditional mean:
+$<span class="arithmatex">\(\hat{x}_i = \frac{\sum_{k=1}^n \mathbb{I}(x_k = c) y_k}{N_c}\)</span>$
+Notice that <span class="arithmatex">\(y_i\)</span> is included directly in the numerator!
+If a rare category appears only twice with targets <span class="arithmatex">\(y_1 = 1, y_2 = 1\)</span>, then <span class="arithmatex">\(\hat{x}_1 = 1.0\)</span>. The tree creates a split <span class="arithmatex">\(\hat{x}_i &gt; 0.9\)</span>, achieving a perfect training split. At test time, an unseen sample with that category receives an encoding that does not correlate with its true label. This is <strong>target leakage</strong> (or target shift).</p>
+<p><strong>CatBoost Ordered Target Encoding Solution:</strong>
+CatBoost enforces a strict causal ordering to simulate historical online inference:
+1. Generate an online random permutation <span class="arithmatex">\(\boldsymbol{\sigma} = (\sigma_1, \dots, \sigma_n)\)</span> of the training dataset.
+2. For any sample <span class="arithmatex">\(\sigma_k\)</span>, the encoding is computed <strong>strictly using samples that precede it in the permutation</strong>:
+   $<span class="arithmatex">\(\hat{x}_{\sigma_k} = \frac{\sum_{j=1}^{k-1} \mathbb{I}(x_{\sigma_j} = x_{\sigma_k}) y_{\sigma_j} + a \cdot P}{\sum_{j=1}^{k-1} \mathbb{I}(x_{\sigma_j} = x_{\sigma_k}) + a}\)</span>$
+   where <span class="arithmatex">\(P = \frac{1}{n}\sum_{i=1}^n y_i\)</span> is the global prior and <span class="arithmatex">\(a\)</span> is a prior weight.
+Because sample <span class="arithmatex">\(\sigma_k\)</span>'s own label <span class="arithmatex">\(y_{\sigma_k}\)</span> is strictly excluded from the calculation, the conditional expectation <span class="arithmatex">\(\mathbb{E}[\hat{x}_{\sigma_k} | y_{\sigma_k}]\)</span> is independent of <span class="arithmatex">\(y_{\sigma_k}\)</span>. Target leakage is completely eliminated. Multiple permutations are averaged across trees to stabilize variance.</p>
+<hr />
+<h3 id="q6-why-do-oblivious-symmetric-trees-in-catboost-execute-orders-of-magnitude-faster-at-inference-time-than-standard-asymmetric-cart-trees">Q6: Why do oblivious (symmetric) trees in CatBoost execute orders of magnitude faster at inference time than standard asymmetric CART trees?<a class="headerlink" href="#q6-why-do-oblivious-symmetric-trees-in-catboost-execute-orders-of-magnitude-faster-at-inference-time-than-standard-asymmetric-cart-trees" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+In standard asymmetric CART/XGBoost trees:
+- Evaluating an input <span class="arithmatex">\(\mathbf{x}\)</span> requires traversing a branching graph of pointer-linked nodes.
+- At each node, the CPU fetches the node struct, evaluates a conditional branch (<code>if x[feat] &lt;= thr goto left else goto right</code>), incurring frequent <strong>CPU branch mispredictions</strong> and non-contiguous memory pointer dereferences.</p>
+<p>In CatBoost Oblivious Trees:
+- At depth <span class="arithmatex">\(d\)</span>, all nodes across that entire horizontal level share the <strong>identical feature and threshold</strong> <span class="arithmatex">\((j_d, \theta_d)\)</span>.
+- For a tree of depth <span class="arithmatex">\(D\)</span> (typically <span class="arithmatex">\(D = 6\)</span>), we evaluate <span class="arithmatex">\(D\)</span> binary boolean comparisons independently:
+  $<span class="arithmatex">\(b_0 = \mathbb{I}(x_{j_0} &gt; \theta_0), \quad b_1 = \mathbb{I}(x_{j_1} &gt; \theta_1), \quad \dots, \quad b_{D-1} = \mathbb{I}(x_{j_{D-1}} &gt; \theta_{D-1})\)</span>$
+- The leaf index is computed via a single bitwise shift-or expression:
+  $<span class="arithmatex">\(\text{Leaf Index} = \sum_{k=0}^{D-1} b_k \cdot 2^k = b_0 \,|\, (b_1 \ll 1) \,|\, (b_2 \ll 2) \,|\, \dots \,|\, (b_{D-1} \ll (D - 1))\)</span>$
+- The prediction is fetched directly from a flat array: <code>values[Leaf Index]</code>.
+This is completely <strong>branchless</strong>, vectorizes seamlessly via CPU SIMD (AVX2/AVX-512) instructions, and fits entirely inside the L1 CPU instruction cache.</p>
+<hr />
+<h2 id="11-mastery-ladder">11. Mastery Ladder<a class="headerlink" href="#11-mastery-ladder" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] <strong>L1:</strong> You can state the difference between Bagging (variance reduction) and Boosting (bias &amp; variance reduction).</li>
+<li>[ ] <strong>L2:</strong> You can write the Bagging variance formula <span class="arithmatex">\(\rho\sigma^2 + \frac{1-\rho}{B}\sigma^2\)</span> and explain the correlation floor.</li>
+<li>[ ] <strong>L3:</strong> You can prove why Out-of-Bag (OOB) error leaves approximately <span class="arithmatex">\(36.8\%\)</span> of samples unsampled via <span class="arithmatex">\((1 - 1/n)^n \to e^{-1}\)</span>.</li>
+<li>[ ] <strong>L4:</strong> You can formulate GBDT as functional gradient descent on pseudo-residuals <span class="arithmatex">\(-g_i\)</span>.</li>
+<li>[ ] <strong>L5:</strong> You can derive XGBoost optimal leaf weights <span class="arithmatex">\(w_j^* = -\frac{\sum g_i}{\sum h_i + \lambda}\)</span> via second-order Taylor expansion.</li>
+<li>[ ] <strong>L6:</strong> You can write the XGBoost split gain formula and explain how <span class="arithmatex">\(\gamma\)</span> acts as built-in pruning.</li>
+<li>[ ] <strong>L7:</strong> You can explain GOSS and EFB in LightGBM and contrast level-wise vs. leaf-wise tree growth.</li>
+<li>[ ] <strong>L8:</strong> You can explain target leakage in categorical target encoding and how CatBoost Ordered Target Encoding prevents it.</li>
+<li>[ ] <strong>L9:</strong> You can explain why symmetric oblivious trees enable branchless SIMD evaluation at inference time.</li>
+<li>[ ] <strong>L10:</strong> You can implement a functional GBDT regressor from scratch in NumPy and benchmark against scikit-learn.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../decision-trees-deep-dive/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deep-dive: Decision Trees">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Decision Trees
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../svm-deep-dive/" class="md-footer__link md-footer__link--next" aria-label="Next: Deep-dive: Support Vector Machines">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Support Vector Machines
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

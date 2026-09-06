@@ -1,0 +1,5116 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A complete, deep-dive AI/ML curriculum — from Python internals to production AI systems.">
+      
+      
+        <meta name="author" content="Sameer Karur">
+      
+      
+      
+        <link rel="prev" href="../foundations-math-deep-dive/">
+      
+      
+        <link rel="next" href="../calculus-optimization-deep-dive/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Deep-dive: Linear Algebra - AI/ML Mastery Program</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#linear-algebra-for-machine-learning-vector-spaces-decompositions-svd" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI/ML Mastery Program" class="md-header__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI/ML Mastery Program
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Deep-dive: Linear Algebra
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../00-computer-science/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 0 – CS Foundations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-python/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 1 – Python
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 2 – Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../03-data-engineering/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 3 – Data Engineering
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../04-classical-ml/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 4 – Classical ML
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../05-ml-theory/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 5 – ML Theory & Evaluation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../06-deep-learning/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 6 – Deep Learning
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../07-computer-vision/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 7 – Computer Vision
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../08-nlp/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 8 – NLP
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../09-transformers-llms/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 9 – Transformers & LLMs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../10-generative-ai/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 10 – Generative AI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../11-ai-agents/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 11 – AI Agents
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../12-mlops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 12 – MLOps
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../13-ai-system-design/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 13 – AI System Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../14-projects/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Book 14 – Projects & Interview
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI/ML Mastery Program" class="md-nav__button md-logo" aria-label="AI/ML Mastery Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI/ML Mastery Program
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sameerkarur/Data_science" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sameerkarur/Data_science
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../00-computer-science/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 0 – CS Foundations
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 0 – CS Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/how-computers-execute-programs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: How Computers Execute Programs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/arrays-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Arrays
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/linked-lists-stacks-queues-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linked Lists, Stacks & Queues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/hash-tables-sets-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hash Tables & Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Trees (Binary, BST, Heaps)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/graphs-tries-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Graphs & Tries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-computer-science/algorithms-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Algorithms (Big-O, Searching, Sorting, Recursion, Greedy, DP, Graphs)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../01-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 1 – Python
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 1 – Python
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/fundamentals-control-flow-collections-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Fundamentals, Control Flow & Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/functions-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/oop-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: OOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/advanced-python-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced Python (Iterators, Generators, Async, Concurrency)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-python/internals-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Internals (CPython, Bytecode, GC, GIL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 2 – Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 2 – Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundations-math-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundations of Mathematics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Algebra
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-intuition-real-world-framing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Intuition &amp; Real-World Framing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Intuition &amp; Real-World Framing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#matrix-multiplication-as-dynamic-coordinate-warping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matrix Multiplication as Dynamic Coordinate Warping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-vectors-spaces-and-fundamental-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Vectors, Spaces, and Fundamental Properties
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Vectors, Spaces, and Fundamental Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-scalars-vectors-matrices-and-tensors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Scalars, Vectors, Matrices, and Tensors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-dot-product-cosine-similarity-and-orthogonality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Dot Product, Cosine Similarity, and Orthogonality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-linear-independence-span-basis-and-rank" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Linear Independence, Span, Basis, and Rank
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-vector-and-matrix-norms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Vector and Matrix Norms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Vector and Matrix Norms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-vector-l_p-norms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Vector \(L_p\) Norms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-matrix-norms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Matrix Norms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-orthogonality-projections-and-the-normal-equations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Orthogonality, Projections, and the Normal Equations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Orthogonality, Projections, and the Normal Equations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-orthogonal-projection-onto-a-subspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Orthogonal Projection onto a Subspace
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-spectral-theory-eigenvalues-eigenvectors-and-eigendecomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Spectral Theory: Eigenvalues, Eigenvectors, and Eigendecomposition
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Spectral Theory: Eigenvalues, Eigenvectors, and Eigendecomposition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-formal-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Formal Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-spectral-theorem-for-real-symmetric-matrices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Spectral Theorem for Real Symmetric Matrices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-positive-semi-definite-psd-matrices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Positive Semi-Definite (PSD) Matrices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-singular-value-decomposition-svd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Singular Value Decomposition (SVD)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Singular Value Decomposition (SVD)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-the-fundamental-svd-theorem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 The Fundamental SVD Theorem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-outer-product-expansion-and-truncated-svd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Outer Product Expansion and Truncated SVD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-the-eckart-young-mirsky-theorem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 The Eckart-Young-Mirsky Theorem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-principal-component-analysis-pca-full-mathematical-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Principal Component Analysis (PCA): Full Mathematical Derivation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Principal Component Analysis (PCA): Full Mathematical Derivation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-problem-formulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Problem Formulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-derivation-via-lagrange-multipliers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Derivation via Lagrange Multipliers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-connection-pca-via-svd-vs-covariance-eigendecomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Connection: PCA via SVD vs. Covariance Eigendecomposition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-python-implementation-from-scratch-numerical-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Python Implementation: From Scratch &amp; Numerical Algorithms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-common-errors-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Common Errors &amp; Debugging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-staff-level-technical-interview-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Staff-Level Technical Interview Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Staff-Level Technical Interview Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-prove-that-the-eigenvalues-of-a-real-symmetric-matrix-are-strictly-real-and-eigenvectors-corresponding-to-distinct-eigenvalues-are-mutually-orthogonal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Prove that the eigenvalues of a real symmetric matrix are strictly real, and eigenvectors corresponding to distinct eigenvalues are mutually orthogonal.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-derive-the-closed-form-orthogonal-projection-matrix-p-aat-a-1-at-onto-the-column-space-of-a-prove-it-is-idempotent-and-symmetric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Derive the closed-form orthogonal projection matrix \(P = A(A^T A)^{-1} A^T\) onto the column space of \(A\). Prove it is idempotent and symmetric.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-state-the-eckart-young-mirsky-theorem-why-does-truncated-svd-provide-the-optimal-low-rank-matrix-approximation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: State the Eckart-Young-Mirsky Theorem. Why does truncated SVD provide the optimal low-rank matrix approximation?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-why-do-production-implementations-of-pca-eg-scikit-learn-compute-the-svd-of-the-centered-data-matrix-rather-than-the-eigendecomposition-of-xt-x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Why do production implementations of PCA (e.g., scikit-learn) compute the SVD of the centered data matrix rather than the eigendecomposition of \(X^T X\)?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-explain-the-condition-number-kappaa-sigma_max-sigma_min-how-does-an-ill-conditioned-design-matrix-affect-parameter-estimation-in-linear-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: Explain the condition number \(\kappa(A) = \sigma_{\max} / \sigma_{\min}\). How does an ill-conditioned design matrix affect parameter estimation in linear regression?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q6-compare-vector-norms-l_1-l_2-l_infty-and-matrix-norms-frobenius-spectral-nuclear-explain-geometrically-why-l_1-induces-sparsity-in-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q6: Compare vector norms (\(L_1, L_2, L_\infty\)) and matrix norms (Frobenius, Spectral, Nuclear). Explain geometrically why \(L_1\) induces sparsity in optimization.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../calculus-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Calculus & Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../probability-statistics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Probability & Statistics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../03-data-engineering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 3 – Data Engineering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 3 – Data Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-ecosystem-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Python Data Ecosystem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-formats-storage-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Formats & Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/data-cleaning-preprocessing-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Data Cleaning & Preprocessing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-data-engineering/feature-engineering-selection-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Feature Engineering & Selection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../04-classical-ml/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 4 – Classical ML
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 4 – Classical ML
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/linear-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Linear Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/regularized-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Regularized & Polynomial Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/logistic-regression-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Logistic Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/knn-naive-bayes-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: KNN & Naive Bayes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/decision-trees-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/ensemble-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Ensemble Learning (Random Forests & GBDT)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-classical-ml/svm-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Support Vector Machines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../05-ml-theory/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 5 – ML Theory & Evaluation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/model-validation-generalization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Validation & Generalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/evaluation-metrics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Evaluation Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-ml-theory/hyperparameter-optimization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Hyperparameter Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../06-deep-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 6 – Deep Learning
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 6 – Deep Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/neural-network-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Neural Network Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/architecture-components-regularization-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Architecture Components & Regularization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-deep-learning/deep-learning-optimizers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Deep Learning Optimizers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../07-computer-vision/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 7 – Computer Vision
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 7 – Computer Vision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/convolutional-foundations-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Convolutional Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/modern-cnn-architectures-transfer-learning-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Modern CNN Architectures & Transfer Learning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-computer-vision/vision-tasks-transformers-multimodal-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Vision Tasks, ViT & Multimodal Vision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../08-nlp/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 8 – NLP
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 8 – NLP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/text-representation-word-embeddings-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Text Representation & Word Embeddings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-nlp/sequence-models-attention-transformers-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Sequence Models, Attention & Transformers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../09-transformers-llms/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 9 – Transformers & LLMs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 9 – Transformers & LLMs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/transformer-architecture-mechanics-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Transformer Architecture & Mechanics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/foundation-model-families-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundation Model Families
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-transformers-llms/llm-training-alignment-peft-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Training, Alignment & PEFT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../10-generative-ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 10 – Generative AI
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 10 – Generative AI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/llm-application-engineering-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: LLM Application Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/enterprise-rag-systems-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Enterprise RAG Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-generative-ai/diffusion-models-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../11-ai-agents/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 11 – AI Agents
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 11 – AI Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/agent-architectures-patterns-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Agent Architectures & Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-ai-agents/multi-agent-systems-security-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Multi-Agent Systems & Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../12-mlops/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 12 – MLOps
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 12 – MLOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/production-tooling-containerization-cicd-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production Tooling, Containerization & CI/CD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/serving-pipelines-orchestration-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Serving, Pipelines & Distributed Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-mlops/model-monitoring-observability-retraining-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Model Monitoring, Observability & Automated Retraining
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../13-ai-system-design/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 13 – AI System Design
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_15" id="__nav_15_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 13 – AI System Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/ai-system-design-methodology-framework-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: AI System Design Methodology & Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../13-ai-system-design/production-case-studies-system-design-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Production AI System Design Case Studies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../14-projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book 14 – Projects & Interview
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_16" id="__nav_16_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book 14 – Projects & Interview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/foundational-applied-projects-tier-1-to-4-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Foundational Applied Projects (Tiers 1–4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/advanced-frontier-projects-tier-5-to-8-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Advanced & Frontier Applied Projects (Tiers 5–8)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../14-projects/staff-level-interview-question-banks-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deep-dive: Staff-Level Technical Interview Question Banks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-intuition-real-world-framing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Intuition &amp; Real-World Framing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Intuition &amp; Real-World Framing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#matrix-multiplication-as-dynamic-coordinate-warping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matrix Multiplication as Dynamic Coordinate Warping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-vectors-spaces-and-fundamental-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Vectors, Spaces, and Fundamental Properties
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Vectors, Spaces, and Fundamental Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-scalars-vectors-matrices-and-tensors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Scalars, Vectors, Matrices, and Tensors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-dot-product-cosine-similarity-and-orthogonality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Dot Product, Cosine Similarity, and Orthogonality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-linear-independence-span-basis-and-rank" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Linear Independence, Span, Basis, and Rank
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-vector-and-matrix-norms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Vector and Matrix Norms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Vector and Matrix Norms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-vector-l_p-norms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Vector \(L_p\) Norms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-matrix-norms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Matrix Norms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-orthogonality-projections-and-the-normal-equations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Orthogonality, Projections, and the Normal Equations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Orthogonality, Projections, and the Normal Equations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-orthogonal-projection-onto-a-subspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Orthogonal Projection onto a Subspace
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-spectral-theory-eigenvalues-eigenvectors-and-eigendecomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Spectral Theory: Eigenvalues, Eigenvectors, and Eigendecomposition
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Spectral Theory: Eigenvalues, Eigenvectors, and Eigendecomposition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-formal-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Formal Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-spectral-theorem-for-real-symmetric-matrices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Spectral Theorem for Real Symmetric Matrices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-positive-semi-definite-psd-matrices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Positive Semi-Definite (PSD) Matrices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-singular-value-decomposition-svd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Singular Value Decomposition (SVD)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Singular Value Decomposition (SVD)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-the-fundamental-svd-theorem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 The Fundamental SVD Theorem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-outer-product-expansion-and-truncated-svd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Outer Product Expansion and Truncated SVD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-the-eckart-young-mirsky-theorem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 The Eckart-Young-Mirsky Theorem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-principal-component-analysis-pca-full-mathematical-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Principal Component Analysis (PCA): Full Mathematical Derivation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Principal Component Analysis (PCA): Full Mathematical Derivation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-problem-formulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Problem Formulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-derivation-via-lagrange-multipliers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Derivation via Lagrange Multipliers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-connection-pca-via-svd-vs-covariance-eigendecomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Connection: PCA via SVD vs. Covariance Eigendecomposition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-python-implementation-from-scratch-numerical-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Python Implementation: From Scratch &amp; Numerical Algorithms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-common-errors-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Common Errors &amp; Debugging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-staff-level-technical-interview-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Staff-Level Technical Interview Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Staff-Level Technical Interview Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-prove-that-the-eigenvalues-of-a-real-symmetric-matrix-are-strictly-real-and-eigenvectors-corresponding-to-distinct-eigenvalues-are-mutually-orthogonal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Prove that the eigenvalues of a real symmetric matrix are strictly real, and eigenvectors corresponding to distinct eigenvalues are mutually orthogonal.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-derive-the-closed-form-orthogonal-projection-matrix-p-aat-a-1-at-onto-the-column-space-of-a-prove-it-is-idempotent-and-symmetric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: Derive the closed-form orthogonal projection matrix \(P = A(A^T A)^{-1} A^T\) onto the column space of \(A\). Prove it is idempotent and symmetric.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-state-the-eckart-young-mirsky-theorem-why-does-truncated-svd-provide-the-optimal-low-rank-matrix-approximation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: State the Eckart-Young-Mirsky Theorem. Why does truncated SVD provide the optimal low-rank matrix approximation?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q4-why-do-production-implementations-of-pca-eg-scikit-learn-compute-the-svd-of-the-centered-data-matrix-rather-than-the-eigendecomposition-of-xt-x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4: Why do production implementations of PCA (e.g., scikit-learn) compute the SVD of the centered data matrix rather than the eigendecomposition of \(X^T X\)?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q5-explain-the-condition-number-kappaa-sigma_max-sigma_min-how-does-an-ill-conditioned-design-matrix-affect-parameter-estimation-in-linear-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5: Explain the condition number \(\kappa(A) = \sigma_{\max} / \sigma_{\min}\). How does an ill-conditioned design matrix affect parameter estimation in linear regression?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q6-compare-vector-norms-l_1-l_2-l_infty-and-matrix-norms-frobenius-spectral-nuclear-explain-geometrically-why-l_1-induces-sparsity-in-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q6: Compare vector norms (\(L_1, L_2, L_\infty\)) and matrix norms (Frobenius, Spectral, Nuclear). Explain geometrically why \(L_1\) induces sparsity in optimization.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-mastery-ladder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Mastery Ladder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="linear-algebra-for-machine-learning-vector-spaces-decompositions-svd">Linear Algebra for Machine Learning — Vector Spaces, Decompositions &amp; SVD<a class="headerlink" href="#linear-algebra-for-machine-learning-vector-spaces-decompositions-svd" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>Basic algebra, functions, and arrays. See <a href="../foundations-math-deep-dive/">Mathematical Foundations</a> and <a href="../../00-computer-science/arrays-deep-dive/">Arrays &amp; Memory</a>.</p>
+</div>
+<hr />
+<h2 id="1-the-big-picture">1. The Big Picture<a class="headerlink" href="#1-the-big-picture" title="Permanent link">&para;</a></h2>
+<p>Linear algebra is the native language of machine learning. Almost every dataset, neural network parameter, attention mechanism, and loss calculation is expressed as operations on vectors, matrices, and multi-dimensional tensors.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Data Representations
+        T["Tensors (Rank-0 Scalars, Rank-1 Vectors, Rank-2 Matrices, Rank-N Tensors)"]
+    end
+    subgraph Geometric Operations
+        T --&gt; DP["Dot Product: Angle, Similarity &amp; Projections"]
+        T --&gt; MM["Matrix Multiplication: Linear Coordinate Transformations"]
+    end
+    subgraph Fundamental Subspaces
+        MM --&gt; SP["Column Space, Null Space, Rank &amp; Linear Independence"]
+        SP --&gt; PR["Orthogonal Projections &amp; Least Squares (OLS)"]
+    end
+    subgraph Spectral Decompositions
+        MM --&gt; ED["Eigendecomposition: A = Q Λ Q^T (Symmetric Real Matrices)"]
+        MM --&gt; SVD["Singular Value Decomposition: A = U Σ V^T (Any Rectangular Matrix)"]
+    end
+    subgraph Machine Learning Applications
+        PR --&gt; LR["Linear Regression (Normal Equations)"]
+        ED --&gt; PCA1["Principal Component Analysis (Covariance Eigendecomposition)"]
+        SVD --&gt; PCA2["Stable Truncated SVD, Matrix Factorization, Latent Semantics"]
+    end</code></pre>
+<p>Mastering linear algebra in machine learning is not merely about executing row reductions by hand; it is about developing <strong>geometric intuition</strong> for transformations:
+- How does a linear operator rotate, stretch, or collapse geometric space?
+- Which directions preserve the maximum variance of high-dimensional data?
+- How do we project high-dimensional signals onto lower-dimensional subspaces while minimizing reconstruction error?</p>
+<hr />
+<h2 id="2-intuition-real-world-framing">2. Intuition &amp; Real-World Framing<a class="headerlink" href="#2-intuition-real-world-framing" title="Permanent link">&para;</a></h2>
+<h3 id="matrix-multiplication-as-dynamic-coordinate-warping">Matrix Multiplication as Dynamic Coordinate Warping<a class="headerlink" href="#matrix-multiplication-as-dynamic-coordinate-warping" title="Permanent link">&para;</a></h3>
+<p>Rather than viewing matrix multiplication <span class="arithmatex">\(A\mathbf{x}\)</span> as a tedious mechanical sequence of dot products, view the columns of <span class="arithmatex">\(A\)</span> as <strong>the new coordinate axes of the transformed space</strong>.</p>
+<p>Suppose the original 2D space has standard basis vectors <span class="arithmatex">\(\mathbf{e}_1 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}\)</span> and <span class="arithmatex">\(\mathbf{e}_2 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}\)</span>. If we apply a matrix:</p>
+<div class="arithmatex">\[
+A = \begin{bmatrix} 2 &amp; 1 \\ 0 &amp; 3 \end{bmatrix}
+\]</div>
+<p>The first column <span class="arithmatex">\(\begin{bmatrix} 2 \\ 0 \end{bmatrix}\)</span> is where <span class="arithmatex">\(\mathbf{e}_1\)</span> lands. The second column <span class="arithmatex">\(\begin{bmatrix} 1 \\ 3 \end{bmatrix}\)</span> is where <span class="arithmatex">\(\mathbf{e}_2\)</span> lands. Any arbitrary input vector <span class="arithmatex">\(\mathbf{x} = \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = x_1 \mathbf{e}_1 + x_2 \mathbf{e}_2\)</span> is linearly mapped to:</p>
+<div class="arithmatex">\[
+A\mathbf{x} = x_1 \begin{bmatrix} 2 \\ 0 \end{bmatrix} + x_2 \begin{bmatrix} 1 \\ 3 \end{bmatrix}
+\]</div>
+<pre class="mermaid"><code>flowchart LR
+    subgraph Standard Input Space
+        I1["Basis e1 = [1, 0]^T"]
+        I2["Basis e2 = [0, 1]^T"]
+        X["Vector x = x1*e1 + x2*e2"]
+    end
+    subgraph Linear Operator A
+        OP["Transform: A = [col1, col2]"]
+    end
+    subgraph Warped Output Space
+        O1["Transformed Basis col1 = [2, 0]^T"]
+        O2["Transformed Basis col2 = [1, 3]^T"]
+        Y["Output Ax = x1*col1 + x2*col2"]
+    end
+    I1 --&gt; OP --&gt; O1
+    I2 --&gt; OP --&gt; O2
+    X --&gt; OP --&gt; Y</code></pre>
+<p>If the columns of <span class="arithmatex">\(A\)</span> collapse onto a single line, <span class="arithmatex">\(A\)</span> flattens 2D space into 1D (rank deficiency). Information is destroyed, the transformation cannot be inverted, and the determinant is zero.</p>
+<hr />
+<h2 id="3-vectors-spaces-and-fundamental-properties">3. Vectors, Spaces, and Fundamental Properties<a class="headerlink" href="#3-vectors-spaces-and-fundamental-properties" title="Permanent link">&para;</a></h2>
+<h3 id="31-scalars-vectors-matrices-and-tensors">3.1 Scalars, Vectors, Matrices, and Tensors<a class="headerlink" href="#31-scalars-vectors-matrices-and-tensors" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tensor Order / Rank</th>
+<th>Mathematical Object</th>
+<th>Notation</th>
+<th>NumPy Shape</th>
+<th>Example in ML</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Scalar</td>
+<td><span class="arithmatex">\(s \in \mathbb{R}\)</span></td>
+<td><code>()</code></td>
+<td>Learning rate <span class="arithmatex">\(\eta\)</span>, scalar loss <span class="arithmatex">\(L\)</span></td>
+</tr>
+<tr>
+<td>1</td>
+<td>Vector</td>
+<td><span class="arithmatex">\(\mathbf{x} \in \mathbb{R}^d\)</span></td>
+<td><code>(d,)</code></td>
+<td>Feature vector of a single sample, bias <span class="arithmatex">\(\mathbf{b}\)</span></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Matrix</td>
+<td><span class="arithmatex">\(A \in \mathbb{R}^{m \times n}\)</span></td>
+<td><code>(m, n)</code></td>
+<td>Weight matrix <span class="arithmatex">\(\mathbf{W}\)</span>, dataset design matrix <span class="arithmatex">\(\mathbf{X}\)</span></td>
+</tr>
+<tr>
+<td>3</td>
+<td>3-Tensor</td>
+<td><span class="arithmatex">\(\mathcal{T} \in \mathbb{R}^{B \times T \times D}\)</span></td>
+<td><code>(B, T, D)</code></td>
+<td>Transformer sequence batch (Batch, Sequence Length, Embedding Dim)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4-Tensor</td>
+<td><span class="arithmatex">\(\mathcal{T} \in \mathbb{R}^{B \times C \times H \times W}\)</span></td>
+<td><code>(B, C, H, W)</code></td>
+<td>Computer vision batch (Batch, Channels, Height, Width)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-dot-product-cosine-similarity-and-orthogonality">3.2 Dot Product, Cosine Similarity, and Orthogonality<a class="headerlink" href="#32-dot-product-cosine-similarity-and-orthogonality" title="Permanent link">&para;</a></h3>
+<p>For vectors <span class="arithmatex">\(\mathbf{u}, \mathbf{v} \in \mathbb{R}^d\)</span>:</p>
+<div class="arithmatex">\[
+\mathbf{u} \cdot \mathbf{v} = \mathbf{u}^T \mathbf{v} = \sum_{i=1}^d u_i v_i = \|\mathbf{u}\|_2 \|\mathbf{v}\|_2 \cos \theta
+\]</div>
+<p>where <span class="arithmatex">\(\theta\)</span> is the angle between the vectors.</p>
+<ul>
+<li><strong>Cosine Similarity</strong>:
+  $<span class="arithmatex">\(\text{cosine\_sim}(\mathbf{u}, \mathbf{v}) = \frac{\mathbf{u}^T \mathbf{v}}{\|\mathbf{u}\|_2 \|\mathbf{v}\|_2} = \cos \theta \in [-1, 1]\)</span>$
+  This is the foundation of dense vector retrieval, semantic search, and self-attention in Transformers.</li>
+<li><strong>Orthogonality</strong>: Two non-zero vectors are orthogonal (<span class="arithmatex">\(\mathbf{u} \perp \mathbf{v}\)</span>) if and only if <span class="arithmatex">\(\mathbf{u}^T \mathbf{v} = 0\)</span> (<span class="arithmatex">\(\theta = 90^\circ\)</span>).</li>
+</ul>
+<h3 id="33-linear-independence-span-basis-and-rank">3.3 Linear Independence, Span, Basis, and Rank<a class="headerlink" href="#33-linear-independence-span-basis-and-rank" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Span</strong>: The set of all possible linear combinations of a collection of vectors <span class="arithmatex">\(\{\mathbf{v}_1, \dots, \mathbf{v}_k\}\)</span>:
+  $<span class="arithmatex">\(\text{span}(\mathbf{v}_1, \dots, \mathbf{v}_k) = \left\{ \sum_{i=1}^k c_i \mathbf{v}_i \;\middle|\; c_i \in \mathbb{R} \right\}\)</span>$</li>
+<li><strong>Linear Independence</strong>: Vectors <span class="arithmatex">\(\{\mathbf{v}_1, \dots, \mathbf{v}_k\}\)</span> are linearly independent if:
+  $<span class="arithmatex">\(\sum_{i=1}^k c_i \mathbf{v}_i = \mathbf{0} \implies c_1 = c_2 = \dots = c_k = 0\)</span>$
+  If any non-zero coefficients satisfy the equation, at least one vector is redundant and lies within the span of the others (multicollinearity).</li>
+<li><strong>Basis</strong>: A linearly independent set of vectors that spans vector space <span class="arithmatex">\(\mathcal{V}\)</span>. The number of vectors in any basis for <span class="arithmatex">\(\mathcal{V}\)</span> defines the <strong>dimension</strong> of <span class="arithmatex">\(\mathcal{V}\)</span>.</li>
+<li><strong>Matrix Rank</strong>:</li>
+<li>The <strong>column rank</strong> of <span class="arithmatex">\(A\)</span> is the dimension of the span of its columns (the column space <span class="arithmatex">\(\mathcal{C}(A)\)</span>).</li>
+<li>The <strong>row rank</strong> of <span class="arithmatex">\(A\)</span> is the dimension of the span of its rows.</li>
+<li><strong>Fundamental Theorem of Linear Algebra</strong>: <span class="arithmatex">\(\text{column\_rank}(A) = \text{row\_rank}(A) = \text{rank}(A) \le \min(m, n)\)</span>.</li>
+<li>A matrix <span class="arithmatex">\(A \in \mathbb{R}^{m \times n}\)</span> is <strong>full rank</strong> if <span class="arithmatex">\(\text{rank}(A) = \min(m, n)\)</span>.</li>
+</ul>
+<hr />
+<h2 id="4-vector-and-matrix-norms">4. Vector and Matrix Norms<a class="headerlink" href="#4-vector-and-matrix-norms" title="Permanent link">&para;</a></h2>
+<p>Norms quantify the "size" or "magnitude" of vectors and matrices. They serve as regularizers (penalties) in machine learning to prevent overfitting.</p>
+<h3 id="41-vector-l_p-norms">4.1 Vector <span class="arithmatex">\(L_p\)</span> Norms<a class="headerlink" href="#41-vector-l_p-norms" title="Permanent link">&para;</a></h3>
+<p>For <span class="arithmatex">\(\mathbf{x} \in \mathbb{R}^d\)</span> and <span class="arithmatex">\(p \ge 1\)</span>:</p>
+<div class="arithmatex">\[
+\|\mathbf{x}\|_p = \left( \sum_{i=1}^d |x_i|^p \right)^{1/p}
+\]</div>
+<table>
+<thead>
+<tr>
+<th>Norm</th>
+<th>Formula</th>
+<th>Geometric Unit Ball</th>
+<th>ML Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><span class="arithmatex">\(L_1\)</span> Norm (Manhattan)</strong></td>
+<td><span class="arithmatex">\(\|\mathbf{x}\|_1 = \sum_{i=1}^d \|x_i\|\)</span></td>
+<td>Diamond / Cross-polytope (sharp corners on axes)</td>
+<td>Lasso regression; induces <strong>exact sparsity</strong> (weights forced to 0.0)</td>
+</tr>
+<tr>
+<td><strong><span class="arithmatex">\(L_2\)</span> Norm (Euclidean)</strong></td>
+<td><span class="arithmatex">\(\|\mathbf{x}\|_2 = \sqrt{\sum_{i=1}^d x_i^2} = \sqrt{\mathbf{x}^T \mathbf{x}}\)</span></td>
+<td>Smooth hypersphere</td>
+<td>Ridge regression, weight decay in neural networks; shrinks weights smoothly</td>
+</tr>
+<tr>
+<td><strong><span class="arithmatex">\(L_\infty\)</span> Norm (Max)</strong></td>
+<td><span class="arithmatex">\(\|\mathbf{x}\|_\infty = \max_{1 \le i \le d} \|x_i\|\)</span></td>
+<td>Hypercube</td>
+<td>Adversarial perturbations (FGSM), worst-case error bounds</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid"><code>flowchart LR
+    L1["L1 Unit Ball: Diamond (Sharp vertices on axes)"] --&gt; S["Sparsity: Contour tangency hits vertices at w_i = 0"]
+    L2["L2 Unit Ball: Smooth Sphere"] --&gt; W["Weight Decay: Uniform weight shrinkage towards origin"]</code></pre>
+<h3 id="42-matrix-norms">4.2 Matrix Norms<a class="headerlink" href="#42-matrix-norms" title="Permanent link">&para;</a></h3>
+<p>For matrix <span class="arithmatex">\(A \in \mathbb{R}^{m \times n}\)</span>:
+- <strong>Frobenius Norm</strong>: Entrywise <span class="arithmatex">\(L_2\)</span> norm:
+  $<span class="arithmatex">\(\|A\|_F = \sqrt{\sum_{i=1}^m \sum_{j=1}^n A_{ij}^2} = \sqrt{\text{Tr}(A^T A)} = \sqrt{\sum_{i=1}^{\min(m, n)} \sigma_i^2}\)</span>$
+- <strong>Spectral Norm (<span class="arithmatex">\(L_2\)</span> Operator Norm)</strong>: Maximum amplification factor:
+  $<span class="arithmatex">\(\|A\|_2 = \max_{\mathbf{x} \ne \mathbf{0}} \frac{\|A\mathbf{x}\|_2}{\|\mathbf{x}\|_2} = \sigma_{\max}(A)\)</span>$
+  Used in Spectral Normalization for GANs to enforce Lipschitz continuity.
+- <strong>Nuclear Norm (Trace Norm)</strong>: Sum of singular values:
+  $<span class="arithmatex">\(\|A\|_* = \sum_{i=1}^{\min(m,n)} \sigma_i(A)\)</span>$
+  The convex relaxation of matrix rank, widely used in matrix completion and collaborative filtering.</p>
+<hr />
+<h2 id="5-orthogonality-projections-and-the-normal-equations">5. Orthogonality, Projections, and the Normal Equations<a class="headerlink" href="#5-orthogonality-projections-and-the-normal-equations" title="Permanent link">&para;</a></h2>
+<h3 id="51-orthogonal-projection-onto-a-subspace">5.1 Orthogonal Projection onto a Subspace<a class="headerlink" href="#51-orthogonal-projection-onto-a-subspace" title="Permanent link">&para;</a></h3>
+<p>Let <span class="arithmatex">\(\mathcal{S}\)</span> be a subspace of <span class="arithmatex">\(\mathbb{R}^m\)</span> spanned by the linearly independent columns of matrix <span class="arithmatex">\(A \in \mathbb{R}^{m \times n}\)</span>. We want to project an arbitrary vector <span class="arithmatex">\(\mathbf{y} \in \mathbb{R}^m\)</span> onto <span class="arithmatex">\(\mathcal{S}\)</span> to find the closest point <span class="arithmatex">\(\hat{\mathbf{y}} = A\mathbf{w}\)</span>.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Projection Geometry
+        Y["Target Vector y ∈ R^m"]
+        S["Subspace S = Col(A)"]
+        Y_HAT["Projection y_hat = A w* ∈ S"]
+        E["Orthogonal Error: e = y - A w* ⟂ Col(A)"]
+    end
+    Y --&gt; Y_HAT
+    Y -. error vector .-&gt; E</code></pre>
+<p>The error vector <span class="arithmatex">\(\mathbf{e} = \mathbf{y} - \hat{\mathbf{y}} = \mathbf{y} - A\mathbf{w}^*\)</span> must be strictly orthogonal to every column of <span class="arithmatex">\(A\)</span>:</p>
+<div class="arithmatex">\[
+A^T \mathbf{e} = \mathbf{0} \implies A^T (\mathbf{y} - A\mathbf{w}^*) = \mathbf{0}
+\]</div>
+<p>Expanding:</p>
+<div class="arithmatex">\[
+A^T \mathbf{y} - A^T A \mathbf{w}^* = \mathbf{0} \implies A^T A \mathbf{w}^* = A^T \mathbf{y}
+\]</div>
+<p>If <span class="arithmatex">\(A\)</span> has full column rank, <span class="arithmatex">\(A^T A\)</span> is strictly positive definite and invertible:</p>
+<div class="arithmatex">\[
+\mathbf{w}^* = (A^T A)^{-1} A^T \mathbf{y}
+\]</div>
+<p>The optimal projection <span class="arithmatex">\(\hat{\mathbf{y}}\)</span> is:</p>
+<div class="arithmatex">\[
+\hat{\mathbf{y}} = A\mathbf{w}^* = A (A^T A)^{-1} A^T \mathbf{y} = P \mathbf{y}
+\]</div>
+<p>where <span class="arithmatex">\(P = A(A^T A)^{-1} A^T\)</span> is the <strong>orthogonal projection matrix</strong>.</p>
+<h4 id="properties-of-projection-matrix-p">Properties of Projection Matrix <span class="arithmatex">\(P\)</span>:<a class="headerlink" href="#properties-of-projection-matrix-p" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Symmetric</strong>: <span class="arithmatex">\(P^T = (A(A^T A)^{-1} A^T)^T = A ((A^T A)^{-1})^T A^T = A(A^T A)^{-1} A^T = P\)</span>.</li>
+<li><strong>Idempotent</strong>: Projecting an already projected point changes nothing:
+   $<span class="arithmatex">\(P^2 = \left(A(A^T A)^{-1} A^T\right)\left(A(A^T A)^{-1} A^T\right) = A (A^T A)^{-1} \left(A^T A\right) (A^T A)^{-1} A^T = A (A^T A)^{-1} A^T = P\)</span>$</li>
+</ol>
+<p>This exact derivation produces the <strong>Ordinary Least Squares (OLS) Normal Equations</strong> in <a href="../../04-classical-ml/linear-regression-deep-dive/">Linear Regression</a>.</p>
+<hr />
+<h2 id="6-spectral-theory-eigenvalues-eigenvectors-and-eigendecomposition">6. Spectral Theory: Eigenvalues, Eigenvectors, and Eigendecomposition<a class="headerlink" href="#6-spectral-theory-eigenvalues-eigenvectors-and-eigendecomposition" title="Permanent link">&para;</a></h2>
+<h3 id="61-formal-definition">6.1 Formal Definition<a class="headerlink" href="#61-formal-definition" title="Permanent link">&para;</a></h3>
+<p>For a square matrix <span class="arithmatex">\(A \in \mathbb{R}^{n \times n}\)</span>, a non-zero vector <span class="arithmatex">\(\mathbf{v} \in \mathbb{R}^n\)</span> is an <strong>eigenvector</strong> with corresponding <strong>eigenvalue</strong> <span class="arithmatex">\(\lambda \in \mathbb{C}\)</span> if:</p>
+<div class="arithmatex">\[
+A\mathbf{v} = \lambda \mathbf{v} \iff (A - \lambda I)\mathbf{v} = \mathbf{0}
+\]</div>
+<p>Geometrically, the linear transformation <span class="arithmatex">\(A\)</span> does not change the direction of <span class="arithmatex">\(\mathbf{v}\)</span>; it merely scales it by factor <span class="arithmatex">\(\lambda\)</span>.</p>
+<p>The eigenvalues are the roots of the characteristic polynomial:</p>
+<div class="arithmatex">\[
+\det(A - \lambda I) = 0
+\]</div>
+<h3 id="62-spectral-theorem-for-real-symmetric-matrices">6.2 Spectral Theorem for Real Symmetric Matrices<a class="headerlink" href="#62-spectral-theorem-for-real-symmetric-matrices" title="Permanent link">&para;</a></h3>
+<p>If <span class="arithmatex">\(A \in \mathbb{R}^{n \times n}\)</span> is real and symmetric (<span class="arithmatex">\(A = A^T\)</span>):
+1. All <span class="arithmatex">\(n\)</span> eigenvalues <span class="arithmatex">\(\lambda_1, \dots, \lambda_n\)</span> are strictly <strong>real numbers</strong> (<span class="arithmatex">\(\lambda_i \in \mathbb{R}\)</span>).
+2. Eigenvectors corresponding to distinct eigenvalues are <strong>mutually orthogonal</strong>.
+3. <span class="arithmatex">\(A\)</span> can be orthogonally diagonalized:
+   $<span class="arithmatex">\(A = Q \Lambda Q^T = \sum_{i=1}^n \lambda_i \mathbf{q}_i \mathbf{q}_i^T\)</span>$
+   where <span class="arithmatex">\(Q = [\mathbf{q}_1, \dots, \mathbf{q}_n]\)</span> is an orthonormal matrix (<span class="arithmatex">\(Q^T Q = Q Q^T = I\)</span>), and <span class="arithmatex">\(\Lambda = \text{diag}(\lambda_1, \dots, \lambda_n)\)</span>.</p>
+<h3 id="63-positive-semi-definite-psd-matrices">6.3 Positive Semi-Definite (PSD) Matrices<a class="headerlink" href="#63-positive-semi-definite-psd-matrices" title="Permanent link">&para;</a></h3>
+<p>A symmetric matrix <span class="arithmatex">\(M \in \mathbb{R}^{n \times n}\)</span> is:
+- <strong>Positive Semi-Definite (<span class="arithmatex">\(M \succeq 0\)</span>)</strong> if for all non-zero <span class="arithmatex">\(\mathbf{x} \in \mathbb{R}^n\)</span>, <span class="arithmatex">\(\mathbf{x}^T M \mathbf{x} \ge 0\)</span>. Equivalent to: all <span class="arithmatex">\(\lambda_i \ge 0\)</span>.
+- <strong>Positive Definite (<span class="arithmatex">\(M \succ 0\)</span>)</strong> if for all non-zero <span class="arithmatex">\(\mathbf{x} \in \mathbb{R}^n\)</span>, <span class="arithmatex">\(\mathbf{x}^T M \mathbf{x} &gt; 0\)</span>. Equivalent to: all <span class="arithmatex">\(\lambda_i &gt; 0\)</span>.</p>
+<p>In ML, every empirical covariance matrix <span class="arithmatex">\(\Sigma = \frac{1}{N} X^T X\)</span> and every Gram/Kernel matrix <span class="arithmatex">\(K_{ij} = k(\mathbf{x}_i, \mathbf{x}_j)\)</span> is inherently positive semi-definite.</p>
+<pre class="mermaid"><code>flowchart LR
+    A["Matrix A = Q Λ Q^T"] --&gt; R1["Q^T: Rotate to Eigenbasis"]
+    R1 --&gt; S["Λ: Scale along axes by eigenvalues λ_i"]
+    S --&gt; R2["Q: Rotate back to original basis"]</code></pre>
+<hr />
+<h2 id="7-singular-value-decomposition-svd">7. Singular Value Decomposition (SVD)<a class="headerlink" href="#7-singular-value-decomposition-svd" title="Permanent link">&para;</a></h2>
+<p>Eigendecomposition requires a square, diagonalizable matrix. <strong>Singular Value Decomposition (SVD)</strong> generalizes spectral factorization to <strong>any</strong> rectangular matrix <span class="arithmatex">\(A \in \mathbb{R}^{m \times n}\)</span>.</p>
+<h3 id="71-the-fundamental-svd-theorem">7.1 The Fundamental SVD Theorem<a class="headerlink" href="#71-the-fundamental-svd-theorem" title="Permanent link">&para;</a></h3>
+<p>Any real matrix <span class="arithmatex">\(A \in \mathbb{R}^{m \times n}\)</span> can be factored into:</p>
+<div class="arithmatex">\[
+A = U \Sigma V^T
+\]</div>
+<p>where:
+- <span class="arithmatex">\(U \in \mathbb{R}^{m \times m}\)</span> is an orthonormal matrix whose columns <span class="arithmatex">\(\mathbf{u}_i\)</span> are the <strong>left singular vectors</strong> of <span class="arithmatex">\(A\)</span> (the eigenvectors of <span class="arithmatex">\(A A^T\)</span>).
+- <span class="arithmatex">\(\Sigma \in \mathbb{R}^{m \times n}\)</span> is a rectangular diagonal matrix with non-negative entries <span class="arithmatex">\(\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r &gt; 0\)</span> along the main diagonal, called the <strong>singular values</strong> of <span class="arithmatex">\(A\)</span> (<span class="arithmatex">\(r = \text{rank}(A)\)</span>).
+- <span class="arithmatex">\(V \in \mathbb{R}^{n \times n}\)</span> is an orthonormal matrix whose columns <span class="arithmatex">\(\mathbf{v}_i\)</span> are the <strong>right singular vectors</strong> of <span class="arithmatex">\(A\)</span> (the eigenvectors of <span class="arithmatex">\(A^T A\)</span>).</p>
+<pre class="mermaid"><code>flowchart LR
+    X["Input Vector x"] --&gt; V["V^T: Rotate/Reflect in R^n"]
+    V --&gt; S["Σ: Stretch along coordinates by σ_i"]
+    S --&gt; U["U: Rotate/Reflect into R^m"]
+    U --&gt; Y["Transformed Output Ax"]</code></pre>
+<h3 id="72-outer-product-expansion-and-truncated-svd">7.2 Outer Product Expansion and Truncated SVD<a class="headerlink" href="#72-outer-product-expansion-and-truncated-svd" title="Permanent link">&para;</a></h3>
+<p>The SVD can be written as the sum of <span class="arithmatex">\(r\)</span> rank-1 matrices:</p>
+<div class="arithmatex">\[
+A = \sum_{i=1}^r \sigma_i \mathbf{u}_i \mathbf{v}_i^T
+\]</div>
+<h3 id="73-the-eckart-young-mirsky-theorem">7.3 The Eckart-Young-Mirsky Theorem<a class="headerlink" href="#73-the-eckart-young-mirsky-theorem" title="Permanent link">&para;</a></h3>
+<p>The fundamental theorem of low-rank matrix approximation states that for any target rank <span class="arithmatex">\(k &lt; r\)</span>, the optimal rank-<span class="arithmatex">\(k\)</span> approximation <span class="arithmatex">\(A_k\)</span> that minimizes the approximation error under both the Frobenius norm and spectral norm is obtained by truncating the SVD at the top <span class="arithmatex">\(k\)</span> terms:</p>
+<div class="arithmatex">\[
+A_k = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T = U_k \Sigma_k V_k^T
+\]</div>
+<div class="arithmatex">\[
+\min_{\text{rank}(B) \le k} \|A - B\|_F = \|A - A_k\|_F = \sqrt{\sum_{i=k+1}^r \sigma_i^2}
+\]</div>
+<div class="arithmatex">\[
+\min_{\text{rank}(B) \le k} \|A - B\|_2 = \|A - A_k\|_2 = \sigma_{k+1}
+\]</div>
+<p>This theorem provides the rigorous mathematical backing for image compression, latent semantic analysis (LSA), collaborative filtering, and low-rank adaptation (LoRA) of Large Language Models.</p>
+<hr />
+<h2 id="8-principal-component-analysis-pca-full-mathematical-derivation">8. Principal Component Analysis (PCA): Full Mathematical Derivation<a class="headerlink" href="#8-principal-component-analysis-pca-full-mathematical-derivation" title="Permanent link">&para;</a></h2>
+<p>Principal Component Analysis (PCA) finds the orthogonal directions of maximum variance in high-dimensional data.</p>
+<h3 id="81-problem-formulation">8.1 Problem Formulation<a class="headerlink" href="#81-problem-formulation" title="Permanent link">&para;</a></h3>
+<p>Let <span class="arithmatex">\(X \in \mathbb{R}^{N \times d}\)</span> be a dataset of <span class="arithmatex">\(N\)</span> samples and <span class="arithmatex">\(d\)</span> features that has been <strong>zero-centered</strong>:</p>
+<div class="arithmatex">\[
+\frac{1}{N} \sum_{i=1}^N \mathbf{x}_i = \mathbf{0}
+\]</div>
+<p>The empirical sample covariance matrix is:</p>
+<div class="arithmatex">\[
+\Sigma = \frac{1}{N} X^T X \in \mathbb{R}^{d \times d}
+\]</div>
+<p>We seek a unit projection vector <span class="arithmatex">\(\mathbf{w} \in \mathbb{R}^d\)</span> (<span class="arithmatex">\(\|\mathbf{w}\|_2 = 1 \implies \mathbf{w}^T \mathbf{w} = 1\)</span>) such that the variance of the projected points <span class="arithmatex">\(\mathbf{z} = X\mathbf{w} \in \mathbb{R}^N\)</span> is maximized.</p>
+<p>The sample variance of the projected data is:</p>
+<div class="arithmatex">\[
+\text{Var}(X\mathbf{w}) = \frac{1}{N} (X\mathbf{w})^T (X\mathbf{w}) = \frac{1}{N} \mathbf{w}^T X^T X \mathbf{w} = \mathbf{w}^T \left( \frac{1}{N} X^T X \right) \mathbf{w} = \mathbf{w}^T \Sigma \mathbf{w}
+\]</div>
+<h3 id="82-derivation-via-lagrange-multipliers">8.2 Derivation via Lagrange Multipliers<a class="headerlink" href="#82-derivation-via-lagrange-multipliers" title="Permanent link">&para;</a></h3>
+<p>We formulate the constrained optimization problem:</p>
+<div class="arithmatex">\[
+\max_{\mathbf{w}} \mathbf{w}^T \Sigma \mathbf{w} \quad \text{subject to} \quad \mathbf{w}^T \mathbf{w} = 1
+\]</div>
+<p>Define the Lagrangian function <span class="arithmatex">\(\mathcal{L}(\mathbf{w}, \lambda)\)</span>:</p>
+<div class="arithmatex">\[
+\mathcal{L}(\mathbf{w}, \lambda) = \mathbf{w}^T \Sigma \mathbf{w} - \lambda (\mathbf{w}^T \mathbf{w} - 1)
+\]</div>
+<p>Compute the gradient with respect to <span class="arithmatex">\(\mathbf{w}\)</span> and set it to <span class="arithmatex">\(\mathbf{0}\)</span> (noting that <span class="arithmatex">\(\Sigma\)</span> is symmetric):</p>
+<div class="arithmatex">\[
+\nabla_\mathbf{w} \mathcal{L} = 2 \Sigma \mathbf{w} - 2 \lambda \mathbf{w} = \mathbf{0}
+\]</div>
+<div class="arithmatex">\[
+\Sigma \mathbf{w} = \lambda \mathbf{w}
+\]</div>
+<p>This is the standard <strong>eigenvalue equation</strong>. The vector <span class="arithmatex">\(\mathbf{w}\)</span> must be an eigenvector of the covariance matrix <span class="arithmatex">\(\Sigma\)</span>.</p>
+<p>To determine which eigenvector maximizes the variance, substitute <span class="arithmatex">\(\Sigma \mathbf{w} = \lambda \mathbf{w}\)</span> back into the objective:</p>
+<div class="arithmatex">\[
+\text{Var}(X\mathbf{w}) = \mathbf{w}^T \Sigma \mathbf{w} = \mathbf{w}^T (\lambda \mathbf{w}) = \lambda (\mathbf{w}^T \mathbf{w}) = \lambda
+\]</div>
+<p>Therefore, the maximum variance is achieved by selecting the eigenvector corresponding to the <strong>largest eigenvalue</strong> <span class="arithmatex">\(\lambda_1\)</span>. The second principal component is the eigenvector corresponding to <span class="arithmatex">\(\lambda_2\)</span>, which is guaranteed to be orthogonal to <span class="arithmatex">\(\mathbf{w}_1\)</span> by the Spectral Theorem.</p>
+<h3 id="83-connection-pca-via-svd-vs-covariance-eigendecomposition">8.3 Connection: PCA via SVD vs. Covariance Eigendecomposition<a class="headerlink" href="#83-connection-pca-via-svd-vs-covariance-eigendecomposition" title="Permanent link">&para;</a></h3>
+<p>Given centered data <span class="arithmatex">\(X \in \mathbb{R}^{N \times d}\)</span>, compute the economy SVD:</p>
+<div class="arithmatex">\[
+X = U \Sigma_{\text{svd}} V^T
+\]</div>
+<p>Substitute this into the covariance matrix:</p>
+<div class="arithmatex">\[
+\Sigma = \frac{1}{N} X^T X = \frac{1}{N} (U \Sigma_{\text{svd}} V^T)^T (U \Sigma_{\text{svd}} V^T) = \frac{1}{N} V \Sigma_{\text{svd}}^T U^T U \Sigma_{\text{svd}} V^T
+\]</div>
+<p>Since <span class="arithmatex">\(U\)</span> is orthonormal (<span class="arithmatex">\(U^T U = I\)</span>):</p>
+<div class="arithmatex">\[
+\Sigma = V \left( \frac{\Sigma_{\text{svd}}^2}{N} \right) V^T
+\]</div>
+<p>Notice that:
+1. The right singular vectors <span class="arithmatex">\(V\)</span> of <span class="arithmatex">\(X\)</span> are <strong>identical</strong> to the principal component eigenvectors of <span class="arithmatex">\(\Sigma\)</span>.
+2. The eigenvalues of <span class="arithmatex">\(\Sigma\)</span> relate directly to the singular values of <span class="arithmatex">\(X\)</span>:
+   $<span class="arithmatex">\(\lambda_i = \frac{\sigma_i^2}{N}\)</span>$
+3. The projected principal coordinates are simply:
+   $<span class="arithmatex">\(X V = U \Sigma_{\text{svd}} V^T V = U \Sigma_{\text{svd}}\)</span>$</p>
+<p>Computing SVD directly on <span class="arithmatex">\(X\)</span> avoids forming <span class="arithmatex">\(X^T X\)</span>, preserving dynamic range and preventing squaring of condition numbers.</p>
+<pre class="mermaid"><code>flowchart TD
+    D["Raw Data Matrix X (N x d)"] --&gt; C["Mean Center: X_c = X - μ"]
+    C --&gt; P1["Route 1: Covariance Eigendecomposition"]
+    C --&gt; P2["Route 2: Direct SVD (Preferred in Production)"]
+    P1 --&gt; COV["Compute Covariance: Σ = 1/N X_c^T X_c"]
+    COV --&gt; EIG["Eigendecomposition: Σ = Q Λ Q^T"]
+    P2 --&gt; SVD["SVD of Data: X_c = U S V^T"]
+    EIG --&gt; PROJ["Projected Data: Z = X_c Q_k"]
+    SVD --&gt; PROJ2["Projected Data: Z = X_c V_k = U_k S_k"]</code></pre>
+<hr />
+<h2 id="9-python-implementation-from-scratch-numerical-algorithms">9. Python Implementation: From Scratch &amp; Numerical Algorithms<a class="headerlink" href="#9-python-implementation-from-scratch-numerical-algorithms" title="Permanent link">&para;</a></h2>
+<p>Below is a complete, runnable suite containing:
+1. <strong>Power Iteration</strong> for computing dominant eigenvalues/eigenvectors.
+2. <strong>Gram-Schmidt QR Orthogonalization</strong>.
+3. <strong>PCA from scratch</strong> using both Covariance Eigendecomposition and SVD.
+4. <strong>Low-rank Matrix Approximation</strong>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="sd">"""</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="sd">linear_algebra_deep_dive.py</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="sd">Production-grade linear algebra algorithms from scratch using NumPy.</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="sd">"""</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">def</span><span class="w"> </span><span class="nf">power_iteration</span><span class="p">(</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">num_simulations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-12</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="sd">    Computes the dominant eigenvalue and eigenvector of square matrix A</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="sd">    using the Power Iteration algorithm.</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="sd">    """</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">n</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="c1"># Initialize random non-zero vector</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">b_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">b_k</span> <span class="o">=</span> <span class="n">b_k</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b_k</span><span class="p">)</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">eigenvalue_old</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_simulations</span><span class="p">):</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>        <span class="c1"># Calculate matrix-by-vector product</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>        <span class="n">b_k1</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">b_k</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b_k1</span><span class="p">)</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="k">if</span> <span class="n">norm</span> <span class="o">&lt;</span> <span class="n">eps</span><span class="p">:</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>            <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">b_k</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="n">b_k</span> <span class="o">=</span> <span class="n">b_k1</span> <span class="o">/</span> <span class="n">norm</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="c1"># Rayleigh quotient: (b_k^T A b_k) / (b_k^T b_k)</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>        <span class="n">eigenvalue</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">b_k</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">A</span> <span class="o">@</span> <span class="n">b_k</span><span class="p">)</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">eigenvalue</span> <span class="o">-</span> <span class="n">eigenvalue_old</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">eps</span><span class="p">:</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>            <span class="k">break</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        <span class="n">eigenvalue_old</span> <span class="o">=</span> <span class="n">eigenvalue</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    <span class="k">return</span> <span class="n">eigenvalue</span><span class="p">,</span> <span class="n">b_k</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="k">def</span><span class="w"> </span><span class="nf">gram_schmidt_qr</span><span class="p">(</span><span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="sd">    Computes QR decomposition of matrix A using Modified Gram-Schmidt (MGS).</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="sd">    A = Q @ R, where Q has orthonormal columns and R is upper triangular.</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a><span class="sd">    """</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>    <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>    <span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>    <span class="n">V</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>        <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">V</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>        <span class="k">if</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">1e-12</span><span class="p">:</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>            <span class="n">Q</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">V</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>            <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Q</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">V</span><span class="p">[:,</span> <span class="n">j</span><span class="p">])</span>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>            <span class="n">V</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">V</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">Q</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>    <span class="k">return</span> <span class="n">Q</span><span class="p">,</span> <span class="n">R</span>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a><span class="k">class</span><span class="w"> </span><span class="nc">ScratchPCA</span><span class="p">:</span>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a><span class="sd">    Principal Component Analysis implemented from scratch.</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a><span class="sd">    Supports both Covariance Eigendecomposition and Direct SVD backends.</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a><span class="sd">    """</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_components</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"svd"</span><span class="p">):</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>        <span class="k">assert</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"svd"</span><span class="p">,</span> <span class="s2">"eig"</span><span class="p">),</span> <span class="s2">"Method must be 'svd' or 'eig'"</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span> <span class="o">=</span> <span class="n">n_components</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mean_</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">components_</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Shape (n_components, d)</span>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>
+</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ScratchPCA"</span><span class="p">:</span>
+</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78" href="#__codelineno-0-78"></a>        <span class="n">N</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79" href="#__codelineno-0-79"></a>        <span class="c1"># 1. Zero-center data</span>
+</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80" href="#__codelineno-0-80"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mean_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81" href="#__codelineno-0-81"></a>        <span class="n">X_centered</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_</span>
+</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82" href="#__codelineno-0-82"></a>
+</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83" href="#__codelineno-0-83"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"eig"</span><span class="p">:</span>
+</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84" href="#__codelineno-0-84"></a>            <span class="c1"># 2a. Covariance matrix formulation</span>
+</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85" href="#__codelineno-0-85"></a>            <span class="n">cov_matrix</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_centered</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X_centered</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86" href="#__codelineno-0-86"></a>            <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">cov_matrix</span><span class="p">)</span>
+</span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87" href="#__codelineno-0-87"></a>            <span class="c1"># Sort in descending order</span>
+</span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88" href="#__codelineno-0-88"></a>            <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89" href="#__codelineno-0-89"></a>            <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+</span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a>            <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
+</span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>
+</span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">components_</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+</span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">]</span>
+</span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a>            <span class="n">total_variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span>
+</span><span id="__span-0-95"><a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_ratio_</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_</span> <span class="o">/</span> <span class="n">total_variance</span>
+</span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a>            <span class="p">)</span>
+</span><span id="__span-0-98"><a id="__codelineno-0-98" name="__codelineno-0-98" href="#__codelineno-0-98"></a>
+</span><span id="__span-0-99"><a id="__codelineno-0-99" name="__codelineno-0-99" href="#__codelineno-0-99"></a>        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"svd"</span><span class="p">:</span>
+</span><span id="__span-0-100"><a id="__codelineno-0-100" name="__codelineno-0-100" href="#__codelineno-0-100"></a>            <span class="c1"># 2b. Direct SVD formulation (Production standard)</span>
+</span><span id="__span-0-101"><a id="__codelineno-0-101" name="__codelineno-0-101" href="#__codelineno-0-101"></a>            <span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">Vt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">X_centered</span><span class="p">,</span> <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-0-102"><a id="__codelineno-0-102" name="__codelineno-0-102" href="#__codelineno-0-102"></a>            <span class="n">eigenvalues</span> <span class="o">=</span> <span class="p">(</span><span class="n">S</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-0-103"><a id="__codelineno-0-103" name="__codelineno-0-103" href="#__codelineno-0-103"></a>
+</span><span id="__span-0-104"><a id="__codelineno-0-104" name="__codelineno-0-104" href="#__codelineno-0-104"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">components_</span> <span class="o">=</span> <span class="n">Vt</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">]</span>
+</span><span id="__span-0-105"><a id="__codelineno-0-105" name="__codelineno-0-105" href="#__codelineno-0-105"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">]</span>
+</span><span id="__span-0-106"><a id="__codelineno-0-106" name="__codelineno-0-106" href="#__codelineno-0-106"></a>            <span class="n">total_variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span>
+</span><span id="__span-0-107"><a id="__codelineno-0-107" name="__codelineno-0-107" href="#__codelineno-0-107"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_ratio_</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-108"><a id="__codelineno-0-108" name="__codelineno-0-108" href="#__codelineno-0-108"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">explained_variance_</span> <span class="o">/</span> <span class="n">total_variance</span>
+</span><span id="__span-0-109"><a id="__codelineno-0-109" name="__codelineno-0-109" href="#__codelineno-0-109"></a>            <span class="p">)</span>
+</span><span id="__span-0-110"><a id="__codelineno-0-110" name="__codelineno-0-110" href="#__codelineno-0-110"></a>
+</span><span id="__span-0-111"><a id="__codelineno-0-111" name="__codelineno-0-111" href="#__codelineno-0-111"></a>        <span class="k">return</span> <span class="bp">self</span>
+</span><span id="__span-0-112"><a id="__codelineno-0-112" name="__codelineno-0-112" href="#__codelineno-0-112"></a>
+</span><span id="__span-0-113"><a id="__codelineno-0-113" name="__codelineno-0-113" href="#__codelineno-0-113"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-0-114"><a id="__codelineno-0-114" name="__codelineno-0-114" href="#__codelineno-0-114"></a>        <span class="n">X_centered</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_</span>
+</span><span id="__span-0-115"><a id="__codelineno-0-115" name="__codelineno-0-115" href="#__codelineno-0-115"></a>        <span class="k">return</span> <span class="n">X_centered</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">components_</span><span class="o">.</span><span class="n">T</span>
+</span><span id="__span-0-116"><a id="__codelineno-0-116" name="__codelineno-0-116" href="#__codelineno-0-116"></a>
+</span><span id="__span-0-117"><a id="__codelineno-0-117" name="__codelineno-0-117" href="#__codelineno-0-117"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-0-118"><a id="__codelineno-0-118" name="__codelineno-0-118" href="#__codelineno-0-118"></a>        <span class="k">return</span> <span class="p">(</span><span class="n">Z</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">components_</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_</span>
+</span><span id="__span-0-119"><a id="__codelineno-0-119" name="__codelineno-0-119" href="#__codelineno-0-119"></a>
+</span><span id="__span-0-120"><a id="__codelineno-0-120" name="__codelineno-0-120" href="#__codelineno-0-120"></a>
+</span><span id="__span-0-121"><a id="__codelineno-0-121" name="__codelineno-0-121" href="#__codelineno-0-121"></a><span class="k">def</span><span class="w"> </span><span class="nf">low_rank_approximation</span><span class="p">(</span><span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="__span-0-122"><a id="__codelineno-0-122" name="__codelineno-0-122" href="#__codelineno-0-122"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-123"><a id="__codelineno-0-123" name="__codelineno-0-123" href="#__codelineno-0-123"></a><span class="sd">    Computes optimal rank-k approximation of matrix A via SVD (Eckart-Young-Mirsky).</span>
+</span><span id="__span-0-124"><a id="__codelineno-0-124" name="__codelineno-0-124" href="#__codelineno-0-124"></a><span class="sd">    """</span>
+</span><span id="__span-0-125"><a id="__codelineno-0-125" name="__codelineno-0-125" href="#__codelineno-0-125"></a>    <span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">Vt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-0-126"><a id="__codelineno-0-126" name="__codelineno-0-126" href="#__codelineno-0-126"></a>    <span class="c1"># Truncate to top k singular components</span>
+</span><span id="__span-0-127"><a id="__codelineno-0-127" name="__codelineno-0-127" href="#__codelineno-0-127"></a>    <span class="n">U_k</span> <span class="o">=</span> <span class="n">U</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span>
+</span><span id="__span-0-128"><a id="__codelineno-0-128" name="__codelineno-0-128" href="#__codelineno-0-128"></a>    <span class="n">S_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">S</span><span class="p">[:</span><span class="n">k</span><span class="p">])</span>
+</span><span id="__span-0-129"><a id="__codelineno-0-129" name="__codelineno-0-129" href="#__codelineno-0-129"></a>    <span class="n">Vt_k</span> <span class="o">=</span> <span class="n">Vt</span><span class="p">[:</span><span class="n">k</span><span class="p">,</span> <span class="p">:]</span>
+</span><span id="__span-0-130"><a id="__codelineno-0-130" name="__codelineno-0-130" href="#__codelineno-0-130"></a>    <span class="k">return</span> <span class="n">U_k</span> <span class="o">@</span> <span class="n">S_k</span> <span class="o">@</span> <span class="n">Vt_k</span>
+</span><span id="__span-0-131"><a id="__codelineno-0-131" name="__codelineno-0-131" href="#__codelineno-0-131"></a>
+</span><span id="__span-0-132"><a id="__codelineno-0-132" name="__codelineno-0-132" href="#__codelineno-0-132"></a>
+</span><span id="__span-0-133"><a id="__codelineno-0-133" name="__codelineno-0-133" href="#__codelineno-0-133"></a><span class="c1"># ---------------------------------------------------------</span>
+</span><span id="__span-0-134"><a id="__codelineno-0-134" name="__codelineno-0-134" href="#__codelineno-0-134"></a><span class="c1"># Verification &amp; Benchmarks</span>
+</span><span id="__span-0-135"><a id="__codelineno-0-135" name="__codelineno-0-135" href="#__codelineno-0-135"></a><span class="c1"># ---------------------------------------------------------</span>
+</span><span id="__span-0-136"><a id="__codelineno-0-136" name="__codelineno-0-136" href="#__codelineno-0-136"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+</span><span id="__span-0-137"><a id="__codelineno-0-137" name="__codelineno-0-137" href="#__codelineno-0-137"></a>    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</span><span id="__span-0-138"><a id="__codelineno-0-138" name="__codelineno-0-138" href="#__codelineno-0-138"></a>
+</span><span id="__span-0-139"><a id="__codelineno-0-139" name="__codelineno-0-139" href="#__codelineno-0-139"></a>    <span class="c1"># 1. Test Power Iteration</span>
+</span><span id="__span-0-140"><a id="__codelineno-0-140" name="__codelineno-0-140" href="#__codelineno-0-140"></a>    <span class="n">sym_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]])</span>
+</span><span id="__span-0-141"><a id="__codelineno-0-141" name="__codelineno-0-141" href="#__codelineno-0-141"></a>    <span class="n">dominant_val</span><span class="p">,</span> <span class="n">dominant_vec</span> <span class="o">=</span> <span class="n">power_iteration</span><span class="p">(</span><span class="n">sym_mat</span><span class="p">)</span>
+</span><span id="__span-0-142"><a id="__codelineno-0-142" name="__codelineno-0-142" href="#__codelineno-0-142"></a>    <span class="n">np_vals</span><span class="p">,</span> <span class="n">np_vecs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">sym_mat</span><span class="p">)</span>
+</span><span id="__span-0-143"><a id="__codelineno-0-143" name="__codelineno-0-143" href="#__codelineno-0-143"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Power Iteration Dominant Eigenvalue: </span><span class="si">{</span><span class="n">dominant_val</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-144"><a id="__codelineno-0-144" name="__codelineno-0-144" href="#__codelineno-0-144"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"NumPy Dominant Eigenvalue:           </span><span class="si">{</span><span class="n">np_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-145"><a id="__codelineno-0-145" name="__codelineno-0-145" href="#__codelineno-0-145"></a>
+</span><span id="__span-0-146"><a id="__codelineno-0-146" name="__codelineno-0-146" href="#__codelineno-0-146"></a>    <span class="c1"># 2. Test QR Decomposition</span>
+</span><span id="__span-0-147"><a id="__codelineno-0-147" name="__codelineno-0-147" href="#__codelineno-0-147"></a>    <span class="n">test_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-0-148"><a id="__codelineno-0-148" name="__codelineno-0-148" href="#__codelineno-0-148"></a>    <span class="n">Q</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="n">gram_schmidt_qr</span><span class="p">(</span><span class="n">test_mat</span><span class="p">)</span>
+</span><span id="__span-0-149"><a id="__codelineno-0-149" name="__codelineno-0-149" href="#__codelineno-0-149"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"QR Orthogonality Check (Q^T @ Q ≈ I):</span><span class="se">\n</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">T</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="n">Q</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-150"><a id="__codelineno-0-150" name="__codelineno-0-150" href="#__codelineno-0-150"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Reconstruction Error: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">test_mat</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Q</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="n">R</span><span class="p">)</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-151"><a id="__codelineno-0-151" name="__codelineno-0-151" href="#__codelineno-0-151"></a>
+</span><span id="__span-0-152"><a id="__codelineno-0-152" name="__codelineno-0-152" href="#__codelineno-0-152"></a>    <span class="c1"># 3. Test PCA Implementations</span>
+</span><span id="__span-0-153"><a id="__codelineno-0-153" name="__codelineno-0-153" href="#__codelineno-0-153"></a>    <span class="n">synthetic_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>
+</span><span id="__span-0-154"><a id="__codelineno-0-154" name="__codelineno-0-154" href="#__codelineno-0-154"></a>    <span class="n">pca_svd</span> <span class="o">=</span> <span class="n">ScratchPCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"svd"</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">synthetic_data</span><span class="p">)</span>
+</span><span id="__span-0-155"><a id="__codelineno-0-155" name="__codelineno-0-155" href="#__codelineno-0-155"></a>    <span class="n">pca_eig</span> <span class="o">=</span> <span class="n">ScratchPCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"eig"</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">synthetic_data</span><span class="p">)</span>
+</span><span id="__span-0-156"><a id="__codelineno-0-156" name="__codelineno-0-156" href="#__codelineno-0-156"></a>
+</span><span id="__span-0-157"><a id="__codelineno-0-157" name="__codelineno-0-157" href="#__codelineno-0-157"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Explained Variance Ratio (SVD method):"</span><span class="p">,</span> <span class="n">pca_svd</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="p">)</span>
+</span><span id="__span-0-158"><a id="__codelineno-0-158" name="__codelineno-0-158" href="#__codelineno-0-158"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Explained Variance Ratio (Eig method):"</span><span class="p">,</span> <span class="n">pca_eig</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="p">)</span>
+</span><span id="__span-0-159"><a id="__codelineno-0-159" name="__codelineno-0-159" href="#__codelineno-0-159"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Variance alignment check: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">pca_svd</span><span class="o">.</span><span class="n">explained_variance_</span><span class="p">,</span><span class="w"> </span><span class="n">pca_eig</span><span class="o">.</span><span class="n">explained_variance_</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-160"><a id="__codelineno-0-160" name="__codelineno-0-160" href="#__codelineno-0-160"></a>
+</span><span id="__span-0-161"><a id="__codelineno-0-161" name="__codelineno-0-161" href="#__codelineno-0-161"></a>    <span class="c1"># 4. Low-Rank Approximation</span>
+</span><span id="__span-0-162"><a id="__codelineno-0-162" name="__codelineno-0-162" href="#__codelineno-0-162"></a>    <span class="n">rand_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+</span><span id="__span-0-163"><a id="__codelineno-0-163" name="__codelineno-0-163" href="#__codelineno-0-163"></a>    <span class="n">rank_5_approx</span> <span class="o">=</span> <span class="n">low_rank_approximation</span><span class="p">(</span><span class="n">rand_matrix</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-0-164"><a id="__codelineno-0-164" name="__codelineno-0-164" href="#__codelineno-0-164"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Original shape: </span><span class="si">{</span><span class="n">rand_matrix</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, Approx shape: </span><span class="si">{</span><span class="n">rank_5_approx</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-165"><a id="__codelineno-0-165" name="__codelineno-0-165" href="#__codelineno-0-165"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Effective Rank of Approx: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">matrix_rank</span><span class="p">(</span><span class="n">rank_5_approx</span><span class="p">,</span><span class="w"> </span><span class="n">tol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="10-common-errors-debugging">10. Common Errors &amp; Debugging<a class="headerlink" href="#10-common-errors-debugging" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Bug / Phenomenon</th>
+<th>Root Cause</th>
+<th>Diagnosis Method</th>
+<th>Production Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>LinAlgError: Singular matrix</code></strong></td>
+<td>Inverting <span class="arithmatex">\(X^T X\)</span> when features are collinear or samples <span class="arithmatex">\(N &lt;\)</span> features <span class="arithmatex">\(d\)</span> (<span class="arithmatex">\(\text{rank} &lt; d\)</span>).</td>
+<td>Check <code>np.linalg.matrix_rank(X) &lt; X.shape[1]</code> or <code>np.linalg.cond(X) &gt; 1e12</code>.</td>
+<td>Add Ridge regularization: <span class="arithmatex">\((X^T X + \lambda I)^{-1}\)</span>, or use pseudo-inverse <code>np.linalg.pinv(X)</code> via SVD.</td>
+</tr>
+<tr>
+<td><strong>PCA Fails / Nonsense Projection</strong></td>
+<td>Failing to zero-center features prior to SVD. The first component simply captures the dataset mean vector.</td>
+<td>Verify <code>np.allclose(np.mean(X, axis=0), 0)</code>.</td>
+<td>Explicitly subtract mean: <code>X_centered = X - np.mean(X, axis=0)</code>.</td>
+</tr>
+<tr>
+<td><strong>Broadcasting Shape Mismatches</strong></td>
+<td>Adding bias vector <span class="arithmatex">\((d,)\)</span> to batch matrix <span class="arithmatex">\((N, d)\)</span> along wrong axis or mismatched inner product dimensions <span class="arithmatex">\((N, d) \times (k, d)\)</span>.</td>
+<td>Print <code>.shape</code> on all tensors immediately prior to matrix multiplication.</td>
+<td>Ensure inner dimensions match: <span class="arithmatex">\((N, d) \times (d, k) \to (N, k)\)</span>. Use <code>assert A.shape[1] == B.shape[0]</code>.</td>
+</tr>
+<tr>
+<td><strong>Negative Eigenvalues on Covariance Matrix</strong></td>
+<td>Floating point rounding error causing symmetric covariance to have small negative eigenvalues (e.g., <span class="arithmatex">\(-10^{-16}\)</span>).</td>
+<td>Check <code>np.any(eigenvalues &lt; 0)</code> on an empirical covariance matrix.</td>
+<td>Clip negative eigenvalues to zero: <code>np.maximum(eigenvalues, 0.0)</code>, or use <code>scipy.linalg.eigh(..., check_finite=True)</code>.</td>
+</tr>
+<tr>
+<td><strong>Condition Number Explosion (<span class="arithmatex">\(\kappa &gt; 10^{15}\)</span>)</strong></td>
+<td>Features have vastly different scales (e.g., income in millions vs. age in years), causing <span class="arithmatex">\(X^T X\)</span> condition number <span class="arithmatex">\(\kappa(X^T X) = \kappa(X)^2\)</span> to explode.</td>
+<td>Inspect <code>np.linalg.cond(X)</code>.</td>
+<td>Standardize features to zero mean and unit variance before fitting linear models or decompositions.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="11-staff-level-technical-interview-questions">11. Staff-Level Technical Interview Questions<a class="headerlink" href="#11-staff-level-technical-interview-questions" title="Permanent link">&para;</a></h2>
+<h3 id="q1-prove-that-the-eigenvalues-of-a-real-symmetric-matrix-are-strictly-real-and-eigenvectors-corresponding-to-distinct-eigenvalues-are-mutually-orthogonal">Q1: Prove that the eigenvalues of a real symmetric matrix are strictly real, and eigenvectors corresponding to distinct eigenvalues are mutually orthogonal.<a class="headerlink" href="#q1-prove-that-the-eigenvalues-of-a-real-symmetric-matrix-are-strictly-real-and-eigenvectors-corresponding-to-distinct-eigenvalues-are-mutually-orthogonal" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Let <span class="arithmatex">\(A \in \mathbb{R}^{n \times n}\)</span> with <span class="arithmatex">\(A = A^T\)</span>.
+1. <strong>Eigenvalues are real:</strong>
+   Let <span class="arithmatex">\(\lambda \in \mathbb{C}\)</span> be an eigenvalue with non-zero eigenvector <span class="arithmatex">\(\mathbf{v} \in \mathbb{C}^n\)</span>:
+   $<span class="arithmatex">\(A\mathbf{v} = \lambda \mathbf{v}\)</span>$
+   Take the conjugate transpose (Hermitian) on both sides:
+   $<span class="arithmatex">\(\mathbf{v}^* A^T = \bar{\lambda} \mathbf{v}^* \implies \mathbf{v}^* A = \bar{\lambda} \mathbf{v}^* \quad (\text{since } A \text{ is real and symmetric, } A^* = A^T = A)\)</span>$
+   Multiply the original equation on the left by <span class="arithmatex">\(\mathbf{v}^*\)</span>:
+   $<span class="arithmatex">\(\mathbf{v}^* A \mathbf{v} = \lambda \mathbf{v}^* \mathbf{v}\)</span>$
+   Multiply the conjugated equation on the right by <span class="arithmatex">\(\mathbf{v}\)</span>:
+   $<span class="arithmatex">\(\mathbf{v}^* A \mathbf{v} = \bar{\lambda} \mathbf{v}^* \mathbf{v}\)</span>$
+   Subtracting the two equations:
+   $<span class="arithmatex">\((\lambda - \bar{\lambda}) \|\mathbf{v}\|_2^2 = 0\)</span>$
+   Since <span class="arithmatex">\(\mathbf{v} \ne \mathbf{0}\)</span>, <span class="arithmatex">\(\|\mathbf{v}\|_2^2 &gt; 0\)</span>, forcing <span class="arithmatex">\(\lambda - \bar{\lambda} = 0 \implies \lambda = \bar{\lambda}\)</span>. Therefore, <span class="arithmatex">\(\lambda \in \mathbb{R}\)</span>.</p>
+<ol>
+<li><strong>Orthogonality of eigenvectors:</strong>
+   Let <span class="arithmatex">\(A\mathbf{v}_1 = \lambda_1 \mathbf{v}_1\)</span> and <span class="arithmatex">\(A\mathbf{v}_2 = \lambda_2 \mathbf{v}_2\)</span> with <span class="arithmatex">\(\lambda_1 \ne \lambda_2\)</span>:
+   $<span class="arithmatex">\(\lambda_1 (\mathbf{v}_1^T \mathbf{v}_2) = (\lambda_1 \mathbf{v}_1)^T \mathbf{v}_2 = (A\mathbf{v}_1)^T \mathbf{v}_2 = \mathbf{v}_1^T A^T \mathbf{v}_2 = \mathbf{v}_1^T (A\mathbf{v}_2) = \mathbf{v}_1^T (\lambda_2 \mathbf{v}_2) = \lambda_2 (\mathbf{v}_1^T \mathbf{v}_2)\)</span>$
+   Rearranging:
+   $<span class="arithmatex">\((\lambda_1 - \lambda_2) (\mathbf{v}_1^T \mathbf{v}_2) = 0\)</span>$
+   Since <span class="arithmatex">\(\lambda_1 \ne \lambda_2\)</span>, it follows that <span class="arithmatex">\(\mathbf{v}_1^T \mathbf{v}_2 = 0\)</span>. Hence, <span class="arithmatex">\(\mathbf{v}_1 \perp \mathbf{v}_2\)</span>.</li>
+</ol>
+<hr />
+<h3 id="q2-derive-the-closed-form-orthogonal-projection-matrix-p-aat-a-1-at-onto-the-column-space-of-a-prove-it-is-idempotent-and-symmetric">Q2: Derive the closed-form orthogonal projection matrix <span class="arithmatex">\(P = A(A^T A)^{-1} A^T\)</span> onto the column space of <span class="arithmatex">\(A\)</span>. Prove it is idempotent and symmetric.<a class="headerlink" href="#q2-derive-the-closed-form-orthogonal-projection-matrix-p-aat-a-1-at-onto-the-column-space-of-a-prove-it-is-idempotent-and-symmetric" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+Let <span class="arithmatex">\(\mathbf{y} \in \mathbb{R}^m\)</span> and let the columns of <span class="arithmatex">\(A \in \mathbb{R}^{m \times n}\)</span> be linearly independent (<span class="arithmatex">\(m &gt; n\)</span>).
+The projection <span class="arithmatex">\(\hat{\mathbf{y}} = P\mathbf{y}\)</span> lies in the column space <span class="arithmatex">\(\mathcal{C}(A)\)</span>, meaning <span class="arithmatex">\(\hat{\mathbf{y}} = A\mathbf{w}\)</span> for some <span class="arithmatex">\(\mathbf{w} \in \mathbb{R}^n\)</span>.
+The residual vector <span class="arithmatex">\(\mathbf{e} = \mathbf{y} - \hat{\mathbf{y}} = \mathbf{y} - A\mathbf{w}\)</span> is orthogonal to <span class="arithmatex">\(\mathcal{C}(A)\)</span>. Thus, for every column <span class="arithmatex">\(\mathbf{a}_j\)</span> of <span class="arithmatex">\(A\)</span>, <span class="arithmatex">\(\mathbf{a}_j^T \mathbf{e} = 0\)</span>, which in matrix form is:
+$<span class="arithmatex">\(A^T (\mathbf{y} - A\mathbf{w}) = \mathbf{0} \implies A^T \mathbf{y} = A^T A \mathbf{w}\)</span>$
+Because <span class="arithmatex">\(A\)</span> has full column rank, <span class="arithmatex">\(A^T A\)</span> is positive definite and invertible:
+$<span class="arithmatex">\(\mathbf{w} = (A^T A)^{-1} A^T \mathbf{y}\)</span>$
+Substituting <span class="arithmatex">\(\mathbf{w}\)</span> back into <span class="arithmatex">\(\hat{\mathbf{y}} = A\mathbf{w}\)</span>:
+$<span class="arithmatex">\(\hat{\mathbf{y}} = A (A^T A)^{-1} A^T \mathbf{y} \equiv P \mathbf{y}\)</span>$
+where <span class="arithmatex">\(P = A(A^T A)^{-1} A^T\)</span>.</p>
+<p><strong>Proof of Symmetry:</strong>
+$<span class="arithmatex">\(P^T = \left(A (A^T A)^{-1} A^T\right)^T = (A^T)^T \left((A^T A)^{-1}\right)^T A^T = A \left((A^T A)^T\right)^{-1} A^T = A (A^T A)^{-1} A^T = P\)</span>$</p>
+<p><strong>Proof of Idempotence (<span class="arithmatex">\(P^2 = P\)</span>):</strong>
+$<span class="arithmatex">\(P^2 = \left(A (A^T A)^{-1} A^T\right) \left(A (A^T A)^{-1} A^T\right) = A (A^T A)^{-1} \left(A^T A\right) (A^T A)^{-1} A^T = A (A^T A)^{-1} A^T = P\)</span>$</p>
+<hr />
+<h3 id="q3-state-the-eckart-young-mirsky-theorem-why-does-truncated-svd-provide-the-optimal-low-rank-matrix-approximation">Q3: State the Eckart-Young-Mirsky Theorem. Why does truncated SVD provide the optimal low-rank matrix approximation?<a class="headerlink" href="#q3-state-the-eckart-young-mirsky-theorem-why-does-truncated-svd-provide-the-optimal-low-rank-matrix-approximation" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+The <strong>Eckart-Young-Mirsky Theorem</strong> states that if <span class="arithmatex">\(A \in \mathbb{R}^{m \times n}\)</span> has SVD <span class="arithmatex">\(A = \sum_{i=1}^r \sigma_i \mathbf{u}_i \mathbf{v}_i^T\)</span> with <span class="arithmatex">\(\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r &gt; 0\)</span>, then for any integer <span class="arithmatex">\(k &lt; r\)</span>, the truncated SVD matrix:
+$<span class="arithmatex">\(A_k = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T\)</span>$
+is the best rank-<span class="arithmatex">\(k\)</span> approximation of <span class="arithmatex">\(A\)</span> under both the <strong>Frobenius norm</strong> and the <strong>Spectral (<span class="arithmatex">\(L_2\)</span>) operator norm</strong>:
+1. <strong>Frobenius error:</strong> <span class="arithmatex">\(\min_{\text{rank}(B) \le k} \|A - B\|_F = \|A - A_k\|_F = \sqrt{\sum_{i=k+1}^r \sigma_i^2}\)</span>
+2. <strong>Spectral error:</strong> <span class="arithmatex">\(\min_{\text{rank}(B) \le k} \|A - B\|_2 = \|A - A_k\|_2 = \sigma_{k+1}\)</span></p>
+<p><strong>Intuition:</strong>
+Singular values decompose total matrix energy into orthogonal rank-1 components sorted by variance / magnitude. Any other rank-<span class="arithmatex">\(k\)</span> matrix subspace fails to align with the dominant orthogonal axes, necessarily leaking more residual energy into discarded dimensions.</p>
+<hr />
+<h3 id="q4-why-do-production-implementations-of-pca-eg-scikit-learn-compute-the-svd-of-the-centered-data-matrix-rather-than-the-eigendecomposition-of-xt-x">Q4: Why do production implementations of PCA (e.g., <code>scikit-learn</code>) compute the SVD of the centered data matrix rather than the eigendecomposition of <span class="arithmatex">\(X^T X\)</span>?<a class="headerlink" href="#q4-why-do-production-implementations-of-pca-eg-scikit-learn-compute-the-svd-of-the-centered-data-matrix-rather-than-the-eigendecomposition-of-xt-x" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+There are two critical reasons: <strong>numerical stability</strong> and <strong>computational complexity</strong>.</p>
+<ol>
+<li>
+<p><strong>Condition Number Squaring:</strong>
+   The condition number <span class="arithmatex">\(\kappa(X) = \frac{\sigma_{\max}}{\sigma_{\min}}\)</span> measures sensitivity to perturbation.
+   When explicitly computing the covariance matrix <span class="arithmatex">\(X^T X\)</span>:
+   $<span class="arithmatex">\(\kappa(X^T X) = (\kappa(X))^2\)</span>$
+   If <span class="arithmatex">\(\kappa(X) = 10^8\)</span> (well within 64-bit float precision), <span class="arithmatex">\(\kappa(X^T X) = 10^{16}\)</span>, which exhausts all 53 bits of IEEE 754 float64 mantissa. The smallest singular components collapse entirely into numerical noise, producing erroneous zero or negative eigenvalues. SVD operates directly on <span class="arithmatex">\(X\)</span>, preserving <span class="arithmatex">\(\kappa(X)\)</span>.</p>
+</li>
+<li>
+<p><strong>Computational and Memory Efficiency:</strong>
+   For a high-dimensional dataset where <span class="arithmatex">\(N \gg d\)</span> (e.g., <span class="arithmatex">\(N = 10^7, d = 100\)</span>):
+   Computing <span class="arithmatex">\(X^T X\)</span> requires <span class="arithmatex">\(O(N d^2)\)</span> operations. Randomized / Truncated SVD algorithms (e.g., Halko-Martinsson-Tropp) can extract the top <span class="arithmatex">\(k\)</span> components in <span class="arithmatex">\(O(N d \log k)\)</span> without ever computing all singular vectors or storing full intermediate matrices.</p>
+</li>
+</ol>
+<hr />
+<h3 id="q5-explain-the-condition-number-kappaa-sigma_max-sigma_min-how-does-an-ill-conditioned-design-matrix-affect-parameter-estimation-in-linear-regression">Q5: Explain the condition number <span class="arithmatex">\(\kappa(A) = \sigma_{\max} / \sigma_{\min}\)</span>. How does an ill-conditioned design matrix affect parameter estimation in linear regression?<a class="headerlink" href="#q5-explain-the-condition-number-kappaa-sigma_max-sigma_min-how-does-an-ill-conditioned-design-matrix-affect-parameter-estimation-in-linear-regression" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+The condition number <span class="arithmatex">\(\kappa(A) = \frac{\sigma_{\max}(A)}{\sigma_{\min}(A)} \ge 1\)</span> quantifies the worst-case relative error amplification of a linear system <span class="arithmatex">\(A\mathbf{w} = \mathbf{y}\)</span> under perturbations in <span class="arithmatex">\(\mathbf{y}\)</span> or <span class="arithmatex">\(A\)</span>:
+$<span class="arithmatex">\(\frac{\|\delta \mathbf{w}\|}{\|\mathbf{w}\|} \le \kappa(A) \frac{\|\delta \mathbf{y}\|}{\|\mathbf{y}\|}\)</span>$
+In Ordinary Least Squares, the estimated weights are <span class="arithmatex">\(\mathbf{w}^* = (X^T X)^{-1} X^T \mathbf{y}\)</span>, and the parameter covariance matrix is:
+$<span class="arithmatex">\(\text{Cov}(\mathbf{w}^*) = \sigma^2 (X^T X)^{-1}\)</span>$
+If <span class="arithmatex">\(X\)</span> has an ill-conditioned geometry (<span class="arithmatex">\(\kappa(X) \gg 1\)</span>), <span class="arithmatex">\(\sigma_{\min}(X) \approx 0\)</span>, which means <span class="arithmatex">\(X^T X\)</span> has an eigenvalue <span class="arithmatex">\(\lambda_{\min} = \sigma_{\min}^2 \approx 0\)</span>.
+The inverse <span class="arithmatex">\((X^T X)^{-1}\)</span> has an eigenvalue <span class="arithmatex">\(\frac{1}{\lambda_{\min}} = \frac{1}{\sigma_{\min}^2} \to \infty\)</span>.</p>
+<p><strong>Impact on estimation:</strong>
+1. <strong>Variance Explosion:</strong> The variance of the estimated parameter along the direction of the corresponding right singular vector explodes. Tiny changes in the training data cause massive swings in learned weights.
+2. <strong>Loss of Interpretability:</strong> Weight coefficients take on huge positive and negative values that cancel each other out, making individual feature attributions meaningless.
+3. <strong>Remedy:</strong> Ridge regression adds a regularization penalty <span class="arithmatex">\(\lambda I\)</span>, shifting all eigenvalues upward: <span class="arithmatex">\(\frac{1}{\sigma_i^2 + \lambda}\)</span>, bounding parameter variance.</p>
+<hr />
+<h3 id="q6-compare-vector-norms-l_1-l_2-l_infty-and-matrix-norms-frobenius-spectral-nuclear-explain-geometrically-why-l_1-induces-sparsity-in-optimization">Q6: Compare vector norms (<span class="arithmatex">\(L_1, L_2, L_\infty\)</span>) and matrix norms (Frobenius, Spectral, Nuclear). Explain geometrically why <span class="arithmatex">\(L_1\)</span> induces sparsity in optimization.<a class="headerlink" href="#q6-compare-vector-norms-l_1-l_2-l_infty-and-matrix-norms-frobenius-spectral-nuclear-explain-geometrically-why-l_1-induces-sparsity-in-optimization" title="Permanent link">&para;</a></h3>
+<p><strong>Model Answer:</strong>
+- <strong>Vector Norms:</strong>
+  - <span class="arithmatex">\(L_1\)</span>: <span class="arithmatex">\(\|\mathbf{x}\|_1 = \sum |x_i|\)</span>. The unit ball is a cross-polytope (diamond in 2D) with sharp vertices positioned precisely on the coordinate axes.
+  - <span class="arithmatex">\(L_2\)</span>: <span class="arithmatex">\(\|\mathbf{x}\|_2 = \sqrt{\sum x_i^2}\)</span>. The unit ball is a smooth hypersphere with no corners.
+  - <span class="arithmatex">\(L_\infty\)</span>: <span class="arithmatex">\(\|\mathbf{x}\|_\infty = \max |x_i|\)</span>. The unit ball is a hypercube.
+- <strong>Matrix Norms:</strong>
+  - Frobenius <span class="arithmatex">\(\|A\|_F = \sqrt{\sum \sigma_i^2}\)</span>: Euclidean entrywise norm.
+  - Spectral <span class="arithmatex">\(\|A\|_2 = \sigma_{\max}\)</span>: Maximum stretch factor.
+  - Nuclear <span class="arithmatex">\(\|A\|_* = \sum \sigma_i\)</span>: <span class="arithmatex">\(L_1\)</span> norm of the singular values; induces low-rank sparsity in matrix recovery.</p>
+<p><strong>Geometric Sparsity Mechanism:</strong>
+In constrained optimization (<span class="arithmatex">\(\min L(\mathbf{w})\)</span> subject to <span class="arithmatex">\(\|\mathbf{w}\| \le C\)</span>), the optimal solution occurs where the elliptical level curves of the objective function <span class="arithmatex">\(L(\mathbf{w})\)</span> first touch the constraint boundary.
+- For <span class="arithmatex">\(L_2\)</span>, the constraint boundary is a smooth sphere. The tangent point between an arbitrary ellipse and a sphere can occur at any continuous angle; the probability of touching exactly on an axis (<span class="arithmatex">\(w_i = 0\)</span>) is measure zero.
+- For <span class="arithmatex">\(L_1\)</span>, the boundary possesses sharp corners situated exactly on the coordinate axes (<span class="arithmatex">\(w_1 = 0, w_2 = \pm C\)</span>, etc.). As the loss contours expand outwards from the unconstrained minimum, they are statistically far more likely to first hit one of these protruding corners, forcing non-essential weights to be exactly zero.</p>
+<hr />
+<h2 id="12-mastery-ladder">12. Mastery Ladder<a class="headerlink" href="#12-mastery-ladder" title="Permanent link">&para;</a></h2>
+<p>Complete this checklist to verify your depth in linear algebra for machine learning:</p>
+<ul>
+<li>[ ] <strong>L1:</strong> You can compute dot products, outer products, matrix products, and trace identities by hand.</li>
+<li>[ ] <strong>L2:</strong> You can determine the rank, column space, and null space of a given rectangular matrix.</li>
+<li>[ ] <strong>L3:</strong> You can state the geometric definition of <span class="arithmatex">\(L_1, L_2,\)</span> and <span class="arithmatex">\(L_\infty\)</span> norms and draw their 2D unit balls.</li>
+<li>[ ] <strong>L4:</strong> You can prove why the orthogonal projection matrix <span class="arithmatex">\(P = A(A^T A)^{-1} A^T\)</span> is symmetric and idempotent (<span class="arithmatex">\(P^2 = P\)</span>).</li>
+<li>[ ] <strong>L5:</strong> You can state the Spectral Theorem for real symmetric matrices and prove all eigenvalues are real.</li>
+<li>[ ] <strong>L6:</strong> You can implement the Power Iteration algorithm from scratch to find the dominant eigenvalue and eigenvector.</li>
+<li>[ ] <strong>L7:</strong> You can derive the SVD formulation <span class="arithmatex">\(A = U \Sigma V^T\)</span> and connect <span class="arithmatex">\(U\)</span> and <span class="arithmatex">\(V\)</span> to the eigenvectors of <span class="arithmatex">\(A A^T\)</span> and <span class="arithmatex">\(A^T A\)</span>.</li>
+<li>[ ] <strong>L8:</strong> You can state the Eckart-Young-Mirsky Theorem and calculate the Frobenius approximation error of a truncated SVD.</li>
+<li>[ ] <strong>L9:</strong> You can derive PCA as a constrained variance maximization problem using Lagrange multipliers.</li>
+<li>[ ] <strong>L10:</strong> You can mathematically explain why production PCA packages compute the SVD of <span class="arithmatex">\(X\)</span> rather than the eigendecomposition of <span class="arithmatex">\(X^T X\)</span>, citing condition number squaring.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../foundations-math-deep-dive/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deep-dive: Foundations of Mathematics">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Foundations of Mathematics
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../calculus-optimization-deep-dive/" class="md-footer__link md-footer__link--next" aria-label="Next: Deep-dive: Calculus &amp; Optimization">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Deep-dive: Calculus & Optimization
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "navigation.footer", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

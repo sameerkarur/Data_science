@@ -2,10 +2,6 @@
 
 Design Netflix recommendations. Design a production RAG system. Design ChatGPT.
 
-# Book 13 — AI System Design
-
-Design Netflix recommendations. Design a production RAG system. Design ChatGPT.
-
 ## Design Methodology & Architectural Framework
 
 - [x] [Requirements & data flow](ai-system-design-methodology-framework-deep-dive.md)
@@ -21,9 +17,12 @@ Design Netflix recommendations. Design a production RAG system. Design ChatGPT.
 
 ## Production Case Studies
 
-- [ ] Large-Scale Recommendation System (Netflix / Spotify / E-Commerce)
-- [ ] Enterprise Multimodal Retrieval-Augmented Generation (RAG) System
-- [ ] High-Throughput Distributed LLM Serving Platform (Design ChatGPT)
+- [x] [Large-Scale Recommendation System (Netflix / Spotify / E-Commerce)](production-case-studies-system-design-deep-dive.md)
+- [x] [Enterprise Multimodal Retrieval-Augmented Generation (RAG) System](production-case-studies-system-design-deep-dive.md)
+- [x] [High-Throughput Distributed LLM Serving Platform (Design ChatGPT)](production-case-studies-system-design-deep-dive.md)
+
+**Comprehensive Deep Dive:**
+- 📖 [Production AI System Design Case Studies Deep Dive](production-case-studies-system-design-deep-dive.md)
 
 !!! mastery "Mastery Roadmap"
     Each topic includes comprehensive mathematical formulations, architectural diagrams, capacity estimation tables, API contracts, failure modes, staff-level interview questions, and a 10-level mastery ladder.

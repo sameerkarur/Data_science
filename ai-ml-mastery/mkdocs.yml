@@ -162,4 +162,5 @@ nav:
   - Book 13 – AI System Design:
       - Overview: 13-ai-system-design/index.md
       - "Deep-dive: AI System Design Methodology & Framework": 13-ai-system-design/ai-system-design-methodology-framework-deep-dive.md
+      - "Deep-dive: Production AI System Design Case Studies": 13-ai-system-design/production-case-studies-system-design-deep-dive.md
   - Book 14 – Projects & Interview: 14-projects/index.md
